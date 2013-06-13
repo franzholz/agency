@@ -1,0 +1,3 @@
+2013-06-13 Franz Holzinger <franz@ttproducts.de>
+	* back to the features of sr_feuser_register 2.6.3 including the sending of a forgotten password
+	* The initial version starts as a fork from sr_feuser_register 3.0.1 with slight enhancements

@@ -1,0 +1,15 @@
+/* Default stylesheet for the html mails of extension agency */
+* { margin: 0; padding: 0; }
+body { background:#ffffff none; margin: 0; padding: 1em; font-family:Verdana, sans-serif; font-size: 12px; color: #35006d; line-height: 125%; }
+.tx-agency p, .tx-agency h4 { margin: 0; padding: 0 .4em; text-indent: 0; }
+.tx-agency p, .tx-agency dl { padding-top: .5em; }
+.tx-agency h4 { font-weight: bold; }
+.tx-agency a:link { color: navy; background-color: transparent; font-weight: bold; text-decoration: none; }
+.tx-agency a:visited { color :navy; }
+.tx-agency a:hover { color: #333333; }
+.tx-agency a:active { color: navy; }
+.tx-agency dt, .tx-agency dd { padding-bottom: .5em; }
+.tx-agency dt { float: left; clear: both; width: 20%; text-align: right; }
+.tx-agency dd { text-align: left; float: right; clear: right; width: 78%; }
+.tx-agency ul.tx-agency-multiple-checked-values { list-style-type: square; list-style-image: none; list-style-position: inside; }
+.tx-agency ul.tx-agency-multiple-checked-values li { float: left; margin: 0 1em 0 0; }
