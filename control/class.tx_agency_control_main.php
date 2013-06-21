@@ -88,6 +88,7 @@ class tx_agency_control_main {
 
 		if ($success !== FALSE) {
 			$error_message = '';
+
 			$content = $this->control->doProcessing(
 				$pibaseObj->cObj,
 				$this->langObj,
@@ -160,7 +161,6 @@ class tx_agency_control_main {
 		);
 
 		if ($this->extKey != AGENCY_EXT) {
-
 					// Static Methods for Extensions for fetching the texts of agency
 				tx_div2007_alpha5::loadLL_fh002(
 					$pibaseObj,
@@ -170,12 +170,12 @@ class tx_agency_control_main {
 		} // otherwise the labels from agency need not be included, because this has been done in
 
 		if (t3lib_extMgm::isLoaded(STATIC_INFO_TABLES_EXT)) {
-
-
 				// Initialise static info library
 			if (class_exists('SJBR\\StaticInfoTables\\PiBaseApi')) {
 				$staticInfoObj = t3lib_div::getUserObj('&SJBR\\StaticInfoTables\\PiBaseApi');
 			} else {
+				t3lib_div::requireOnce(PATH_BE_static_info_tables . 'pi1/class.tx_staticinfotables_pi1.php');
+
 				$staticInfoObj = t3lib_div::getUserObj('&tx_staticinfotables_pi1');
 			}
 

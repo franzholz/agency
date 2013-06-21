@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2012 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2007-2013 Franz Holzinger (franz@ttproducts.de)
 *  (c) 2012 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
@@ -314,15 +314,16 @@ class tx_agency_controldata {
 			$this->setValidRegHash($bValidRegHash);
 			$this->setFeUserData($feUserData);
 			$this->writeRedirectUrl();
-				// Generate a new token for the next created forms
-			$token = $authObj->generateToken();
-			$this->writeToken($token);
 		} else {
 				// Erase all FE user data when the token is not valid
 			$this->setFeUserData(array());
 				// Erase any stored password
 			$this->writePassword('');
 		}
+
+			// Generate a new token for the next created forms
+		$token = $authObj->generateToken();
+		$this->writeToken($token);
 	}
 
 	public function setRegHash ($regHash) {
