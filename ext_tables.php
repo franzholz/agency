@@ -3,7 +3,10 @@ if (!defined ('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
-$typo3Version = class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) : t3lib_div::int_from_ver(TYPO3_version);
+$typoVersion =
+	class_exists('TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility') ?
+		\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) :
+		t3lib_div::int_from_ver(TYPO3_version);
 
 
 if (TYPO3_MODE == 'BE' && !$loadTcaAdditions) {

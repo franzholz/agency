@@ -6,8 +6,8 @@ if (!defined ('TYPO3_MODE')) {
 
 if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 
-	$TCA['fe_groups_language_overlay'] = array(
-		'ctrl' => $TCA['fe_groups_language_overlay']['ctrl'],
+	$GLOBALS['TCA']['fe_groups_language_overlay'] = array(
+		'ctrl' => $GLOBALS['TCA']['fe_groups_language_overlay']['ctrl'],
 		'interface' => array(
 			'showRecordFieldList' => 'hidden,fe_group,sys_language_uid,title'
 		),
@@ -43,7 +43,7 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 				'config' => array(
 					'type' => 'input',
 					'size' => '50',
-					'max' => '50',
+					'max' => '70',
 					'eval' => 'trim,required',
 				)
 			),
@@ -52,7 +52,6 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 			'0' => array( 'showitem' => 'hidden;;;;1-1-1, fe_group, sys_language_uid, title')
 		)
 	);
-
 }
 
 ?>

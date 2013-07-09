@@ -223,6 +223,7 @@ class tx_agency_display {
 	protected function editForm (
 		&$markerArray,
 		$conf,
+		$prefixId,
 		$cObj,
 		$langObj,
 		$controlData,
@@ -239,8 +240,6 @@ class tx_agency_display {
 		$errorFieldArray,
 		$token
 	) {
-		$prefixId = $controlData->getPrefixId();
-
 		if (isset($dataArray) && is_array($dataArray)) {
 			$currentArray = array_merge($origArray, $dataArray);
 		} else {
@@ -410,11 +409,12 @@ class tx_agency_display {
 			$form =
 				tx_div2007_alpha5::getClassName_fh002(
 					$theTable . '_form',
-					$controlData->getPrefixId(),
+					$prefixId,
 					TRUE
 				);
 			$modData = $dataObj->modifyDataArrForFormUpdate($currentArray, $cmdKey);
-			$fields = $dataObj->getFieldList() . $dataObj->getAdditionalUpdateFields();
+			$fields = $dataObj->getFieldList() . ',' . $dataObj->getAdditionalUpdateFields();
+			$fields = implode(',', array_intersect(explode(',', $fields), t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)));
 			$fields = $controlData->getOpenFields($fields);
 			$updateJS =
 				$cObj->getUpdateJS(
@@ -443,6 +443,8 @@ class tx_agency_display {
 	public function createScreen (
 		&$markerArray,
 		$conf,
+		$prefixId,
+		$extKey,
 		$cObj,
 		$langObj,
 		$controlData,
@@ -468,8 +470,6 @@ class tx_agency_display {
 		}
 
 		$templateCode = $dataObj->getTemplateCode();
-		$prefixId = $controlData->getPrefixId();
-		$extKey = $controlData->getExtKey();
 		$currentArray = array_merge($origArray, $dataArray);
 
 		if ($theTable == 'fe_users') {
@@ -627,7 +627,8 @@ class tx_agency_display {
 				);
 
 			if ($mode != MODE_PREVIEW && $bNeedUpdateJS) {
-				$fields = $dataObj->fieldList . $dataObj->additionalUpdateFields;
+				$fields = $dataObj->getFieldList() . ',' . $dataObj->getAdditionalUpdateFields();
+				$fields = implode(',', array_intersect(explode(',', $fields), t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)));
 				$fields = $controlData->getOpenFields($fields);
 				$modData = $dataObj->modifyDataArrForFormUpdate($dataArray, $cmdKey);
 				$form =
@@ -740,6 +741,7 @@ class tx_agency_display {
 					$content = $this->editForm(
 						$markerArray,
 						$conf,
+						$prefixId,
 						$cObj,
 						$langObj,
 						$controlData,
@@ -814,6 +816,8 @@ class tx_agency_display {
 	public function deleteScreen (
 		$markerArray,
 		$conf,
+		$prefixId,
+		$extKey,
 		$cObj,
 		$langObj,
 		$controlData,
@@ -827,9 +831,6 @@ class tx_agency_display {
 		$token
 	) {
 		if ($conf['delete']) {
-
-			$extKey = $controlData->getExtKey();
-			$prefixId = $controlData->getPrefixId();
 			$templateCode = $dataObj->getTemplateCode();
 			$authObj = t3lib_div::getUserObj('&tx_agency_auth');
 
@@ -865,19 +866,9 @@ class tx_agency_display {
 					if ($aCAuth || $bMayEdit) {
 						$markerArray = $markerObj->getArray();
 						// Display the form, if access granted.
-						$markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="rU" value="' .  $dataObj->getRecUid() . '" />';
 
-						if ($theTable != 'fe_users') {
-							$markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="' . $prefixId . '[aC]" value="' . $authObj->authCode($origArray, $conf['setfixed.']['DELETE.']['_FIELDLIST']) . '" />';
-						}
-						$markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="' . $prefixId . '[cmd]" value="delete" />';
-						$markerObj->addFormToken(
-							$markerArray,
-							$token,
-							$extKey,
-							$prefixId
-						);
-
+						$markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="' . $prefixId . '[rU]" value="' .  $dataObj->getRecUid() . '" />';
+						$markerObj->addGeneralHiddenFieldsMarkers($markerArray, 'delete', $token);
 						$markerObj->setArray($markerArray);
 						$content = $this->getPlainTemplate(
 							$conf,
@@ -1278,7 +1269,8 @@ class tx_agency_display {
 						$theTable,
 						$conf['useShortUrls'],
 						$conf['edit.']['setfixed'],
-						$autoLoginKey
+						$autoLoginKey,
+						$conf['confirmType']
 					);
 				}
 			}

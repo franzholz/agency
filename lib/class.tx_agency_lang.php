@@ -125,9 +125,10 @@ class tx_agency_lang extends tx_div2007_alpha_language_base {
 	* @param string The key from the LOCAL_LANG array for which to return the value.
 	* @param string Alternative string to return IF no value is found set for the key, neither for the local language nor the default.
 	* @param boolean If TRUE, the output label is passed through htmlspecialchars()
+	* @param boolean If TRUE then an error text will be generated with the information that no text for the key could be found..
 	* @return string The value from LOCAL_LANG.
 	*/
-	public function getLL ($key, $alt = '', $hsc = FALSE) {
+	public function getLL ($key, $alt = '', $hsc = FALSE, $showError = FALSE) {
 
 			// If the suffix is allowed and we have a localized string for the desired salutation, we'll take that.
 		$localizedLabel = '';
@@ -165,12 +166,17 @@ class tx_agency_lang extends tx_div2007_alpha_language_base {
 					$alt,
 					$hsc
 				);
+
 				// Fall back to tslib_fe::sL
 			if ($localizedLabel == '') {
 				$localizedLabel = $GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:' . $key);
 				if ($localizedLabel != '') {
 					$message = sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_label_not_localized_by_div2007'), $key);
 					t3lib_div::sysLog($message, $this->extKey, t3lib_div::SYSLOG_SEVERITY_WARNING);
+				}
+
+				if ($localizedLabel == '' && $showError) {
+					$localizedLabel = 'ERROR in extension "' .  $this->extKey . '" no text for key "' . $key . '" can be found';
 				}
 			}
 		}

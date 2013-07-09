@@ -113,6 +113,7 @@ class tx_agency_storage_security {
 	*/
 	public function initializeAutoLoginPassword (array &$dataArray) {
 		$dataArray['tx_agency_password'] = '';
+		unset($dataArray['auto_login_key']);
 	}
 
 	/**

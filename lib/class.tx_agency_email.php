@@ -115,12 +115,13 @@ class tx_agency_email {
 					'100'
 				);
 				$errorContent = '';
+				$bEmailSent = FALSE;
 
 					// Processing records
 				if (is_array($DBrows)) {
 					$recipient = $DBrows[0][$conf['email.']['field']];
 					$dataObj->setDataArray($DBrows[0]);
-					$errorContent = $this->compile(
+					$bEmailSent = $this->compile(
 						'INFOMAIL',
 						$conf,
 						$cObj,
@@ -149,7 +150,7 @@ class tx_agency_email {
 				} elseif (t3lib_div::validEmail($fetch)) {
 					$fetchArray = array( '0' => array('email' => $fetch));
 
-					$errorContent = $this->compile(
+					$bEmailSent = $this->compile(
 						'INFOMAIL_NORECORD',
 						$conf,
 						$cObj,
@@ -177,7 +178,15 @@ class tx_agency_email {
 					);
 				}
 
-				if ($errorContent || is_array($errorCode)) {
+				if (
+					!$bEmailSent &&
+					is_array($errorCode)
+				){
+					$errorText = $langObj->getLL($errorCode['0'], '', FALSE, TRUE);
+					$errorContent = sprintf($errorText, $errorCode['1']);
+				}
+
+				if ($errorContent != '') {
 					$content = $errorContent;
 				} else {
 					$subpartkey = '###TEMPLATE_' . $this->infomailPrefix . 'SENT###';
@@ -252,7 +261,8 @@ class tx_agency_email {
 	* @param array  Array with key/values being marker-strings/substitution values.
 	* @param array  $errorFieldArray: array of field with errors (former $dataObj->inError[$theField])
 	* @param array  $setFixedConfig: a setfixed TS config array
-	* @return string : text in case of error
+	* @param array  $errorCode: array of error indices
+	* @return boolean : FALSE in case of error. The $errorCode will be filled in.
 	*/
 	public function compile (
 		$key,
@@ -280,6 +290,7 @@ class tx_agency_email {
 		array $setFixedConfig,
 		&$errorCode
 	) {
+		$result = TRUE;
 		$missingSubpartArray = array();
 		$userSubpartsFound = 0;
 		$adminSubpartsFound = 0;
@@ -512,7 +523,8 @@ class tx_agency_email {
 				$theTable,
 				$conf['useShortUrls'],
 				$conf['edit.']['setfixed'],
-				$autoLoginKey
+				$autoLoginKey,
+				$conf['confirmType']
 			);
 
 			$markerObj->addStaticInfoMarkers(
@@ -692,7 +704,7 @@ class tx_agency_email {
 			($userSubpartsFound + $adminSubpartsFound >= 1) &&
 			($adminSubpartsFound >= 1 || $key != 'SETFIXED_REVIEW')
 		) {
-			$this->send(
+			$result = $this->send(
 				$conf,
 				$recipient,
 				$conf['email.']['admin'],
@@ -702,13 +714,21 @@ class tx_agency_email {
 				$content['adminhtml']['final'],
 				$file
 			);
+
+			if ($result !== TRUE) {
+				$errorCode = array();
+				$errorCode['0'] = 'internal_email_not_sent';
+				$errorCode['1'] = $recipient;
+			}
 		} else if ($conf['notify.'][$key]) {
 			$errorCode = array();
 			$errorCode['0'] = 'internal_no_subtemplate';
 			$errorCode['1'] = $missingSubpartArray['0'];
 
-			return FALSE;
+			$result = FALSE;
 		}
+
+		return $result;
 	} // compile
 
 	/**
@@ -733,6 +753,8 @@ class tx_agency_email {
 		$adminContentHTML = '',
 		$fileAttachment = ''
 	) {
+		$result = FALSE;
+
 		// Send mail to admin
 		if ($admin && ($adminContent != '' || $adminContentHTML != '')) {
 
@@ -745,7 +767,7 @@ class tx_agency_email {
 			}
 
 			// Send mail to the admin
-			$this->sendHTML(
+			$result = $this->sendHTML(
 				$adminContentHTML,
 				$adminContent,
 				$admin,
@@ -760,7 +782,7 @@ class tx_agency_email {
 		// Send mail to user
 		if ($recipient && ($content != '' || $contentHTML != '')) {
 			// Send mail to the front end user
-			$this->sendHTML(
+			$result = $this->sendHTML(
 				$contentHTML,
 				$content,
 				$recipient,
@@ -771,6 +793,8 @@ class tx_agency_email {
 				$fileAttachment
 			);
 		}
+
+		return $result;
 	}
 
 	/**
@@ -817,13 +841,15 @@ class tx_agency_email {
 		$replyTo = '',
 		$fileAttachment = ''
 	) {
+		$result = FALSE;
+
 		if (
 			trim($recipient) &&
 			(trim($HTMLContent) || trim($PLAINContent))
 		) {
 			$defaultSubject = 'Agency Registration - TYPO3 extension';
 
-			tx_div2007_email::sendMail(
+			$result = tx_div2007_email::sendMail(
 				$recipient,
 				$subject,
 				$PLAINContent,
@@ -840,6 +866,8 @@ class tx_agency_email {
 				$defaultSubject
 			);
 		}
+
+		return $result;
 	}
 }
 

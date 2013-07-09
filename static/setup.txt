@@ -150,6 +150,7 @@ plugin.tx_agency {
 
 	invite < .create
 	invite {
+		required := removeFromList(password)
 		defaultValues {
 			by_invitation = 1
 		}

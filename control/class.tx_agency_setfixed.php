@@ -87,6 +87,7 @@ class tx_agency_setfixed {
 		$token
 	) {
 		$row = $origArray;
+		$errorContent = '';
 
 		if ($controlData->getSetfixedEnabled()) {
 			$autoLoginIsRequested = FALSE;
@@ -163,7 +164,10 @@ class tx_agency_setfixed {
 						$conf['forceFileDelete']
 					) {
 						// If the record is fully deleted... then remove the image attached.
-						$dataObj->deleteFilesFromRecord($uid);
+						$dataObj->deleteFilesFromRecord(
+							$theTable,
+							$uid
+						);
 					}
 					$res = $cObj->DBgetDelete(
 						$theTable,
@@ -397,7 +401,7 @@ class tx_agency_setfixed {
 					) {
 						$errorCode = '';
 							// Compiling email
-						$errorContent = $emailObj->compile(
+						$bEmailSent = $emailObj->compile(
 							SETFIXED_PREFIX . $setfixedSuffix,
 							$conf,
 							$cObj,
@@ -423,14 +427,14 @@ class tx_agency_setfixed {
 							$conf['setfixed.'],
 							$errorCode
 						);
-
-						if (is_array($errorCode)) {
-							$errorText = $this->langObj->getLL($errorCode['0']);
-							$errorContent = sprintf($errorText, $errorCode['1']);
-						}
 					}
 
-					if ($errorContent) {
+					if (
+						!$bEmailSent &&
+						is_array($errorCode)
+					){
+						$errorText = $langObj->getLL($errorCode['0'], '', FALSE, TRUE);
+						$errorContent = sprintf($errorText, $errorCode['1']);
 						$content = $errorContent;
 					} else if ($theTable == 'fe_users') {
 							// If applicable, send admin a request to review the registration request
@@ -440,7 +444,7 @@ class tx_agency_setfixed {
 							!$row['by_invitation']
 						) {
 							$errorCode = '';
-							$errorContent = $emailObj->compile(
+							$bEmailSent = $emailObj->compile(
 								SETFIXED_PREFIX . 'REVIEW',
 								$conf,
 								$cObj,
@@ -466,11 +470,15 @@ class tx_agency_setfixed {
 								$conf['setfixed.']
 							);
 
-							if (is_array($errorCode)) {
-								$errorText = $this->langObj->getLL($errorCode['0']);
+							if (
+								!$bEmailSent &&
+								is_array($errorCode)
+							){
+								$errorText = $langObj->getLL($errorCode['0'], '', FALSE, TRUE);
 								$errorContent = sprintf($errorText, $errorCode['1']);
 							}
 						}
+
 						if ($errorContent) {
 							$content = $errorContent;
 						} else if (
@@ -558,7 +566,8 @@ class tx_agency_setfixed {
 		$theTable,
 		$useShortUrls,
 		$editSetfixed,
-		$autoLoginKey
+		$autoLoginKey,
+		$confirmType
 	) {
 		if ($controlData->getSetfixedEnabled() && is_array($setfixed)) {
 			$authObj = t3lib_div::getUserObj('&tx_agency_auth');
@@ -644,7 +653,7 @@ class tx_agency_setfixed {
 					}
 				}
 
-				$linkPID = $controlData->getPID($pidCmd);
+				$linkPID = $controlData->getPid($pidCmd);
 
 				if (t3lib_div::_GP('L') && !t3lib_div::inList($GLOBALS['TSFE']->config['config']['linkVars'], 'L')) {
 					$setfixedpiVars['L'] = t3lib_div::_GP('L');
@@ -654,22 +663,22 @@ class tx_agency_setfixed {
 					$thisHash = $this->storeFixedPiVars($setfixedpiVars);
 					$setfixedpiVars = array($prefixId . '%5BregHash%5D' => $thisHash);
 				}
-				$conf = array();
-				$conf['disableGroupAccessCheck'] = TRUE;
+				$urlConf = array();
+				$urlConf['disableGroupAccessCheck'] = TRUE;
 				$bconfirmTypeIsInt = (
 					class_exists('t3lib_utility_Math') ?
-						t3lib_utility_Math::canBeInterpretedAsInteger($conf['confirmType']) :
-						t3lib_div::testInt($conf['confirmType'])
+						t3lib_utility_Math::canBeInterpretedAsInteger($confirmType) :
+						t3lib_div::testInt($confirmType)
 				);
 
-				$confirmType = ($bconfirmTypeIsInt ? intval($conf['confirmType']) : $GLOBALS['TSFE']->type);
+				$confirmType = ($bconfirmTypeIsInt ? intval($confirmType) : $GLOBALS['TSFE']->type);
 				$url =
 					tx_div2007_alpha5::getTypoLink_URL_fh003(
 						$cObj,
 						$linkPID . ',' . $confirmType,
 						$setfixedpiVars,
 						'',
-						$conf
+						$urlConf
 					);
 
 				$bIsAbsoluteURL = ((strncmp($url, 'http://', 7) == 0) || (strncmp($url, 'https://', 8) == 0));

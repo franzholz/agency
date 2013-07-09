@@ -371,15 +371,23 @@ class tx_agency_marker {
 				$colContent = '';
 				$markerArray['###FIELD_' . $markerkey . '_CHECKED###'] = '';
 				$markerArray['###LABEL_' . $markerkey . '_CHECKED###'] = '';
-
 				$markerArray['###POSTVARS_' . $markerkey . '###'] = '';
-				$fieldArray = t3lib_div::trimExplode(',', $row[$theField]);
-				foreach ($fieldArray as $key => $value) {
-					$label = $this->langObj->getLLFromString($colConfig['items'][$value][0]);
-					$markerArray['###FIELD_' . $markerkey . '_CHECKED###'] .= '- ' . $label . '<br />';
-					$label = $this->langObj->getLLFromString($colConfig['items'][$value][0]);
-					$markerArray['###LABEL_' . $markerkey . '_CHECKED###'] .= '- ' . $label . '<br />';
-					$markerArray['###POSTVARS_' . $markerkey.'###'] .= chr(10) . '	<input type="hidden" name="FE[fe_users][' . $theField . '][' . $key . ']" value ="' . $value . '" />';
+
+				if (isset($row[$theField])) {
+					$fieldArray = array();
+					if (is_array($row[$theField])) {
+						$fieldArray = $row[$theField];
+					} else {
+						$fieldArray = t3lib_div::trimExplode(',', $row[$theField]);
+					}
+
+					foreach ($fieldArray as $key => $value) {
+						$label = $this->langObj->getLLFromString($colConfig['items'][$value][0]);
+						$markerArray['###FIELD_' . $markerkey . '_CHECKED###'] .= '- ' . $label . '<br />';
+						$label = $this->langObj->getLLFromString($colConfig['items'][$value][0]);
+						$markerArray['###LABEL_' . $markerkey . '_CHECKED###'] .= '- ' . $label . '<br />';
+						$markerArray['###POSTVARS_' . $markerkey.'###'] .= chr(10) . '	<input type="hidden" name="FE[fe_users][' . $theField . '][' . $key . ']" value ="' . $value . '" />';
+					}
 				}
 			} else if ($colConfig['type'] == 'check') {
 				$markerArray['###FIELD_' . $markerkey . '_CHECKED###'] = ($row[$theField]) ? 'checked' : '';
@@ -561,14 +569,13 @@ class tx_agency_marker {
 		}
 		$vars['cmd'] = $this->controlData->getCmd();
 		$vars['token'] = $token;
-		$vars['backURL'] = rawurlencode($urlObj->get('', $GLOBALS['TSFE']->id . ',' . $GLOBALS['TSFE']->type, $vars));
+		$vars['backURL'] = rawurlencode($formUrl);
 		$vars['cmd'] = 'delete';
 		$vars['rU'] = $uid;
 		$vars['preview'] = '1';
 
 		$markerArray['###DELETE_URL###'] = $urlObj->get('', $this->controlData->getPid('edit') . ',' . $GLOBALS['TSFE']->type, $vars);
 
-		$vars['backURL'] = rawurlencode($formUrl);
 		$vars['cmd'] = 'create';
 
 		$unsetVars[] = 'regHash';
@@ -1151,9 +1158,8 @@ class tx_agency_marker {
 		}
 			// Add global markers
 		$extKey = $this->controlData->getExtKey();
-		$prefixId = $this->controlData->getPrefixId();
-		if (is_array ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey][$prefixId]['registrationProcess'])) {
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey][$prefixId]['registrationProcess'] as $classRef) {
+		if (is_array ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'] as $classRef) {
 				$hookObj= t3lib_div::getUserObj($classRef);
 				if (method_exists($hookObj, 'addGlobalMarkers')) {
 					$hookObj->addGlobalMarkers($markerArray, $this);

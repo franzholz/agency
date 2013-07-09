@@ -537,6 +537,7 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
 			<label index="internal_replace_deprecated_marker">Deprecated marker %1$s must be replaced by marker %2$s in HTML template file %3$s</label>
 			<label index="internal_remove_deprecated_marker">Deprecated marker %1$s must be removed from HTML template file %2$s</label>
 			<label index="internal_label_not_localized_by_div2007">div2007 failed to localize label %1$s</label>
+			<label index="internal_email_not_sent">An email to %s could not be sent!</label>
 		</languageKey>
 	</data>
 </T3locallang>

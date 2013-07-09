@@ -1,3 +1,6 @@
+2013-07-09 Franz Holzinger <franz@ttproducts.de>
+	* fix bug #49802
+	* fix bugs from sr_feuser_register
 
 2013-06-21 Franz Holzinger <franz@ttproducts.de>
 	* fix bug #37022

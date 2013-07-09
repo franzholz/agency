@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2008-2011 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2008-2013 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -94,15 +94,15 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 	public function getReservedValues () {
 		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
 		$conf = $confObj->getConf();
-		$rc = array_merge(
+		$result = array_merge(
 			t3lib_div::trimExplode(',', $conf['create.']['overrideValues.']['usergroup'], 1),
 			t3lib_div::trimExplode(',', $conf['invite.']['overrideValues.']['usergroup'], 1),
 			t3lib_div::trimExplode(',', $conf['setfixed.']['APPROVE.']['usergroup'], 1),
 			t3lib_div::trimExplode(',', $conf['setfixed.']['ACCEPT.']['usergroup'], 1),
 			$this->savedReservedValues
 		);
-		$rc = array_unique($rc);
-		return $rc;
+		$result = array_unique($result);
+		return $result;
 	}
 
 	/*
@@ -155,7 +155,7 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 		$pidArray = array();
 		$tmpArray = t3lib_div::trimExplode(',', $conf['userGroupsPidList'], 1);
 		if (count($tmpArray)) {
-			foreach ($tmpArray as $value) {
+			foreach($tmpArray as $value) {
 				$valueIsInt = (
 					class_exists('t3lib_utility_Math') ?
 					t3lib_utility_Math::canBeInterpretedAsInteger($value) :
@@ -166,6 +166,7 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 				}
 			}
 		}
+
 		if (count($pidArray) > 0) {
 			$whereClause = ' pid IN (' . implode(',', $pidArray) . ') ';
 		} else {
@@ -211,7 +212,6 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 		return $whereClause;
 	}
 
-
 	public function parseOutgoingData (
 		$theTable,
 		$fieldname,
@@ -223,57 +223,56 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 		$origArray,
 		&$parsedArray
 	) {
-		$valuesArray = array();
-
-		if (
-			isset($origArray) &&
-			is_array($origArray) &&
-			isset($origArray[$fieldname]) &&
-			is_array($origArray[$fieldname])
-		) {
-			$valuesArray = $origArray[$fieldname];
-
-			if ($conf[$cmdKey . '.']['keepUnselectableUserGroups']) {
-				$whereClause =
-					$this->getAllowedWhereClause(
-						$foreignTable,
-						$pid,
-						$conf,
-						$cmdKey,
-						FALSE
-					);
-
-				$rowArray =
-					$GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-						'uid',
-						$foreignTable,
-						$whereClause,
-						'',
-						'',
-						'',
-						'uid'
-					);
-
-				if ($rowArray && is_array($rowArray) && count($rowArray)) {
-					$keepValues = array_keys($rowArray);
-				}
-			} else {
-				$keepValues = $this->getReservedValues();
-			}
-			$valuesArray = array_intersect($valuesArray, $keepValues);
-		}
-
 		if (
 			isset($dataArray) &&
 			is_array($dataArray) &&
 			isset($dataArray[$fieldname]) &&
 			is_array($dataArray[$fieldname])
 		) {
+			$valuesArray = array();
+
+			if (
+				isset($origArray) &&
+				is_array($origArray) &&
+				isset($origArray[$fieldname]) &&
+				is_array($origArray[$fieldname])
+			) {
+				$valuesArray = $origArray[$fieldname];
+
+				if ($conf[$cmdKey . '.']['keepUnselectableUserGroups']) {
+					$whereClause =
+						$this->getAllowedWhereClause(
+							$foreignTable,
+							$pid,
+							$conf,
+							$cmdKey,
+							FALSE
+						);
+
+					$rowArray =
+						$GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+							'uid',
+							$foreignTable,
+							$whereClause,
+							'',
+							'',
+							'',
+							'uid'
+						);
+
+					if ($rowArray && is_array($rowArray) && count($rowArray)) {
+						$keepValues = array_keys($rowArray);
+					}
+				} else {
+					$keepValues = $this->getReservedValues();
+				}
+				$valuesArray = array_intersect($valuesArray, $keepValues);
+			}
+
 			$dataArray[$fieldname] = array_unique(array_merge($dataArray[$fieldname], $valuesArray));
 			$parsedArray[$fieldname] = $dataArray[$fieldname];
 		}
 	}
-
 
 	public function getExtendedValue ($extKey, $value, $config, $row) {
 
@@ -374,7 +373,6 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 				}
 			}
 		}
-
 
 		return $value;
 	}

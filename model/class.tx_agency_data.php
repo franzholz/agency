@@ -56,9 +56,9 @@ class tx_agency_data {
 	public $fileFunc = ''; // Set to a basic_filefunc object for file uploads
 
 	public $error;
-	public $additionalUpdateFields;
-	public $fieldList; // List of fields from fe_admin_fieldList
-	public $specialfieldlist; // list of special fields like captcha
+	public $additionalUpdateFields = '';
+	public $fieldList = ''; // List of fields from fe_admin_fieldList
+	public $specialfieldlist = ''; // list of special fields like captcha
 	public $recUid = 0;
 	public $missing = array(); // array of required missing fields
 	public $inError = array(); // array of fields with eval errors other than absence
@@ -424,7 +424,7 @@ class tx_agency_data {
 			} else {
 				$thePid = $this->controlData->getPid();
 				$recordTestPid = $thePid ? $thePid :
-				t3lib_div::intval_positive($pid);
+				(method_exists('TYPO3\\CMS\\Core\\Utility\\MathUtility', 'convertToPositiveInteger') ? \TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($pid) : t3lib_div::intval_positive($pid));
 			}
 			$countArray = array();
 			$countArray['hook'] = array();
@@ -807,7 +807,7 @@ class tx_agency_data {
 												break;
 											}
 										} else {
-											debug ($classRef, 'error in the class name for the hook "model"'); // keep debug
+											debug($classRef, 'error in the class name for the hook "model"'); // keep debug
 										}
 									}
 								}
@@ -887,7 +887,7 @@ class tx_agency_data {
 						$theCmd = trim($cmdParts[0]);
 						$bValueAssigned = TRUE;
 						if (
-							$theField === 'password' &&
+							$theField == 'password' &&
 							!isset($dataArray[$theField])
 						) {
 							$bValueAssigned = FALSE;
@@ -1195,11 +1195,11 @@ class tx_agency_data {
 								$origArray
 							);
 
- 						if ($theTable === 'fe_users' && isset($dataArray['password'])) {
+ 						if ($theTable == 'fe_users' && isset($dataArray['password'])) {
  								// Do not set the outgoing password if the incoming password was unset
 							$outGoingData['password'] = $password;
  						}
-						$newFieldList = implode (',', $newFieldArray);
+						$newFieldList = implode(',', $newFieldArray);
 						if (isset($GLOBALS['TCA'][$theTable]['ctrl']['token'])) {
 								// Save token in record
 							$outGoingData['token'] = $token;
@@ -1217,7 +1217,7 @@ class tx_agency_data {
 						$this->updateMMRelations($theTable, $dataArray);
 						$this->setSaved(TRUE);
 						$newRow = $this->parseIncomingData($outGoingData);
-						$this->tca->modifyRow($staticInfoObj, $theTable, $newRow, FALSE);
+						$this->tca->modifyRow($staticInfoObj, $theTable, $newRow, TRUE);
 						$newRow = array_merge($origArray, $newRow);
 						tx_div2007_alpha::userProcess_fh001(
 							$this->control,
@@ -1410,19 +1410,18 @@ class tx_agency_data {
 
 							// <Ries van Twisk added registrationProcess hooks>
 							// Call all beforeSaveDelete hooks BEFORE the record is deleted
-						if (is_array ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'])) {
-							foreach  ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'] as $classRef) {
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'])) {
+							foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'] as $classRef) {
 								$hookObj = t3lib_div::getUserObj($classRef);
 								if (method_exists($hookObj, 'registrationProcess_beforeSaveDelete')) {
 									$hookObj->registrationProcess_beforeSaveDelete($origArray, $this);
 								}
 							}
 						}
-							// </Ries van Twisk added registrationProcess hooks>
 
 						if (!$GLOBALS['TCA'][$theTable]['ctrl']['delete'] || $this->conf['forceFileDelete']) {
 								// If the record is being fully deleted... then remove the images or files attached.
-							$this->deleteFilesFromRecord($this->getRecUid());
+							$this->deleteFilesFromRecord($theTable, $this->getRecUid());
 						}
 						$res =
 							$this->cObj->DBgetDelete(
@@ -1451,15 +1450,15 @@ class tx_agency_data {
 	 * @param string  $uid: record id
 	 * @return void
 	 */
-	public function deleteFilesFromRecord ($uid) {
-		$rec = $GLOBALS['TSFE']->sys_page->getRawRecord($this->controlData->getTable(), $uid);
+	public function deleteFilesFromRecord ($theTable, $uid) {
+		$rec = $GLOBALS['TSFE']->sys_page->getRawRecord($theTable, $uid);
 		$updateFields = array();
 		foreach($GLOBALS['TCA'][$theTable]['columns'] as $field => $conf) {
 			if ($conf['config']['type'] == 'group' && $conf['config']['internal_type'] == 'file') {
 				$updateFields[$field] = '';
 				$res =
 					$this->cObj->DBgetUpdate(
-						$this->controlData->getTable(),
+						$theTable,
 						$uid,
 						$updateFields,
 						$field,
@@ -1601,7 +1600,7 @@ class tx_agency_data {
 	*
 	* @return void
 	*/
-	public function deleteMMRelations ($table, $uid, array $row = array()) {
+	public function deleteMMRelations ($theTable, $uid, array $row = array()) {
 			// update the MM relation
 		$fieldsList = array_keys($row);
 		foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
@@ -1709,7 +1708,11 @@ class tx_agency_data {
 		) {
 				// Honour Address List (tt_address) configuration settings
 			$nameFormat = '';
-			if ($theTable === 'tt_address' && t3lib_extMgm::isLoaded('tt_address') && isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address'])) {
+			if (
+				$theTable == 'tt_address' &&
+				t3lib_extMgm::isLoaded('tt_address') &&
+				isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address'])
+			) {
 				$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address']);
 				if (is_array($extConf) && isset($extConf['backwardsCompatFormat'])) {
 					$nameFormat = $extConf['backwardsCompatFormat'];
@@ -1736,7 +1739,7 @@ class tx_agency_data {
 	* @return void  done directly on array $this->dataArray
 	*/
 	public function setUsername ($theTable, array &$dataArray, $cmdKey) {
-		if ($this->conf[$cmdKey.'.']['useEmailAsUsername'] && $theTable === 'fe_users' && t3lib_div::inList($this->getFieldList(), 'username') && empty($this->evalErrors['email'])) {
+		if ($this->conf[$cmdKey.'.']['useEmailAsUsername'] && $theTable == 'fe_users' && t3lib_div::inList($this->getFieldList(), 'username') && empty($this->evalErrors['email'])) {
 			$dataArray['username'] = trim($dataArray['email']);
 		}
 	}
@@ -1845,8 +1848,8 @@ class tx_agency_data {
 							$fieldConfig = $GLOBALS['TCA'][$theTable]['columns'][$theField]['config'];
 							if (
 								is_array($fieldConfig) &&
-								$fieldConfig['type'] === 'group' &&
-								$fieldConfig['internal_type'] === 'file' &&
+								$fieldConfig['type'] == 'group' &&
+								$fieldConfig['internal_type'] == 'file' &&
 								$fieldConfig['uploadfolder']
 							) {
 								$uploadPath = $fieldConfig['uploadfolder'];
@@ -1930,7 +1933,7 @@ class tx_agency_data {
 	*/
 	public function evalFileError ($error_code) {
 		$rc = FALSE;
-		if ($error_code == "0") {
+		if ($error_code == '0') {
 			$rc = TRUE;
 			// File upload okay
 		} elseif ($error_code == '1') {

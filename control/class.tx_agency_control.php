@@ -311,6 +311,7 @@ class tx_agency_control {
 		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
 		$conf = $confObj->getConf();
 
+		$extKey = $controlData->getExtKey();
 		$prefixId = $controlData->getPrefixId();
 		$controlData->setMode(MODE_NORMAL);
 
@@ -478,7 +479,6 @@ class tx_agency_control {
 						}
 					}
 				}
-				$extKey = $controlData->getExtKey();
 				$newDataArray = array();
 
 				$theUid = $this->data->save(
@@ -492,7 +492,7 @@ class tx_agency_control {
 					$cmdKey,
 					$controlData->getPid(),
 					$password,
-					$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey][$prefixId]['registrationProcess']
+					$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess']
 				);
 
 				if ($newDataArray) {
@@ -617,11 +617,12 @@ class tx_agency_control {
 			if ($errorContent == '') {
 				$markerArray = $this->marker->getArray(); // uses its own markerArray
 				$errorCode = '';
+				$bEmailSent = FALSE;
 
 				if ($conf['enableAdminReview'] && $bDefaultMode && !$bCustomerConfirmsMode) {
 						// Send admin the confirmation email
 						// The user will not confirm in this mode
-					$errorContent = $this->email->compile(
+					$bEmailSent = $this->email->compile(
 						SETFIXED_PREFIX . 'REVIEW',
 						$conf,
 						$cObj,
@@ -664,7 +665,7 @@ class tx_agency_control {
 						$origArray[$emailField];
 
 					// Send email message(s)
-					$errorContent = $this->email->compile(
+					$bEmailSent = $this->email->compile(
 						$key,
 						$conf,
 						$cObj,
@@ -692,8 +693,11 @@ class tx_agency_control {
 					);
 				}
 
-				if (is_array($errorCode)) {
-					$errorText = $langObj->getLL($errorCode['0']);
+				if (
+					!$bEmailSent &&
+					is_array($errorCode)
+				) {
+					$errorText = $langObj->getLL($errorCode['0'], '', FALSE, TRUE);
 					$errorContent = sprintf($errorText, $errorCode['1']);
 				}
 			}
@@ -856,6 +860,8 @@ class tx_agency_control {
 					$content = $this->display->deleteScreen(
 						$markerArray,
 						$conf,
+						$prefixId,
+						$extKey,
 						$cObj,
 						$langObj,
 						$controlData,
@@ -908,6 +914,8 @@ class tx_agency_control {
 					$content = $this->display->createScreen(
 						$markerArray,
 						$conf,
+						$prefixId,
+						$extKey,
 						$cObj,
 						$langObj,
 						$controlData,
@@ -938,6 +946,8 @@ class tx_agency_control {
 					$content = $this->display->createScreen(
 						$markerArray,
 						$conf,
+						$prefixId,
+						$extKey,
 						$cObj,
 						$langObj,
 						$controlData,
@@ -1000,8 +1010,11 @@ class tx_agency_control {
 			'uident_text' => $row['password'],
 			'status' => 'login',
 		);
-			// Do not use a particular page id
-		$GLOBALS['TSFE']->fe_user->checkPid = 0;
+
+		// Check against configured pid (defaulting to current page)
+		$GLOBALS['TSFE']->fe_user->checkPid = TRUE;
+		$GLOBALS['TSFE']->fe_user->checkPid_value = $controlData->getPid();
+
 			// Get authentication info array
 		$authInfo = $GLOBALS['TSFE']->fe_user->getAuthInfoArray();
 			// Get user info
@@ -1020,10 +1033,10 @@ class tx_agency_control {
 				if ($ok) {
 						// Login successfull: create user session
 					$GLOBALS['TSFE']->fe_user->createUserSession($user);
+					$GLOBALS['TSFE']->initUserGroups();
 					$GLOBALS['TSFE']->fe_user->user = $GLOBALS['TSFE']->fe_user->fetchUserSession();
-					$GLOBALS['TSFE']->fe_user->fetchGroupData();
 					$GLOBALS['TSFE']->loginUser = 1;
-					$GLOBALS['TSFE']->gr_list = '0,-2';
+
 						// Delete regHash
 					if (
 						$controlData->getValidRegHash()
