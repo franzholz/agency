@@ -468,7 +468,7 @@ class tx_agency_data {
 									$where .= $GLOBALS['TSFE']->sys_page->deleteClause($theTable);
 								}
 								if ($theCmd == 'uniqueLocal' || $theCmd == 'uniqueDeletedLocal') {
-									$where .= ' AND pid IN (' . $recordTestPid.')';
+									$where .= ' AND pid IN (' . $recordTestPid . ')';
 								}
 
 								$DBrows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,' . $theField, $theTable, $where, '', '', '1');
@@ -511,7 +511,11 @@ class tx_agency_data {
 								}
 							break;
 							case 'email':
-								if (!is_array($dataArray[$theField]) && trim($dataArray[$theField]) && !t3lib_div::validEmail($dataArray[$theField])) {
+								if (
+									!is_array($dataArray[$theField]) &&
+									trim($dataArray[$theField]) &&
+									!t3lib_div::validEmail($dataArray[$theField])
+								) {
 									$failureArray[] = $theField;
 									$this->inError[$theField] = TRUE;
 									$this->evalErrors[$theField][] = $theCmd;
@@ -732,7 +736,11 @@ class tx_agency_data {
 								}
 							break;
 							case 'preg':
-								if (!is_array($dataArray[$theField]) && !(empty($dataArray[$theField]) && $dataArray[$theField] !== '0')) {
+								if (
+									!is_array($dataArray[$theField])
+									&& !(empty($dataArray[$theField]) &&
+									$dataArray[$theField] !== '0')
+								) {
 									if (isset($countArray['preg'][$theCmd])) {
 										$countArray['preg'][$theCmd]++;
 									} else {
