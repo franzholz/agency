@@ -74,12 +74,12 @@ class tx_agency_select_dmcategories {
 		$params['field'] = $field;
 */
 
-		$items = $params['items'];
-		$config = $params['config'];
-		$table = $config['itemsProcFunc_config']['table'];
+		if ($LANG->lang != 'default' && $LANG->lang != '' && t3lib_extMgm::isLoaded('static_info_tables')) {
+			$items = $params['items'];
+			$config = $params['config'];
+			$table = $config['itemsProcFunc_config']['table'];
 
 			// initialize backend user language
-		if ($LANG->lang && t3lib_extMgm::isLoaded('static_info_tables')) {
 			$res = $TYPO3_DB->exec_SELECTquery(
 				//'sys_language.uid,static_languages.lg_collate_locale',
 				'sys_language.uid',
@@ -92,26 +92,26 @@ class tx_agency_select_dmcategories {
 				$this->sys_language_uid = $row['uid'];
 				$this->collate_locale = $row['lg_collate_locale'];
 			}
-		}
 
-		if ($this->sys_language_uid && isset($items) && is_array($items)) {
-			foreach($items as $k => $item) {
-				$res = $TYPO3_DB->exec_SELECTquery(
-					'*',
-					$table,
-					'uid=' . intval($item[1])
-					);
-				while($rowCat = $TYPO3_DB->sql_fetch_assoc($res)) {
-					$localizedRowCat =
-						tx_agency_dmstatic::getRecordOverlay(
-							$table,
-							$rowCat,
-							$this->sys_language_uid,
-							''
+			if ($this->sys_language_uid && isset($items) && is_array($items)) {
+				foreach($items as $k => $item) {
+					$res = $TYPO3_DB->exec_SELECTquery(
+						'*',
+						$table,
+						'uid=' . intval($item[1])
 						);
+					while($rowCat = $TYPO3_DB->sql_fetch_assoc($res)) {
+						$localizedRowCat =
+							tx_agency_dmstatic::getRecordOverlay(
+								$table,
+								$rowCat,
+								$this->sys_language_uid,
+								''
+							);
 
-					if($localizedRowCat) {
-						$params['items'][$k][0] = $localizedRowCat['category'];
+						if($localizedRowCat) {
+							$params['items'][$k][0] = $localizedRowCat['category'];
+						}
 					}
 				}
 			}

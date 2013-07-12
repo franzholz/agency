@@ -1,5 +1,5 @@
 
-## $Id: constants.txt 61200 2012-04-28 13:11:43Z stan $
+## $Id$
 
 
 plugin.tx_agency {

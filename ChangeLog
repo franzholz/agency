@@ -1,3 +1,7 @@
+2013-07-12 Franz Holzinger <franz@ttproducts.de>
+	* fix bug #49881
+	* do not query static_languages with default language
+
 2013-07-09 Franz Holzinger <franz@ttproducts.de>
 	* fix bug #49802
 	* fix bugs from sr_feuser_register

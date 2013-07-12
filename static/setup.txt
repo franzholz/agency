@@ -1,7 +1,7 @@
 ##
 ## @package TYPO3
 ## @subpackage agency
-## @version $Id: setup.txt 61193 2012-04-28 03:28:29Z stan $
+## @version $Id$
 ##
 
 plugin.tx_agency = USER_INT
