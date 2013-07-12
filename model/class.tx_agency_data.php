@@ -392,7 +392,9 @@ class tx_agency_data {
 			$bIsMissing = FALSE;
 
 			if (isset($dataArray[$theField])) {
-				if (empty($dataArray[$theField]) && $dataArray[$theField] != '0') {
+				if (
+					empty($dataArray[$theField])
+				) {
 					$bIsMissing = TRUE;
 				}
 			} else {
@@ -854,7 +856,6 @@ class tx_agency_data {
 
 		$failure = implode($failureArray, ',');
 		$this->controlData->setFailure($failure);
-
 		return $this->evalErrors;
 	}
 
