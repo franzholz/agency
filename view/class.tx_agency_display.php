@@ -102,7 +102,7 @@ class tx_agency_display {
 				array(
 					'module_sys_dmail_category',
 					'module_sys_dmail_newsletter',
-				)
+					)
 			);
 		}
 
@@ -121,13 +121,14 @@ class tx_agency_display {
 			}
 		}
 
+		$infoFields = array_unique($infoFields);
 		foreach ($infoFields as $k => $theField) {
 			if ($theField == '') {
 				continue;
 			}
 
 				// Remove field required subpart, if field is not required
-			if (in_array(trim($theField), $requiredArray) ) {
+			if (in_array(trim($theField), $requiredArray)) {
 				if (!t3lib_div::inList($failure, $theField)) {
 					$templateCode =
 						$cObj->substituteSubpart(
@@ -328,7 +329,6 @@ class tx_agency_display {
 			$prefixId,
 			FALSE
 		);
-
 		$markerObj->addLabelMarkers(
 			$markerArray,
 			$conf,

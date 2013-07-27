@@ -67,6 +67,10 @@ class tx_agency_marker {
 		$tca,
 		$langObj,
 		$controlData,
+		$backUrl,
+		$extKey,
+		$prefixId,
+		$theTable,
 		$urlObj,
 		$staticInfoObj,
 		$uid,
@@ -77,14 +81,11 @@ class tx_agency_marker {
 		$this->tca = $tca;
 		$this->langObj = $langObj;
 		$this->controlData = $controlData;
-		$theTable = $this->controlData->getTable();
 		$this->staticInfoObj = $staticInfoObj;
 
 		$markerArray = array();
 
 		$charset = $GLOBALS['TSFE']->metaCharset ? $GLOBALS['TSFE']->metaCharset : 'utf-8';
-		$prefixId = $this->controlData->getPrefixId();
-		$extKey = $this->controlData->getExtKey();
 		$markerArray['###CHARSET###'] = $charset;
 		$markerArray['###PREFIXID###'] = $prefixId;
 
@@ -92,7 +93,7 @@ class tx_agency_marker {
 		$urlMarkerArray =
 			$this->generateURLMarkers(
 				$urlObj,
-				$this->controlData->getBackURL(),
+				$backUrl,
 				$uid,
 				$token,
 				$theTable,
@@ -226,7 +227,8 @@ class tx_agency_marker {
 						$controlData->getPrefixId(),
 						TRUE,
 						'',
-						FALSE
+						FALSE,
+						TRUE
 					);
 				}
 				$rc = $this->tmpTcaMarkers['###TCA_INPUT_' . $matches[2] . '###'];

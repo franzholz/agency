@@ -1,3 +1,6 @@
+2013-07-27 Franz Holzinger <franz@ttproducts.de>
+	* use the markers for all fields in emails
+
 2013-07-12 Franz Holzinger <franz@ttproducts.de>
 	* fix bug #49881
 	* do not query static_languages with default language

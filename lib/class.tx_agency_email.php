@@ -388,7 +388,7 @@ class tx_agency_email {
 			$content['admin']['all'] = trim($cObj->getSubpart($templateCode, $subpartMarker));
 
 			if ($content['admin']['all'] == '') {
-				$missingSubpartArray[] = $subpartMarker;
+					$missingSubpartArray[] = $subpartMarker;
 			} else {
 				$content['admin']['all'] =
 					$displayObj->removeRequired(
@@ -407,7 +407,7 @@ class tx_agency_email {
 				$subpartMarker =  '###' . $this->emailMarkPrefix . $key . $this->emailMarkAdminSuffix . $this->emailMarkHTMLSuffix . '###';
 				$content['adminhtml']['all'] = trim($cObj->getSubpart($templateCode, $subpartMarker));
 
-				if ($content['adminhtml']['all'] == '')	{
+				if ($content['adminhtml']['all'] == '') {
 					$missingSubpartArray[] = $subpartMarker;
 				} else {
 					$content['adminhtml']['all'] =
@@ -509,9 +509,7 @@ class tx_agency_email {
 			} else {
 				$mrow = $currentRow;
 			}
-
 			$markerArray['###SYS_AUTHCODE###'] = $authObj->authCode($row);
-
 			$setfixedObj->computeUrl(
 				$cmdKey,
 				$prefixId,
@@ -526,7 +524,6 @@ class tx_agency_email {
 				$autoLoginKey,
 				$conf['confirmType']
 			);
-
 			$markerObj->addStaticInfoMarkers(
 				$markerArray,
 				$prefixId,
@@ -626,7 +623,6 @@ class tx_agency_email {
 			// Substitute the markers and eliminate HTML markup from plain text versions
 		if ($content['user']['all']) {
 			$content['user']['final'] = $cObj->substituteSubpart($content['user']['all'], '###SUB_RECORD###', $content['user']['accum']);
-
 			$content['user']['final'] = $displayObj->removeHTMLComments($content['user']['final']);
 			$content['user']['final'] = $displayObj->replaceHTMLBr($content['user']['final']);
 			$content['user']['final'] = $displayObj->removeHtmlTags($content['user']['final']);
@@ -652,9 +648,11 @@ class tx_agency_email {
 			$content['userhtml']['final'] = str_replace('\n', '', $content['userhtml']['final']);
 		}
 
-
 		if ($content['admin']['all']) {
-			$content['admin']['final'] = $cObj->substituteSubpart($content['admin']['all'], '###SUB_RECORD###', $content['admin']['accum']);
+			$content['admin']['final'] =
+				$cObj->substituteSubpart(
+					$content['admin']['all'], '###SUB_RECORD###', $content['admin']['accum']
+				);
 			$content['admin']['final'] = $displayObj->removeHTMLComments($content['admin']['final']);
 			$content['admin']['final'] = $displayObj->replaceHTMLBr($content['admin']['final']);
 			$content['admin']['final'] = $displayObj->removeHtmlTags($content['admin']['final']);
@@ -685,6 +683,7 @@ class tx_agency_email {
 				t3lib_utility_Math::canBeInterpretedAsInteger($recipient) :
 				t3lib_div::testInt($recipient)
 		);
+
 		if ($bRecipientIsInt) {
 			$fe_userRec = $GLOBALS['TSFE']->sys_page->getRawRecord('fe_users', $recipient);
 			$recipient = $fe_userRec['email'];

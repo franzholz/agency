@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2012 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2007-2013 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -332,6 +332,11 @@ class tx_agency_tca {
 		$bChangesOnly = FALSE,
 		$HSC = TRUE
 	) {
+		$bUseMissingFields = FALSE;
+		if ($activity == 'email') {
+			$bUseMissingFields = TRUE;
+		}
+
 		if (
 			!is_array($GLOBALS['TCA'][$theTable]) ||
 			!is_array($GLOBALS['TCA'][$theTable]['columns'])
@@ -371,7 +376,7 @@ class tx_agency_tca {
 
 		foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
 
-			if (t3lib_div::inList($fields, $colName)) {
+			if (t3lib_div::inList($fields, $colName) || $bUseMissingFields) {
 				$colConfig = $colSettings['config'];
 				$colContent = '';
 
@@ -674,13 +679,17 @@ class tx_agency_tca {
 										$label = $langObj->getLLFromString($itemArray[$key][0]);
 										$label = htmlspecialchars($label, ENT_QUOTES, $charset);
 										$colContent .= '<li><input type="checkbox"' .
-										tx_div2007_alpha5::classParam_fh002(
-											'checkbox',
-											'',
-											$prefixId,
-											TRUE
-										) .
-										' id="' . $uidText . '-' . $key .  '" name="FE[' . $theTable . '][' . $colName . '][]" value="' . $key . '"' . $checked . ' /><label for="' . $uidText . '-' . $key . '">' . $label . '</label></li>';
+											tx_div2007_alpha5::classParam_fh002(
+												'checkbox',
+												'',
+												$prefixId,
+												TRUE
+											) .
+											' id="' . $uidText . '-' . $key .
+											'" name="FE[' . $theTable . '][' . $colName . '][]" value="' . $key . '"' .
+											$checked . ' /><label for="' . $uidText . '-' . $key . '">' .
+											$label .
+											'</label></li>';
 									}
 									$colContent .= '</ul>';
 								} else {
@@ -791,7 +800,7 @@ class tx_agency_tca {
 										TRUE
 									) .
 									'" name="FE[' . $theTable . '][' . $colName . ']' . $multiple . '" title="###TOOLTIP_' .
-									(($cmd == 'invite')?'INVITATION_':'') . $cObj->caseshift($colName, 'upper') . '###">';
+									(($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($colName, 'upper') . '###">';
 								}
 
 								if (is_array($itemArray)) {
