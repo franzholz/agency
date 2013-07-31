@@ -26,9 +26,11 @@ if (t3lib_extMgm::isLoaded('sr_freecap')) {
 }
 
 /**
- * Hook for captcha image marker when extension 'fsr_freecap' is used
+ * Hook for captcha image marker when extension 'sr_freecap' is used
  */
 class tx_agency_freecap {
+	const SESSIONNAMESPACE = 'tx_srfreecap';
+
 	/**
 	 * Sets the value of captcha markers
 	 */
@@ -86,14 +88,14 @@ class tx_agency_freecap {
 			$freeCap = t3lib_div::getUserObj('&tx_srfreecap_pi2');
 				// Save the sr_freecap word_hash
 				// sr_freecap will invalidate the word_hash after calling checkWord
-			$sessionData = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_' . $freeCap->extKey);
+			$sessionData = $GLOBALS['TSFE']->fe_user->getKey('ses', self::SESSIONNAMESPACE);
 			if (!$freeCap->checkWord($dataArray[$theField])) {
 				$errorField = $theField;
 			} else {
 				// Restore sr_freecap word_hash
 				$GLOBALS['TSFE']->fe_user->setKey(
 					'ses',
-					'tx_' . $freeCap->extKey,
+					self::SESSIONNAMESPACE,
 					$sessionData
 				);
 				$GLOBALS['TSFE']->storeSessionData();
