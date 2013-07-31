@@ -22,15 +22,16 @@ if (!defined(STATIC_INFO_TABLES_EXT)) {
 }
 
 	// Add Status Report
+$className = '\\TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility';
 $typoVersion =
-	class_exists('TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility') ?
-		\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) :
-		t3lib_div::int_from_ver(TYPO3_version);
+	method_exists('t3lib_div', 'int_from_ver') ?
+		t3lib_div::int_from_ver(TYPO3_version) :
+		call_user_func($className . '::convertVersionNumberToInteger', TYPO3_version);
 
-if ($typo3Version >= 4006000) {
+if ($typoVersion >= 4006000) {
 	require_once(PATH_BE_AGENCY . 'hooks/statusreport/ext_localconf.php');
 }
-unset($typo3Version);
+unset($typoVersion);
 
 t3lib_extMgm::addPItoST43($_EXTKEY, 'class.tx_agency.php', '', 'list_type', 0);
 

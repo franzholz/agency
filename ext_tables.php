@@ -3,14 +3,14 @@ if (!defined ('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
+$className = '\\TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility';
 $typoVersion =
-	class_exists('TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility') ?
-		\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) :
-		t3lib_div::int_from_ver(TYPO3_version);
-
+	method_exists('t3lib_div', 'int_from_ver') ?
+		t3lib_div::int_from_ver(TYPO3_version) :
+		call_user_func($className . '::convertVersionNumberToInteger', TYPO3_version);
 
 if (TYPO3_MODE == 'BE' && !$loadTcaAdditions) {
-	if ($typo3Version >= 6000000) {
+	if ($typoVersion >= 6000000) {
 
 		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'static/', 'Agency Registration');
 

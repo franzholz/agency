@@ -32,13 +32,29 @@ class tx_agency_freecap {
 	/**
 	 * Sets the value of captcha markers
 	 */
-	public function addGlobalMarkers (&$markerArray, $markerObject) {
-		$cmdKey = $markerObject->controlData->getCmdKey();
-		if (t3lib_extMgm::isLoaded('sr_freecap') && $markerObject->conf[$cmdKey . '.']['evalValues.']['captcha_response'] == 'freecap') {
+	public function addGlobalMarkers (
+		&$markerArray,
+		$controlData,
+		$confObj,
+		$markerObject
+	) {
+		$cmdKey = $controlData->getCmdKey();
+		$conf = $confObj->getConf();
+
+		if (
+			t3lib_extMgm::isLoaded('sr_freecap') &&
+			$conf[$cmdKey . '.']['evalValues.']['captcha_response'] == 'freecap'
+		) {
 			$freeCap = t3lib_div::getUserObj('&tx_srfreecap_pi2');
 			$captchaMarkerArray = $freeCap->makeCaptcha();
 		} else {
-			$captchaMarkerArray = array('###SR_FREECAP_NOTICE###' => '', '###SR_FREECAP_CANT_READ###' => '', '###SR_FREECAP_IMAGE###' => '', '###SR_FREECAP_ACCESSIBLE###' => '');
+			$captchaMarkerArray =
+				array(
+					'###SR_FREECAP_NOTICE###' => '',
+					'###SR_FREECAP_CANT_READ###' => '',
+					'###SR_FREECAP_IMAGE###' => '',
+					'###SR_FREECAP_ACCESSIBLE###' => ''
+				);
 		}
 		$markerArray = array_merge($markerArray, $captchaMarkerArray);
 	}

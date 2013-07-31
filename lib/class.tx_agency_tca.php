@@ -333,6 +333,7 @@ class tx_agency_tca {
 		$HSC = TRUE
 	) {
 		$bUseMissingFields = FALSE;
+
 		if ($activity == 'email') {
 			$bUseMissingFields = TRUE;
 		}

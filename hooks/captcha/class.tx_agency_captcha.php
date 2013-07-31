@@ -28,9 +28,15 @@ class tx_agency_captcha {
 	/**
 	 * Sets the value of captcha markers
 	 */
-	public function addGlobalMarkers(&$markerArray, $markerObject) {
-		$cmdKey = $markerObject->controlData->getCmdKey();
-		if (t3lib_extMgm::isLoaded('captcha') && $markerObject->conf[$cmdKey . '.']['evalValues.']['captcha_response'] == 'captcha') {
+	public function addGlobalMarkers(
+		&$markerArray,
+		$controlData,
+		$confObj,
+		$markerObject
+	) {
+		$cmdKey = $controlData->getCmdKey();
+		$conf = $confObj->getConf();
+		if (t3lib_extMgm::isLoaded('captcha') && $conf[$cmdKey . '.']['evalValues.']['captcha_response'] == 'captcha') {
 			$markerArray['###CAPTCHA_IMAGE###'] = '<img src="' . t3lib_extMgm::siteRelPath('captcha') . 'captcha/captcha.php" alt="" />';
 		} else {
 			$markerArray['###CAPTCHA_IMAGE###'] = '';

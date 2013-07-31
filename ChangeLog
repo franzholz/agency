@@ -1,3 +1,7 @@
+2013-07-31 Franz Holzinger <franz@ttproducts.de>
+	* use the markers for all fields in emails (part II)
+	* modification to the captcha hooks interface
+
 2013-07-27 Franz Holzinger <franz@ttproducts.de>
 	* use the markers for all fields in emails
 

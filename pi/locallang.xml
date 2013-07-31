@@ -530,7 +530,7 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
 			<label index="internal_rsaauth_process_incoming_password_failed">RSA auth service failed to process incoming password</label>
 			<label index="internal_salted_passwords_disabled">Salted passwords must be enabled in front end</label>
 			<label index="internal_salted_passwords_no_instance">Could not get a salting instance from saltedpasswords</label>
-			<label index="internal_required_extension_missing">Required extension "%1$s" is not available and must be installed</label>
+			<label index="internal_required_extension_missing">The extension "%1$s" is required and must be installed</label>
 			<label index="internal_conflicting_extension_installed">The conflicting extension "%1$s" must be uninstalled</label>
 			<label index="internal_required_authentication_service_not_available">Required authentication service not available</label>
 			<label index="internal_check_requirements_frontend">&lt;p&gt;&lt;big&gt;&lt;b&gt;Agency Registration (agency): %1$s.&lt;/b&gt;&lt;/big&gt;&lt;/p&gt;</label>

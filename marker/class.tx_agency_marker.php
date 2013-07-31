@@ -307,8 +307,15 @@ class tx_agency_marker {
 		$requiredArray,
 		$infoFields,
 		$tcaColumns,
+		$activity = '',
 		$bChangesOnly = FALSE
 	) {
+		$bUseMissingFields = FALSE;
+		if ($activity == 'email') {
+			$bUseMissingFields = TRUE;
+		}
+
+		$charset = $GLOBALS['TSFE']->renderCharset ? $GLOBALS['TSFE']->renderCharset : 'utf-8';
 		$urlObj = t3lib_div::getUserObj('&tx_agency_url');
 		$formUrlMarkerArray = $this->generateFormURLMarkers($urlObj);
 		$urlMarkerArray = $this->getUrlMarkerArray();
@@ -326,7 +333,6 @@ class tx_agency_marker {
 
 		// Data field labels
 		$infoFieldArray = t3lib_div::trimExplode(',', $infoFields, 1);
-		$charset = $GLOBALS['TSFE']->renderCharset ? $GLOBALS['TSFE']->renderCharset : 'utf-8';
 		$specialFieldArray = t3lib_div::trimExplode(',', $this->data->getSpecialFieldList(), 1);
 
 		if ($specialFieldArray[0] != '') {
@@ -334,6 +340,12 @@ class tx_agency_marker {
 			$requiredArray = array_merge($requiredArray, $specialFieldArray);
 		}
 
+		if ($bUseMissingFields) {
+			$tcaFieldArray = array_keys($tcaColumns);
+			$infoFieldArray = array_merge($infoFieldArray, $tcaFieldArray);
+		}
+
+		$infoFieldArray = array_unique($infoFieldArray);
 		foreach($infoFieldArray as $theField) {
 			$markerkey = $cObj->caseshift($theField, 'upper');
 			$bValueChanged = FALSE;
@@ -519,7 +531,6 @@ class tx_agency_marker {
 			$markerkey = $cObj->caseshift($value, 'upper');
 			$markerArray['###LABEL_' . $markerkey . '###'] = $label;
 		}
-
 	}	// addLabelMarkers
 
 	public function setRow ($row) {
@@ -1121,6 +1132,8 @@ class tx_agency_marker {
 		&$markerArray,
 		$row,
 		$securedArray,
+		$controlData,
+		$confObj,
 		$fieldList = '',
 		$nl2br = TRUE,
 		$prefix = 'FIELD_',
@@ -1164,7 +1177,12 @@ class tx_agency_marker {
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'] as $classRef) {
 				$hookObj= t3lib_div::getUserObj($classRef);
 				if (method_exists($hookObj, 'addGlobalMarkers')) {
-					$hookObj->addGlobalMarkers($markerArray, $this);
+					$hookObj->addGlobalMarkers(
+						$markerArray,
+						$controlData,
+						$confObj,
+						$this
+					);
 				}
 			}
 		}

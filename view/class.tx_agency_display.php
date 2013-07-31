@@ -228,6 +228,7 @@ class tx_agency_display {
 		$cObj,
 		$langObj,
 		$controlData,
+		$confObj,
 		$tcaObj,
 		$markerObj,
 		$dataObj,
@@ -293,6 +294,8 @@ class tx_agency_display {
 				$markerArray,
 				$currentArray,
 				$securedArray,
+				$controlData,
+				$confObj,
 				'',
 				TRUE
 			);
@@ -342,6 +345,7 @@ class tx_agency_display {
 			$controlData->getRequiredArray(),
 			$dataObj->getFieldList(),
 			$GLOBALS['TCA'][$theTable]['columns'],
+			'',
 			FALSE
 		);
 
@@ -448,6 +452,7 @@ class tx_agency_display {
 		$cObj,
 		$langObj,
 		$controlData,
+		$confObj,
 		$tcaObj,
 		$markerObj,
 		$dataObj,
@@ -536,6 +541,8 @@ class tx_agency_display {
 					$markerArray,
 					$currentArray,
 					$securedArray,
+					$controlData,
+					$confObj,
 					'',
 					TRUE
 				);
@@ -591,6 +598,7 @@ class tx_agency_display {
 				$controlData->getRequiredArray(),
 				$infoFields,
 				$GLOBALS['TCA'][$theTable]['columns'],
+				'',
 				FALSE
 			);
 
@@ -667,6 +675,7 @@ class tx_agency_display {
 		$cObj,
 		$langObj,
 		$controlData,
+		$confObj,
 		$tcaObj,
 		$markerObj,
 		$dataObj,
@@ -745,6 +754,7 @@ class tx_agency_display {
 						$cObj,
 						$langObj,
 						$controlData,
+						$confObj,
 						$tcaObj,
 						$markerObj,
 						$dataObj,
@@ -765,6 +775,7 @@ class tx_agency_display {
 						$cObj,
 						$langObj,
 						$controlData,
+						$confObj,
 						$tcaObj,
 						$markerObj,
 						$dataObj,
@@ -785,6 +796,7 @@ class tx_agency_display {
 					$cObj,
 					$langObj,
 					$controlData,
+					$confObj,
 					$tcaObj,
 					$markerObj,
 					$dataObj,
@@ -821,6 +833,7 @@ class tx_agency_display {
 		$cObj,
 		$langObj,
 		$controlData,
+		$confObj,
 		$tcaObj,
 		$markerObj,
 		$dataObj,
@@ -875,6 +888,7 @@ class tx_agency_display {
 							$cObj,
 							$langObj,
 							$controlData,
+							$confObj,
 							$tcaObj,
 							$markerObj,
 							$dataObj,
@@ -894,6 +908,7 @@ class tx_agency_display {
 							$cObj,
 							$langObj,
 							$controlData,
+							$confObj,
 							$tcaObj,
 							$markerObj,
 							$dataObj,
@@ -916,6 +931,7 @@ class tx_agency_display {
 						$cObj,
 						$langObj,
 						$controlData,
+						$confObj,
 						$tcaObj,
 						$markerObj,
 						$dataObj,
@@ -934,6 +950,7 @@ class tx_agency_display {
 						$cObj,
 						$langObj,
 						$controlData,
+						$confObj,
 						$tcaObj,
 						$markerObj,
 						$dataObj,
@@ -969,6 +986,7 @@ class tx_agency_display {
 		$cObj,
 		$langObj,
 		$controlData,
+		$confObj,
 		$tcaObj,
 		$markerObj,
 		$dataObj,
@@ -983,11 +1001,6 @@ class tx_agency_display {
 		$bCheckEmpty = TRUE,
 		$failure = ''
 	) {
-
-
-// 		$fields = $conf[$cmdKey . '.']['fields'];
-
-
 		if (
 			!is_array($GLOBALS['TCA'][$theTable]) ||
 			!is_array($GLOBALS['TCA'][$theTable]['columns'])
@@ -1017,6 +1030,8 @@ class tx_agency_display {
 					$markerArray,
 					is_array($row) ? $row : array(),
 					$securedArray,
+					$controlData,
+					$confObj,
 					''
 				);
 
@@ -1055,6 +1070,7 @@ class tx_agency_display {
 				$controlData->getRequiredArray(),
 				$dataObj->getFieldList(),
 				$GLOBALS['TCA'][$theTable]['columns'],
+				'',
 				FALSE
 			);
 			$templateCode =
@@ -1165,6 +1181,7 @@ class tx_agency_display {
 		$cObj,
 		$langObj,
 		$controlData,
+		$confObj,
 		$tcaObj,
 		$markerObj,
 		$dataObj,
@@ -1206,6 +1223,8 @@ class tx_agency_display {
 					$markerArray,
 					$dataArray,
 					$securedArray,
+					$controlData,
+					$confObj,
 					'',
 					TRUE,
 					'FIELD_',
@@ -1245,6 +1264,7 @@ class tx_agency_display {
 				$controlData->getRequiredArray(),
 				$dataObj->getFieldList(),
 				$GLOBALS['TCA'][$theTable]['columns'],
+				'',
 				FALSE
 			);
 

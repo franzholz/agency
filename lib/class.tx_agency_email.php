@@ -78,6 +78,7 @@ class tx_agency_email {
 		$cObj,
 		$langObj,
 		$controlData,
+		$confObj,
 		$tcaObj,
 		$markerObj,
 		$dataObj,
@@ -127,6 +128,7 @@ class tx_agency_email {
 						$cObj,
 						$langObj,
 						$controlData,
+						$confObj,
 						$tcaObj,
 						$markerObj,
 						$dataObj,
@@ -156,6 +158,7 @@ class tx_agency_email {
 						$cObj,
 						$langObj,
 						$controlData,
+						$confObj,
 						$tcaObj,
 						$markerObj,
 						$dataObj,
@@ -196,6 +199,7 @@ class tx_agency_email {
 							$cObj,
 							$langObj,
 							$controlData,
+							$confObj,
 							$tcaObj,
 							$markerObj,
 							$dataObj,
@@ -223,6 +227,7 @@ class tx_agency_email {
 						$cObj,
 						$langObj,
 						$controlData,
+						$confObj,
 						$tcaObj,
 						$markerObj,
 						$dataObj,
@@ -270,6 +275,7 @@ class tx_agency_email {
 		$cObj,
 		$langObj,
 		$controlData,
+		$confObj,
 		$tcaObj,
 		$markerObj,
 		$dataObj,
@@ -457,6 +463,8 @@ class tx_agency_email {
 				$markerArray,
 				$DBrows[0],
 				$securedArray,
+				$controlData,
+				$confObj,
 				'',
 				FALSE
 			);
@@ -474,6 +482,7 @@ class tx_agency_email {
 			$controlData->getRequiredArray(),
 			$dataObj->getFieldList(),
 			$GLOBALS['TCA'][$theTable]['columns'],
+			'email',
 			$bChangesOnly
 		);
 		$content['user']['all'] = $cObj->substituteMarkerArray($content['user']['all'], $markerArray);
@@ -567,6 +576,7 @@ class tx_agency_email {
 				$controlData->getRequiredArray(),
 				$dataObj->getFieldList(),
 				$GLOBALS['TCA'][$theTable]['columns'],
+				'email',
 				$bChangesOnly
 			);
 
@@ -576,6 +586,8 @@ class tx_agency_email {
 					$fieldMarkerArray,
 					$mrow,
 					$securedArray,
+					$controlData,
+					$confObj,
 					'',
 					FALSE,
 					'FIELD_',

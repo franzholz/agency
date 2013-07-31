@@ -87,6 +87,7 @@ class tx_agency_transmission_security {
 				break;
 			}
 		}
+
 		if ($incomingFieldSet) {
 			switch ($this->getTransmissionSecurityLevel()) {
 				case 'rsa':

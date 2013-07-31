@@ -148,6 +148,7 @@ class tx_agency_storage_security {
 		$result = FALSE;
 		$privateKey = '';
 		$cryptedPassword = '';
+
 		if ($password != '') {
 				// Create the keypair
 			$keyPair = openssl_pkey_new();
@@ -157,6 +158,7 @@ class tx_agency_storage_security {
 				// Get public key
 			$keyDetails = openssl_pkey_get_details($keyPair);
 			$publicKey = $keyDetails['key'];
+
 			if (@openssl_public_encrypt($password, $cryptedPassword, $publicKey)) {
 				$autoLoginKey = $privateKey;
 				$result = TRUE;

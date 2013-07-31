@@ -647,12 +647,13 @@ class tx_agency_controldata {
 					unset($allSessionData[$extKey][$key]);
 				}
 			} else {
+				$className = '\\TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility';
 				$typoVersion =
-					class_exists('TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility') ?
-						\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) :
-						t3lib_div::int_from_ver(TYPO3_version);
+					method_exists('t3lib_div', 'int_from_ver') ?
+						t3lib_div::int_from_ver(TYPO3_version) :
+						call_user_func($className . '::convertVersionNumberToInteger', TYPO3_version);
 
-				if ($typo3Version < 4007000) {
+				if ($typoVersion < 4007000) {
 					foreach ($keys as $key) {
 						if ($data[$key] == '__UNSET') {
 							unset($data[$key]);
