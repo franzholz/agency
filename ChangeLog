@@ -1,3 +1,5 @@
+2013-08-05 Franz Holzinger <franz@ttproducts.de>
+	* fix security issue TYPO3-EXT-SA-2013-011
 
 2013-07-31 Franz Holzinger <franz@ttproducts.de>
 	* fix bug #50607

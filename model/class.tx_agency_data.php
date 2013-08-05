@@ -193,16 +193,11 @@ class tx_agency_data {
 	}
 
 	public function setDataArray (
-		array $dataArray,
-		$k = '',
-		$bOverrride = TRUE
+		array $dataArray
 	) {
-		if ($k != '') {
-			if ($bOverrride || !isset($this->dataArray[$k])) {
-				$this->dataArray[$k] = $dataArray;
-			}
-		} else {
-			$this->dataArray = $dataArray;
+		$this->dataArray = $dataArray;
+		if (isset($this->dataArray['uid'])) {
+			$this->dataArray['uid'] = intval($this->dataArray['uid']);
 		}
 	}
 
