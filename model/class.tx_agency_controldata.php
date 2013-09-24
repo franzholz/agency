@@ -2,8 +2,8 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2013 Franz Holzinger (franz@ttproducts.de)
-*  (c) 2012 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2013 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2012 Stanislas Rolland (typo3(arobas)sjbr.ca)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -72,16 +72,8 @@ class tx_agency_controldata {
 		// Storage security object
 	protected $storageSecurity;
 		// Supported captcha extensions
-	protected $captchaExtensions = array(
-		array(
-			'extensionKey' => 'sr_freecap',
-			'evalRule' => 'freecap',
-		),
-		array(
-			'extensionKey' => 'captcha',
-			'evalRule' => 'captcha',
-		),
-	);
+	protected $captchaExtensions = array();
+
 
 	public function init (
 		$conf,
@@ -91,6 +83,23 @@ class tx_agency_controldata {
 		$theTable
 	) {
 		$this->conf = $conf;
+			// Initialize array of installed captcha extensions
+		if (isset($conf['captcha.'])) {
+			foreach ($conf['captcha.'] as $k => $captchaConfig) {
+				$extensionKey = $captchaConfig['extensionKey'];
+				if (
+					$extensionKey != '' &&
+					t3lib_extMgm::isLoaded($extensionKey) &&
+					$captchaConfig['evalRule'] != ''
+				) {
+					$this->captchaExtensions[$extensionKey] = array(
+						'extensionKey' => $extensionKey,
+						'evalRule' => $captchaConfig['evalRule']
+					);
+				}
+			}
+		}
+
 		$this->site_url = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
 		if ($GLOBALS['TSFE']->absRefPrefix) {
 			if(strpos($GLOBALS['TSFE']->absRefPrefix, 'http://') === 0 || strpos($GLOBALS['TSFE']->absRefPrefix, 'https://') === 0) {
@@ -104,9 +113,6 @@ class tx_agency_controldata {
 		$this->piVars = $piVars;
 		$this->setTable($theTable);
 		$authObj = t3lib_div::getUserObj('&tx_agency_auth');
-
-			// Initialize array of installed captcha extensions
-		$this->setCaptchaExtensions();
 
 		$bSysLanguageUidIsInt = (
 			class_exists('t3lib_utility_Math') ?
@@ -421,7 +427,11 @@ class tx_agency_controldata {
 	* @return	void
 	*/
 	public function setSecuredFieldArray (array $securedFieldArray) {
-		$this->securedFieldArray = array_merge($securedFieldArray, array('password', 'password_again', 'tx_agency_password'));
+		$this->securedFieldArray =
+			array_merge(
+				$securedFieldArray,
+				array('password', 'password_again', 'tx_agency_password')
+			);
 
 	}
 
@@ -667,6 +677,7 @@ class tx_agency_controldata {
 		} else {
 			$allSessionData[$extKey] = $data;
 		}
+
 		$GLOBALS['TSFE']->fe_user->setKey('ses', 'feuser', $allSessionData);
 			// The feuser session data shall not get lost when coming back from external scripts
 		$GLOBALS['TSFE']->fe_user->storeSessionData();
@@ -745,18 +756,6 @@ class tx_agency_controldata {
 	/*************************************
 	* CAPTCHA
 	*************************************/
-	/**
-	 * Sets the array of loaded captcha extensions
-	 *
-	 * @return void
-	 */
-	public function setCaptchaExtensions() {
-		foreach ($this->captchaExtensions as $index => $captchaExtension) {
-			if (!t3lib_extMgm::isLoaded($captchaExtension['extensionKey'])) {
-				unset($this->captchaExtensions[$index]);
-			}
-		}
-	}
 
 	/**
 	 * Gets the array of loaded captcha extensions
@@ -775,6 +774,7 @@ class tx_agency_controldata {
 	 */
 	public function useCaptcha ($conf, $cmdKey) {
 		$useCaptcha = FALSE;
+
 		if (
 			t3lib_div::inList($conf[$cmdKey . '.']['fields'], 'captcha_response') &&
 			is_array($conf[$cmdKey . '.']) &&
@@ -1049,7 +1049,10 @@ class tx_agency_controldata {
 
 		if ($regHash != '') {
 			// get the serialised array from the DB based on the passed hash value
-			$GLOBALS['TYPO3_DB']->exec_DELETEquery('cache_md5params', 'md5hash=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($regHash, 'cache_md5params'));
+			$GLOBALS['TYPO3_DB']->exec_DELETEquery(
+				'cache_md5params',
+				'md5hash=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($regHash, 'cache_md5params')
+			);
 		}
 	}
 
@@ -1060,7 +1063,11 @@ class tx_agency_controldata {
 
 		$shortUrlLife = intval($this->conf['shortUrlLife']) ? strval(intval($this->conf['shortUrlLife'])) : '30';
 		$max_life = time() - (86400 * intval($shortUrlLife));
-		$res = $GLOBALS['TYPO3_DB']->exec_DELETEquery('cache_md5params', 'tstamp<' . $max_life . ' AND type=99');
+		$res =
+			$GLOBALS['TYPO3_DB']->exec_DELETEquery(
+				'cache_md5params',
+				'tstamp<' . $max_life . ' AND type=99'
+			);
 	}	// cleanShortUrlCache
 }
 

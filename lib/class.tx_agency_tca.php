@@ -543,9 +543,9 @@ class tx_agency_tca {
 										t3lib_div::loadTCA($colConfig['foreign_table']);
 										$reservedValues = array();
 										if (isset($userGroupObj) && is_object($userGroupObj)) {
-											$reservedValues = $userGroupObj->getReservedValues();
+											$reservedValues = $userGroupObj->getReservedValues($conf);
+											$valuesArray = array_diff($valuesArray, $reservedValues);
 										}
-										$valuesArray = array_diff($valuesArray, $reservedValues);
 										reset($valuesArray);
 										$firstValue = current($valuesArray);
 
@@ -853,7 +853,7 @@ class tx_agency_tca {
 										isset($userGroupObj) &&
 										is_object($userGroupObj)
 									) {
-										$reservedValues = $userGroupObj->getReservedValues();
+										$reservedValues = $userGroupObj->getReservedValues($conf);
 										$foreignTable = $this->getForeignTable($theTable, $colName);
 										$whereClause = $userGroupObj->getAllowedWhereClause(
 											$foreignTable,

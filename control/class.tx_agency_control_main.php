@@ -50,7 +50,6 @@ class tx_agency_control_main {
 	public $controlData; // data used for the control
 	public $data; // object of type tx_agency_data
 	public $urlObj;
-	public $display; // object of type tx_agency_display
 	public $email; // object of type tx_agency_email
 	public $langObj; // object of type tx_agency_lang
 	public $tca;  // object of type tx_agency_tca
@@ -69,9 +68,11 @@ class tx_agency_control_main {
 	) {
 		$this->extKey = $pibaseObj->extKey;
 		$staticInfoObj = FALSE;
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
 
 		$success = $this->init(
 			$pibaseObj,
+			$confObj,
 			$conf,
 			$theTable,
 			$adminFieldList,
@@ -89,10 +90,14 @@ class tx_agency_control_main {
 		if ($success !== FALSE) {
 			$error_message = '';
 
+			$displayObj = t3lib_div::getUserObj('tx_agency_display');
 			$content = $this->control->doProcessing(
 				$pibaseObj->cObj,
+				$confObj,
 				$this->langObj,
+				$displayObj,
 				$this->controlData,
+				$this->data,
 				$staticInfoObj,
 				$theTable,
 				$cmd,
@@ -122,6 +127,7 @@ class tx_agency_control_main {
 	*/
 	public function init (
 		$pibaseObj,
+		$confObj,
 		$conf,
 		$theTable,
 		$adminFieldList,
@@ -133,8 +139,6 @@ class tx_agency_control_main {
 		$this->tca = t3lib_div::getUserObj('&tx_agency_tca');
 
 			// plugin initialization
-		$this->conf = $conf;
-
 		if (
 			isset($conf['table.']) &&
 			is_array($conf['table.']) &&
@@ -142,11 +146,8 @@ class tx_agency_control_main {
 		) {
 			$theTable  = $conf['table.']['name'];
 		}
-		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
 		$confObj->init($conf);
-
 		$this->tca->init($this->extKey, $theTable);
-
 		$tablesObj = t3lib_div::getUserObj('&tx_agency_lib_tables');
 		$tablesObj->init($theTable);
 		$authObj = t3lib_div::getUserObj('&tx_agency_auth');
@@ -194,7 +195,6 @@ class tx_agency_control_main {
 		$this->urlObj = t3lib_div::getUserObj('&tx_agency_url');
 		$this->data = t3lib_div::getUserObj('&tx_agency_data');
 		$this->marker = t3lib_div::getUserObj('&tx_agency_marker');
-		$this->display = t3lib_div::getUserObj('&tx_agency_display');
 		$this->setfixedObj = t3lib_div::getUserObj('&tx_agency_setfixed');
 		$this->email = t3lib_div::getUserObj('&tx_agency_email');
 		$this->control = t3lib_div::getUserObj('&tx_agency_control');
@@ -219,7 +219,6 @@ class tx_agency_control_main {
 				$this->langObj,
 				$cObj,
 				$this->controlData,
-				$this->display,
 				$this->marker,
 				$this->email,
 				$this->tca,

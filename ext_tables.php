@@ -222,7 +222,15 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 
 	$TCA['fe_users']['types']['0']['showitem'] = preg_replace('/(^|,)\s*country\s*(,|$)/', '$1 zone, static_info_country, country, language$2', $TCA['fe_users']['types']['0']['showitem']);
 	$TCA['fe_users']['types']['0']['showitem'] = preg_replace('/(^|,)\s*address\s*(,|$)/', '$1 cnum, status, date_of_birth, house_no, address$2', $TCA['fe_users']['types']['0']['showitem']);
-	$TCA['fe_users']['types']['0']['showitem'] = preg_replace('/(^|,)\s*www\s*(,|$)/', '$1 www, comments, by_invitation, terms_acknowledged$2', $TCA['fe_users']['types']['0']['showitem']);
+
+// 	$TCA['fe_users']['types']['0']['showitem'] = preg_replace('/(^|,)\s*www\s*(,|$)/', '$1 www, comments, by_invitation, terms_acknowledged$2', $TCA['fe_users']['types']['0']['showitem']);
+
+	t3lib_extMgm::addToAllTCAtypes(
+		'fe_users',
+		'comments, by_invitation, terms_acknowledged',
+		'',
+		'after:www,'
+	);
 
 	$TCA['fe_users']['palettes']['2']['showitem'] = 'gender,--linebreak--,' . $TCA['fe_users']['palettes']['2']['showitem'];
 

@@ -1,3 +1,7 @@
+2013-09-24 Franz Holzinger <franz@ttproducts.de>
+	* new setup captcha for support of diversal captcha extensions
+	* enhancements to some hook functions
+
 2013-08-05 Franz Holzinger <franz@ttproducts.de>
 	* fix security issue TYPO3-EXT-SA-2013-011
 

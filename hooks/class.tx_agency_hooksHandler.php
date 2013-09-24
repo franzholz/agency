@@ -35,22 +35,44 @@
 
 
 class tx_agency_hooksHandler {
-	public function registrationProcess_beforeConfirmCreate (&$recordArray, $controlDataObj) {
+	public $bHasBeenInitialised = FALSE;
+
+	public function init ($dataObject) {
+		$this->bHasBeenInitialised = TRUE;
+	}
+
+	public function needsInit () {
+		return !$this->bHasBeenInitialised;
+	}
+
+	public function registrationProcess_beforeConfirmCreate (
+		&$recordArray,
+		$controlDataObj
+	) {
 			// in the case of this hook, the record array is passed by reference
 			// in this example hook, we generate a username based on the first and last names of the user
 		$cmdKey = $controlDataObj->getCmdKey();
 		$theTable = $controlDataObj->getTable();
-		if ($controlDataObj->getFeUserData('preview') && $controlDataObj->conf[$cmdKey . '.']['generateUsername']) {
+		if (
+			$controlDataObj->getFeUserData('preview') &&
+			$controlDataObj->conf[$cmdKey . '.']['generateUsername']
+		) {
 			$firstName = trim($recordArray['first_name']);
 			$lastName = trim($recordArray['last_name']);
 			$name = trim($recordArray['name']);
-			if ((!$firstName || !$lastName) && $name)	{
+			if ((!$firstName || !$lastName) && $name) {
 				$nameArray = t3lib_div::trimExplode(' ', $name);
 				$firstName = ($firstName ? $firstName : $nameArray[0]);
 				$lastName = ($lastName ? $lastName : $nameArray[1]);
 			}
 			$recordArray['username'] = substr(strtolower($firstName), 0, 5) . substr(strtolower($lastName), 0, 5);
-			$DBrows = $GLOBALS['TSFE']->sys_page->getRecordsByField($theTable, 'username', $recordArray['username'], 'LIMIT 1');
+			$DBrows =
+				$GLOBALS['TSFE']->sys_page->getRecordsByField(
+					$theTable,
+					'username',
+					$recordArray['username'],
+					'LIMIT 1'
+				);
 			$counter = 0;
 			while($DBrows) {
 				$counter = $counter + 1;
@@ -81,7 +103,10 @@ class tx_agency_hooksHandler {
 	) {
 	}
 
-	public function registrationProcess_beforeSaveDelete (&$recordArray, $invokingObj) {
+	public function registrationProcess_beforeSaveDelete (
+		&$recordArray,
+		$invokingObj
+	) {
 	}
 
 	public function registrationProcess_afterSaveCreate (
@@ -98,18 +123,55 @@ class tx_agency_hooksHandler {
 	) {
 	}
 
-	public function confirmRegistrationClass_preProcess (&$recordArray, $invokingObj) {
-		// in the case of this hook, the record array is passed by reference
-		// you may not see this echo if the page is redirected to auto-login
+	public function confirmRegistrationClass_preProcess (
+		$theTable,
+		&$recordArray,
+		&$newFieldList,
+		$confObj,
+		$invokingObj
+	) {
 	}
 
-	public function confirmRegistrationClass_postProcess (&$recordArray, $invokingObj) {
-		// you may not see this echo if the page is redirected to auto-login
+	public function confirmRegistrationClass_postProcess ($theTable, &$recordArray, $currArr, $origArray, $confObj, $invokingObj) {
 	}
 
-	public function addGlobalMarkers (&$markerArray, $invokingObj) {
+	public function addGlobalMarkers (
+		&$markerArray,
+		$controlData,
+		$confObj,
+		$markerObject
+	) {
+	}
+
+	public function evalValues (
+		$staticInfoObj,
+		$theTable,
+		$dataArray,
+		$origArray,
+		$markContentArray,
+		$cmdKey,
+		$requiredArray,
+		$theField,
+		$cmdParts,
+		$bInternal,
+		&$test,
+		$dataObject  // object of type tx_agency_data
+	) {
+	}
+
+	public function getFailureText (
+		$failureText,
+		$dataArray,
+		$theField,
+		$theRule,
+		$label,
+		$orderNo = '',
+		$param = '',
+		$bInternal = FALSE
+	) {
 	}
 }
+
 
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/hooks/class.tx_agency_hooksHandler.php']) {
 	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/hooks/class.tx_agency_hooksHandler.php']);

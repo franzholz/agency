@@ -216,11 +216,11 @@ class tx_agency_data {
 	}
 
 	public function setOrigArray (array $origArray) {
-		$this->origArr = $origArray;
+		$this->origArray = $origArray;
 	}
 
 	public function getOrigArray () {
-		return $this->origArr;
+		return $this->origArray;
 	}
 
 	public function bNewAvailable () {
@@ -294,6 +294,7 @@ class tx_agency_data {
 	* @return string  the error message to be displayed
 	*/
 	public function getFailureText (
+		$dataArray,
 		$theField,
 		$theRule,
 		$label,
@@ -345,6 +346,7 @@ class tx_agency_data {
 					$failureLabel = $this->lang->getLL($labelname);
 					$failureLabel = $failureLabel ? $failureLabel : $this->lang->getLL('evalErrors_' . $theRule . $internalPostfix);
 				}
+
 				if (!$failureLabel) { // this remains only for compatibility reasons
 					$labelname = $label;
 					$failureLabel = $this->lang->getLL($labelname);
@@ -352,8 +354,8 @@ class tx_agency_data {
 			}
 		}
 
-		if ($param != '') {
-			$failureLabel = sprintf($failureLabel,$param);
+		if ($param != '' && $failureLabel != '') {
+			$failureLabel = sprintf($failureLabel, $param);
 		}
 
 		return $failureLabel;
@@ -483,6 +485,7 @@ class tx_agency_data {
 										$this->evalErrors[$theField][] = $theCmd;
 										$failureMsg[$theField][] =
 											$this->getFailureText(
+												$dataArray,
 												$theField,
 												'uniqueLocal',
 												'evalErrors_existed_already'
@@ -499,6 +502,7 @@ class tx_agency_data {
 									$this->evalErrors[$theField][] = $theCmd;
 									$failureMsg[$theField][] =
 										$this->getFailureText(
+											$dataArray,
 											$theField,
 											$theCmd,
 											'evalErrors_same_twice'
@@ -516,6 +520,7 @@ class tx_agency_data {
 									$this->evalErrors[$theField][] = $theCmd;
 									$failureMsg[$theField][] =
 										$this->getFailureText(
+											$dataArray,
 											$theField,
 											$theCmd,
 											'evalErrors_valid_email'
@@ -529,6 +534,7 @@ class tx_agency_data {
 									$this->evalErrors[$theField][] = $theCmd;
 									$failureMsg[$theField][] =
 										$this->getFailureText(
+											$dataArray,
 											$theField,
 											$theCmd,
 											'evalErrors_required'
@@ -544,6 +550,7 @@ class tx_agency_data {
 									$failureMsg[$theField][] =
 										sprintf(
 											$this->getFailureText(
+												$dataArray,
 												$theField,
 												$theCmd,
 												'evalErrors_atleast_characters'
@@ -561,6 +568,7 @@ class tx_agency_data {
 									$failureMsg[$theField][] =
 										sprintf(
 											$this->getFailureText(
+												$dataArray,
 												$theField,
 												$theCmd,
 												'evalErrors_atmost_characters'
@@ -585,6 +593,7 @@ class tx_agency_data {
 										$failureMsg[$theField][] =
 											sprintf(
 												$this->getFailureText(
+													$dataArray,
 													$theField,
 													$theCmd,
 													'evalErrors_unvalid_list'),
@@ -631,6 +640,7 @@ class tx_agency_data {
 															$failureMsg[$theField][] =
 																sprintf(
 																	$this->getFailureText(
+																		$dataArray,
 																		$theField,
 																		'max_size',
 																		'evalErrors_size_too_large'
@@ -662,7 +672,15 @@ class tx_agency_data {
 															$bWritePermissionError = FALSE;
 														}
 														$this->evalErrors[$theField][] = $theCmd;
-														$failureMsg[$theField][] = sprintf($this->getFailureText($theField, 'isfile', ($bWritePermissionError ? 'evalErrors_write_permission' : 'evalErrors_file_upload')), $filename);
+														$failureMsg[$theField][] =
+															sprintf(
+																$this->getFailureText(
+																	$theField,
+																	'isfile',
+																	($bWritePermissionError ? 'evalErrors_write_permission' : 'evalErrors_file_upload')
+																),
+																$filename
+															);
 														$failureArray[] = $theField;
 													}
 												} else {
@@ -670,6 +688,7 @@ class tx_agency_data {
 													$failureMsg[$theField][] =
 														sprintf(
 															$this->getFailureText(
+																$dataArray,
 																$theField,
 																'allowed',
 																'evalErrors_file_extension'),
@@ -703,6 +722,7 @@ class tx_agency_data {
 										$this->evalErrors[$theField][] = $theCmd;
 										$failureMsg[$theField][] =
 											$this->getFailureText(
+												$dataArray,
 												$theField,
 												$theCmd,
 												'evalErrors_unvalid_url'
@@ -724,6 +744,7 @@ class tx_agency_data {
 									$this->evalErrors[$theField][] = $theCmd;
 									$failureMsg[$theField][] =
 										$this->getFailureText(
+											$dataArray,
 											$theField,
 											$theCmd,
 											'evalErrors_unvalid_date'
@@ -752,6 +773,7 @@ class tx_agency_data {
 										$this->evalErrors[$theField][] = $theCmd;
 										$failureMsg[$theField][] =
 											$this->getFailureText(
+												$dataArray,
 												$theField,
 												$theCmd,
 												'evalErrors_' . $theCmd,
@@ -773,11 +795,20 @@ class tx_agency_data {
 								$hookClassArray = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['model'];
 								if (is_array($hookClassArray)) {
 									foreach ($hookClassArray as $classRef) {
-										$hookObj= t3lib_div::getUserObj($classRef);
+										$hookObj = t3lib_div::getUserObj($classRef);
+
 										if (
 											is_object($hookObj) &&
 											method_exists($hookObj, 'evalValues')
 										) {
+											if (
+												method_exists($hookObj, 'needsInit') &&
+												method_exists($hookObj, 'init') &&
+												$hookObj->needsInit()
+											) {
+												$hookObj->init($this);
+											}
+
 											$test = FALSE; // set it to TRUE when you test the hooks
 											$bInternal = FALSE;
 											$errorField = $hookObj->evalValues(
@@ -794,13 +825,16 @@ class tx_agency_data {
 												$test, // must be set to FALSE if it is not a test
 												$this
 											);
+
 											if ($errorField != '') {
 												$failureArray[] = $errorField;
 												$this->evalErrors[$theField][] = $theCmd;
+
 												if (!$test) {
 													$this->inError[$theField] = TRUE;
-													$failureMsg[$theField][] =
+													$failureText =
 														$this->getFailureText(
+															$dataArray,
 															$theField,
 															$theCmd,
 															'evalErrors_' . $theCmd,
@@ -808,11 +842,29 @@ class tx_agency_data {
 															$cmd,
 															$bInternal
 														);
+
+													if (method_exists($hookObj, 'getFailureText')) {
+														$hookFailureText =
+															$hookObj->getFailureText(
+																$failureText,
+																$dataArray,
+																$theField,
+																$theCmd,
+																'evalErrors_' . $theCmd,
+																$countArray['hook'][$theCmd],
+																$cmd,
+																$bInternal
+															);
+														if ($hookFailureText != '') {
+															$failureText = $hookFailureText;
+														}
+													}
+													$failureMsg[$theField][] = $failureText;
 												}
 												break;
 											}
 										} else {
-											debug($classRef, 'error in the class name for the hook "model"'); // keep debug
+											debug($classRef, 'error in the class name for the hook "model"'); // keep this
 										}
 									}
 								}
@@ -825,7 +877,16 @@ class tx_agency_data {
 					in_array($theField, $displayFieldArray) ||
 					in_array($theField, $failureArray)
 				) {
-					if (!empty($failureMsg[$theField])) {
+					if (
+						(
+							is_string($failureMsg[$theField]) &&
+							!empty($failureMsg[$theField])
+						) ||
+						(
+							is_array($failureMsg[$theField]) &&
+							!empty($failureMsg[$theField]['0'])
+						)
+					) {
 						if ($markContentArray['###EVAL_ERROR_saved###']) {
 							$markContentArray['###EVAL_ERROR_saved###'] .= '<br />';
 						}
@@ -860,7 +921,7 @@ class tx_agency_data {
 		$failure = implode($failureArray, ',');
 		$this->controlData->setFailure($failure);
 		return $this->evalErrors;
-	}
+	} // evalValues
 
 	/**
 	* Transforms fields into certain things...
@@ -1236,6 +1297,14 @@ class tx_agency_data {
 							foreach($hookClassArray as $classRef) {
 								$hookObj = t3lib_div::getUserObj($classRef);
 								if (method_exists($hookObj, 'registrationProcess_afterSaveEdit')) {
+									if (
+										method_exists($hookObj, 'needsInit') &&
+										method_exists($hookObj, 'init') &&
+										$hookObj->needsInit()
+									) {
+										$hookObj->init($this);
+									}
+
 									$hookObj->registrationProcess_afterSaveEdit(
 										$theTable,
 										$dataArray,
@@ -1259,9 +1328,33 @@ class tx_agency_data {
 			default:
 				if (is_array($this->conf[$cmdKey.'.'])) {
 
-					$newFieldList = implode(',', array_intersect(explode(',', $this->getFieldList()), t3lib_div::trimExplode(',', $this->conf[$cmdKey . '.']['fields'], 1)));
-					$newFieldList  = implode(',', array_unique( array_merge (explode(',', $newFieldList), explode(',', $this->getAdminFieldList()))));
-					$parsedArray =
+					$newFieldList =
+						implode(
+							',',
+							array_intersect(
+								explode(
+									',',
+									$this->getFieldList()
+								),
+								t3lib_div::trimExplode(
+									',',
+									$this->conf[$cmdKey . '.']['fields'],
+									1
+								)
+							)
+						);
+					$newFieldList  =
+						implode(
+							',',
+							array_unique(
+								array_merge(
+									explode(',', $newFieldList),
+									explode(',', $this->getAdminFieldList())
+								)
+							)
+						);
+
+						$parsedArray =
 						$this->parseOutgoingData(
 							$theTable,
 							$cmdKey,
@@ -1351,6 +1444,14 @@ class tx_agency_data {
 							foreach ($hookClassArray as $classRef) {
 								$hookObj = t3lib_div::getUserObj($classRef);
 								if (method_exists($hookObj, 'registrationProcess_afterSaveCreate')) {
+									if (
+										method_exists($hookObj, 'needsInit') &&
+										method_exists($hookObj, 'init') &&
+										$hookObj->needsInit()
+									) {
+										$hookObj->init($this);
+									}
+
 									$hookObj->registrationProcess_afterSaveCreate(
 										$theTable,
 										$dataArray,
@@ -1418,6 +1519,15 @@ class tx_agency_data {
 							foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'] as $classRef) {
 								$hookObj = t3lib_div::getUserObj($classRef);
 								if (method_exists($hookObj, 'registrationProcess_beforeSaveDelete')) {
+									if (
+										method_exists($hookObj, 'needsInit') &&
+										method_exists($hookObj, 'init') &&
+										$hookObj->needsInit()
+									) {
+										$hookObj->init($this);
+									}
+
+
 									$hookObj->registrationProcess_beforeSaveDelete($origArray, $this);
 								}
 							}
@@ -1757,7 +1867,7 @@ class tx_agency_data {
 
 		$parsedArray = array();
 		$parsedArray = $origArray;
-		if (is_array($this->conf['parseFromDBValues.'])) {
+		if (count($origArray) && is_array($this->conf['parseFromDBValues.'])) {
 			foreach($this->conf['parseFromDBValues.'] as $theField => $theValue) {
 				$listOfCommands = t3lib_div::trimExplode(',', $theValue, 1);
 				if (is_array($listOfCommands)) {
@@ -1816,7 +1926,10 @@ class tx_agency_data {
 				foreach($listOfCommands as $k2 => $cmd) {
 					$cmdParts = preg_split('/\[|\]/', $cmd); // Point is to enable parameters after each command enclosed in brackets [..]. These will be in position 1 in the array.
 					$theCmd = trim($cmdParts[0]);
-					if (($theCmd == 'date' || $theCmd == 'adodb_date') && $dataArray[$theField]) {
+					if (
+						($theCmd == 'date' || $theCmd == 'adodb_date') &&
+						$dataArray[$theField]
+					) {
 						if(strlen($dataArray[$theField]) == 8) {
 							$parsedArray[$theField] = substr($dataArray[$theField], 0, 4) . '-' . substr($dataArray[$theField], 4, 2) . '-' . substr($dataArray[$theField], 6, 2);
 						} else {
@@ -1908,7 +2021,7 @@ class tx_agency_data {
 					);
 				}
 
-				if (is_array ($parsedArray[$colName])) {
+				if (is_array($parsedArray[$colName])) {
 					if (
 						in_array($colName, $fieldsList) &&
 						$colSettings['config']['type'] == 'select' &&

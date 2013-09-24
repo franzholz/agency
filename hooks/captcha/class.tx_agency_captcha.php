@@ -21,6 +21,22 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+
+/**
+ * Part of the agency (Agency Registration) extension.
+ *
+ * captcha hook functions
+ *
+ * $Id$
+ *
+ * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
+ *
+ * @package TYPO3
+ * @subpackage agency
+ *
+ *
+ */
+
 /**
  * Hook for captcha image marker when extension 'captcha' is used
  */
@@ -47,6 +63,7 @@ class tx_agency_captcha {
 	 * Evaluates the captcha word
 	 */
 	public function evalValues (
+		$staticInfoObj,
 		$theTable,
 		$dataArray,
 		$origArray,
@@ -58,7 +75,7 @@ class tx_agency_captcha {
 		$bInternal,
 		&$test,
 		$dataObject
-		) {
+	) {
 		$errorField = '';
 			// Must be set to FALSE if it is not a test
 		$test = FALSE;

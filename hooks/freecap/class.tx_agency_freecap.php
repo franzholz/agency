@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2012 Stanislas Rolland <typo3@sjbr.ca>
+*  (c) 2013 Stanislas Rolland <typo3@sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -24,6 +24,22 @@
 if (t3lib_extMgm::isLoaded('sr_freecap')) {
 	require_once(t3lib_extMgm::extPath('sr_freecap') . 'pi2/class.tx_srfreecap_pi2.php');
 }
+
+/**
+ * Part of the agency (Agency Registration) extension.
+ *
+ * sr_freecap hook functions
+ *
+ * $Id$
+ *
+ * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
+ *
+ * @package TYPO3
+ * @subpackage agency
+ *
+ *
+ */
+
 
 /**
  * Hook for captcha image marker when extension 'sr_freecap' is used
@@ -65,6 +81,7 @@ class tx_agency_freecap {
 	 * Evaluates the captcha word
 	 */
 	public function evalValues (
+		$staticInfoObj,
 		$theTable,
 		$dataArray,
 		$origArray,
@@ -76,7 +93,7 @@ class tx_agency_freecap {
 		$bInternal,
 		&$test,
 		$dataObject
-		) {
+	) {
 		$errorField = '';
 			// Must be set to FALSE if it is not a test
 		$test = FALSE;

@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2012 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2007-2013 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -44,8 +44,6 @@
 class tx_agency_control {
 	public $langObj;
 	public $conf = array();
-	public $display;
-	public $data;
 	public $marker;
 	public $auth;
 	public $email;
@@ -61,7 +59,6 @@ class tx_agency_control {
 		$langObj,
 		$cObj,
 		$controlData,
-		$display,
 		$marker,
 		$email,
 		$tca,
@@ -72,7 +69,6 @@ class tx_agency_control {
 
 		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
 		$conf = $confObj->getConf();
-		$this->display = $display;
 		$this->marker = $marker;
 		$this->email = $email;
 		$this->tca = $tca;
@@ -106,24 +102,23 @@ class tx_agency_control {
 		$staticInfoObj,
 		$theTable,
 		$controlData,
-		$data,
+		$dataObj,
 		&$adminFieldList
 	) {
 		$conf = $confObj->getConf();
-		$this->data = $data;
 
 		$tablesObj = t3lib_div::getUserObj('&tx_agency_lib_tables');
 		$addressObj = $tablesObj->get('address');
 		$origArray = array();
 		$extKey = $controlData->getExtKey();
 		$cmd = $controlData->getCmd();
-		$dataArray = $this->data->getDataArray();
+		$dataArray = $dataObj->getDataArray();
 		$feUserdata = $controlData->getFeUserData();
 
 		$theUid = ($dataArray['uid'] ? $dataArray['uid'] : ($feUserdata['rU'] ? $feUserdata['rU'] : (!in_array($cmd, $this->noLoginCommands) ? $GLOBALS['TSFE']->fe_user->user['uid'] : 0 )));
 
 		if ($theUid) {
-			$this->data->setRecUid($theUid);
+			$dataObj->setRecUid($theUid);
 			$newOrigArray = $GLOBALS['TSFE']->sys_page->getRawRecord($theTable, $theUid);
 
 			if (isset($newOrigArray) && is_array($newOrigArray)) {
@@ -156,11 +151,11 @@ class tx_agency_control {
 
 		if (!$theUid) {
 			if (!count($dataArray)) {
-				$dataArray = $this->data->defaultValues($cmdKey);
-				$this->data->setDataArray($dataArray);
+				$dataArray = $dataObj->defaultValues($cmdKey);
+				$dataObj->setDataArray($dataArray);
 			}
 		}
-		$this->data->setOrigArray($origArray);
+		$dataObj->setOrigArray($origArray);
 
 			// Setting the list of fields allowed for editing and creation.
 		$tcaFieldArray =
@@ -171,13 +166,13 @@ class tx_agency_control {
 			);
 		$tcaFieldArray = array_unique($tcaFieldArray);
 		$fieldlist = implode(',', $tcaFieldArray);
-		$this->data->setFieldList($fieldlist);
+		$dataObj->setFieldList($fieldlist);
 
 		if (trim($conf['addAdminFieldList'])) {
 			$adminFieldList .= ',' . trim($conf['addAdminFieldList']);
 		}
 		$adminFieldList = implode(',', array_intersect( explode(',', $fieldlist), t3lib_div::trimExplode(',', $adminFieldList, 1)));
-		$this->data->setAdminFieldList($adminFieldList);
+		$dataObj->setAdminFieldList($adminFieldList);
 
 		if (!t3lib_extMgm::isLoaded('direct_mail')) {
 			$conf[$cmdKey.'.']['fields'] = implode(',', array_diff(t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), array('module_sys_dmail_category,module_sys_dmail_newsletter')));
@@ -297,20 +292,21 @@ class tx_agency_control {
 	*/
 	public function doProcessing (
 		$cObj,
+		$confObj,
 		$langObj,
+		$displayObj,
 		$controlData,
+		$dataObj,
 		$staticInfoObj,
 		$theTable,
 		$cmd,
 		$cmdKey,
-		$origArray,
+		array $origArray,
 		$dataArray,
 		$templateCode,
 		&$error_message
 	) {
-		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
 		$conf = $confObj->getConf();
-
 		$extKey = $controlData->getExtKey();
 		$prefixId = $controlData->getPrefixId();
 		$controlData->setMode(MODE_NORMAL);
@@ -319,9 +315,9 @@ class tx_agency_control {
 		$cryptedPassword = '';
 		$autoLoginKey = '';
 
-			// Commands with which the data will not be saved by $this->data->save
+			// Commands with which the data will not be saved by $dataObj->save
 		$noSaveCommands = array('infomail', 'login', 'delete');
-		$uid = $this->data->getRecUid();
+		$uid = $dataObj->getRecUid();
 
 		$securedArray = array();
 			// Check for valid token
@@ -338,10 +334,10 @@ class tx_agency_control {
 		) {
 			$controlData->setCmd($cmd);
 			$origArray = array();
-			$this->data->setOrigArray($origArray);
-			$this->data->resetDataArray();
+			$dataObj->setOrigArray($origArray);
+			$dataObj->resetDataArray();
 			$finalDataArray = $dataArray;
-		} else if ($this->data->bNewAvailable()) {
+		} else if ($dataObj->bNewAvailable()) {
 			if ($theTable == 'fe_users') {
 				$securedArray = $controlData->readSecuredArray();
 			}
@@ -370,9 +366,9 @@ class tx_agency_control {
 
 			// Evaluate incoming data
 		if (count($finalDataArray) && !in_array($cmd, $noSaveCommands)) {
-			$this->data->setName($finalDataArray, $cmdKey, $theTable);
-			$this->data->parseValues($theTable, $finalDataArray, $origArray, $cmdKey);
-			$this->data->overrideValues($finalDataArray, $cmdKey);
+			$dataObj->setName($finalDataArray, $cmdKey, $theTable);
+			$dataObj->parseValues($theTable, $finalDataArray, $origArray, $cmdKey);
+			$dataObj->overrideValues($finalDataArray, $cmdKey);
 
 			if (
 				$bSubmit ||
@@ -380,7 +376,7 @@ class tx_agency_control {
 				$controlData->getFeUserData('linkToPID')
 			) {
 					// A button was clicked on
-				$evalErrors = $this->data->evalValues(
+				$evalErrors = $dataObj->evalValues(
 					$staticInfoObj,
 					$theTable,
 					$finalDataArray,
@@ -397,6 +393,7 @@ class tx_agency_control {
 				) {
 					$controlData->clearSessionData();
 				}
+
 				if ($conf['evalFunc']) {
 					$this->marker->setArray($markerArray);
 
@@ -413,7 +410,7 @@ class tx_agency_control {
 					// This is either a country change submitted through the onchange event or a file deletion already processed by the parsing function
 					// You come here after a click on the text "Not a member yet? click here to register."
 					// We are going to redisplay
-				$evalErrors = $this->data->evalValues(
+				$evalErrors = $dataObj->evalValues(
 					$staticInfoObj,
 					$theTable,
 					$finalDataArray,
@@ -433,8 +430,8 @@ class tx_agency_control {
 				$this->marker->setArray($markerArray);
 				$controlData->setFailure('submit'); // internal error simulation needed in order not to save in the next step
 			}
-			$this->data->setUsername($theTable, $finalDataArray, $cmdKey);
-			$this->data->setDataArray($finalDataArray);
+			$dataObj->setUsername($theTable, $finalDataArray, $cmdKey);
+			$dataObj->setDataArray($finalDataArray);
 
 			if (
 				$controlData->getFailure() == '' &&
@@ -480,8 +477,7 @@ class tx_agency_control {
 					}
 				}
 				$newDataArray = array();
-
-				$theUid = $this->data->save(
+				$theUid = $dataObj->save(
 					$staticInfoObj,
 					$theTable,
 					$finalDataArray,
@@ -494,12 +490,11 @@ class tx_agency_control {
 					$password,
 					$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess']
 				);
-
 				if ($newDataArray) {
 					$dataArray = $newDataArray;
 				}
 
-				if ($this->data->getSaved()) {
+				if ($dataObj->getSaved()) {
 					$controlData->clearSessionData();
 				}
 			}
@@ -507,7 +502,7 @@ class tx_agency_control {
 			if ($bSubmit) {
 				$fetch = $controlData->getFeUserData('fetch');
 				$finalDataArray['email'] = $fetch;
-				$evalErrors = $this->data->evalValues(
+				$evalErrors = $dataObj->evalValues(
 					$staticInfoObj,
 					$theTable,
 					$finalDataArray,
@@ -544,13 +539,13 @@ class tx_agency_control {
 			!$bDoNotSave
 		) {
 			// Delete record if delete command is set + the preview flag is NOT set.
-			$this->data->deleteRecord($theTable, $origArray, $dataArray);
+			$dataObj->deleteRecord($theTable, $origArray, $dataArray);
 		}
 		$errorContent = '';
 		$bDeleteRegHash = FALSE;
 
 			// Display forms
-		if ($this->data->getSaved()) {
+		if ($dataObj->getSaved()) {
 
 			$bCustomerConfirmsMode = FALSE;
 			$bDefaultMode = FALSE;
@@ -581,7 +576,7 @@ class tx_agency_control {
 				!$conf['enableEmailConfirmation'] &&
 				$conf['enableAdminReview'];
 			$key =
-				$this->display->getKeyAfterSave(
+				$displayObj->getKeyAfterSave(
 					$cmd,
 					$cmdKey,
 					$bCustomerConfirmsMode,
@@ -590,7 +585,7 @@ class tx_agency_control {
 				);
 
 			$errorContent =
-				$this->display->afterSave(
+				$displayObj->afterSave(
 					$conf,
 					$cObj,
 					$langObj,
@@ -598,7 +593,7 @@ class tx_agency_control {
 					$confObj,
 					$this->tca,
 					$this->marker,
-					$this->data,
+					$dataObj,
 					$this->setfixedObj,
 					$theTable,
 					$autoLoginKey,
@@ -611,7 +606,7 @@ class tx_agency_control {
 					$key,
 					$templateCode,
 					$markerArray,
-					$this->data->inError,
+					$dataObj->inError,
 					$content
 				);
 
@@ -632,8 +627,8 @@ class tx_agency_control {
 						$confObj,
 						$this->tca,
 						$this->marker,
-						$this->data,
-						$this->display,
+						$dataObj,
+						$displayObj,
 						$this->setfixedObj.
 						$theTable,
 						$autoLoginKey,
@@ -676,8 +671,8 @@ class tx_agency_control {
 						$confObj,
 						$this->tca,
 						$this->marker,
-						$this->data,
-						$this->display,
+						$dataObj,
+						$displayObj,
 						$this->setfixedObj,
 						$theTable,
 						$autoLoginKey,
@@ -746,10 +741,10 @@ class tx_agency_control {
 			} else { // error case
 				$content = $errorContent;
 			}
-		} else if ($this->data->getError()) {
+		} else if ($dataObj->getError()) {
 
 				// If there was an error, we return the template-subpart with the error message
-			$templateCode = $cObj->getSubpart($templateCode, $this->data->getError());
+			$templateCode = $cObj->getSubpart($templateCode, $dataObj->getError());
 
 			$this->marker->addLabelMarkers(
 				$markerArray,
@@ -758,11 +753,11 @@ class tx_agency_control {
 				$controlData->getExtKey(),
 				$theTable,
 				$finalDataArray,
-				$this->data->getOrigArray(),
+				$dataObj->getOrigArray(),
 				$securedArray,
 				array(),
 				$controlData->getRequiredArray(),
-				$this->data->getFieldList(),
+				$dataObj->getFieldList(),
 				$GLOBALS['TCA'][$theTable]['columns'],
 				'',
 				FALSE
@@ -785,9 +780,9 @@ class tx_agency_control {
 						$controlData->setSetfixedEnabled(1);
 					}
 					$feuData = $controlData->getFeUserData();
-					if (is_array($origArray)) {
-						$origArray = $this->data->parseIncomingData($origArray, FALSE);
-					}
+// 					if (count($origArray)) {
+					$origArray = $dataObj->parseIncomingData($origArray, FALSE);
+// 					}
 
 					$content = $this->setfixedObj->processSetFixed(
 						$conf,
@@ -797,14 +792,14 @@ class tx_agency_control {
 						$confObj,
 						$this->tca,
 						$this->marker,
-						$this->data,
+						$dataObj,
 						$theTable,
 						$autoLoginKey,
 						$prefixId,
 						$uid,
 						$cmdKey,
 						$markerArray,
-						$this->display,
+						$displayObj,
 						$this->email,
 						$templateCode,
 						$finalDataArray,
@@ -824,9 +819,9 @@ class tx_agency_control {
 					if ($conf['infomail']) {
 						$controlData->setSetfixedEnabled(1);
 					}
-					if (is_array($origArray)) {
-						$origArray = $this->data->parseIncomingData($origArray, FALSE);
-					}
+// 					if (count($origArray)) {
+					$origArray = $dataObj->parseIncomingData($origArray, FALSE);
+// 					}
 
 					$errorCode = '';
 					$content = $this->email->sendInfo(
@@ -837,8 +832,8 @@ class tx_agency_control {
 						$confObj,
 						$this->tca,
 						$this->marker,
-						$this->data,
-						$this->display,
+						$dataObj,
+						$displayObj,
 						$this->setfixedObj,
 						$theTable,
 						$autoLoginKey,
@@ -863,7 +858,7 @@ class tx_agency_control {
 						$cmd,
 						$token
 					);
-					$content = $this->display->deleteScreen(
+					$content = $displayObj->deleteScreen(
 						$markerArray,
 						$conf,
 						$prefixId,
@@ -874,7 +869,7 @@ class tx_agency_control {
 						$confObj,
 						$this->tca,
 						$this->marker,
-						$this->data,
+						$dataObj,
 						$theTable,
 						$finalDataArray,
 						$origArray,
@@ -889,7 +884,7 @@ class tx_agency_control {
 						$cmd,
 						$token
 					);
-					$content = $this->display->editScreen(
+					$content = $displayObj->editScreen(
 						$markerArray,
 						$conf,
 						$cObj,
@@ -898,7 +893,7 @@ class tx_agency_control {
 						$confObj,
 						$this->tca,
 						$this->marker,
-						$this->data,
+						$dataObj,
 						$theTable,
 						$prefixId,
 						$finalDataArray,
@@ -907,7 +902,7 @@ class tx_agency_control {
 						$cmd,
 						$cmdKey,
 						$controlData->getMode(),
-						$this->data->inError,
+						$dataObj->inError,
 						$token
 					);
 
@@ -919,7 +914,7 @@ class tx_agency_control {
 						$cmd,
 						$token
 					);
-					$content = $this->display->createScreen(
+					$content = $displayObj->createScreen(
 						$markerArray,
 						$conf,
 						$prefixId,
@@ -930,7 +925,7 @@ class tx_agency_control {
 						$confObj,
 						$this->tca,
 						$this->marker,
-						$this->data,
+						$dataObj,
 						$cmd,
 						$cmdKey,
 						$controlData->getMode(),
@@ -938,8 +933,8 @@ class tx_agency_control {
 						$finalDataArray,
 						$origArray,
 						$securedArray,
-						$this->data->getFieldList(),
-						$this->data->inError,
+						$dataObj->getFieldList(),
+						$dataObj->inError,
 						$token
 					);
 					break;
@@ -952,7 +947,7 @@ class tx_agency_control {
 						$cmd,
 						$token
 					);
-					$content = $this->display->createScreen(
+					$content = $displayObj->createScreen(
 						$markerArray,
 						$conf,
 						$prefixId,
@@ -963,7 +958,7 @@ class tx_agency_control {
 						$confObj,
 						$this->tca,
 						$this->marker,
-						$this->data,
+						$dataObj,
 						$cmd,
 						$cmdKey,
 						$controlData->getMode(),
@@ -971,8 +966,8 @@ class tx_agency_control {
 						$finalDataArray,
 						$origArray,
 						$securedArray,
-						$this->data->getFieldList(),
-						$this->data->inError,
+						$dataObj->getFieldList(),
+						$dataObj->inError,
 						$token
 					);
 					break;

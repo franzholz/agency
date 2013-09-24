@@ -81,7 +81,7 @@ class tx_agency_setfixed {
 		$emailObj,
 		$templateCode,
 		$dataArray,
-		$origArray,
+		array $origArray,
 		$securedArray,
 		$pObj,
 		$feuData,
@@ -205,20 +205,36 @@ class tx_agency_setfixed {
 						// Hook: first we initialize the hooks
 					$hookObjectsArr = array();
 					if (is_array ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$controlData->getExtKey()]['confirmRegistrationClass'])) {
-						foreach  ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$controlData->getExtKey()]['confirmRegistrationClass'] as $classRef) {
-							$hookObjectsArr[] = t3lib_div::getUserObj($classRef);
-						}
-					}
-						// Hook: confirmRegistrationClass_preProcess
-					foreach($hookObjectsArr as $hookObj) {
-						if (method_exists($hookObj, 'confirmRegistrationClass_preProcess')) {
-							$hookObj->confirmRegistrationClass_preProcess($row, $this);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$controlData->getExtKey()]['confirmRegistrationClass'] as $classRef) {
+							$hookObj = t3lib_div::getUserObj($classRef);
+							if (
+								method_exists($hookObj, 'needsInit') &&
+								method_exists($hookObj, 'init') &&
+								$hookObj->needsInit()
+							) {
+								$hookObj->init($dataObj);
+							}
+
+							$hookObjectsArr[] = $hookObj;
 						}
 					}
 					$newFieldList = implode(',', array_intersect(
-						t3lib_div::trimExplode(',', $dataObj->fieldList, 1),
+						t3lib_div::trimExplode(',', $dataObj->getFieldList(), 1),
 						t3lib_div::trimExplode(',', implode($fieldArr, ','), 1)
 					));
+
+						// Hook: confirmRegistrationClass_preProcess
+					foreach($hookObjectsArr as $hookObj) {
+						if (method_exists($hookObj, 'confirmRegistrationClass_preProcess')) {
+							$hookObj->confirmRegistrationClass_preProcess(
+								$theTable,
+								$row,
+								$newFieldList,
+								$confObj,
+								$this
+							);
+						}
+					}
 
 					if ($sFK == 'UNSUBSCRIBE') {
 						$newFieldList = implode(',', array_intersect(
@@ -227,7 +243,10 @@ class tx_agency_setfixed {
 						));
 					}
 
-					if ($sFK != 'ENTER' && $newFieldList != '') {
+					if (
+						$sFK != 'ENTER' &&
+						$newFieldList != ''
+					) {
 						$res = $cObj->DBgetUpdate(
 							$theTable,
 							$uid,
@@ -263,7 +282,7 @@ class tx_agency_setfixed {
 						// Hook: confirmRegistrationClass_postProcess
 					foreach($hookObjectsArr as $hookObj) {
 						if (method_exists($hookObj, 'confirmRegistrationClass_postProcess')) {
-							$hookObj->confirmRegistrationClass_postProcess($row, $this);
+							$hookObj->confirmRegistrationClass_postProcess($theTable, $row, $currArr, $origArray, $confObj, $this);
 						}
 					}
 				}

@@ -682,8 +682,8 @@ class tx_agency_marker {
 		$prefixId = $this->controlData->getPrefixId();
 
 		$localMarkerArray['###HIDDENFIELDS###'] = $markerArray['###HIDDENFIELDS###'] . ($cmd ? '<input type="hidden" name="' . $prefixId . '[cmd]" value="' . $cmd . '" />':'');
-		$localMarkerArray['###HIDDENFIELDS###'] .= chr(10) . ($authCode?'<input type="hidden" name="' . $prefixId . '[aC]" value="' . $authCode . '" />':'');
-		$localMarkerArray['###HIDDENFIELDS###'] .= chr(10) . ($backUrl?'<input type="hidden" name="' . $prefixId . '[backURL]" value="' . htmlspecialchars($backUrl) . '" />':'');
+		$localMarkerArray['###HIDDENFIELDS###'] .= chr(10) . ($authCode ? '<input type="hidden" name="' . $prefixId . '[aC]" value="' . $authCode . '" />':'');
+		$localMarkerArray['###HIDDENFIELDS###'] .= chr(10) . ($backUrl ? '<input type="hidden" name="' . $prefixId . '[backURL]" value="' . htmlspecialchars($backUrl) . '" />':'');
 		$this->addFormToken(
 			$localMarkerArray,
 			$token,
@@ -715,8 +715,9 @@ class tx_agency_marker {
 			$cmd = $this->controlData->getCmd();
 			$theTable = $this->controlData->getTable();
 			if ($this->controlData->getMode() == MODE_PREVIEW || $viewOnly) {
-				$markerArray['###FIELD_static_info_country###'] = $this->staticInfoObj->getStaticInfoName('COUNTRIES', is_array($row)?$row['static_info_country']:'');
-				$markerArray['###FIELD_zone###'] = $this->staticInfoObj->getStaticInfoName('SUBDIVISIONS', is_array($row)?$row['zone']:'', is_array($row)?$row['static_info_country']:'');
+				$markerArray['###FIELD_static_info_country###'] =
+					$this->staticInfoObj->getStaticInfoName('COUNTRIES', is_array($row) ? $row['static_info_country'] : '');
+				$markerArray['###FIELD_zone###'] = $this->staticInfoObj->getStaticInfoName('SUBDIVISIONS', is_array($row) ? $row['zone'] : '', is_array($row) ? $row['static_info_country'] : '');
 				if (!$markerArray['###FIELD_zone###'] ) {
 					$markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="FE['.$theTable.'][zone]" value="" />';
 				}
@@ -897,6 +898,7 @@ class tx_agency_marker {
 					$this->langObj->getLL('file_view') . '</a><br />';
 				$HTMLContent .= '<input type="hidden" name="' . $tablePrefix . '[' . $theField . '][' . $i . '][name]' . '" value="' . $filenameArray[$i] . '" />';
 			}
+
 			for ($i = sizeof($filenameArray); $i < $number + sizeof($filenameArray); $i++) {
 				$HTMLContent .= '<input id="' .
 				tx_div2007_alpha5::getClassName_fh002(
@@ -1133,6 +1135,7 @@ class tx_agency_marker {
 		$row,
 		$securedArray,
 		$controlData,
+		$dataObj,
 		$confObj,
 		$fieldList = '',
 		$nl2br = TRUE,
@@ -1172,11 +1175,21 @@ class tx_agency_marker {
 			}
 		}
 			// Add global markers
-		$extKey = $this->controlData->getExtKey();
+		$extKey = $controlData->getExtKey();
+
 		if (is_array ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'])) {
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'] as $classRef) {
 				$hookObj= t3lib_div::getUserObj($classRef);
+
 				if (method_exists($hookObj, 'addGlobalMarkers')) {
+					if (
+						method_exists($hookObj, 'needsInit') &&
+						method_exists($hookObj, 'init') &&
+						$hookObj->needsInit()
+					) {
+						$hookObj->init($dataObj);
+					}
+
 					$hookObj->addGlobalMarkers(
 						$markerArray,
 						$controlData,
@@ -1186,6 +1199,7 @@ class tx_agency_marker {
 				}
 			}
 		}
+
 		return $markerArray;
 	}
 

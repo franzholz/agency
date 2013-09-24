@@ -464,6 +464,7 @@ class tx_agency_email {
 				$DBrows[0],
 				$securedArray,
 				$controlData,
+				$dataObj,
 				$confObj,
 				'',
 				FALSE
@@ -587,6 +588,7 @@ class tx_agency_email {
 					$mrow,
 					$securedArray,
 					$controlData,
+					$dataObj,
 					$confObj,
 					'',
 					FALSE,

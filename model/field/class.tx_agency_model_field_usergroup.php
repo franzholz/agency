@@ -63,7 +63,7 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 		}
 			// If inviting and administrative review is enabled, save original reserved user groups
 		if ($cmdKey == 'invite' && $conf['enableAdminReview']) {
-			$this->savedReservedValues = $this->getReservedValues();
+			$this->savedReservedValues = $this->getReservedValues($conf);
 		}
 	}
 
@@ -91,9 +91,7 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 	 *
 	 * @return array the reserved user groups
 	 */
-	public function getReservedValues () {
-		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
-		$conf = $confObj->getConf();
+	public function getReservedValues ($conf) {
 		$result = array_merge(
 			t3lib_div::trimExplode(',', $conf['create.']['overrideValues.']['usergroup'], 1),
 			t3lib_div::trimExplode(',', $conf['invite.']['overrideValues.']['usergroup'], 1),
@@ -111,24 +109,24 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 	 * @param array $row: array
 	 * @return void
 	 */
-	public function removeReservedValues (&$row) {
-		if (isset($row['usergroup'])) {
-			$reservedValues = $this->getReservedValues();
-			if (is_array($row['usergroup'])) {
-				$userGroupArray = $row['usergroup'];
-				$bUseArray = TRUE;
-			} else {
-				$userGroupArray = explode(',', $row['usergroup']);
-				$bUseArray = FALSE;
-			}
-			$userGroupArray = array_diff($userGroupArray, $reservedValues);
-			if ($bUseArray) {
-				$row['usergroup'] = $userGroupArray;
-			} else {
-				$row['usergroup'] = implode(',', $userGroupArray);
-			}
-		}
-	}
+// 	public function removeReservedValues ($conf, &$row) {
+// 		if (isset($row['usergroup'])) {
+// 			$reservedValues = $this->getReservedValues($conf);
+// 			if (is_array($row['usergroup'])) {
+// 				$userGroupArray = $row['usergroup'];
+// 				$bUseArray = TRUE;
+// 			} else {
+// 				$userGroupArray = explode(',', $row['usergroup']);
+// 				$bUseArray = FALSE;
+// 			}
+// 			$userGroupArray = array_diff($userGroupArray, $reservedValues);
+// 			if ($bUseArray) {
+// 				$row['usergroup'] = $userGroupArray;
+// 			} else {
+// 				$row['usergroup'] = implode(',', $userGroupArray);
+// 			}
+// 		}
+// 	}
 
 	public function removeInvalidValues (
 		$conf,
@@ -264,7 +262,7 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 						$keepValues = array_keys($rowArray);
 					}
 				} else {
-					$keepValues = $this->getReservedValues();
+					$keepValues = $this->getReservedValues($conf);
 				}
 				$valuesArray = array_intersect($valuesArray, $keepValues);
 			}

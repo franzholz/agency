@@ -234,7 +234,7 @@ class tx_agency_display {
 		$dataObj,
 		$theTable,
 		$dataArray,
-		$origArray,
+		array $origArray,
 		$securedArray,
 		$cmd,
 		$cmdKey,
@@ -295,6 +295,7 @@ class tx_agency_display {
 				$currentArray,
 				$securedArray,
 				$controlData,
+				$dataObj,
 				$confObj,
 				'',
 				TRUE
@@ -461,7 +462,7 @@ class tx_agency_display {
 		$mode,
 		$theTable,
 		$dataArray,
-		$origArray,
+		array $origArray,
 		$securedArray,
 		$infoFields,
 		$errorFieldArray,
@@ -490,6 +491,15 @@ class tx_agency_display {
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'])) {
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'] as $classRef) {
 					$hookObj= t3lib_div::getUserObj($classRef);
+
+					if (
+						method_exists($hookObj, 'needsInit') &&
+						method_exists($hookObj, 'init') &&
+						$hookObj->needsInit()
+					) {
+						$hookObj->init($dataObj);
+					}
+
 					if (method_exists($hookObj,'registrationProcess_beforeConfirmCreate')) {
 						$hookObj->registrationProcess_beforeConfirmCreate($dataArray, $controlData);
 					}
@@ -513,7 +523,6 @@ class tx_agency_display {
 			if ($bNeedUpdateJS) {
 				$markerObj->addPasswordTransmissionMarkers($markerArray);
 			}
-
 			$templateCode = $cObj->getSubpart($templateCode, $subpartKey);
 			$failure = t3lib_div::_GP('noWarnings') ? FALSE: $controlData->getFailure();
 
@@ -542,6 +551,7 @@ class tx_agency_display {
 					$currentArray,
 					$securedArray,
 					$controlData,
+					$dataObj,
 					$confObj,
 					'',
 					TRUE
@@ -656,7 +666,6 @@ class tx_agency_display {
 				$GLOBALS['TSFE']->additionalHeaderData['JSincludeFormupdate'] = '<script type="text/javascript" src="' . $GLOBALS['TSFE']->absRefPrefix . t3lib_div::createVersionNumberedFilename(t3lib_extMgm::siteRelPath('agency')  . 'scripts/jsfunc.updateform.js') . '"></script>';
 			}
 		}
-
 		return $content;
 	} // createScreen
 
@@ -682,7 +691,7 @@ class tx_agency_display {
 		$theTable,
 		$prefixId,
 		$dataArray,
-		$origArray,
+		array $origArray,
 		$securedArray,
 		$cmd,
 		$cmdKey,
@@ -720,9 +729,7 @@ class tx_agency_display {
 					);
 			}
 
-			if (is_array($origArray)) {
-				$origArray = $dataObj->parseIncomingData($origArray);
-			}
+			$origArray = $dataObj->parseIncomingData($origArray);
 			$aCAuth = $authObj->aCAuth($origArray, $conf['setfixed.']['EDIT.']['_FIELDLIST']);
 			if (
 				is_array($origArray) &&
@@ -839,7 +846,7 @@ class tx_agency_display {
 		$dataObj,
 		$theTable,
 		$dataArray,
-		$origArray,
+		array $origArray,
 		$securedArray,
 		$token
 	) {
@@ -993,7 +1000,7 @@ class tx_agency_display {
 		$templateCode,
 		$subpartMarker,
 		$markerArray,
-		$origArray,
+		array $origArray,
 		$theTable,
 		$prefixId,
 		$row = '',
@@ -1031,6 +1038,7 @@ class tx_agency_display {
 					is_array($row) ? $row : array(),
 					$securedArray,
 					$controlData,
+					$dataObj,
 					$confObj,
 					''
 				);
@@ -1190,7 +1198,7 @@ class tx_agency_display {
 		$autoLoginKey,
 		$prefixId,
 		$dataArray,
-		$origArray,
+		array $origArray,
 		$securedArray,
 		$cmd,
 		$cmdKey,
@@ -1224,6 +1232,7 @@ class tx_agency_display {
 					$dataArray,
 					$securedArray,
 					$controlData,
+					$dataObj,
 					$confObj,
 					'',
 					TRUE,

@@ -210,6 +210,17 @@ plugin.tx_agency {
 		}
 	}
 
+	captcha {
+		10 {
+			extensionKey = sr_freecap
+			evalRule = freecap
+		}
+		20 {
+			extensionKey = captcha
+			evalRule = captcha
+		}
+	}
+
 	forceFileDelete = {$plugin.tx_agency.forceFileDelete}
 
 	parseValues {
