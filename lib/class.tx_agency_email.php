@@ -692,12 +692,7 @@ class tx_agency_email {
 			$content['adminhtml']['final'] = str_replace('\n', '', $content['adminhtml']['final']);
 		}
 
-		$bRecipientIsInt = (
-			class_exists('t3lib_utility_Math') ?
-				t3lib_utility_Math::canBeInterpretedAsInteger($recipient) :
-				t3lib_div::testInt($recipient)
-		);
-
+		$bRecipientIsInt = tx_div2007_core::testInt($recipient);
 		if ($bRecipientIsInt) {
 			$fe_userRec = $GLOBALS['TSFE']->sys_page->getRawRecord('fe_users', $recipient);
 			$recipient = $fe_userRec['email'];

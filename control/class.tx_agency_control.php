@@ -312,13 +312,14 @@ class tx_agency_control {
 		$controlData->setMode(MODE_NORMAL);
 
 		$password = '';
+		$savePassword = '';
 		$cryptedPassword = '';
 		$autoLoginKey = '';
+		$hasError = FALSE;
 
 			// Commands with which the data will not be saved by $dataObj->save
 		$noSaveCommands = array('infomail', 'login', 'delete');
 		$uid = $dataObj->getRecUid();
-
 		$securedArray = array();
 			// Check for valid token
 		if (
@@ -383,7 +384,8 @@ class tx_agency_control {
 					$origArray,
 					$markerArray,
 					$cmdKey,
-					$controlData->getRequiredArray()
+					$controlData->getRequiredArray(),
+					array()
 				);
 
 					// If the two password fields are not equal, clear session data
@@ -407,6 +409,11 @@ class tx_agency_control {
 					$markerArray = $this->marker->getArray();
 				}
 			} else {
+				$checkFieldArray = array();
+				if (!count($origArray)) {
+					$checkFieldArray = array('password'); // only check for the password field on creation
+				}
+
 					// This is either a country change submitted through the onchange event or a file deletion already processed by the parsing function
 					// You come here after a click on the text "Not a member yet? click here to register."
 					// We are going to redisplay
@@ -417,7 +424,8 @@ class tx_agency_control {
 					$origArray,
 					$markerArray,
 					$cmdKey,
-					$controlData->getRequiredArray()
+					$controlData->getRequiredArray(),
+					$checkFieldArray
 				);
 
 					// If the two password fields are not equal, clear session data
@@ -439,7 +447,7 @@ class tx_agency_control {
 				!$bDoNotSave
 			) {
 				if ($theTable == 'fe_users') {
-					$controlData->getStorageSecurity()->initializeAutoLoginPassword($finalDataArray);
+// 					$controlData->getStorageSecurity()->initializeAutoLoginPassword($finalDataArray);
 						// We generate an interim password in the case of an invitation
 					if (
 						$cmdKey == 'invite'	||
@@ -452,8 +460,8 @@ class tx_agency_control {
 						$controlData->generatePassword($finalDataArray, $genLength);
 					}
 
-						// If inviting or if auto-login will be required on confirmation, we store an encrypted version of the password
-					$password = $controlData->readPasswordForStorage();
+					$password = $controlData->readPassword();
+					$cryptedPassword = '';
 
 					if (
 						$cmdKey == 'invite' ||
@@ -475,7 +483,11 @@ class tx_agency_control {
 							$finalDataArray['tx_agency_password'] = base64_encode($cryptedPassword);
 						}
 					}
+
+					// If inviting or if auto-login will be required on confirmation, we store an encrypted version of the password
+					$savePassword = $controlData->readPasswordForStorage();
 				}
+
 				$newDataArray = array();
 				$theUid = $dataObj->save(
 					$staticInfoObj,
@@ -487,9 +499,10 @@ class tx_agency_control {
 					$cmd,
 					$cmdKey,
 					$controlData->getPid(),
-					$password,
+					$savePassword,
 					$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess']
 				);
+
 				if ($newDataArray) {
 					$dataArray = $newDataArray;
 				}
@@ -509,6 +522,7 @@ class tx_agency_control {
 					$origArray,
 					$markerArray,
 					$cmdKey,
+					array(),
 					array()
 				);
 			}
@@ -780,9 +794,7 @@ class tx_agency_control {
 						$controlData->setSetfixedEnabled(1);
 					}
 					$feuData = $controlData->getFeUserData();
-// 					if (count($origArray)) {
 					$origArray = $dataObj->parseIncomingData($origArray, FALSE);
-// 					}
 
 					$content = $this->setfixedObj->processSetFixed(
 						$conf,
@@ -807,7 +819,8 @@ class tx_agency_control {
 						$securedArray,
 						$this,
 						$feuData,
-						$token
+						$token,
+						$hasError
 					);
 					break;
 				case 'infomail':
@@ -905,7 +918,6 @@ class tx_agency_control {
 						$dataObj->inError,
 						$token
 					);
-
 					break;
 				case 'invite':
 				case 'create':
@@ -976,6 +988,7 @@ class tx_agency_control {
 			if (
 				($cmd != 'setfixed' || $cmdKey != 'edit' || $cmdKey != 'password') &&
 				!$errorContent &&
+				!$hasError &&
 				!$controlData->getFeUserData('preview')
 			) {
 				$bDeleteRegHash = TRUE;
@@ -996,7 +1009,6 @@ class tx_agency_control {
 	/**
 	 * Perform user login and redirect to configured url, if any
 	 *
-	 * @param array	$row: incoming setfixed parameters
 	 * @param boolen $redirect: whether to redirect after login or not
 	 * @return boolean TRUE, if login was successful, FALSE otherwise
 	 */
@@ -1004,15 +1016,17 @@ class tx_agency_control {
 		$conf,
 		$langObj,
 		$controlData,
-		array $row,
+		$username,
+		$cryptedPassword,
 		$redirect = TRUE
 	) {
 		$result = TRUE;
+
 			// Log the user in
 		$loginData = array(
-			'uname' => $row['username'],
-			'uident' => $row['password'],
-			'uident_text' => $row['password'],
+			'uname' => $username,
+			'uident' => $cryptedPassword,
+			'uident_text' => $cryptedPassword,
 			'status' => 'login',
 		);
 
@@ -1022,6 +1036,7 @@ class tx_agency_control {
 
 			// Get authentication info array
 		$authInfo = $GLOBALS['TSFE']->fe_user->getAuthInfoArray();
+
 			// Get user info
 		$user =
 			$GLOBALS['TSFE']->fe_user->fetchUserRecord(
@@ -1032,8 +1047,9 @@ class tx_agency_control {
 		if (is_array($user)) {
 				// Get the appropriate authentication service
 			$authServiceObj = t3lib_div::makeInstanceService('auth', 'authUserFE');
+
 				// Check authentication
-			if (is_object($authServiceObj)) {
+			if (is_object($authServiceObj) && get_class($authServiceObj) == 'tx_saltedpasswords_sv1') {
 				$ok = $authServiceObj->compareUident($user, $loginData);
 				if ($ok) {
 						// Login successfull: create user session

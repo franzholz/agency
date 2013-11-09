@@ -151,6 +151,7 @@ class tx_agency_hooksHandler {
 		$markContentArray,
 		$cmdKey,
 		$requiredArray,
+		$checkFieldArray,
 		$theField,
 		$cmdParts,
 		$bInternal,

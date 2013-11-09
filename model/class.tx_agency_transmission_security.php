@@ -168,7 +168,8 @@ class tx_agency_transmission_security {
 				if (count($extraHiddenFieldsArray)) {
 					$extraHiddenFields = implode(LF, $extraHiddenFieldsArray);
 				}
-				$GLOBALS['TSFE']->additionalHeaderData['agency_rsaauth'] = '<script type="text/javascript" src="' . $GLOBALS['TSFE']->absRefPrefix . t3lib_div::createVersionNumberedFilename(t3lib_extMgm::siteRelPath('agency')  . 'scripts/rsaauth.js') . '"></script>';
+				$headerData = '<script type="text/javascript" src="' . $GLOBALS['TSFE']->absRefPrefix . t3lib_div::createVersionNumberedFilename(t3lib_extMgm::siteRelPath('agency')  . 'scripts/rsaauth.js') . '"></script>';
+				$GLOBALS['TSFE']->additionalHeaderData['agency_rsaauth'] = $headerData;
 				$markerArray['###FORM_ONSUBMIT###'] = ' onsubmit="tx_agency_encrypt(this); return true;"';
 				$markerArray['###HIDDENFIELDS###'] .= LF . $extraHiddenFields;
 				break;

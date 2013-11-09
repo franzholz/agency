@@ -3,33 +3,16 @@ if (!defined ('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
-$className = '\\TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility';
-$typoVersion =
-	method_exists('t3lib_div', 'int_from_ver') ?
-		t3lib_div::int_from_ver(TYPO3_version) :
-		call_user_func($className . '::convertVersionNumberToInteger', TYPO3_version);
 
 if (TYPO3_MODE == 'BE' && !$loadTcaAdditions) {
-	if ($typoVersion >= 6000000) {
+	t3lib_extMgm::addStaticFile($_EXTKEY, 'static/', 'Agency Registration');
 
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'static/', 'Agency Registration');
+	t3lib_div::loadTCA('tt_content');
+	$TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY . ''] = 'layout,select_key';
+	$TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY . ''] = 'pi_flexform';
+	t3lib_extMgm::addPiFlexFormValue($_EXTKEY . '', 'FILE:EXT:' . $_EXTKEY . '/pi/flexform_ds_pi.xml');
 
-		t3lib_div::loadTCA('tt_content');
-		$TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY . ''] = 'layout,select_key';
-		$TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY . ''] = 'pi_flexform';
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue($_EXTKEY . '', 'FILE:EXT:' . $_EXTKEY . '/pi/flexform_ds_pi.xml');
-
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPlugin(array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:tt_content.list_type', $_EXTKEY . ''),'list_type');
-	} else {
-		t3lib_extMgm::addStaticFile($_EXTKEY, 'static/', 'Agency Registration');
-
-		t3lib_div::loadTCA('tt_content');
-		$TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY . ''] = 'layout,select_key';
-		$TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY . ''] = 'pi_flexform';
-		t3lib_extMgm::addPiFlexFormValue($_EXTKEY . '', 'FILE:EXT:' . $_EXTKEY . '/pi/flexform_ds_pi.xml');
-
-		t3lib_extMgm::addPlugin(array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:tt_content.list_type', $_EXTKEY . ''),'list_type');
-	}
+	t3lib_extMgm::addPlugin(array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:tt_content.list_type', $_EXTKEY . ''),'list_type');
 }
 
 

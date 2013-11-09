@@ -1,4 +1,4 @@
-function tx_srfeuserregister_encrypt(form) {
+function tx_agency_encrypt(form) {
 	var rsa = new RSAKey();
 	rsa.setPublic(form.n.value, form.e.value);
 

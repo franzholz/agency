@@ -85,10 +85,13 @@ class tx_agency_setfixed {
 		$securedArray,
 		$pObj,
 		$feuData,
-		$token
+		$token,
+		&$hasError
 	) {
 		$row = $origArray;
 		$errorContent = '';
+		$hasError = FALSE;
+		$cryptedPassword = '';
 
 		if ($controlData->getSetfixedEnabled()) {
 			$autoLoginIsRequested = FALSE;
@@ -256,10 +259,12 @@ class tx_agency_setfixed {
 						);
 					}
 					$currArr = $origArray;
+
 					if ($autoLoginIsRequested) {
+						$cryptedPassword = $currArr['tx_agency_password'];
 						$controlData->getStorageSecurity()
 							->decryptPasswordForAutoLogin(
-								$currArr['tx_agency_password'],
+								$cryptedPassword,
 								$autoLoginKey
 							);
 					}
@@ -270,7 +275,6 @@ class tx_agency_setfixed {
 							$currArr,
 							$modArray
 						);
-
 					$row = array_merge($row, $modArray);
 					tx_div2007_alpha::userProcess_fh001(
 						$pObj,
@@ -282,7 +286,14 @@ class tx_agency_setfixed {
 						// Hook: confirmRegistrationClass_postProcess
 					foreach($hookObjectsArr as $hookObj) {
 						if (method_exists($hookObj, 'confirmRegistrationClass_postProcess')) {
-							$hookObj->confirmRegistrationClass_postProcess($theTable, $row, $currArr, $origArray, $confObj, $this);
+							$hookObj->confirmRegistrationClass_postProcess(
+								$theTable,
+								$row,
+								$currArr,
+								$origArray,
+								$confObj,
+								$this
+							);
 						}
 					}
 				}
@@ -316,7 +327,8 @@ class tx_agency_setfixed {
 								$conf,
 								$langObj,
 								$controlData,
-								$currArr,
+								$currArr['username'],
+								$cryptedPassword,
 								FALSE
 							);
 
@@ -355,7 +367,7 @@ class tx_agency_setfixed {
 									$markerObj,
 									$dataObj,
 									$templateCode,
-									'###TEMPLATE_SETFIXED_FAILED###',
+									'###TEMPLATE_SETFIXED_LOGIN_FAILED###',
 									$markerArray,
 									$origArray,
 									$theTable,
@@ -363,6 +375,7 @@ class tx_agency_setfixed {
 									'',
 									''
 								);
+							$hasError = TRUE;
 						}
 					}
 
@@ -520,9 +533,10 @@ class tx_agency_setfixed {
 									$conf,
 									$langObj,
 									$controlData,
+									$currArr['username'],
+									$cryptedPassword,
 									$currArr
 								);
-
 							if ($loginSuccess) {
 									// Login was successful
 								exit;
@@ -538,7 +552,7 @@ class tx_agency_setfixed {
 									$markerObj,
 									$dataObj,
 									$templateCode,
-									'###TEMPLATE_SETFIXED_FAILED###',
+									'###TEMPLATE_SETFIXED_LOGIN_FAILED###',
 									$markerArray,
 									$origArray,
 									$theTable,
@@ -546,6 +560,7 @@ class tx_agency_setfixed {
 									'',
 									''
 								);
+								$hasError = TRUE;
 							}
 						}
 					}
@@ -694,12 +709,7 @@ class tx_agency_setfixed {
 				}
 				$urlConf = array();
 				$urlConf['disableGroupAccessCheck'] = TRUE;
-				$bconfirmTypeIsInt = (
-					class_exists('t3lib_utility_Math') ?
-						t3lib_utility_Math::canBeInterpretedAsInteger($confirmType) :
-						t3lib_div::testInt($confirmType)
-				);
-
+				$bconfirmTypeIsInt = tx_div2007_core::testInt($confirmType);
 				$confirmType = ($bconfirmTypeIsInt ? intval($confirmType) : $GLOBALS['TSFE']->type);
 				$url =
 					tx_div2007_alpha5::getTypoLink_URL_fh003(

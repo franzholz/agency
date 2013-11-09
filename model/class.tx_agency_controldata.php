@@ -99,8 +99,8 @@ class tx_agency_controldata {
 				}
 			}
 		}
-
 		$this->site_url = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+
 		if ($GLOBALS['TSFE']->absRefPrefix) {
 			if(strpos($GLOBALS['TSFE']->absRefPrefix, 'http://') === 0 || strpos($GLOBALS['TSFE']->absRefPrefix, 'https://') === 0) {
 				$this->site_url = $GLOBALS['TSFE']->absRefPrefix;
@@ -114,11 +114,7 @@ class tx_agency_controldata {
 		$this->setTable($theTable);
 		$authObj = t3lib_div::getUserObj('&tx_agency_auth');
 
-		$bSysLanguageUidIsInt = (
-			class_exists('t3lib_utility_Math') ?
-				t3lib_utility_Math::canBeInterpretedAsInteger($GLOBALS['TSFE']->config['config']['sys_language_uid']) :
-				t3lib_div::testInt($GLOBALS['TSFE']->config['config']['sys_language_uid'])
-		);
+		$bSysLanguageUidIsInt = tx_div2007_core::testInt($GLOBALS['TSFE']->config['config']['sys_language_uid']);
 		$this->sys_language_content = ($bSysLanguageUidIsInt ? $GLOBALS['TSFE']->config['config']['sys_language_uid'] : 0);
 
 			// set the title language overlay
@@ -142,6 +138,7 @@ class tx_agency_controldata {
 		) {
 			$this->setSetfixedEnabled(1);
 		}
+
 			// Get hash variable if provided and if short url feature is enabled
 		$feUserData = t3lib_div::_GP($prefixId);
 		$bSecureStartCmd = (count($feUserData) == 1 && in_array($feUserData['cmd'], array('create', 'edit', 'password')));
@@ -165,7 +162,11 @@ class tx_agency_controldata {
 			if ($regHash) {
 				$getVars = $this->getShortUrl($regHash);
 
-				if (isset($getVars) && is_array($getVars) && count($getVars)) {
+				if (
+					isset($getVars) &&
+					is_array($getVars) &&
+					count($getVars)
+				) {
 					$bValidRegHash = TRUE;
 					$origDataFieldArray = array('sFK', 'cmd', 'submit', 'fetch', 'regHash', 'preview');
 					$origFeuserData = array();
@@ -230,12 +231,7 @@ class tx_agency_controldata {
 		$this->secureInput($feUserData);
 
 			// Get the data for the uid provided in query parameters
-		$bRuIsInt = (
-			class_exists('t3lib_utility_Math') ?
-				t3lib_utility_Math::canBeInterpretedAsInteger($feUserData['rU']) :
-				t3lib_div::testInt($feUserData['rU'])
-		);
-
+		$bRuIsInt = tx_div2007_core::testInt($feUserData['rU']);
 		if ($bRuIsInt) {
 			$theUid = intval($feUserData['rU']);
 			$origArray = $GLOBALS['TSFE']->sys_page->getRawRecord($theTable, $theUid);
@@ -455,7 +451,7 @@ class tx_agency_controldata {
 	*
 	* @return	string	the password
 	*/
-	protected function readPassword () {
+	public function readPassword () {
 		$password = '';
 		$securedArray = $this->readSecuredArray();
 		if ($securedArray['password']) {
@@ -657,11 +653,7 @@ class tx_agency_controldata {
 					unset($allSessionData[$extKey][$key]);
 				}
 			} else {
-				$className = '\\TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility';
-				$typoVersion =
-					method_exists('t3lib_div', 'int_from_ver') ?
-						t3lib_div::int_from_ver(TYPO3_version) :
-						call_user_func($className . '::convertVersionNumberToInteger', TYPO3_version);
+				$typoVersion = tx_div2007_core::getTypoVersion();
 
 				if ($typoVersion < 4007000) {
 					foreach ($keys as $key) {
@@ -804,11 +796,7 @@ class tx_agency_controldata {
 			is_array($conf['conf.'][$theTable . '.']) &&
 			isset($conf['conf.'][$theTable . '.'][$theCode . '.']) &&
 			is_array($conf['conf.'][$theTable . '.'][$theCode . '.']) &&
-			(
-				class_exists('t3lib_utility_Math') ?
-					t3lib_utility_Math::canBeInterpretedAsInteger($conf['conf.'][$theTable . '.'][$theCode . '.']['sys_language_uid']) :
-					t3lib_div::testInt($conf['conf.'][$theTable . '.'][$theCode . '.']['sys_language_uid'])
-			)
+			tx_div2007_core::testInt($conf['conf.'][$theTable . '.'][$theCode . '.']['sys_language_uid'])
 		)	{
 			$rc = $conf['conf.'][$theTable . '.'][$theCode . '.']['sys_language_uid'];
 		} else {
@@ -922,19 +910,13 @@ class tx_agency_controldata {
 			}
 		}
 		if (!$result) {
-			$bPidIsInt =
-				(
-					class_exists('t3lib_utility_Math') ?
-						t3lib_utility_Math::canBeInterpretedAsInteger($this->conf['pid']) :
-						t3lib_div::testInt($this->conf['pid'])
-				);
+			$bPidIsInt = tx_div2007_core::testInt($this->conf['pid']);
 			$result = ($bPidIsInt ? intval($this->conf['pid']) : $GLOBALS['TSFE']->id);
 		}
 		return $result;
 	}
 
 	public function setPid ($type, $pid) {
-
 		if (!intval($pid)) {
 			switch ($type) {
 				case 'infomail':
@@ -1009,7 +991,6 @@ class tx_agency_controldata {
 	*  Get the stored variables using the hash value to access the database
 	*/
 	public function getShortUrl ($regHash) {
-
 			// get the serialised array from the DB based on the passed hash value
 		$varArray = array();
 		$res =
@@ -1046,7 +1027,6 @@ class tx_agency_controldata {
 	*  Get the stored variables using the hash value to access the database
 	*/
 	public function deleteShortUrl ($regHash) {
-
 		if ($regHash != '') {
 			// get the serialised array from the DB based on the passed hash value
 			$GLOBALS['TYPO3_DB']->exec_DELETEquery(

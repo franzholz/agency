@@ -111,10 +111,10 @@ class tx_agency_storage_security {
 	* @param	array	$dataArray
 	* @return	void
 	*/
-	public function initializeAutoLoginPassword (array &$dataArray) {
-		$dataArray['tx_agency_password'] = '';
-		unset($dataArray['auto_login_key']);
-	}
+// 	public function initializeAutoLoginPassword (array &$dataArray) {
+// 		$dataArray['tx_agency_password'] = '';
+// 		unset($dataArray['auto_login_key']);
+// 	}
 
 	/**
 	* Determines if auto login should be attempted
@@ -129,6 +129,7 @@ class tx_agency_storage_security {
 			$autoLoginKey = $feuData['key'];
 			$autoLoginIsRequested = TRUE;
 		}
+
 		return $autoLoginIsRequested;
 	}
 
@@ -187,7 +188,7 @@ class tx_agency_storage_security {
 					if (is_object($backend) && $backend->isAvailable()) {
 						$decryptedPassword = $backend->decrypt($privateKey, $password);
 						if ($decryptedPassword) {
-							$dataArray['password'] = $decryptedPassword;
+							$password = $decryptedPassword;
 						} else {
 								// Failed to decrypt auto login password
 							$message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_decrypt_auto_login_failed');
@@ -201,6 +202,7 @@ class tx_agency_storage_security {
 				}
 			}
 		}
+
 		return $result;
 	}
 }

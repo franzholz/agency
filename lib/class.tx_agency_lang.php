@@ -147,14 +147,6 @@ class tx_agency_lang extends tx_div2007_alpha_language_base {
 					$alt,
 					$hsc
 				);
-					// Fall back to tslib_fe::sL
-				if ($localizedLabel == '') {
-					$localizedLabel = $GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:' . $expandedKey);
-					if ($localizedLabel != '') {
-						$message = sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_label_not_localized_by_div2007'), $expandedKey);
-						t3lib_div::sysLog($message, $this->extKey, t3lib_div::SYSLOG_SEVERITY_WARNING);
-					}
-				}
 		}
 			// No allowed salutation suffix and fall back
 		if ($localizedLabel == '' || $localizedLabel == $alt || $usedLang != $this->LLkey) {
@@ -169,12 +161,6 @@ class tx_agency_lang extends tx_div2007_alpha_language_base {
 
 				// Fall back to tslib_fe::sL
 			if ($localizedLabel == '') {
-				$localizedLabel = $GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:' . $key);
-				if ($localizedLabel != '') {
-					$message = sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_label_not_localized_by_div2007'), $key);
-					t3lib_div::sysLog($message, $this->extKey, t3lib_div::SYSLOG_SEVERITY_WARNING);
-				}
-
 				if ($localizedLabel == '' && $showError) {
 					$localizedLabel = 'ERROR in extension "' .  $this->extKey . '" no text for key "' . $key . '" can be found';
 				}

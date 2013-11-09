@@ -154,11 +154,7 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 		$tmpArray = t3lib_div::trimExplode(',', $conf['userGroupsPidList'], 1);
 		if (count($tmpArray)) {
 			foreach($tmpArray as $value) {
-				$valueIsInt = (
-					class_exists('t3lib_utility_Math') ?
-					t3lib_utility_Math::canBeInterpretedAsInteger($value) :
-					t3lib_div::testInt($value)
-				);
+				$valueIsInt = tx_div2007_core::testInt($value);
 				if ($valueIsInt) {
 					$pidArray[] = intval($value);
 				}

@@ -310,11 +310,7 @@ class tx_agency_data {
 			$count = 0;
 
 			foreach ($this->conf['evalErrors.'][$theField . '.'][$theRule . '.'] as $k => $v) {
-				$bKIsInt = (
-					class_exists('t3lib_utility_Math') ?
-						t3lib_utility_Math::canBeInterpretedAsInteger($k) :
-						t3lib_div::testInt($k)
-				);
+				$bKIsInt = tx_div2007_core::testInt($k);
 
 				if ($bInternal) {
 					if ($k == 'internal') {
@@ -374,7 +370,8 @@ class tx_agency_data {
 		array &$origArray,
 		array &$markContentArray,
 		$cmdKey,
-		array $requiredArray
+		array $requiredArray,
+		array $checkFieldArray
 	) {
 		$failureMsg = array();
 		$displayFieldArray = t3lib_div::trimExplode(',', $this->conf[$cmdKey.'.']['fields'], 1);
@@ -422,14 +419,19 @@ class tx_agency_data {
 				$bRecordExists = ($recordTestPid != 0);
 			} else {
 				$thePid = $this->controlData->getPid();
-				$recordTestPid = $thePid ? $thePid :
-				(method_exists('TYPO3\\CMS\\Core\\Utility\\MathUtility', 'convertToPositiveInteger') ? \TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($pid) : t3lib_div::intval_positive($pid));
+				$recordTestPid = ($thePid ? $thePid : tx_div2007_core::intval_positive($pid));
 			}
 			$countArray = array();
 			$countArray['hook'] = array();
 			$countArray['preg'] = array();
 
 			foreach ($this->conf[$cmdKey.'.']['evalValues.'] as $theField => $theValue) {
+				if (
+					count($checkFieldArray) &&
+					!in_array($theField, $checkFieldArray)
+				) {
+					continue;
+				}
 				$this->evalErrors[$theField] = array();
 				$failureMsg[$theField] = array();
 				$listOfCommands = t3lib_div::trimExplode(',', $theValue, 1);
@@ -467,7 +469,6 @@ class tx_agency_data {
 								if ($theCmd == 'uniqueLocal' || $theCmd == 'uniqueDeletedLocal') {
 									$where .= ' AND pid IN (' . $recordTestPid . ')';
 								}
-
 								$DBrows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,' . $theField, $theTable, $where, '', '', '1');
 
 								if (
@@ -819,6 +820,7 @@ class tx_agency_data {
 												$markContentArray,
 												$cmdKey,
 												$requiredArray,
+												$checkFieldArray,
 												$theField,
 												$cmdParts,
 												$bInternal,
@@ -897,6 +899,10 @@ class tx_agency_data {
 					}
 					$markContentArray['###EVAL_ERROR_FIELD_' . $theField . '###'] = ($errorMsg != '' ? $errorMsg : '<!--no error-->');
 				}
+
+				if (!count($this->evalErrors[$theField])) {
+					unset($this->evalErrors[$theField]);
+				}
 			}
 		}
 
@@ -918,6 +924,7 @@ class tx_agency_data {
 			}
 		}
 
+		$failureArray = array_unique($failureArray);
 		$failure = implode($failureArray, ',');
 		$this->controlData->setFailure($failure);
 		return $this->evalErrors;

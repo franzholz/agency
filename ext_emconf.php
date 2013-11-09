@@ -2,12 +2,6 @@
 
 /***************************************************************
  * Extension Manager/Repository config file for ext "agency".
- *
- * Auto generated 20-08-2013 20:43
- *
- * Manual updates:
- * Only the data in the array - everything else is removed by next
- * writing. "version" and "dependencies" must not be touched!
  ***************************************************************/
 
 $EM_CONF[$_EXTKEY] = array(
@@ -35,10 +29,10 @@ $EM_CONF[$_EXTKEY] = array(
 	'constraints' => array(
 		'depends' => array(
 			'php' => '5.2.0-5.4.99',
-			'typo3' => '4.4.0-6.1.99',
+			'typo3' => '4.4.0-6.2.99',
 			'cms' => '',
-			'static_info_tables' => '2.3.1-6.1.99',
-			'div2007' => '0.13.0-',
+			'static_info_tables' => '2.3.1-6.2.99',
+			'div2007' => '1.0.3-',
 		),
 		'conflicts' => array(
 			'sr_feuser_register' => '',

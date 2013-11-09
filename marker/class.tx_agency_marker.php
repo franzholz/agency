@@ -112,7 +112,7 @@ class tx_agency_marker {
 		$otherLabelsList = 'yes,no,new_password,password_again,tooltip_password_again,tooltip_invitation_password_again,click_here_to_register,tooltip_click_here_to_register,click_here_to_edit,tooltip_click_here_to_edit,click_here_to_delete,tooltip_click_here_to_delete,click_here_to_see_terms,tooltip_click_here_to_see_terms'.
 		',copy_paste_link,enter_account_info,enter_invitation_account_info,required_info_notice,excuse_us,'.
 			',tooltip_login_username,tooltip_login_password,'.
-			',registration_problem,registration_sorry,registration_clicked_twice,registration_help,kind_regards,kind_regards_cre,kind_regards_del,kind_regards_ini,kind_regards_inv,kind_regards_upd'.
+			',registration_problem,registration_login,registration_sorry,registration_clicked_twice,registration_help,kind_regards,kind_regards_cre,kind_regards_del,kind_regards_ini,kind_regards_inv,kind_regards_upd'.
 			',v_dear,v_verify_before_create,v_verify_invitation_before_create,v_verify_before_update,v_really_wish_to_delete,v_edit_your_account'.
 			',v_email_lost_password,v_infomail_dear,v_infomail_lost_password_confirm,v_infomail_lost_password_subject'.
 
@@ -1156,12 +1156,7 @@ class tx_agency_marker {
 		} else {
 			if (is_array($row)) {
 				foreach($row as $field => $value) {
-					$bFieldIsInt = (
-						class_exists('t3lib_utility_Math') ?
-							t3lib_utility_Math::canBeInterpretedAsInteger($field) :
-							t3lib_div::testInt($field)
-					);
-
+					$bFieldIsInt = tx_div2007_core::testInt($field);
 					if (!$bFieldIsInt) {
 						if (is_array($value)) {
 							$value = implode(',', $value);
