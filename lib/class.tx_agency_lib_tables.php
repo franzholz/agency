@@ -77,7 +77,7 @@ class tx_agency_lib_tables {
 		}
 
 		if (!$classNameArray['model'] || $bView && !$classNameArray['model']) {
-			debug('Error in ' . AGENCY_EXT . '. No class found after calling function tx_agency_lib_tables::get with parameters "' . $functablename . '", ' . $bView . '.', 'internal error', __LINE__, __FILE__);
+			debug('Error in ' . AGENCY_EXT . '. No class found after calling function tx_agency_lib_tables::get with parameters "' . $functablename . '", ' . $bView . '.', 'internal error'); // keep this
 			return 'ERROR';
 		}
 
@@ -89,7 +89,7 @@ class tx_agency_lib_tables {
 					list($extKey, $className) = t3lib_div::trimExplode(':', $className, TRUE);
 
 					if (!t3lib_extMgm::isLoaded($extKey)) {
-						debug('Error in ' . AGENCY_EXT . '. No extension "' . $extKey . '" has been loaded to use class class.' . $className . '.','internal error');
+						debug('Error in ' . AGENCY_EXT . '. No extension "' . $extKey . '" has been loaded to use class class.' . $className . '.','internal error'); // keep this
 						continue;
 					}
 					$path = t3lib_extMgm::extPath($extKey);
@@ -108,7 +108,7 @@ class tx_agency_lib_tables {
 				);
 			}
 		} else {
-			debug ('Object for \'' . $functablename . '\' has not been found.', 'internal error in ' . AGENCY_EXT);
+			debug ('Object for \'' . $functablename . '\' has not been found.', 'internal error in ' . AGENCY_EXT); // keep this
 		}
 
 		if (

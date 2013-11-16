@@ -518,7 +518,6 @@ class tx_agency_setfixed {
 								$errorContent = sprintf($errorText, $errorCode['1']);
 							}
 						}
-
 						if ($errorContent) {
 							$content = $errorContent;
 						} else if (
@@ -561,7 +560,7 @@ class tx_agency_setfixed {
 									''
 								);
 								$hasError = TRUE;
-							}
+´							}
 						}
 					}
 				}

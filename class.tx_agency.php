@@ -42,7 +42,6 @@ class tx_agency {
 	public $cObj;
 
 	public function main($content, $conf) {
-
 		$pibaseObj = t3lib_div::getUserObj('&tx_agency_pi_base');
 		$pibaseObj->cObj = $this->cObj;
 		$content = $pibaseObj->main($content, $conf);
@@ -50,7 +49,8 @@ class tx_agency {
 	}
 }
 
-if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/class.tx_agency_pi.php']) {
-	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/class.tx_agency_pi.php']);
+if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/class.tx_agency.php']) {
+	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/class.tx_agency.php']);
 }
+
 ?>

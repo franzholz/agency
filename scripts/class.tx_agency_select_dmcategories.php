@@ -74,7 +74,11 @@ class tx_agency_select_dmcategories {
 		$params['field'] = $field;
 */
 
-		if ($LANG->lang != 'default' && $LANG->lang != '' && t3lib_extMgm::isLoaded('static_info_tables')) {
+		if (
+			$LANG->lang != 'default' &&
+			$LANG->lang != '' &&
+			t3lib_extMgm::isLoaded(STATIC_INFO_TABLES_EXT)
+		) {
 			$items = $params['items'];
 			$config = $params['config'];
 			$table = $config['itemsProcFunc_config']['table'];

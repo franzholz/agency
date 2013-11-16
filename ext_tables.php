@@ -3,26 +3,36 @@ if (!defined ('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
+$typoVersion = tx_div2007_core::getTypoVersion();
 
-if (TYPO3_MODE == 'BE' && !$loadTcaAdditions) {
+if (
+	TYPO3_MODE == 'BE' &&
+	!$loadTcaAdditions
+) {
 	t3lib_extMgm::addStaticFile($_EXTKEY, 'static/', 'Agency Registration');
 
-	t3lib_div::loadTCA('tt_content');
-	$TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY . ''] = 'layout,select_key';
-	$TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY . ''] = 'pi_flexform';
-	t3lib_extMgm::addPiFlexFormValue($_EXTKEY . '', 'FILE:EXT:' . $_EXTKEY . '/pi/flexform_ds_pi.xml');
+	if ($typoVersion < 6001000) {
 
-	t3lib_extMgm::addPlugin(array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:tt_content.list_type', $_EXTKEY . ''),'list_type');
+		t3lib_div::loadTCA('tt_content');
+	}
+
+	$listType = $_EXTKEY . '';
+	$TCA['tt_content']['types']['list']['subtypes_excludelist'][$listType] = 'layout,select_key';
+	$TCA['tt_content']['types']['list']['subtypes_addlist'][$listType] = 'pi_flexform';
+	t3lib_extMgm::addPiFlexFormValue($listType, 'FILE:EXT:' . $_EXTKEY . '/pi/flexform_ds_pi.xml');
+	t3lib_extMgm::addPlugin(array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:tt_content.list_type', $listType), 'list_type');
 }
-
 
 if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 
-	/**
-	* Setting up country, country subdivision, preferred language, first_name and last_name in fe_users table
-	* Adjusting some maximum lengths to conform to specifications of payment gateways (ref.: Authorize.net)
-	*/
-	t3lib_div::loadTCA('fe_users');
+	if ($typoVersion < 6001000) {
+
+		/**
+		* Setting up country, country subdivision, preferred language, first_name and last_name in fe_users table
+		* Adjusting some maximum lengths to conform to specifications of payment gateways (ref.: Authorize.net)
+		*/
+		t3lib_div::loadTCA('fe_users');
+	}
 
 	$TCA['fe_users']['columns']['username']['config']['eval'] = 'nospace,uniqueInPid,required';
 	$TCA['fe_users']['columns']['name']['config']['max'] = '100';
@@ -34,12 +44,9 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 	$TCA['fe_users']['columns']['email']['config']['max'] = '255';
 	$TCA['fe_users']['columns']['telephone']['config']['max'] = '25';
 	$TCA['fe_users']['columns']['fax']['config']['max'] = '25';
-
-
 	$TCA['fe_users']['columns']['image']['config']['uploadfolder'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['uploadfolder'];
 	$TCA['fe_users']['columns']['image']['config']['max_size'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['imageMaxSize'];
 	$TCA['fe_users']['columns']['image']['config']['allowed'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['imageTypes'];
-
 
 	$addColumnarray = array(
 		'cnum' => array(
@@ -262,9 +269,7 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 		);
 
 		t3lib_extMgm::addTCAcolumns('fe_users', $tempCols);
-
 		$TCA['fe_users']['feInterface']['fe_admin_fieldList'] .= ',module_sys_dmail_newsletter,module_sys_dmail_category,module_sys_dmail_html';
-
 		t3lib_extMgm::addToAllTCATypes('fe_users','--div--;Direct mail,module_sys_dmail_newsletter;;;;1-1-1,module_sys_dmail_category,module_sys_dmail_html');
 	}
 

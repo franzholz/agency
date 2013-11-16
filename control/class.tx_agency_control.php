@@ -742,7 +742,6 @@ class tx_agency_control {
 							$controlData,
 							$finalDataArray
 						);
-
 					if ($loginSuccess) {
 							// Login was successful
 						exit;
@@ -1045,11 +1044,18 @@ class tx_agency_control {
 			);
 
 		if (is_array($user)) {
+			$authServiceClass = '';
 				// Get the appropriate authentication service
 			$authServiceObj = t3lib_div::makeInstanceService('auth', 'authUserFE');
+			if (is_object($authServiceObj)) {
+				$authServiceClass = get_class($authServiceObj);
+			}
 
 				// Check authentication
-			if (is_object($authServiceObj) && get_class($authServiceObj) == 'tx_saltedpasswords_sv1') {
+			if (
+				$authServiceClass == 'tx_saltedpasswords_sv1' ||
+				$authServiceClass == 'TYPO3\\CMS\\Saltedpasswords\\SaltedPasswordService'
+			) {
 				$ok = $authServiceObj->compareUident($user, $loginData);
 				if ($ok) {
 						// Login successfull: create user session

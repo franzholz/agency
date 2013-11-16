@@ -22,16 +22,7 @@ if (!defined(STATIC_INFO_TABLES_EXT)) {
 }
 
 	// Add Status Report
-$className = '\\TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility';
-$typoVersion =
-	method_exists('t3lib_div', 'int_from_ver') ?
-		t3lib_div::int_from_ver(TYPO3_version) :
-		call_user_func($className . '::convertVersionNumberToInteger', TYPO3_version);
-
-if ($typoVersion >= 4006000) {
-	require_once(PATH_BE_AGENCY . 'hooks/statusreport/ext_localconf.php');
-}
-unset($typoVersion);
+require_once(PATH_BE_AGENCY . 'hooks/statusreport/ext_localconf.php');
 
 t3lib_extMgm::addPItoST43($_EXTKEY, 'class.tx_agency.php', '', 'list_type', 0);
 
@@ -42,7 +33,6 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['imageMaxSize'] = $_EXTCONF['im
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['imageTypes'] = $_EXTCONF['imageTypes'] ? $_EXTCONF['imageTypes'] : 'png,jpeg,jpg,gif,tif,tiff';
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['enableDirectMail'] = $_EXTCONF['enableDirectMail'] ? $_EXTCONF['enableDirectMail'] : 0;
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['forceGender'] = $_EXTCONF['forceGender'] ? $_EXTCONF['forceGender'] : 0;
-
 
 	/* Example of configuration of hooks */
 /*
@@ -57,9 +47,9 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['version'] = $EM_CONF[$_EXTKEY]
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['constraints'] = $EM_CONF[$_EXTKEY]['constraints'];
 
 	// Set path to extension static_info_tables
-if (t3lib_extMgm::isLoaded('static_info_tables')) {
+if (t3lib_extMgm::isLoaded(STATIC_INFO_TABLES_EXT)) {
 	if (!defined ('PATH_BE_static_info_tables')) {
-		define('PATH_BE_static_info_tables', t3lib_extMgm::extPath('static_info_tables'));
+		define('PATH_BE_static_info_tables', t3lib_extMgm::extPath(STATIC_INFO_TABLES_EXT));
 	}
 }
 

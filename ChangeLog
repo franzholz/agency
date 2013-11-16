@@ -1,5 +1,6 @@
-2013-11-09 Franz Holzinger <franz@ttproducts.de>
+2013-11-16 Franz Holzinger <franz@ttproducts.de>
 	* bug fix to autologin
+	* add new subpart ###TEMPLATE_SETFIXED_LOGIN_FAILED###
 
 2013-09-24 Franz Holzinger <franz@ttproducts.de>
 	* new setup captcha for support of diversal captcha extensions

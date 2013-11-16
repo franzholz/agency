@@ -175,8 +175,8 @@ class tx_agency_control_main {
 			if (class_exists('SJBR\\StaticInfoTables\\PiBaseApi')) {
 				$staticInfoObj = t3lib_div::getUserObj('&SJBR\\StaticInfoTables\\PiBaseApi');
 			} else {
+				$typoVersion = tx_div2007_core::getTypoVersion();
 				t3lib_div::requireOnce(PATH_BE_static_info_tables . 'pi1/class.tx_staticinfotables_pi1.php');
-
 				$staticInfoObj = t3lib_div::getUserObj('&tx_staticinfotables_pi1');
 			}
 
