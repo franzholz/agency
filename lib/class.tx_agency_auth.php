@@ -45,7 +45,7 @@
 class tx_agency_auth {
 	public $conf = array();
 	public $config = array();
-	public $authCode;
+	protected $authCode;
 
 
 	public function init ($confObj) {
@@ -56,6 +56,7 @@ class tx_agency_auth {
 			// Setting the authCode length
 		$this->config['codeLength'] = 8;
 		if (isset($this->conf['authcodeFields.']) && is_array($this->conf['authcodeFields.'])) {
+
 			if (intval($this->conf['authcodeFields.']['codeLength'])) {
 				$this->config['codeLength'] = intval($this->conf['authcodeFields.']['codeLength']);
 			}
@@ -92,7 +93,7 @@ class tx_agency_auth {
 	 * @param integer $codeLength: The length of the code, if different than configured
 	 * @return string MD5 hash (default length of 8 for compatibility with Direct Mail)
 	 */
-	public function authCode (
+	public function generateAuthCode (
 		array $record,
 		$fields = '',
 		$extra = '',
@@ -103,6 +104,7 @@ class tx_agency_auth {
 			$codeLength = intval($this->config['codeLength']) ? intval($this->config['codeLength']) : 8;
 		}
 		$recordCopy = array();
+
 		if ($fields) {
 			$fieldArray = t3lib_div::trimExplode(',', $fields, 1);
 			foreach ($fieldArray as $key => $value) {
@@ -126,6 +128,7 @@ class tx_agency_auth {
 			}
 		}
 		$preKey = implode('|', $recordCopy);
+
 			// Non-standard extra fields
 			// Any of these extras makes the authCode incompatible with TYPO3 standard authCode
 			// See t3lib_div::stdAuthCode
@@ -145,7 +148,6 @@ class tx_agency_auth {
 			// In t3lib_div::stdAuthCode, $extras is empty
 		$authCode = $preKey . '|' . $extras . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'];
 		$authCode = substr(md5($authCode), 0, $codeLength);
-
 		return $authCode;
 	}
 
@@ -162,10 +164,10 @@ class tx_agency_auth {
 	) {
 		$result = FALSE;
 
-		if ($this->authCode) {
-			$authCode = $this->authCode($record, $fields);
+		if ($this->getAuthCode()) {
+			$authCode = $this->generateAuthCode($record, $fields);
 
-			if (!strcmp($this->authCode, $authCode)) {
+			if (!strcmp($this->getAuthCode(), $authCode)) {
 				$result = TRUE;
 			}
 		}
@@ -188,7 +190,7 @@ class tx_agency_auth {
 		$codeLength = 0
 	) {
 		$rawUrlDecode = TRUE;
-		$result = $this->authCode(
+		$result = $this->generateAuthCode(
 			$record,
 			$fields,
 			'',

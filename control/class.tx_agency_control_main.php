@@ -62,7 +62,7 @@ class tx_agency_control_main {
 		$conf,
 		$pibaseObj,
 		$theTable,
-		$adminFieldList = 'username,password,name,disable,usergroup,by_invitation,tx_agency_password',
+		$adminFieldList = 'username,password,name,disable,usergroup,by_invitation,tx_agency_password,lost_password',
 		$buttonLabelsList = '',
 		$otherLabelsList = ''
 	) {
@@ -94,6 +94,7 @@ class tx_agency_control_main {
 			$content = $this->control->doProcessing(
 				$pibaseObj->cObj,
 				$confObj,
+				$this->setfixedObj,
 				$this->langObj,
 				$displayObj,
 				$this->controlData,
@@ -110,7 +111,7 @@ class tx_agency_control_main {
 		} else {
 			$content = '<em>Internal error in ' . $pibaseObj->extKey . '!</em><br /> Maybe you forgot to include the basic template file under statics from extensions.';
 		}
-		$content = $pibaseObj->pi_wrapInBaseClass($content);
+		$content = tx_div2007_alpha::wrapInBaseClass_fh001($content, $pibaseObj->prefixId, $pibaseObj->extKey);
 		return $content;
 	}
 
@@ -154,7 +155,7 @@ class tx_agency_control_main {
 		$authObj->init($confObj); // $config is changed
 		$this->controlData = t3lib_div::getUserObj('&tx_agency_controldata');
 		$this->controlData->init(
-			$conf,
+			$confObj,
 			$pibaseObj->prefixId,
 			$this->extKey,
 			$pibaseObj->piVars,
@@ -175,7 +176,6 @@ class tx_agency_control_main {
 			if (class_exists('SJBR\\StaticInfoTables\\PiBaseApi')) {
 				$staticInfoObj = t3lib_div::getUserObj('&SJBR\\StaticInfoTables\\PiBaseApi');
 			} else {
-				$typoVersion = tx_div2007_core::getTypoVersion();
 				t3lib_div::requireOnce(PATH_BE_static_info_tables . 'pi1/class.tx_staticinfotables_pi1.php');
 				$staticInfoObj = t3lib_div::getUserObj('&tx_staticinfotables_pi1');
 			}
@@ -222,13 +222,11 @@ class tx_agency_control_main {
 				$this->marker,
 				$this->email,
 				$this->tca,
-				$this->setfixedObj,
 				$this->urlObj
 			);
 
 			$this->data->init(
 				$cObj,
-				$conf,
 				$this->langObj,
 				$this->tca,
 				$this->control,

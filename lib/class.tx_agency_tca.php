@@ -45,17 +45,21 @@ class tx_agency_tca {
 
 	public function init ($extKey, $theTable) {
 
-			// Get the table definition
-		tx_div2007_alpha::loadTcaAdditions_fh001(array($extKey));
-		$this->fixAddressFeAdminFieldList($theTable);
+		$typoVersion = tx_div2007_core::getTypoVersion();
+		if ($typoVersion < 6002000) {
 
-		if (t3lib_extMgm::isLoaded('direct_mail')) {
-			tx_div2007_alpha::loadTcaAdditions_fh001(array('direct_mail'));
+				// Get the table definition
+			tx_div2007_alpha::loadTcaAdditions_fh001(array($extKey));
+			$this->fixAddressFeAdminFieldList($theTable);
+
+			if (t3lib_extMgm::isLoaded('direct_mail')) {
+				tx_div2007_alpha::loadTcaAdditions_fh001(array('direct_mail'));
+				$this->fixAddressFeAdminFieldList($theTable);
+			}
+
+			tx_div2007_alpha::loadTcaAdditions_fh001($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['extendingTCA']);
 			$this->fixAddressFeAdminFieldList($theTable);
 		}
-
-		tx_div2007_alpha::loadTcaAdditions_fh001($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['extendingTCA']);
-		$this->fixAddressFeAdminFieldList($theTable);
 	}
 
 	/**
@@ -411,7 +415,7 @@ class tx_agency_tca {
 						$listWrap = $conf[$type . '.'][$activity . '.'][$colName . '.']['list.'];
 						$bListWrap = TRUE;
 					} else {
-						$listWrap['wrap'] = '<ul class="tx-agency-multiple-checked-values">|</ul>';
+						$listWrap['wrap'] = '<ul class="agency-multiple-checked-values">|</ul>';
 					}
 
 					if ($theTable == 'fe_users' && $colName == 'usergroup') {
@@ -435,7 +439,7 @@ class tx_agency_tca {
 									}
 
 									if (!$bListWrap) {
-										$listWrap['wrap'] = '<ul class="tx-agency-multiple-checked-values">|</ul>';
+										$listWrap['wrap'] = '<ul class="agency-multiple-checked-values">|</ul>';
 									}
 									$bCheckedArray = array();
 									foreach($colConfig['items'] as $key => $value) {
@@ -664,7 +668,7 @@ class tx_agency_tca {
 									if (isset($mrow) && is_array($mrow) && $mrow['uid']) {
 										$uidText .= '-' . $mrow['uid'];
 									}
-									$colContent = '<ul id="' . $uidText . '" class="tx-agency-multiple-checkboxes">';
+									$colContent = '<ul id="' . $uidText . '" class="agency-multiple-checkboxes">';
 									if (
 										$controlData->getSubmit() ||
 										$controlData->getDoNotSave() ||

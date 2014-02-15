@@ -23,6 +23,7 @@ CREATE TABLE fe_users (
 	terms_acknowledged tinyint(4) unsigned DEFAULT '0' NOT NULL,
 	token varchar(32) DEFAULT '' NOT NULL,
 	tx_agency_password blob NOT NULL
+	lost_password tinyint(4) unsigned DEFAULT '0' NOT NULL,
 );
 
 

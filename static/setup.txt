@@ -24,6 +24,7 @@ plugin.tx_agency {
 	editPID = {$plugin.tx_agency.editPID}
 	confirmPID = {$plugin.tx_agency.confirmPID}
 	confirmInvitationPID = {$plugin.tx_agency.confirmInvitationPID}
+	passwordPID = {$plugin.tx_agency.passwordPID}
 	confirmType = {$plugin.tx_agency.confirmType}
 	loginPID = {$plugin.tx_agency.loginPID}
 	linkToPID = {$plugin.tx_agency.linkToPID}
@@ -78,17 +79,19 @@ plugin.tx_agency {
 			usergroup = {$plugin.tx_agency.userGroupUponRegistration}
 			disable = {$plugin.tx_agency.enableEmailConfirmation}
 			by_invitation = 0
+			lost_password = 0
 		}
 
 		overrideValues {
 			usergroup = {$plugin.tx_agency.userGroupUponRegistration}
 			disable = {$plugin.tx_agency.enableEmailConfirmation}
 			by_invitation = 0
+			lost_password = 0
 		}
 
 		evalValues {
 			password = twice, atLeast[{$plugin.tx_agency.passwordAtLeast}], atMost[{$plugin.tx_agency.passwordAtMost}]
-			username = uniqueLocal, alphanum, atLeast[{$plugin.tx_agency.usernameAtLeast}], atMost[{$plugin.tx_agency.usernameAtMost}]
+			username = uniqueLocal, atLeast[{$plugin.tx_agency.usernameAtLeast}], atMost[{$plugin.tx_agency.usernameAtMost}]
 			email = email,atMost[255],uniqueLocal
 			gender =
 			name = atMost[{$plugin.tx_agency.nameAtMost}]
@@ -113,6 +116,7 @@ plugin.tx_agency {
 			usergroup =
 			by_invitation =
 			captcha_response =
+			lost_password =
 		}
 	}
 
@@ -151,6 +155,7 @@ plugin.tx_agency {
 	invite < .create
 	invite {
 		required := removeFromList(password)
+		generatePassword = 32
 		defaultValues {
 			by_invitation = 1
 		}
@@ -162,6 +167,7 @@ plugin.tx_agency {
 	edit < .create
 	edit {
 		preview = {$plugin.tx_agency.enablePreviewEdit}
+		generatePassword = 0
 		allowUserGroupSelection = {$plugin.tx_agency.allowUserGroupUpdate}
 		keepUnselectableUserGroups = {$plugin.tx_agency.keepUnselectableUserGroups}
 		fields := removeFromList(username)
@@ -204,6 +210,7 @@ plugin.tx_agency {
 	infomail = {$plugin.tx_agency.enableEmailPassword}
 	infomail {
 		fields = email,username,name,first_name,middle_name,last_name
+		generatePassword = 32
 		evalValues {
 			email = email,atMost[80],required
 			captcha_response = freecap
@@ -224,7 +231,7 @@ plugin.tx_agency {
 	forceFileDelete = {$plugin.tx_agency.forceFileDelete}
 
 	parseValues {
-		username = nospace,trim,alphanum_x
+		username = nospace,trim,alphanum_x[{$plugin.tx_agency.alphaSpecials}]
 		email = trim
 		password = trim
 		name = trim
@@ -271,8 +278,11 @@ plugin.tx_agency {
 	email.SETFIXED_APPROVE_REVIEW = {$plugin.tx_agency.enableEmailOnApprove}
 	email.SETFIXED_DELETE = {$plugin.tx_agency.enableEmailOnRefuse}
 	email.SETFIXED_ACCEPT = 1
+	email.SETFIXED_PASSWORD = 1
 	email.SETFIXED_REFUSE = {$plugin.tx_agency.enableEmailOnAdminRefuse}
 	email.SETFIXED_UNSUBSCRIBE = {$plugin.tx_agency.enableEmailOnUnsubscribe}
+	email.INFOMAIL < plugin.tx_agency.infomail
+	email.INFOMAIL_NORECORD < plugin.tx_agency.infomail
 
 	notify.CREATE_SAVED = {$plugin.tx_agency.enableAdminNotifyOnRegister}
 	notify.EDIT_SAVED = {$plugin.tx_agency.enableAdminNotifyOnUpdate}
@@ -285,40 +295,44 @@ plugin.tx_agency {
 	notify.SETFIXED_DELETE = {$plugin.tx_agency.enableAdminNotifyOnRefuse}
 	notify.SETFIXED_ENTER = {$plugin.tx_agency.enableAdminNotifyOnEnter}
 	notify.SETFIXED_ACCEPT = {$plugin.tx_agency.enableAdminNotifyOnAdminAccept}
+	notify.SETFIXED_PASSWORD = {$plugin.tx_agency.enableAdminNotifyOnPassword}
 	notify.SETFIXED_REFUSE = {$plugin.tx_agency.enableAdminNotifyOnAdminRefuse}
+	notify.SETFIXED_UNSUBSCRIBE = {$plugin.tx_agency.enableAdminNotifyOnUnsubscribe}
+	notify.INFOMAIL = 0
+	notify.INFOMAIL_NORECORD = 0
 
 	_CSS_DEFAULT_STYLE (
-		.tx-agency p { margin-top: .5em; margin-bottom: 0; padding: 0 .3em; text-indent: 0; }
-		.tx-agency h4 { margin-top: 0; padding-left: .3em; }
-		.tx-agency legend { padding: 0 .5em; font-weight: bold; }
-		.tx-agency .tx-agency-notice { font-style: italic; margin-bottom: 1em; }
-		.tx-agency .tx-agency-trash { margin-bottom: 2em; }
-		.tx-agency a { padding-left: 14px; background-image: url("../typo3conf/ext/agency/res/icons/fe/internal_link.gif"); background-repeat: no-repeat; background-position: 0% 60%; text-decoration:none; }
-		.tx-agency label { margin: 0; padding: 0; }
-		.tx-agency label span { color: #ff0000; }
-		.tx-agency .tx-agency-error { color: #ff0000; }
-		.tx-agency input { margin: 0; padding: 0 .5em 0 0; }
-		.tx-agency input[type=password] { margin-right: 1em; }
-		* html .tx-agency input.tx-agency-password { margin-right: 1em; }
-		.tx-agency input[type=radio], .tx-agency input[type=checkbox] { background-color: transparent; }
-		* html .tx-agency input.tx-agency-radio, * html .tx-agency input.tx-agency-checkbox { background-color: transparent; }
-		.tx-agency .tx-agency-delete-icon { margin-left: 1em; background-color: transparent; }
-		.tx-agency .tx-agency-delete-icon:hover { cursor: pointer; }
-		.tx-agency a.tx-agency-file-view { padding-left: 15px; background-image: url("../typo3conf/ext/agency/res/icons/fe/internal_link_new_window.gif"); background-color: transparent; background-repeat: no-repeat; font-size: .8em; margin-left: 1em; }
-		.tx-agency ul { margin: 0; padding: 0; list-style-position: inside; }
-		.tx-agency ul.tx-agency-multiple-checkboxes { list-style-type: none; }
-		.tx-agency ul.tx-agency-multiple-checkboxes li { margin: 0 0 .3em 0; padding: 0; }
-		.tx-agency ul.tx-agency-multiple-checkboxes li label { margin: 0; padding: 0 0 0 .5em; }
-		.tx-agency ul.tx-agency-multiple-checked-values li { float: left; padding: 0 2em 0 0; margin: 0; }
-		.tx-agency dl { margin: 0; padding: 1em 0 0 0; }
-		.tx-agency dt, .tx-agency dd { margin: 0; padding: 0 0 .5em 0; float: left; }
-		.tx-agency dt { clear: both; width: 25%; text-align: right; padding-right: 1em; }
-		.tx-agency dd { text-align: left; width: 50%; }
-		.tx-agency .tx-agency-multiple-checkboxes dt { width: auto; padding-right: 0; }
-		.tx-agency .tx-agency-multiple-checkboxes dd { width: auto; }
-		* html .tx-agency dd { float: none; }
-		.tx-agency dd p { margin-top: 0; margin-bottom: .5em; padding: 0; }
-		.tx-agency dd label { padding: 0 1em 0 .5em; }
+	.agency p { margin-top: .5em; margin-bottom: 0; padding: 0 .3em; text-indent: 0; }
+	.agency h4 { margin-top: 0; padding-left: .3em; }
+	.agency legend { padding: 0 .5em; font-weight: bold; }
+	.agency .agency-notice { font-style: italic; margin-bottom: 1em; }
+	.agency .agency-trash { margin-bottom: 2em; }
+	.agency a { padding-left: 14px; background-image: url("../typo3conf/ext/agency/res/icons/fe/internal_link.gif"); background-repeat: no-repeat; background-position: 0% 60%; text-decoration:none; }
+	.agency label { margin: 0; padding: 0; }
+	.agency label span { color: #ff0000; }
+	.agency .agency-error { color: #ff0000; }
+	.agency input { margin: 0; padding: 0 .5em 0 0; }
+	.agency input[type=password] { margin-right: 1em; }
+	* html .agency input.agency-password { margin-right: 1em; }
+	.agency input[type=radio], .agency input[type=checkbox] { background-color: transparent; }
+	* html .agency input.agency-radio, * html .agency input.agency-checkbox { background-color: transparent; }
+	.agency .agency-delete-icon { margin-left: 1em; background-color: transparent; }
+	.agency .agency-delete-icon:hover { cursor: pointer; }
+	.agency a.agency-file-view { padding-left: 15px; background-image: url("../typo3conf/ext/agency/res/icons/fe/internal_link_new_window.gif"); background-color: transparent; background-repeat: no-repeat; font-size: .8em; margin-left: 1em; }
+	.agency ul { margin: 0; padding: 0; list-style-position: inside; }
+	.agency ul.agency-multiple-checkboxes { list-style-type: none; }
+	.agency ul.agency-multiple-checkboxes li { margin: 0 0 .3em 0; padding: 0; }
+	.agency ul.agency-multiple-checkboxes li label { margin: 0; padding: 0 0 0 .5em; }
+	.agency ul.agency-multiple-checked-values li { float: left; padding: 0 2em 0 0; margin: 0; }
+	.agency dl { margin: 0; padding: 1em 0 0 0; }
+	.agency dt, .agency dd { margin: 0; padding: 0 0 .5em 0; float: left; }
+	.agency dt { clear: both; width: 25%; text-align: right; padding-right: 1em; }
+	.agency dd { text-align: left; width: 50%; }
+	.agency .agency-multiple-checkboxes dt { width: auto; padding-right: 0; }
+	.agency .agency-multiple-checkboxes dd { width: auto; }
+	* html .agency dd { float: none; }
+	.agency dd p { margin-top: 0; margin-bottom: .5em; padding: 0; }
+	.agency dd label { padding: 0 1em 0 .5em; }
 	)
 
 	_DEFAULT_PI_VARS {

@@ -88,7 +88,18 @@ class tx_agency_setfixed {
 		$token,
 		&$hasError
 	) {
+		$content = FALSE;
 		$row = $origArray;
+		$usesPassword = FALSE;
+
+		if (
+			$theTable == 'fe_users' &&
+			!$row['by_invitation'] &&
+			!$row['lost_password']
+		) {
+			$usesPassword = TRUE;
+		}
+
 		$errorContent = '';
 		$hasError = FALSE;
 		$cryptedPassword = '';
@@ -127,15 +138,16 @@ class tx_agency_setfixed {
 				// Calculate the setfixed hash from incoming data
 			$fieldList = $row['_FIELDLIST'];
 			$codeLength = strlen($authObj->getAuthCode());
+			$theAuthCode = '';
 				// Let's try with a code length of 8 in case this link is coming from direct mail
 			if ($codeLength == 8 && in_array($sFK, array('DELETE', 'EDIT', 'UNSUBSCRIBE'))) {
-				$theCode = $authObj->setfixedHash($row, $fieldList, $codeLength);
+				$theAuthCode = $authObj->setfixedHash($row, $fieldList, $codeLength);
 			} else {
-				$theCode = $authObj->setfixedHash($row, $fieldList);
+				$theAuthCode = $authObj->setfixedHash($row, $fieldList);
 			}
 
 			if (
-				!strcmp($authObj->getAuthCode(), $theCode) &&
+				!strcmp($authObj->getAuthCode(), $theAuthCode) &&
 				!($sFK == 'APPROVE' && count($origArray) && $origArray['disable'] == '0')
 			) {
 				if ($sFK == 'EDIT') {
@@ -151,13 +163,14 @@ class tx_agency_setfixed {
 						$markerObj,
 						$dataObj,
 						$theTable,
+						$prefixId,
 						$dataArray,
 						$origArray,
 						$securedArray,
 						'setfixed',
 						$cmdKey,
 						$controlData->getMode(),
-						$dataObj->inError,
+						$dataObj->getInError(),
 						$token
 					);
 				} else if (
@@ -304,8 +317,8 @@ class tx_agency_setfixed {
 						// LOGIN is here only for an error case  ???
 					in_array($sFK, array('APPROVE', 'ENTER', 'LOGIN'))
 				) {
-					$markerObj->addGeneralHiddenFieldsMarkers($markerArray, $row['by_invitation'] ? 'password' : 'login', $token);
-					if (!$row['by_invitation']) {
+					$markerObj->addGeneralHiddenFieldsMarkers($markerArray, $usesPassword ? 'login' : 'password', $token);
+					if ($usesPassword) {
 						$markerObj->addPasswordTransmissionMarkers($markerArray);
 						$markerObj->setArray($markerArray);
 					}
@@ -313,13 +326,11 @@ class tx_agency_setfixed {
 					$markerObj->addGeneralHiddenFieldsMarkers($markerArray, 'setfixed', $token);
 				}
 
-				if ($sFK == 'EDIT') {
-					// Nothing to do
-				} else {
+				if ($sFK != 'EDIT') {
 					if (
 						$theTable == 'fe_users' &&
 						($sFK == 'APPROVE' || $sFK == 'ENTER') &&
-						$row['by_invitation']
+						!$usesPassword
 					) {
 							// Auto-login
 						$loginSuccess =
@@ -345,13 +356,14 @@ class tx_agency_setfixed {
 									$markerObj,
 									$dataObj,
 									$theTable,
+									$prefixId,
 									$dataArray,
 									$origArray,
 									$securedArray,
 									'password',
 									'password',
 									$controlData->getMode(),
-									$dataObj->inError,
+									$dataObj->getInError(),
 									$token
 								);
 						} else {
@@ -462,7 +474,7 @@ class tx_agency_setfixed {
 							'setfixed',
 							$cmdKey,
 							$templateCode,
-							$this->data->inError,
+							$dataObj->getInError(),
 							$conf['setfixed.'],
 							$errorCode
 						);
@@ -480,7 +492,7 @@ class tx_agency_setfixed {
 						if (
 							$conf['enableAdminReview'] &&
 							$sFK == 'APPROVE' &&
-							!$row['by_invitation']
+							$usesPassword
 						) {
 							$errorCode = '';
 							$bEmailSent = $emailObj->compile(
@@ -506,7 +518,7 @@ class tx_agency_setfixed {
 								'setfixed',
 								$cmdKey,
 								$templateCode,
-								$this->data->inError,
+								$dataObj->getInError(),
 								$conf['setfixed.']
 							);
 
@@ -518,13 +530,17 @@ class tx_agency_setfixed {
 								$errorContent = sprintf($errorText, $errorCode['1']);
 							}
 						}
+
 						if ($errorContent) {
 							$content = $errorContent;
 						} else if (
 								// Auto-login on confirmation
 							$conf['enableAutoLoginOnConfirmation'] &&
-							!$row['by_invitation'] &&
-							(($sFK == 'APPROVE' && !$conf['enableAdminReview']) || $sFK == 'ENTER') &&
+							$usesPassword &&
+							(
+								($sFK == 'APPROVE' && !$conf['enableAdminReview']) ||
+								$sFK == 'ENTER'
+							) &&
 							$autoLoginIsRequested
 						) {
 							$loginSuccess =
@@ -536,6 +552,7 @@ class tx_agency_setfixed {
 									$cryptedPassword,
 									$currArr
 								);
+
 							if ($loginSuccess) {
 									// Login was successful
 								exit;
@@ -561,6 +578,8 @@ class tx_agency_setfixed {
 								);
 								$hasError = TRUE;
 							}
+						} else {
+							// confirmation after INVITATION
 						}
 					}
 				}
@@ -585,6 +604,7 @@ class tx_agency_setfixed {
 				);
 			}
 		}
+
 		return $content;
 	}	// processSetFixed
 
@@ -599,7 +619,7 @@ class tx_agency_setfixed {
 	* @return void
 	*/
 	public function computeUrl (
-		$cmdKey,
+		$nextCmd,
 		$prefixId,
 		$cObj,
 		$controlData,
@@ -620,11 +640,10 @@ class tx_agency_setfixed {
 					$theKey = substr($theKey, 0, -1);
 				}
 				$setfixedpiVars = array();
+				$noFeusersEdit = FALSE;
 
 				if ($theTable != 'fe_users' && $theKey == 'EDIT') {
 					$noFeusersEdit = TRUE;
-				} else {
-					$noFeusersEdit = FALSE;
 				}
 
 				$setfixedpiVars[$prefixId . '%5BrU%5D'] = $record['uid'];
@@ -656,21 +675,30 @@ class tx_agency_setfixed {
 					}
 				}
 
+				$theCmd = '';
+				$pidCmd = '';
+
 				if ($noFeusersEdit) {
-					$cmd = $pidCmd = 'edit';
+					$theCmd = $pidCmd = 'edit';
 					if($editSetfixed) {
 						$bSetfixedHash = TRUE;
 					} else {
 						$bSetfixedHash = FALSE;
 						$setfixedpiVars[$prefixId . '%5BaC%5D'] =
-							$authObj->authCode(
+							$authObj->generateAuthCode(
 								$record,
 								$fieldList
 							);
 					}
 				} else {
-					$cmd = 'setfixed';
-					$pidCmd = ($controlData->getCmd() == 'invite' ? 'confirmInvitation' : 'confirm');
+					$theCmd = 'setfixed';
+					$pidCmd = 'confirm';
+					if ($nextCmd == 'invite') {
+						$pidCmd = 'confirmInvitation';
+					}
+					if ($nextCmd == 'password') {
+						$pidCmd = 'password';
+					}
 					$setfixedpiVars[$prefixId . '%5BsFK%5D'] = $theKey;
 					$bSetfixedHash = TRUE;
 
@@ -685,7 +713,7 @@ class tx_agency_setfixed {
 				if ($bSetfixedHash) {
 					$setfixedpiVars[$prefixId . '%5BaC%5D'] = $authObj->setfixedHash($record, $fieldList);
 				}
-				$setfixedpiVars[$prefixId . '%5Bcmd%5D'] = $cmd;
+				$setfixedpiVars[$prefixId . '%5Bcmd%5D'] = $theCmd;
 
 				if (is_array($data) ) {
 					foreach($data as $fieldname => $fieldValue) {
@@ -698,7 +726,10 @@ class tx_agency_setfixed {
 
 				$linkPID = $controlData->getPid($pidCmd);
 
-				if (t3lib_div::_GP('L') && !t3lib_div::inList($GLOBALS['TSFE']->config['config']['linkVars'], 'L')) {
+				if (
+					t3lib_div::_GP('L') &&
+					!t3lib_div::inList($GLOBALS['TSFE']->config['config']['linkVars'], 'L')
+				) {
 					$setfixedpiVars['L'] = t3lib_div::_GP('L');
 				}
 

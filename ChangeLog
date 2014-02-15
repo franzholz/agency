@@ -1,4 +1,13 @@
 
+2014-02-15 Franz Holzinger <franz@ttproducts.de>
+	* New feature: alphaSpecials
+	* New feature: send an email to recreate a forgotten password
+	* support alternative for the removed fe_admin_fieldList in TYPO3 6.2
+	* change all class names from prefix tx-agency into agency
+	* allow the empty default security level FE oginSecurityLevel
+	* fix bug: wrong conf array in tx_agency_data
+	* fix bugs in invitation process
+
 2013-12-28 Franz Holzinger <franz@ttproducts.de>
 	* Fix bug #50607: sr_freecap Captcha might not be accepted after submission
 

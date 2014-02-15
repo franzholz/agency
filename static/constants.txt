@@ -79,6 +79,9 @@ plugin.tx_agency {
     # cat=plugin.tx_agency//; type=int+; label= Confirmation of invitation page PID: PID of the page on which the plugin is inserted with the intent of serving as the front end user confirmation page (or setfixed page!) when replying to an invitation.
   confirmInvitationPID =
 
+    # cat=plugin.tx_agency//; type=int+; label= Password page PID: PID of the page on which the plugin is inserted with the intent of entering a new password.
+  passwordPID =
+
     # cat=plugin.tx_agency//; type=int+; label= Confirmation page Type: Type (or pageNum) of the confirmation page.
   confirmType = 0
 
@@ -157,6 +160,12 @@ plugin.tx_agency {
     # cat=plugin.tx_agency/enable; type=boolean; label= Enable admin notification on refusal by admin: If set, an email will be sent to the site administration when a registration is refused by the administration.
   enableAdminNotifyOnAdminRefuse = 1
 
+    # cat=plugin.tx_agency/enable; type=boolean; label= Enable admin notification on unsubscribe: If set, an email will be sent to the site administration when the user ends his membership through a link from a mailing application.
+  enableAdminNotifyOnUnsubscribe = 1
+
+    # cat=plugin.tx_agency/enable; type=boolean; label= Enable admin notification on lost password: If set, an email will be sent to the site administration when the user requests to recreate his lost password..
+  enableAdminNotifyOnPassword = 1
+
     # cat=plugin.tx_agency/enable; type=boolean; label= Enable HTML emails: If set, emails sent to the front end user will be sent in HTML format.
   enableHTMLMail = 1
 
@@ -219,6 +228,9 @@ plugin.tx_agency {
 
     # cat=plugin.tx_agency//; type=int+; label= Maximum name length: The maximum number of characters that the name of the front end user may contain.
   nameAtMost = 80
+
+    # cat=plugin.tx_agency//; type=string; label= Allow special characters to alpha: The parse values for the alpha check normally contain alphabethical letters. Here you can add also special characters to the username.
+  alphaSpecials =
 
     # cat=plugin.tx_agency//; type=int+; label= Number of images: Number of images that may be uploaded (should be smaller than 7).
   maxImages = 6

@@ -110,7 +110,7 @@ class tx_agency_email {
 					$theTable,
 					$conf['email.']['field'],
 					$fetch,
-					$pidLock.$enable,
+					$pidLock . $enable,
 					'',
 					'',
 					'100'
@@ -120,10 +120,39 @@ class tx_agency_email {
 
 					// Processing records
 				if (is_array($DBrows)) {
+
+					$key = 'INFOMAIL';
+
+					if ($theTable == 'fe_users') {
+						$key = 'SETFIXED_PASSWORD';
+						$outGoingData = array();
+						$outGoingData['lost_password'] = '1';
+
+						$controlData->generatePassword(
+							$conf,
+							$conf[$cmdKey . '.'],
+							$outGoingData,
+							$autoLoginKey
+						);
+
+						// if auto-login will be required on confirmation, we store an encrypted version of the password
+						$savePassword = $controlData->readPasswordForStorage();
+						$outGoingData['password'] = $savePassword;
+						$extraList = 'lost_password,password,tx_agency_password';
+						$result =
+							$cObj->DBgetUpdate(
+								$theTable,
+								$DBrows[0]['uid'],
+								$outGoingData,
+								$extraList,
+								TRUE
+							);
+					}
+
 					$recipient = $DBrows[0][$conf['email.']['field']];
 					$dataObj->setDataArray($DBrows[0]);
 					$bEmailSent = $this->compile(
-						'INFOMAIL',
+						$key,
 						$conf,
 						$cObj,
 						$langObj,
@@ -151,7 +180,6 @@ class tx_agency_email {
 					);
 				} elseif (t3lib_div::validEmail($fetch)) {
 					$fetchArray = array( '0' => array('email' => $fetch));
-
 					$bEmailSent = $this->compile(
 						'INFOMAIL_NORECORD',
 						$conf,
@@ -215,13 +243,13 @@ class tx_agency_email {
 						);
 				}
 			} else {
+				$markerArray['###FIELD_email###'] = '';
 				$subpartkey = '###TEMPLATE_INFOMAIL###';
 				if (isset($fetch) && !empty($fetch)) {
 					$markerArray['###FIELD_email###'] = htmlspecialchars($fetch);
-				} else {
-					$markerArray['###FIELD_email###'] = '';
 				}
-				$content =
+
+				$content =  // lost password entry form
 					$displayObj->getPlainTemplate(
 						$conf,
 						$cObj,
@@ -331,20 +359,20 @@ class tx_agency_email {
 			array(
 				'SETFIXED_CREATE',
 				'SETFIXED_CREATE_REVIEW',
+				'SETFIXED_PASSWORD',
 				'SETFIXED_INVITE',
 				'SETFIXED_REVIEW'
 			);
 		$infomailArray = array('INFOMAIL', 'INFOMAIL_NORECORD');
 
 		if (
-				// Silently refuse to not send infomail to non-subscriber, if so requested
 			(isset($conf['email.'][$key]) && $conf['email.'][$key] != '0') ||
 			($conf['enableEmailConfirmation'] && in_array($key, $setfixedArray)) ||
 			(
 				$conf['infomail'] &&
 				in_array($key, $infomailArray) &&
 					// Silently refuse to not send infomail to non-subscriber, if so requested
-				!($key === 'INFOMAIL_NORECORD' && $conf['email.'][$key] == '0')
+				!($key == 'INFOMAIL_NORECORD' && $conf['email.'][$key] == '0')
 			)
 		) {
 			$subpartMarker = '###' . $this->emailMarkPrefix . $key . '###';
@@ -469,7 +497,6 @@ class tx_agency_email {
 				'',
 				FALSE
 			);
-
 		$markerObj->addLabelMarkers(
 			$markerArray,
 			$conf,
@@ -519,9 +546,9 @@ class tx_agency_email {
 			} else {
 				$mrow = $currentRow;
 			}
-			$markerArray['###SYS_AUTHCODE###'] = $authObj->authCode($row);
+			$markerArray['###SYS_AUTHCODE###'] = $authObj->generateAuthCode($row);
 			$setfixedObj->computeUrl(
-				$cmdKey,
+				$cmd,
 				$prefixId,
 				$cObj,
 				$controlData,
@@ -855,8 +882,7 @@ class tx_agency_email {
 			trim($recipient) &&
 			(trim($HTMLContent) || trim($PLAINContent))
 		) {
-			$defaultSubject = 'Agency Registration - TYPO3 extension';
-
+			$defaultSubject = 'Agency Registration - TYPO3';
 			$result = tx_div2007_email::sendMail(
 				$recipient,
 				$subject,

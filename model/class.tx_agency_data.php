@@ -41,7 +41,6 @@
  *
  */
 class tx_agency_data {
-	public $conf = array();
 	public $lang;
 	public $tca;
 	public $freeCap; // object of type tx_srfreecap_pi2
@@ -57,7 +56,7 @@ class tx_agency_data {
 
 	public $error;
 	public $additionalUpdateFields = '';
-	public $fieldList = ''; // List of fields from fe_admin_fieldList
+	public $fieldList = ''; // List of fields from $TCA[table]['columns'] or fe_admin_fieldList (TYPO3 below 6.2)
 	public $specialfieldlist = ''; // list of special fields like captcha
 	public $recUid = 0;
 	public $missing = array(); // array of required missing fields
@@ -67,7 +66,6 @@ class tx_agency_data {
 
 	public function init (
 		$cObj,
-		$conf,
 		$lang,
 		$tca,
 		$control,
@@ -75,7 +73,9 @@ class tx_agency_data {
 		$controlData,
 		$staticInfoObj
 	) {
-		$this->conf = $conf;
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
+
 		$this->lang = $lang;
 		$this->tca = $tca;
 		$this->control = $control;
@@ -237,11 +237,13 @@ class tx_agency_data {
 	public function overrideValues (array &$dataArray, $cmdKey) {
 
 		$cObj = t3lib_div::getUserObj('&tx_div2007_cobj');
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
 
 		// Addition of overriding values
-		if (is_array($this->conf[$cmdKey . '.']['overrideValues.'])) {
-			foreach ($this->conf[$cmdKey . '.']['overrideValues.'] as $theField => $theValue) {
-				if ($theField == 'usergroup' && $this->controlData->getTable() == 'fe_users' && $this->conf[$cmdKey.'.']['allowUserGroupSelection']) {
+		if (is_array($conf[$cmdKey . '.']['overrideValues.'])) {
+			foreach ($conf[$cmdKey . '.']['overrideValues.'] as $theField => $theValue) {
+				if ($theField == 'usergroup' && $this->controlData->getTable() == 'fe_users' && $conf[$cmdKey.'.']['allowUserGroupSelection']) {
 					$overrideArray = t3lib_div::trimExplode(',', $theValue, 1);
 					if (is_array($dataArray[$theField])) {
 						$dataValue = array_merge($dataArray[$theField], $overrideArray);
@@ -250,11 +252,11 @@ class tx_agency_data {
 					}
 					$dataValue = array_unique($dataValue);
 				} else {
-					$stdWrap = $this->conf[$cmdKey . '.']['overrideValues.'][$theField.'.'];
+					$stdWrap = $conf[$cmdKey . '.']['overrideValues.'][$theField.'.'];
 					if ($stdWrap) {
 						$dataValue = $cObj->stdWrap($theValue, $stdWrap);
-					} else if (isset($this->conf[$cmdKey . '.']['overrideValues.'][$theField])) {
-						$dataValue = $this->conf[$cmdKey . '.']['overrideValues.'][$theField];
+					} else if (isset($conf[$cmdKey . '.']['overrideValues.'][$theField])) {
+						$dataValue = $conf[$cmdKey . '.']['overrideValues.'][$theField];
 					} else {
 						$dataValue = $theValue;
 					}
@@ -270,12 +272,14 @@ class tx_agency_data {
 	* @param array  Array with key/values being marker-strings/substitution values.
 	* @return array the data row with key/value pairs
 	*/
-	public function defaultValues ($cmdKey) {
+	public function readDefaultValues ($cmdKey) {
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
 		$dataArray = array();
 
 		// Addition of default values
-		if (is_array($this->conf[$cmdKey . '.']['defaultValues.'])) {
-			foreach($this->conf[$cmdKey . '.']['defaultValues.'] as $theField => $theValue) {
+		if (is_array($conf[$cmdKey . '.']['defaultValues.'])) {
+			foreach($conf[$cmdKey . '.']['defaultValues.'] as $theField => $theValue) {
 				$dataArray[$theField] = $theValue;
 			}
 		}
@@ -302,14 +306,17 @@ class tx_agency_data {
 		$param = '',
 		$bInternal = FALSE
 	) {
- 		if (
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
+
+		if (
 			$orderNo != '' &&
 			$theRule &&
-			isset($this->conf['evalErrors.'][$theField . '.'][$theRule . '.'])
+			isset($conf['evalErrors.'][$theField . '.'][$theRule . '.'])
 		) {
 			$count = 0;
 
-			foreach ($this->conf['evalErrors.'][$theField . '.'][$theRule . '.'] as $k => $v) {
+			foreach ($conf['evalErrors.'][$theField . '.'][$theRule . '.'] as $k => $v) {
 				$bKIsInt = tx_div2007_core::testInt($k);
 
 				if ($bInternal) {
@@ -331,9 +338,9 @@ class tx_agency_data {
 		if (!isset($failureLabel)) {
 			if (
 				$theRule &&
-				isset($this->conf['evalErrors.'][$theField . '.'][$theRule])
+				isset($conf['evalErrors.'][$theField . '.'][$theRule])
 			) {
-				$failureLabel = $this->conf['evalErrors.'][$theField . '.'][$theRule];
+				$failureLabel = $conf['evalErrors.'][$theField . '.'][$theRule];
 			} else {
 				$failureLabel='';
 				$internalPostfix = ($bInternal ? '_internal' : '');
@@ -373,9 +380,11 @@ class tx_agency_data {
 		array $requiredArray,
 		array $checkFieldArray
 	) {
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
 		$failureMsg = array();
-		$displayFieldArray = t3lib_div::trimExplode(',', $this->conf[$cmdKey.'.']['fields'], 1);
-		if ($this->controlData->useCaptcha($this->conf, $cmdKey)) {
+		$displayFieldArray = t3lib_div::trimExplode(',', $conf[$cmdKey.'.']['fields'], 1);
+		if ($this->controlData->useCaptcha($conf, $cmdKey)) {
 			$displayFieldArray = array_merge($displayFieldArray, array('captcha_response'));
 		}
 
@@ -406,7 +415,7 @@ class tx_agency_data {
 		// Evaluate: This evaluates for more advanced things than "required" does. But it returns the same error code, so you must let the required-message tell, if further evaluation has failed!
 		$bRecordExists = FALSE;
 
-		if (is_array($this->conf[$cmdKey . '.']['evalValues.'])) {
+		if (is_array($conf[$cmdKey . '.']['evalValues.'])) {
 			$cmd = $this->controlData->getCmd();
 			if ($cmd == 'edit' || $cmdKey == 'edit') {
 				if ($pid) {
@@ -425,7 +434,7 @@ class tx_agency_data {
 			$countArray['hook'] = array();
 			$countArray['preg'] = array();
 
-			foreach ($this->conf[$cmdKey.'.']['evalValues.'] as $theField => $theValue) {
+			foreach ($conf[$cmdKey.'.']['evalValues.'] as $theField => $theValue) {
 				if (
 					count($checkFieldArray) &&
 					!in_array($theField, $checkFieldArray)
@@ -737,7 +746,7 @@ class tx_agency_data {
 									$dataArray[$theField] &&
 									!$this->evalDate(
 										$dataArray[$theField],
-										$this->conf['dateFormat']
+										$conf['dateFormat']
 									)
 								) {
 									$failureArray[] = $theField;
@@ -938,11 +947,12 @@ class tx_agency_data {
 	public function parseValues ($theTable, array &$dataArray, array $origArray, $cmdKey) {
 
 		$cObj = t3lib_div::getUserObj('&tx_div2007_cobj');
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
 
-		if (is_array($this->conf['parseValues.'])) {
+		if (is_array($conf['parseValues.'])) {
 
-			foreach($this->conf['parseValues.'] as $theField => $theValue) {
-
+			foreach($conf['parseValues.'] as $theField => $theValue) {
 				$listOfCommands = t3lib_div::trimExplode(',', $theValue, 1);
 				if (in_array('setEmptyIfAbsent', $listOfCommands)) {
 					$this->setEmptyIfAbsent($theTable, $theField, $dataArray);
@@ -957,6 +967,7 @@ class tx_agency_data {
 					foreach($listOfCommands as $cmd) {
 						$cmdParts = preg_split('/\[|\]/', $cmd); // Point is to enable parameters after each command enclosed in brackets [..]. These will be in position 1 in the array.
 						$theCmd = trim($cmdParts[0]);
+						$parameter = trim($cmdParts[1]);
 						$bValueAssigned = TRUE;
 						if (
 							$theField == 'password' &&
@@ -978,16 +989,16 @@ class tx_agency_data {
 								$dataValue = str_replace(' ', '', $dataValue);
 							break;
 							case 'alpha':
-								$dataValue = preg_replace('/[^a-zA-Z]/', '', $dataValue);
+								$dataValue = preg_replace('/[^a-zA-Z' . preg_quote($parameter) . ']/', '', $dataValue);
 							break;
 							case 'num':
 								$dataValue = preg_replace('/[^0-9]/', '', $dataValue);
 							break;
 							case 'alphanum':
-								$dataValue = preg_replace('/[^a-zA-Z0-9]/', '', $dataValue);
+								$dataValue = preg_replace('/[^a-zA-Z0-9' . preg_quote($parameter) . ']/', '', $dataValue);
 							break;
 							case 'alphanum_x':
-								$dataValue = preg_replace('/[^a-zA-Z0-9_-]/', '', $dataValue);
+								$dataValue = preg_replace('/[^a-zA-Z0-9_\\-' . preg_quote($parameter) . ']/', '', $dataValue);
 							break;
 							case 'trim':
 								$dataValue = trim($dataValue);
@@ -1077,10 +1088,10 @@ class tx_agency_data {
 									$dataValue &&
 									$this->evalDate(
 										$dataValue,
-										$this->conf['dateFormat']
+										$conf['dateFormat']
 									)
 								) {
-									$dateArray = $this->fetchDate($dataValue, $this->conf['dateFormat']);
+									$dateArray = $this->fetchDate($dataValue, $conf['dateFormat']);
 									$dataValue = $dateArray['y'] . '-' . $dateArray['m'] . '-'.$dateArray['d'];
 									$translateArray = array(
 										'd' => ($dateArray['d'] < 10 ? '0'.$dateArray['d'] : $dateArray['d']),
@@ -1092,7 +1103,7 @@ class tx_agency_data {
 									);
 									$searchArray = array_keys($translateArray);
 									$replaceArray = array_values($translateArray);
-									$dataValue = str_replace($searchArray, $replaceArray, $this->conf['dateFormat']);
+									$dataValue = str_replace($searchArray, $replaceArray, $conf['dateFormat']);
 								} else if (!isset($dataArray[$theField])) {
 									$bValueAssigned = FALSE;
 								}
@@ -1214,6 +1225,8 @@ class tx_agency_data {
 		$password,
 		&$hookClassArray
 	) {
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
 		$rc = 0;
 
 		switch($cmdKey) {
@@ -1222,17 +1235,23 @@ class tx_agency_data {
 				$theUid = $dataArray['uid'];
 				$rc = $theUid;
 				$authObj = t3lib_div::getUserObj('&tx_agency_auth');
-				$aCAuth = $authObj->aCAuth($origArray, $this->conf['setfixed.']['EDIT.']['_FIELDLIST']);
+				$aCAuth = $authObj->aCAuth($origArray, $conf['setfixed.']['EDIT.']['_FIELDLIST']);
 
 					// Fetch the original record to check permissions
 				if (
-					$this->conf['edit'] &&
+					$conf['edit'] &&
 					($GLOBALS['TSFE']->loginUser || $aCAuth)
 				) {
 						// Must be logged in in order to edit  (OR be validated by email)
-					$newFieldList = implode(',', array_intersect(explode(',', $this->getFieldList()), t3lib_div::trimExplode(',', $this->conf[$cmdKey . '.']['fields'], 1)));
-					$newFieldArray = array_unique( array_merge (explode(',', $newFieldList), explode(',', $this->getAdminFieldList())));
-					$fieldArray = t3lib_div::trimExplode(',', $this->conf[$cmdKey . '.']['fields'], 1);
+					$newFieldList = implode(',', array_intersect(explode(',', $this->getFieldList()), t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)));
+					$newFieldArray =
+							array_unique(
+								array_merge(
+									explode(',', $newFieldList),
+									explode(',', $this->getAdminFieldList())
+								)
+							);
+					$fieldArray = t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1);
 
 						// Do not reset the name if we have no new value
 					if (
@@ -1253,8 +1272,8 @@ class tx_agency_data {
 							$theTable,
 							$origArray,
 							$GLOBALS['TSFE']->fe_user->user,
-							$this->conf['allowedGroups'],
-							$this->conf['fe_userEditSelf']
+							$conf['allowedGroups'],
+							$conf['fe_userEditSelf']
 						)
 					) {
 						$outGoingData =
@@ -1262,7 +1281,7 @@ class tx_agency_data {
 								$theTable,
 								$cmdKey,
 								$pid,
-								$this->conf,
+								$conf,
 								$dataArray,
 								$origArray
 							);
@@ -1293,7 +1312,7 @@ class tx_agency_data {
 						$newRow = array_merge($origArray, $newRow);
 						tx_div2007_alpha::userProcess_fh001(
 							$this->control,
-							$this->conf['edit.'],
+							$conf['edit.'],
 							'userFunc_afterSave',
 							array('rec' => $newRow, 'origRec' => $origArray)
 						);
@@ -1333,7 +1352,7 @@ class tx_agency_data {
 				}
 			break;
 			default:
-				if (is_array($this->conf[$cmdKey.'.'])) {
+				if (is_array($conf[$cmdKey.'.'])) {
 
 					$newFieldList =
 						implode(
@@ -1345,7 +1364,7 @@ class tx_agency_data {
 								),
 								t3lib_div::trimExplode(
 									',',
-									$this->conf[$cmdKey . '.']['fields'],
+									$conf[$cmdKey . '.']['fields'],
 									1
 								)
 							)
@@ -1366,7 +1385,7 @@ class tx_agency_data {
 							$theTable,
 							$cmdKey,
 							$pid,
-							$this->conf,
+							$conf,
 							$dataArray,
 							$origArray
 						);
@@ -1394,7 +1413,7 @@ class tx_agency_data {
 						// Enable users to own themselves.
 					if (
 						$theTable == 'fe_users' &&
-						$this->conf['fe_userOwnSelf']
+						$conf['fe_userOwnSelf']
 					) {
 						$extraList = '';
 						$tmpDataArray = array();
@@ -1441,7 +1460,7 @@ class tx_agency_data {
 
 						tx_div2007_alpha::userProcess_fh001(
 							$this->control,
-							$this->conf['create.'],
+							$conf['create.'],
 							'userFunc_afterSave',
 							array('rec' => $newRow, 'origRec' => $origArray)
 						);
@@ -1496,11 +1515,14 @@ class tx_agency_data {
 		array &$origArray,
 		array &$dataArray
 	) {
-		if ($this->conf['delete']) {
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
+
+		if ($conf['delete']) {
 			// If deleting is enabled
 
 			$authObj = t3lib_div::getUserObj('&tx_agency_auth');
-			$aCAuth = $authObj->aCAuth($origArray, $this->conf['setfixed.']['DELETE.']['_FIELDLIST']);
+			$aCAuth = $authObj->aCAuth($origArray, $conf['setfixed.']['DELETE.']['_FIELDLIST']);
 
 			if ($GLOBALS['TSFE']->loginUser || $aCAuth) {
 				// Must be logged in OR be authenticated by the aC code in order to delete
@@ -1513,8 +1535,8 @@ class tx_agency_data {
 							$theTable,
 							$origArray,
 							$GLOBALS['TSFE']->fe_user->user,
-							$this->conf['allowedGroups'],
-							$this->conf['fe_userEditSelf']
+							$conf['allowedGroups'],
+							$conf['fe_userEditSelf']
 						)
 					) {
 							// Delete the record and display form, if access granted.
@@ -1540,7 +1562,7 @@ class tx_agency_data {
 							}
 						}
 
-						if (!$GLOBALS['TCA'][$theTable]['ctrl']['delete'] || $this->conf['forceFileDelete']) {
+						if (!$GLOBALS['TCA'][$theTable]['ctrl']['delete'] || $conf['forceFileDelete']) {
 								// If the record is being fully deleted... then remove the images or files attached.
 							$this->deleteFilesFromRecord($theTable, $this->getRecUid());
 						}
@@ -1605,9 +1627,12 @@ class tx_agency_data {
 	*/
 	public function fetchDate ($value, $dateFormat) {
 
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
+
 		$rcArray = array('m' => '', 'd' => '', 'y' => '');
 		$dateValue = trim($value);
-		$split = $this->conf['dateSplit'];
+		$split = $conf['dateSplit'];
 		if (!$split) {
 			$split = '-';
 		}
@@ -1742,9 +1767,11 @@ class tx_agency_data {
 	* @return array  updated array
 	*/
 	public function modifyDataArrForFormUpdate (array $inputArr, $cmdKey) {
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
 
-		if (is_array($this->conf[$cmdKey.'.']['evalValues.'])) {
-			foreach($this->conf[$cmdKey.'.']['evalValues.'] as $theField => $theValue) {
+		if (is_array($conf[$cmdKey.'.']['evalValues.'])) {
+			foreach($conf[$cmdKey.'.']['evalValues.'] as $theField => $theValue) {
 				$listOfCommands = t3lib_div::trimExplode(',', $theValue, 1);
 				foreach($listOfCommands as $k => $cmd) {
 					$cmdParts = preg_split('/\[|\]/', $cmd); // Point is to enable parameters after each command enclosed in brackets [..]. These will be in position 1 in the array.
@@ -1763,8 +1790,8 @@ class tx_agency_data {
 			}
 		}
 
-		if (is_array($this->conf['parseValues.'])) {
-			foreach($this->conf['parseValues.'] as $theField => $theValue) {
+		if (is_array($conf['parseValues.'])) {
+			foreach($conf['parseValues.'] as $theField => $theValue) {
 				$listOfCommands = t3lib_div::trimExplode(',', $theValue, 1);
 				foreach($listOfCommands as $k => $cmd) {
 					$cmdParts = preg_split('/\[|\]/', $cmd); // Point is to enable parameters after each command enclosed in brackets [..]. These will be in position 1 in the array.
@@ -1794,7 +1821,7 @@ class tx_agency_data {
 		$inputArr =
 			tx_div2007_alpha::userProcess_fh001(
 				$this->control,
-				$this->conf,
+				$conf,
 				'userFunc_updateArray',
 				$inputArr
 			);
@@ -1821,11 +1848,14 @@ class tx_agency_data {
 	* @return void  done directly on $dataArray passed by reference
 	*/
 	public function setName (array &$dataArray, $cmdKey, $theTable) {
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
+
 		if (
 			in_array('name', explode(',', $this->getFieldList())) &&
-			!in_array('name', t3lib_div::trimExplode(',', $this->conf[$cmdKey . '.']['fields'], 1)) &&
-			in_array('first_name', t3lib_div::trimExplode(',', $this->conf[$cmdKey . '.']['fields'], 1)) &&
-			in_array('last_name', t3lib_div::trimExplode(',', $this->conf[$cmdKey . '.']['fields'], 1))
+			!in_array('name', t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)) &&
+			in_array('first_name', t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)) &&
+			in_array('last_name', t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1))
 		) {
 				// Honour Address List (tt_address) configuration settings
 			$nameFormat = '';
@@ -1839,6 +1869,7 @@ class tx_agency_data {
 					$nameFormat = $extConf['backwardsCompatFormat'];
 				}
 			}
+
 			if ($nameFormat != '') {
 				$dataArray['name'] = sprintf(
 					$nameFormat,
@@ -1848,7 +1879,7 @@ class tx_agency_data {
 				);
 			} else {
 				$dataArray['name'] = trim(trim($dataArray['first_name'])
-					. ((in_array('middle_name', t3lib_div::trimExplode(',', $this->conf[$cmdKey . '.']['fields'], 1)) && trim($dataArray['middle_name']) != '') ? ' ' . trim($dataArray['middle_name']) : '' )
+					. ((in_array('middle_name', t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)) && trim($dataArray['middle_name']) != '') ? ' ' . trim($dataArray['middle_name']) : '' )
 					. ' ' . trim($dataArray['last_name']));
 			}
 		}
@@ -1860,7 +1891,14 @@ class tx_agency_data {
 	* @return void  done directly on array $this->dataArray
 	*/
 	public function setUsername ($theTable, array &$dataArray, $cmdKey) {
-		if ($this->conf[$cmdKey.'.']['useEmailAsUsername'] && $theTable == 'fe_users' && t3lib_div::inList($this->getFieldList(), 'username') && empty($this->evalErrors['email'])) {
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
+
+		if (
+			$conf[$cmdKey.'.']['useEmailAsUsername'] &&
+			$theTable == 'fe_users' && t3lib_div::inList($this->getFieldList(), 'username') &&
+			empty($this->evalErrors['email'])
+		) {
 			$dataArray['username'] = trim($dataArray['email']);
 		}
 	}
@@ -1872,10 +1910,13 @@ class tx_agency_data {
 	*/
 	public function parseIncomingData (array $origArray, $bUnsetZero = TRUE) {
 
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
+
 		$parsedArray = array();
 		$parsedArray = $origArray;
-		if (count($origArray) && is_array($this->conf['parseFromDBValues.'])) {
-			foreach($this->conf['parseFromDBValues.'] as $theField => $theValue) {
+		if (count($origArray) && is_array($conf['parseFromDBValues.'])) {
+			foreach($conf['parseFromDBValues.'] as $theField => $theValue) {
 				$listOfCommands = t3lib_div::trimExplode(',', $theValue, 1);
 				if (is_array($listOfCommands)) {
 					foreach($listOfCommands as $k2 => $cmd) {
@@ -1886,7 +1927,7 @@ class tx_agency_data {
 							case 'adodb_date':
 								if ($origArray[$theField]) {
 									$parsedArray[$theField] = date(
-										$this->conf['dateFormat'],
+										$conf['dateFormat'],
 										$origArray[$theField]
 									);
 								}
@@ -1924,11 +1965,14 @@ class tx_agency_data {
 	) {
 		$tablesObj = t3lib_div::getUserObj('&tx_agency_lib_tables');
 		$addressObj = $tablesObj->get('address');
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
+
 		$parsedArray = $dataArray;
 
-		if (is_array($this->conf['parseToDBValues.'])) {
+		if (is_array($conf['parseToDBValues.'])) {
 
-			foreach ($this->conf['parseToDBValues.'] as $theField => $theValue) {
+			foreach ($conf['parseToDBValues.'] as $theField => $theValue) {
 				$listOfCommands = t3lib_div::trimExplode(',', $theValue, 1);
 				foreach($listOfCommands as $k2 => $cmd) {
 					$cmdParts = preg_split('/\[|\]/', $cmd); // Point is to enable parameters after each command enclosed in brackets [..]. These will be in position 1 in the array.
@@ -1942,7 +1986,7 @@ class tx_agency_data {
 						} else {
 							$parsedArray[$theField] = $dataArray[$theField];
 						}
-						$dateArray = $this->fetchDate($parsedArray[$theField], $this->conf['dateFormat']);
+						$dateArray = $this->fetchDate($parsedArray[$theField], $conf['dateFormat']);
 					}
 
 					switch ($theCmd) {

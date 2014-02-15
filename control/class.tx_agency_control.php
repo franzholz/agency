@@ -50,7 +50,6 @@ class tx_agency_control {
 	public $tca;
 	public $requiredArray; // List of required fields
 	public $controlData;
-	public $setfixedObj;
 		// Commands that may be processed when no user is logged in
 	public $noLoginCommands = array('create', 'invite', 'setfixed', 'infomail', 'login');
 
@@ -62,7 +61,6 @@ class tx_agency_control {
 		$marker,
 		$email,
 		$tca,
-		$setfixedObj,
 		$urlObj
 	) {
 		$this->langObj = $langObj;
@@ -72,7 +70,6 @@ class tx_agency_control {
 		$this->marker = $marker;
 		$this->email = $email;
 		$this->tca = $tca;
-		$this->setfixedObj = $setfixedObj;
 		$this->urlObj = $urlObj;
 			// Retrieve the extension key
 		$extKey = $controlData->getExtKey();
@@ -129,7 +126,12 @@ class tx_agency_control {
 			// Set the command key
 		$cmdKey = '';
 
-		if ($cmd == 'edit' || $cmd == 'invite' || $cmd == 'password' || $cmd == 'infomail') {
+		if (
+			$cmd == 'edit' ||
+			$cmd == 'invite' ||
+			$cmd == 'password' ||
+			$cmd == 'infomail'
+		) {
 			$cmdKey = $cmd;
 		} else {
 			if (
@@ -151,27 +153,42 @@ class tx_agency_control {
 
 		if (!$theUid) {
 			if (!count($dataArray)) {
-				$dataArray = $dataObj->defaultValues($cmdKey);
+				$dataArray = $dataObj->readDefaultValues($cmdKey);
 				$dataObj->setDataArray($dataArray);
 			}
 		}
 		$dataObj->setOrigArray($origArray);
+		$fieldlist = '';
 
-			// Setting the list of fields allowed for editing and creation.
-		$tcaFieldArray =
-			t3lib_div::trimExplode(
-				',',
-				$GLOBALS['TCA'][$theTable]['feInterface']['fe_admin_fieldList'],
-				1
-			);
-		$tcaFieldArray = array_unique($tcaFieldArray);
-		$fieldlist = implode(',', $tcaFieldArray);
+		$typoVersion = tx_div2007_core::getTypoVersion();
+		if ($typoVersion < 6002000) {
+
+				// Setting the list of fields allowed for editing and creation.
+			$tcaFieldArray =
+				t3lib_div::trimExplode(
+					',',
+					$GLOBALS['TCA'][$theTable]['feInterface']['fe_admin_fieldList'],
+					1
+				);
+			$tcaFieldArray = array_unique($tcaFieldArray);
+			$fieldlist = implode(',', $tcaFieldArray);
+		} else {
+			$fieldlist = implode(',', tx_div2007_core::getFields($theTable));
+		}
+
 		$dataObj->setFieldList($fieldlist);
 
 		if (trim($conf['addAdminFieldList'])) {
 			$adminFieldList .= ',' . trim($conf['addAdminFieldList']);
 		}
-		$adminFieldList = implode(',', array_intersect( explode(',', $fieldlist), t3lib_div::trimExplode(',', $adminFieldList, 1)));
+		$adminFieldList =
+			implode(
+				',',
+				array_intersect(
+					explode(',', $fieldlist),
+					t3lib_div::trimExplode(',', $adminFieldList, 1)
+				)
+			);
 		$dataObj->setAdminFieldList($adminFieldList);
 
 		if (!t3lib_extMgm::isLoaded('direct_mail')) {
@@ -199,8 +216,10 @@ class tx_agency_control {
 			}
 
 			if (
-				$cmdKey == 'invite' ||
-				$cmdKey == 'create' && $conf[$cmdKey . '.']['generatePassword']
+				(
+					$cmdKey == 'invite' ||
+					$cmdKey == 'create'
+				) && $conf[$cmdKey . '.']['generatePassword']
 			) {
 				$conf[$cmdKey . '.']['fields'] = implode(',', array_diff(t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), array('password')));
 			}
@@ -235,22 +254,26 @@ class tx_agency_control {
 					}
 				}
 			}
+
 			if ($cmdKey == 'create') {
 				if ($conf['enableAdminReview'] && !$conf['enableEmailConfirmation']) {
 					$conf['create.']['defaultValues.']['disable'] = '1';
 					$conf['create.']['overrideValues.']['disable'] = '1';
 				}
 			}
-				// Infomail does not apply to fe_users
-// 			$conf['infomail'] = 0;
 		}
 			// Honour Address List (tt_address) configuration setting
-		if ($theTable == 'tt_address' && t3lib_extMgm::isLoaded('tt_address') && isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address'])) {
+		if (
+			$theTable == 'tt_address' &&
+			t3lib_extMgm::isLoaded('tt_address') &&
+			isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address'])
+		) {
 			$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address']);
 			if (is_array($extConf) && $extConf['disableCombinedNameField'] == '1') {
 				$conf[$cmdKey . '.']['fields'] = t3lib_div::rmFromList('name', $conf[$cmdKey . '.']['fields']);
 			}
 		}
+
 			// Adjust some evaluation settings
 		if (is_array($conf[$cmdKey . '.']['evalValues.'])) {
 				// Do not evaluate any password when inviting
@@ -260,7 +283,11 @@ class tx_agency_control {
 				// Do not evaluate the username if it is generated or if email is used
 			if (
 				$conf[$cmdKey . '.']['useEmailAsUsername'] ||
-				($conf[$cmdKey . '.']['generateUsername'] && $cmdKey != 'edit' && $cmdKey != 'password')
+				(
+					$conf[$cmdKey . '.']['generateUsername'] &&
+					$cmdKey != 'edit' &&
+					$cmdKey != 'password'
+				)
 			) {
 				unset($conf[$cmdKey . '.']['evalValues.']['username']);
 			}
@@ -293,6 +320,7 @@ class tx_agency_control {
 	public function doProcessing (
 		$cObj,
 		$confObj,
+		$setfixedObj,
 		$langObj,
 		$displayObj,
 		$controlData,
@@ -311,14 +339,13 @@ class tx_agency_control {
 		$prefixId = $controlData->getPrefixId();
 		$controlData->setMode(MODE_NORMAL);
 
-		$password = '';
 		$savePassword = '';
-		$cryptedPassword = '';
 		$autoLoginKey = '';
 		$hasError = FALSE;
 
 			// Commands with which the data will not be saved by $dataObj->save
 		$noSaveCommands = array('infomail', 'login', 'delete');
+
 		$uid = $dataObj->getRecUid();
 		$securedArray = array();
 			// Check for valid token
@@ -370,7 +397,6 @@ class tx_agency_control {
 			$dataObj->setName($finalDataArray, $cmdKey, $theTable);
 			$dataObj->parseValues($theTable, $finalDataArray, $origArray, $cmdKey);
 			$dataObj->overrideValues($finalDataArray, $cmdKey);
-
 			if (
 				$bSubmit ||
 				$bDoNotSave ||
@@ -447,41 +473,16 @@ class tx_agency_control {
 				!$bDoNotSave
 			) {
 				if ($theTable == 'fe_users') {
-// 					$controlData->getStorageSecurity()->initializeAutoLoginPassword($finalDataArray);
-						// We generate an interim password in the case of an invitation
-					if (
-						$cmdKey == 'invite'	||
-						$cmdKey == 'create' && $conf[$cmdKey . '.']['generatePassword']
-					) {
-						$genLength = intval($conf[$cmdKey . '.']['generatePassword']);
-						if (!$genLength) {
-							$genLength = 32;
-						}
-						$controlData->generatePassword($finalDataArray, $genLength);
-					}
-
-					$password = $controlData->readPassword();
-					$cryptedPassword = '';
-
 					if (
 						$cmdKey == 'invite' ||
-						$cmdKey == 'create' &&
-							(
-								$conf['enableAutoLoginOnConfirmation'] &&
-								!$conf['enableAutoLoginOnCreate']
-							)
+						$cmdKey == 'create'
 					) {
-						$bEncrypted =
-							$controlData->getStorageSecurity()
-								->encryptPasswordForAutoLogin(
-									$password,
-									$cryptedPassword,
-									$autoLoginKey
-								);
-
-						if ($bEncrypted) {
-							$finalDataArray['tx_agency_password'] = base64_encode($cryptedPassword);
-						}
+						$controlData->generatePassword(
+							$conf,
+							$conf[$cmdKey . '.'],
+							$finalDataArray,
+							$autoLoginKey
+						);
 					}
 
 					// If inviting or if auto-login will be required on confirmation, we store an encrypted version of the password
@@ -608,7 +609,7 @@ class tx_agency_control {
 					$this->tca,
 					$this->marker,
 					$dataObj,
-					$this->setfixedObj,
+					$setfixedObj,
 					$theTable,
 					$autoLoginKey,
 					$prefixId,
@@ -620,7 +621,7 @@ class tx_agency_control {
 					$key,
 					$templateCode,
 					$markerArray,
-					$dataObj->inError,
+					$dataObj->getInError(),
 					$content
 				);
 
@@ -629,7 +630,11 @@ class tx_agency_control {
 				$errorCode = '';
 				$bEmailSent = FALSE;
 
-				if ($conf['enableAdminReview'] && $bDefaultMode && !$bCustomerConfirmsMode) {
+				if (
+					$conf['enableAdminReview'] &&
+					$bDefaultMode &&
+					!$bCustomerConfirmsMode
+				) {
 						// Send admin the confirmation email
 						// The user will not confirm in this mode
 					$bEmailSent = $this->email->compile(
@@ -643,7 +648,7 @@ class tx_agency_control {
 						$this->marker,
 						$dataObj,
 						$displayObj,
-						$this->setfixedObj.
+						$setfixedObj.
 						$theTable,
 						$autoLoginKey,
 						$prefixId,
@@ -687,7 +692,7 @@ class tx_agency_control {
 						$this->marker,
 						$dataObj,
 						$displayObj,
-						$this->setfixedObj,
+						$setfixedObj,
 						$theTable,
 						$autoLoginKey,
 						$prefixId,
@@ -720,10 +725,26 @@ class tx_agency_control {
 
 					// Link to on edit save
 					// backURL may link back to referring process
-				if ($theTable == 'fe_users' &&
+				if (
+					$theTable == 'fe_users' &&
 					($cmd == 'edit' || $cmd == 'password') &&
-					($controlData->getBackURL() || ($conf['linkToPID'] && ($controlData->getFeUserData('linkToPID') || !$conf['linkToPIDAddButton']))) ) {
-					$destUrl = ($controlData->getBackURL() ? $controlData->getBackURL() : $cObj->getTypoLink_URL($conf['linkToPID'] . ',' . $GLOBALS['TSFE']->type));
+					(
+						$controlData->getBackURL() ||
+						(
+							$conf['linkToPID'] &&
+							(
+								$controlData->getFeUserData('linkToPID') ||
+								!$conf['linkToPIDAddButton']
+							)
+						)
+					)
+				) {
+					$destUrl =
+						(
+							$controlData->getBackURL() ?
+								$controlData->getBackURL() :
+								$cObj->getTypoLink_URL($conf['linkToPID'] . ',' . $GLOBALS['TSFE']->type)
+						);
 					header('Location: '.t3lib_div::locationHeaderUrl($destUrl));
 					exit;
 				}
@@ -775,6 +796,7 @@ class tx_agency_control {
 				'',
 				FALSE
 			);
+
 			$this->marker->setArray($markerArray);
 			$content = $cObj->substituteMarkerArray($templateCode, $markerArray);
 		} else {
@@ -795,7 +817,7 @@ class tx_agency_control {
 					$feuData = $controlData->getFeUserData();
 					$origArray = $dataObj->parseIncomingData($origArray, FALSE);
 
-					$content = $this->setfixedObj->processSetFixed(
+					$content = $setfixedObj->processSetFixed(
 						$conf,
 						$cObj,
 						$langObj,
@@ -831,10 +853,7 @@ class tx_agency_control {
 					if ($conf['infomail']) {
 						$controlData->setSetfixedEnabled(1);
 					}
-// 					if (count($origArray)) {
 					$origArray = $dataObj->parseIncomingData($origArray, FALSE);
-// 					}
-
 					$errorCode = '';
 					$content = $this->email->sendInfo(
 						$conf,
@@ -846,7 +865,7 @@ class tx_agency_control {
 						$this->marker,
 						$dataObj,
 						$displayObj,
-						$this->setfixedObj,
+						$setfixedObj,
 						$theTable,
 						$autoLoginKey,
 						$prefixId,
@@ -860,7 +879,10 @@ class tx_agency_control {
 						$errorCode
 					);
 
-					if (is_array($errorCode)) {
+					if (
+						$content == '' &&
+						is_array($errorCode)
+					) {
 						$content = $langObj->getLL($errorCode['0']);
 					}
 					break;
@@ -914,7 +936,7 @@ class tx_agency_control {
 						$cmd,
 						$cmdKey,
 						$controlData->getMode(),
-						$dataObj->inError,
+						$dataObj->getInError(),
 						$token
 					);
 					break;
@@ -945,7 +967,7 @@ class tx_agency_control {
 						$origArray,
 						$securedArray,
 						$dataObj->getFieldList(),
-						$dataObj->inError,
+						$dataObj->getInError(),
 						$token
 					);
 					break;
@@ -978,7 +1000,7 @@ class tx_agency_control {
 						$origArray,
 						$securedArray,
 						$dataObj->getFieldList(),
-						$dataObj->inError,
+						$dataObj->getInError(),
 						$token
 					);
 					break;
@@ -1057,6 +1079,7 @@ class tx_agency_control {
 				$authServiceClass == 'TYPO3\\CMS\\Saltedpasswords\\SaltedPasswordService'
 			) {
 				$ok = $authServiceObj->compareUident($user, $loginData);
+
 				if ($ok) {
 						// Login successfull: create user session
 					$GLOBALS['TSFE']->fe_user->createUserSession($user);

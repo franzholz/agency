@@ -105,35 +105,35 @@ class tx_agency_marker {
 		$this->setArray($markerArray);
 
 			// Button labels
-		$buttonLabelsList = 'register,confirm_register,back_to_form,update,confirm_update,enter,confirm_delete,cancel_delete,update_and_more,password_forgotten';
+		$buttonLabelsList = 'register,confirm_register,back_to_form,update,confirm_update,enter,confirm_delete,cancel_delete,update_and_more,password_enter_new';
 
 		$this->setButtonLabelsList($buttonLabelsList);
 
-		$otherLabelsList = 'yes,no,new_password,password_again,tooltip_password_again,tooltip_invitation_password_again,click_here_to_register,tooltip_click_here_to_register,click_here_to_edit,tooltip_click_here_to_edit,click_here_to_delete,tooltip_click_here_to_delete,click_here_to_see_terms,tooltip_click_here_to_see_terms'.
-		',copy_paste_link,enter_account_info,enter_invitation_account_info,required_info_notice,excuse_us,'.
-			',tooltip_login_username,tooltip_login_password,'.
-			',registration_problem,registration_login,registration_sorry,registration_clicked_twice,registration_help,kind_regards,kind_regards_cre,kind_regards_del,kind_regards_ini,kind_regards_inv,kind_regards_upd'.
-			',v_dear,v_verify_before_create,v_verify_invitation_before_create,v_verify_before_update,v_really_wish_to_delete,v_edit_your_account'.
-			',v_email_lost_password,v_infomail_dear,v_infomail_lost_password_confirm,v_infomail_lost_password_subject'.
-
-			',v_now_enter_your_username,v_now_choose_password,v_notification'.
-			',v_registration_created,v_registration_created_subject,v_registration_created_message1,v_registration_created_message2,v_registration_created_message3'.
+		$otherLabelsList = 'yes,no,new_password,password_again,tooltip_password_again,tooltip_invitation_password_again,click_here_to_register,tooltip_click_here_to_register,click_here_to_edit,tooltip_click_here_to_edit,click_here_to_delete,tooltip_click_here_to_delete,click_here_to_see_terms,tooltip_click_here_to_see_terms' .
+		',copy_paste_link,enter_account_info,enter_invitation_account_info,required_info_notice,excuse_us,' .
+			',tooltip_login_username,tooltip_login_password,' .
+			',registration_problem,registration_login,registration_sorry,registration_clicked_twice,registration_help,kind_regards,kind_regards_cre,kind_regards_del,kind_regards_ini,kind_regards_inv,kind_regards_upd' .
+			',v_dear,v_verify_before_create,v_verify_invitation_before_create,v_verify_before_update,v_really_wish_to_delete,v_edit_your_account' .
+			',v_infomail_lost_password,v_infomail_dear,v_infomail_lost_password_enter_new,v_infomail_lost_password_subject' .
+			',v_infomail_lost_password_message1,v_infomail_lost_password_message2' .
+			',v_now_enter_your_username,v_now_choose_password,v_notification' .
+			',v_registration_created,v_registration_created_subject,v_registration_created_message1,v_registration_created_message2,v_registration_created_message3' .
 			',v_to_the_administrator'.
-			',v_registration_review_subject,v_registration_review_message1,v_registration_review_message2,v_registration_review_message3'.
-			',v_please_confirm,v_your_account_was_created,v_your_account_was_created_nomail,v_follow_instructions1,v_follow_instructions2,v_follow_instructions_review1,v_follow_instructions_review2'.
-			',v_invitation_confirm,v_invitation_account_was_created,v_invitation_instructions1'.
-			',v_registration_initiated,v_registration_initiated_subject,v_registration_initiated_message1,v_registration_initiated_message2,v_registration_initiated_message3,v_registration_initiated_review1,v_registration_initiated_review2'.
-			',v_registration_invited,v_registration_invited_subject,v_registration_invited_message1,v_registration_invited_message1a,v_registration_invited_message2'.
-			',v_registration_infomail_message1,v_registration_infomail_message1a'.
-			',v_registration_confirmed,v_registration_confirmed_subject,v_registration_confirmed_message1,v_registration_confirmed_message2,v_registration_confirmed_review1,v_registration_confirmed_review2'.
-			',v_registration_cancelled,v_registration_cancelled_subject,v_registration_cancelled_message1,v_registration_cancelled_message2'.
-			',v_registration_accepted,v_registration_accepted_subject,v_registration_accepted_message1,v_registration_accepted_message2'.
-			',v_registration_refused,v_registration_refused_subject,v_registration_refused_message1,v_registration_refused_message2'.
-			',v_registration_accepted_subject2,v_registration_accepted_message3,v_registration_accepted_message4'.
-			',v_registration_refused_subject2,v_registration_refused_message3,v_registration_refused_message4'.
-			',v_registration_entered_subject,v_registration_entered_message1,v_registration_entered_message2'.
-			',v_registration_updated,v_registration_updated_subject,v_registration_updated_message1'.
-			',v_registration_deleted,v_registration_deleted_subject,v_registration_deleted_message1,v_registration_deleted_message2'.
+			',v_registration_review_subject,v_registration_review_message1,v_registration_review_message2,v_registration_review_message3' .
+			',v_please_confirm,v_your_account_was_created,v_your_account_was_created_nomail,v_follow_instructions1,v_follow_instructions2,v_follow_instructions_review1,v_follow_instructions_review2' .
+			',v_invitation_confirm,v_invitation_account_was_created,v_invitation_instructions1' .
+			',v_registration_initiated,v_registration_initiated_subject,v_registration_initiated_message1,v_registration_initiated_message2,v_registration_initiated_message3,v_registration_initiated_review1,v_registration_initiated_review2' .
+			',v_registration_invited,v_registration_invited_subject,v_registration_invited_message1,v_registration_invited_message1a,v_registration_invited_message2' .
+			',v_registration_infomail_message1a' .
+			',v_registration_confirmed,v_registration_confirmed_subject,v_registration_confirmed_message1,v_registration_confirmed_message2,v_registration_confirmed_review1,v_registration_confirmed_review2' .
+			',v_registration_cancelled,v_registration_cancelled_subject,v_registration_cancelled_message1,v_registration_cancelled_message2' .
+			',v_registration_accepted,v_registration_accepted_subject,v_registration_accepted_message1,v_registration_accepted_message2' .
+			',v_registration_refused,v_registration_refused_subject,v_registration_refused_message1,v_registration_refused_message2' .
+			',v_registration_accepted_subject2,v_registration_accepted_message3,v_registration_accepted_message4' .
+			',v_registration_refused_subject2,v_registration_refused_message3,v_registration_refused_message4' .
+			',v_registration_entered_subject,v_registration_entered_message1,v_registration_entered_message2' .
+			',v_registration_updated,v_registration_updated_subject,v_registration_updated_message1' .
+			',v_registration_deleted,v_registration_deleted_subject,v_registration_deleted_message1,v_registration_deleted_message2' .
 			',v_registration_unsubscribed,v_registration_unsubscribed_subject,v_registration_unsubscribed_message1,v_registration_unsubscribed_message2';
 		$this->setOtherLabelsList($otherLabelsList);
 	}
@@ -163,6 +163,8 @@ class tx_agency_marker {
 				$newOtherLabelsList = $formerOtherLabelsList . ',' . $otherLabelsList;
 				$newOtherLabelsList = t3lib_div::uniqueList($newOtherLabelsList);
 				$this->setOtherLabelsList($newOtherLabelsList);
+			} else {
+				$this->setOtherLabelsList($otherLabelsList);
 			}
 		}
 	}

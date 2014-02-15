@@ -76,13 +76,13 @@ class tx_agency_controldata {
 
 
 	public function init (
-		$conf,
+		$confObj,
 		$prefixId,
 		$extKey,
 		$piVars,
 		$theTable
 	) {
-		$this->conf = $conf;
+		$conf = $confObj->getConf();
 			// Initialize array of installed captcha extensions
 		if (isset($conf['captcha.'])) {
 			foreach ($conf['captcha.'] as $k => $captchaConfig) {
@@ -124,7 +124,7 @@ class tx_agency_controldata {
 		$row = $pidRecord->getPage($this->getPid());
 		$this->thePidTitle = trim($conf['pidTitleOverride']) ? trim($conf['pidTitleOverride']) : $row['title'];
 
-		$pidTypeArray = array('login', 'register', 'edit', 'infomail', 'confirm', 'confirmInvitation');
+		$pidTypeArray = array('login', 'register', 'edit', 'infomail', 'confirm', 'confirmInvitation', 'password');
 		// set the pid's
 
 		foreach ($pidTypeArray as $k => $type) {
@@ -493,12 +493,50 @@ class tx_agency_controldata {
 	* @param	array	$dataArray: incoming array
 	* @return	void
 	*/
-	public function generatePassword (array &$dataArray, $genLength) {
+	public function generatePassword (
+		array $conf,
+		array $cmdConf,
+		array &$dataArray,
+		&$autoLoginKey
+	) {
+// 		$this->getStorageSecurity()->initializeAutoLoginPassword($finalDataArray);
+		// We generate an interim password in the case of an invitation
+		if (
+			$cmdConf['generatePassword']
+		) {
+			$genLength = intval($cmdConf['generatePassword']);
 
-		$generatedPassword = substr(md5(uniqid(microtime(), 1)), 0, $genLength);
-		$dataArray['password'] = $generatedPassword;
-		$dataArray['password_again'] = $generatedPassword;
-		$this->writePassword($generatedPassword);
+			if ($genLength) {
+				$generatedPassword =
+					substr(
+						md5(uniqid(microtime(), 1)),
+						0,
+						$genLength
+					);
+				$dataArray['password'] = $generatedPassword;
+				$dataArray['password_again'] = $generatedPassword;
+				$this->writePassword($generatedPassword);
+			}
+		}
+
+		if (
+			$conf['enableAutoLoginOnConfirmation'] &&
+			!$conf['enableAutoLoginOnCreate']
+		) {
+			$password = $this->readPassword();
+			$cryptedPassword = '';
+			$autoLoginKey = '';
+			$bEncrypted =
+				$this->getStorageSecurity()
+					->encryptPasswordForAutoLogin(
+						$password,
+						$cryptedPassword,
+						$autoLoginKey
+					);
+			if ($bEncrypted) {
+				$dataArray['tx_agency_password'] = base64_encode($cryptedPassword);
+			}
+		}
 	}
 
 	/**
@@ -904,14 +942,17 @@ class tx_agency_controldata {
 	}
 
 	public function getPid ($type = '') {
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
+
 		if ($type) {
 			if (isset($this->pid[$type])) {
 				$result = $this->pid[$type];
 			}
 		}
 		if (!$result) {
-			$bPidIsInt = tx_div2007_core::testInt($this->conf['pid']);
-			$result = ($bPidIsInt ? intval($this->conf['pid']) : $GLOBALS['TSFE']->id);
+			$bPidIsInt = tx_div2007_core::testInt($conf['pid']);
+			$result = ($bPidIsInt ? intval($conf['pid']) : $GLOBALS['TSFE']->id);
 		}
 		return $result;
 	}
@@ -925,6 +966,9 @@ class tx_agency_controldata {
 					break;
 				case 'confirmInvitation':
 					$pid = $this->getPid('confirm');
+					break;
+				case 'password':
+					$pid = $this->getPid('password');
 					break;
 				default:
 					$pid = $GLOBALS['TSFE']->id;
@@ -977,10 +1021,12 @@ class tx_agency_controldata {
 	* @return boolean  true if preview display is on
 	*/
 	public function isPreview () {
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
 		$rc = '';
 		$cmdKey = $this->getCmdKey();
 
-		$rc = ($this->conf[$cmdKey . '.']['preview'] && $this->getFeUserData('preview'));
+		$rc = ($conf[$cmdKey . '.']['preview'] && $this->getFeUserData('preview'));
 		return $rc;
 	}	// isPreview
 
@@ -1041,7 +1087,10 @@ class tx_agency_controldata {
 	*/
 	public function cleanShortUrlCache () {
 
-		$shortUrlLife = intval($this->conf['shortUrlLife']) ? strval(intval($this->conf['shortUrlLife'])) : '30';
+		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$conf = $confObj->getConf();
+
+		$shortUrlLife = intval($conf['shortUrlLife']) ? strval(intval($conf['shortUrlLife'])) : '30';
 		$max_life = time() - (86400 * intval($shortUrlLife));
 		$res =
 			$GLOBALS['TYPO3_DB']->exec_DELETEquery(

@@ -1,5 +1,5 @@
 <?php
-/***************************************************************
+	/***************************************************************
 *  Copyright notice
 *
 *  (c) 2007-2012 Stanislas Rolland <typo3(arobas)sjbr.ca>
@@ -40,6 +40,7 @@
  *
  *
  */
+
 
 
 class tx_agency_display {
@@ -380,7 +381,7 @@ class tx_agency_display {
 
 		if ($theTable != 'fe_users') {
 			$authObj = t3lib_div::getUserObj('&tx_agency_auth');
-			$markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="' . $prefixId . '[aC]" value="' . $authObj->authCode($origArray, $conf['setfixed.']['EDIT.']['_FIELDLIST']) . '" />';
+			$markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="' . $prefixId . '[aC]" value="' . $authObj->generateAuthCode($origArray, $conf['setfixed.']['EDIT.']['_FIELDLIST']) . '" />';
 			$markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="' . $prefixId . '[cmd]" value="edit" />';
 		}
 
@@ -507,7 +508,6 @@ class tx_agency_display {
 			}
 			$currentArray = array_merge($currentArray, $dataArray);
 			$key = ($cmd == 'invite') ? 'INVITE': 'CREATE';
-
 			$bNeedUpdateJS = TRUE;
 			if ($cmd == 'create' || $cmd == 'invite') {
 				$subpartKey = '###TEMPLATE_' . $key . $markerObj->getPreviewLabel() . '###';
@@ -524,7 +524,7 @@ class tx_agency_display {
 				$markerObj->addPasswordTransmissionMarkers($markerArray);
 			}
 			$templateCode = $cObj->getSubpart($templateCode, $subpartKey);
-			$failure = t3lib_div::_GP('noWarnings') ? FALSE: $controlData->getFailure();
+			$failure = t3lib_div::_GP('noWarnings') ? FALSE : $controlData->getFailure();
 
 			if ($failure == FALSE) {
 				$templateCode = $cObj->substituteSubpart(
@@ -699,6 +699,8 @@ class tx_agency_display {
 		$errorFieldArray,
 		$token
 	) {
+		$theAuthCode = '';
+
 		if (
 			!is_array($GLOBALS['TCA'][$theTable]) ||
 			!is_array($GLOBALS['TCA'][$theTable]['columns'])
@@ -722,7 +724,7 @@ class tx_agency_display {
 						$fieldArr[] = $field;
 					}
 				}
-				$theCode =
+				$theAuthCode =
 					$authObj->setfixedHash(
 						$origArray,
 						$origArray['_FIELDLIST']
@@ -731,19 +733,24 @@ class tx_agency_display {
 
 			$origArray = $dataObj->parseIncomingData($origArray);
 			$aCAuth = $authObj->aCAuth($origArray, $conf['setfixed.']['EDIT.']['_FIELDLIST']);
+
 			if (
 				is_array($origArray) &&
 				(
 					($theTable == 'fe_users' && $GLOBALS['TSFE']->loginUser) ||
 					$aCAuth ||
-					$theCode && !strcmp($authObj->authCode, $theCode)
+					(
+						$theAuthCode != '' &&
+						!strcmp($authObj->getAuthCode(), $theAuthCode)
+					)
 				)
 			) {
 				$markerObj->setArray($markerArray);
+
 				// Must be logged in OR be authenticated by the aC code in order to edit
 				// If the recUid selects a record.... (no check here)
 				if (
-					!strcmp($authObj->authCode, $theCode) ||
+					!strcmp($authObj->getAuthCode(), $theAuthCode) ||
 					$aCAuth ||
 					$cObj->DBmayFEUserEdit(
 						$theTable,
@@ -1042,7 +1049,6 @@ class tx_agency_display {
 					$confObj,
 					''
 				);
-
 			$markerObj->addStaticInfoMarkers(
 				$markerArray,
 				$prefixId,
@@ -1109,7 +1115,7 @@ class tx_agency_display {
 	}	// getPlainTemplate
 
 	/**
-	 * Determine what template subpart should be used atfer the last save operation
+	 * Determine which template subpart should be used atfer the last save operation
 	 *
 	 * @param string $cmd: the cmd that was executed
 	 * @param string $cmdKey: the command key that was use
@@ -1288,7 +1294,7 @@ class tx_agency_display {
 			if (isset($conf[$cmdKey . '.']['marker.'])) {
 				if ($conf[$cmdKey . '.']['marker.']['computeUrl'] == '1') {
 					$this->setfixedObj->computeUrl(
-						$cmdKey,
+						$cmd,
 						$prefixId,
 						$cObj,
 						$controlData,

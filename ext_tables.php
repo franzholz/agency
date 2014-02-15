@@ -185,6 +185,14 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 				'max' => '20'
 			)
 		),
+		'lost_password' => array(
+			'exclude' => 0,
+			'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.lost_password',
+			'config' => array(
+				'type' => 'check',
+				'default' => '0'
+			)
+		),
 	);
 
 	if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['forceGender']) {
@@ -196,28 +204,26 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 
 	t3lib_extMgm::addTCAcolumns('fe_users', $addColumnarray);
 
-
 	$TCA['fe_users']['interface']['showRecordFieldList'] = preg_replace('/(^|,)\s*country\s*(,|$)/', '$1zone,static_info_country,country,language$2', $TCA['fe_users']['interface']['showRecordFieldList']);
 	$TCA['fe_users']['interface']['showRecordFieldList'] = preg_replace('/(^|,)\s*title\s*(,|$)/', '$1gender,status,date_of_birth,house_no,title$2', $TCA['fe_users']['interface']['showRecordFieldList']);
 
-	$additionalFields = '';
-	if (strpos($TCA['fe_users']['feInterface']['fe_admin_fieldList'],'first_name') === FALSE) {
-		$additionalFields = 'first_name,middle_name,last_name,';
+	if ($typoVersion < 6002000) {
+		$additionalFields = '';
+		if (strpos($TCA['fe_users']['feInterface']['fe_admin_fieldList'], 'first_name') === FALSE) {
+			$additionalFields = 'first_name,middle_name,last_name,';
+		}
+
+		$TCA['fe_users']['feInterface']['fe_admin_fieldList'] = preg_replace('/(^|,)\s*title\s*(,|$)/', '$1gender,' . $additionalFields . 'cnum,status,title$2', $TCA['fe_users']['feInterface']['fe_admin_fieldList']);
+		$TCA['fe_users']['feInterface']['fe_admin_fieldList'] .= ',image,disable,date_of_birth,house_no,by_invitation,terms_acknowledged,tx_agency_password,lost_password';
+		$TCA['fe_users']['feInterface']['fe_admin_fieldList'] = preg_replace('/(^|,)\s*country\s*(,|$)/', '$1zone,static_info_country,country,language,comments$2', $TCA['fe_users']['feInterface']['fe_admin_fieldList']);
 	}
-
-	$TCA['fe_users']['feInterface']['fe_admin_fieldList'] = preg_replace('/(^|,)\s*title\s*(,|$)/', '$1gender,' . $additionalFields . 'cnum,status,title$2', $TCA['fe_users']['feInterface']['fe_admin_fieldList']);
-
-	$TCA['fe_users']['feInterface']['fe_admin_fieldList'] .= ',image,disable,date_of_birth,house_no,by_invitation,terms_acknowledged,tx_agency_password';
-	$TCA['fe_users']['feInterface']['fe_admin_fieldList'] = preg_replace('/(^|,)\s*country\s*(,|$)/', '$1zone,static_info_country,country,language,comments$2', $TCA['fe_users']['feInterface']['fe_admin_fieldList']);
 
 	$TCA['fe_users']['types']['0']['showitem'] = preg_replace('/(^|,)\s*country\s*(,|$)/', '$1 zone, static_info_country, country, language$2', $TCA['fe_users']['types']['0']['showitem']);
 	$TCA['fe_users']['types']['0']['showitem'] = preg_replace('/(^|,)\s*address\s*(,|$)/', '$1 cnum, status, date_of_birth, house_no, address$2', $TCA['fe_users']['types']['0']['showitem']);
 
-// 	$TCA['fe_users']['types']['0']['showitem'] = preg_replace('/(^|,)\s*www\s*(,|$)/', '$1 www, comments, by_invitation, terms_acknowledged$2', $TCA['fe_users']['types']['0']['showitem']);
-
 	t3lib_extMgm::addToAllTCAtypes(
 		'fe_users',
-		'comments, by_invitation, terms_acknowledged',
+		'comments, by_invitation, terms_acknowledged, lost_password',
 		'',
 		'after:www,'
 	);
@@ -229,7 +235,7 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 
 		// fe_users modified
 	if (
-		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][ $_EXTKEY ]['enableDirectMail'] &&
+		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['enableDirectMail'] &&
 		!t3lib_extMgm::isLoaded('direct_mail')
 	) {
 		$tempCols = array(
@@ -269,7 +275,9 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 		);
 
 		t3lib_extMgm::addTCAcolumns('fe_users', $tempCols);
-		$TCA['fe_users']['feInterface']['fe_admin_fieldList'] .= ',module_sys_dmail_newsletter,module_sys_dmail_category,module_sys_dmail_html';
+		if ($typoVersion < 6002000) {
+			$TCA['fe_users']['feInterface']['fe_admin_fieldList'] .= ',module_sys_dmail_newsletter,module_sys_dmail_category,module_sys_dmail_html';
+		}
 		t3lib_extMgm::addToAllTCATypes('fe_users','--div--;Direct mail,module_sys_dmail_newsletter;;;;1-1-1,module_sys_dmail_category,module_sys_dmail_html');
 	}
 
