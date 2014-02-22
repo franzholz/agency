@@ -242,8 +242,8 @@
 			<label index="button_enter">Enter</label>
 			<label index="button_confirm_delete">Yes, delete account</label>
 			<label index="button_cancel_delete">No, cancel</label>
-			<label index="button_password_forgotten">Send me the forgotten password.</label>
-			<label index="button_password_forgotten_informal">Send me the forgotten password.</label>
+			<label index="button_password_enter_new">Send me the email to enter a new password.</label>
+			<label index="button_password_enter_new_informal">Send me the email to enter a new password.</label>
 			<label index="click_here_to_register">Not a member yet? click here to register.</label>
 			<label index="click_here_to_register_informal">Not a member yet? click here to register.</label>
 			<label index="tooltip_click_here_to_register">Presents a registration form.</label>
@@ -268,7 +268,7 @@
 			<label index="excuse_us">Please forgive us for any inconvenience we may have caused you.&lt;br /&gt;&lt;br /&gt;</label>
 			<label index="excuse_us_informal">Please forgive us for any inconvenience we may have caused you.&lt;br /&gt;&lt;br /&gt;</label>
 			<label index="registration_problem">There seems to be a problem.</label>
-			<label index="registration_login">Your login data seems to be invalid.</label>
+			<label index="registration_login">Your login data seem to be invalid.</label>
 			<label index="registration_sorry">We are sorry that it was not possible to complete this process.</label>
 			<label index="registration_sorry_informal">We are sorry that it was not possible to complete this process.</label>
 			<label index="registration_clicked_twice">Perhaps you clicked twice on the link?</label>
@@ -305,8 +305,13 @@
 			<label index="v_infomail_dear_informal">Dear madam/sir,</label>
 			<label index="v_infomail_lost_password">Enter the email address under which you are registered.</label>
 			<label index="v_infomail_lost_password_confirm">The email with the lost password has been sent to &lt;b&gt;%4$s&lt;/b&gt;.</label>
+			<label index="v_infomail_lost_password_enter_new">The email to enter a new password has been sent to &lt;b&gt;%4$s&lt;/b&gt;.</label>
 			<label index="v_infomail_lost_password_subject">Information about your registration with &lt;b&gt;%1$s&lt;/b&gt;.</label>
 			<label index="v_infomail_lost_password_subject_informal">Information about your registration with &lt;b&gt;%1$s&lt;/b&gt;.</label>
+			<label index="v_infomail_lost_password_message1">The email message will contain a link that will allow you to enter your new password for &lt;b&gt;%1$s&lt;/b&gt;.</label>
+			<label index="v_infomail_lost_password_message1_informal">The email message will contain a link that will allow you to enter your new password for &lt;b&gt;%1$s&lt;/b&gt;.</label>
+			<label index="v_infomail_lost_password_message2">Please follow the instructions given in this email message to recreate your membership password.</label>
+			<label index="v_infomail_lost_password_message2_informal">Please follow the instructions given in this email message to recreate your membership password.</label>
 			<label index="v_to_the_administrator">To the administrator of memberships with %1$s</label>
 			<label index="v_now_enter_your_username">You may now enter with your username &lt;b&gt;%2$s&lt;/b&gt; and your password</label>
 			<label index="v_now_enter_your_username_informal">You may now enter with your username &lt;b&gt;%2$s&lt;/b&gt; and your password</label>
@@ -539,6 +544,7 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
 			<label index="internal_remove_deprecated_marker">Deprecated marker %1$s must be removed from HTML template file %2$s</label>
 			<label index="internal_label_not_localized_by_div2007">div2007 failed to localize label %1$s</label>
 			<label index="internal_email_not_sent">An email to %s could not be sent!</label>
+			<label index="internal_invalid_token">Apparently, this link has expired.</label>
 		</languageKey>
 	</data>
 </T3locallang>

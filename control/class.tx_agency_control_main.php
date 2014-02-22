@@ -78,7 +78,8 @@ class tx_agency_control_main {
 			$adminFieldList,
 			$buttonLabelsList,
 			$otherLabelsList,
-			$staticInfoObj
+			$staticInfoObj,
+			$errorMessage
 		);
 		$cmd = $this->controlData->getCmd();
 		$cmdKey = $this->controlData->getCmdKey();
@@ -87,7 +88,7 @@ class tx_agency_control_main {
 		$dataArray = $this->data->getDataArray();
 		$templateCode = $this->data->getTemplateCode();
 
-		if ($success !== FALSE) {
+		if ($success) {
 			$error_message = '';
 
 			$displayObj = t3lib_div::getUserObj('tx_agency_display');
@@ -108,9 +109,14 @@ class tx_agency_control_main {
 				$templateCode,
 				$error_message
 			);
-		} else {
+		}
+
+		if ($error_message) {
+			$content = $error_message;
+		} else if ($success === FALSE) {
 			$content = '<em>Internal error in ' . $pibaseObj->extKey . '!</em><br /> Maybe you forgot to include the basic template file under statics from extensions.';
 		}
+
 		$content = tx_div2007_alpha::wrapInBaseClass_fh001($content, $pibaseObj->prefixId, $pibaseObj->extKey);
 		return $content;
 	}
@@ -134,7 +140,8 @@ class tx_agency_control_main {
 		$adminFieldList,
 		$buttonLabelsList,
 		$otherLabelsList,
-		&$staticInfoObj
+		&$staticInfoObj,
+		&$errorMessage
 	) {
 		$cObj = $pibaseObj->cObj;
 		$this->tca = t3lib_div::getUserObj('&tx_agency_tca');
@@ -211,67 +218,72 @@ class tx_agency_control_main {
 			$pibaseObj->scriptRelPath,
 			$this->extKey
 		);
-		$success = $this->langObj->loadLL();
+		$result = $this->langObj->loadLL();
 
-		if ($success !== FALSE) {
+		if ($result !== FALSE) {
 
-			$this->control->init(
-				$this->langObj,
-				$cObj,
-				$this->controlData,
-				$this->marker,
-				$this->email,
-				$this->tca,
-				$this->urlObj
-			);
+			if ($this->controlData->isTokenValid()) {
+				$this->control->init(
+					$this->langObj,
+					$cObj,
+					$this->controlData,
+					$this->marker,
+					$this->email,
+					$this->tca,
+					$this->urlObj
+				);
 
-			$this->data->init(
-				$cObj,
-				$this->langObj,
-				$this->tca,
-				$this->control,
-				$theTable,
-				$this->controlData,
-				$staticInfoObj
-			);
+				$this->data->init(
+					$cObj,
+					$this->langObj,
+					$this->tca,
+					$this->control,
+					$theTable,
+					$this->controlData,
+					$staticInfoObj
+				);
 
-			$this->control->init2( // only here the $conf is changed
-				$confObj,
-				$staticInfoObj,
-				$theTable,
-				$this->controlData,
-				$this->data,
-				$adminFieldList
-			);
+				$this->control->init2( // only here the $conf is changed
+					$confObj,
+					$staticInfoObj,
+					$theTable,
+					$this->controlData,
+					$this->data,
+					$adminFieldList
+				);
 
-			$uid = $this->data->getRecUid();
+				$uid = $this->data->getRecUid();
 
-			$this->marker->init(
-				$confObj,
-				$this->data,
-				$this->tca,
-				$this->langObj,
-				$this->controlData,
-				$this->controlData->getBackURL(),
-				$this->controlData->getExtKey(),
-				$this->controlData->getPrefixId(),
-				$this->controlData->getTable(),
-				$this->urlObj,
-				$staticInfoObj,
-				$uid,
-				$this->controlData->readToken()
-			);
+				$this->marker->init(
+					$confObj,
+					$this->data,
+					$this->tca,
+					$this->langObj,
+					$this->controlData,
+					$this->controlData->getBackURL(),
+					$this->controlData->getExtKey(),
+					$this->controlData->getPrefixId(),
+					$this->controlData->getTable(),
+					$this->urlObj,
+					$staticInfoObj,
+					$uid,
+					$this->controlData->readToken()
+				);
 
-			if ($buttonLabelsList != '') {
-				$this->marker->setButtonLabelsList($buttonLabelsList);
-			}
+				if ($buttonLabelsList != '') {
+					$this->marker->setButtonLabelsList($buttonLabelsList);
+				}
 
-			if ($otherLabelsList != '') {
-				$this->marker->addOtherLabelsList($otherLabelsList);
+				if ($otherLabelsList != '') {
+					$this->marker->addOtherLabelsList($otherLabelsList);
+				}
+			} else {
+				$result = FALSE;
+				$errorMessage = $this->langObj->getLL('internal_invalid_token');
 			}
 		}
 
-		return $success;
+		return $result;
 	}	// init
 }
 

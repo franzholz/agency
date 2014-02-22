@@ -559,7 +559,6 @@ class tx_agency_marker {
 		$prefixId
 	) {
 		$markerArray = array();
-		$this->checkToken($token, $extKey);
 		$vars = array();
 		$unsetVarsList = 'mode,pointer,sort,sword,backURL,submit,rU,aC,sFK,doNotSave,preview';
 		$unsetVars = t3lib_div::trimExplode(',', $unsetVarsList);
@@ -572,8 +571,7 @@ class tx_agency_marker {
 		$markerArray['###FORM_URL###'] = $formUrl;
 		$form = tx_div2007_alpha5::getClassName_fh002(
 			$theTable . '_form',
-			$prefixId,
-			TRUE
+			$prefixId
 		);
 
 		$markerArray['###FORM_NAME###'] = $form; // $this->conf['formName'];
@@ -728,22 +726,19 @@ class tx_agency_marker {
 				$idCountry =
 					tx_div2007_alpha5::getClassName_fh002(
 						'static_info_country',
-						$prefixId,
-						TRUE
+						$prefixId
 					);
 				$titleCountry = $this->langObj->getLL('tooltip_' . (($cmd == 'invite') ? 'invitation_' : '')  . 'static_info_country');
 				$idZone =
 					tx_div2007_alpha5::getClassName_fh002(
 						'zone',
-						$prefixId,
-						TRUE
+						$prefixId
 					);
 				$titleZone = $this->langObj->getLL('tooltip_' . (($cmd == 'invite') ? 'invitation_' : '')  . 'zone');
 				$idLanguage =
 					tx_div2007_alpha5::getClassName_fh002(
 						'language',
-						$prefixId,
-						TRUE
+						$prefixId
 					);
 				$titleLanguage = $this->langObj->getLL('tooltip_' . (($cmd == 'invite') ? 'invitation_' : '')  . 'language');
 				$selected = (is_array($row) && isset($row['static_info_country']) ? $row['static_info_country'] : array());
@@ -867,8 +862,7 @@ class tx_agency_marker {
 					tx_div2007_alpha5::classParam_fh002(
 						'file-view',
 						'',
-						$prefixId,
-						TRUE
+						$prefixId
 					) .
 					' target="_blank" title="' . $this->langObj->getLL('file_view') . '">' .
 						$this->langObj->getLL('file_view') .
@@ -884,8 +878,7 @@ class tx_agency_marker {
 					tx_div2007_alpha5::classParam_fh002(
 						'delete-view',
 						'',
-						$prefixId,
-						TRUE
+						$prefixId
 					) .
 					' onclick=\'if(confirm("' .
 					$this->langObj->getLL('confirm_file_delete') . '")) return true; else return false;\' />'
@@ -893,8 +886,7 @@ class tx_agency_marker {
 					tx_div2007_alpha5::classParam_fh002(
 						'file-view',
 						'',
-						$prefixId,
-						TRUE
+						$prefixId
 					) .
 					' target="_blank" title="' . $this->langObj->getLL('file_view') . '">' .
 					$this->langObj->getLL('file_view') . '</a><br />';
@@ -905,8 +897,7 @@ class tx_agency_marker {
 				$HTMLContent .= '<input id="' .
 				tx_div2007_alpha5::getClassName_fh002(
 					$theField,
-					$prefixId,
-					TRUE
+					$prefixId
 				) .
 				'-' . ($i-sizeof($filenameArray)) .
 				'" name="' . $tablePrefix . '[' . $theField . '][' . $i . ']" title="' .
@@ -914,8 +905,7 @@ class tx_agency_marker {
 				tx_div2007_alpha5::classParam_fh002(
 					'uploader-view',
 					'',
-					$prefixId,
-					TRUE
+					$prefixId
 				) .
 				' /><br />';
 			}
@@ -986,20 +976,6 @@ class tx_agency_marker {
 		}
 	}	// addFileUploadMarkers
 
-
-	public function checkToken ($token, $extKey) {
-		$tokenError = '';
-		if ($token == '') {
-			$tokenError = $this->langObj->getLL('internal_token_empty');
-		} else if (strlen($token) < 10) {
-			$tokenError = $this->langObj->getLL('token_short');
-		}
-
-		if ($tokenError != '') {
-			exit($extKey . ': ' . $tokenError); // Todo: do not exit here
-		}
-	}
-
 	/**
 	* Inserts a token for the form and stores it
 	*
@@ -1011,7 +987,6 @@ class tx_agency_marker {
 		$extKey,
 		$prefixId
 	) {
-		$this->checkToken($token, $extKey);
 		$markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="' . $prefixId . '[token]" value="' . $token . '" />';
 	}
 
