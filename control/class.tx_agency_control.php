@@ -1050,7 +1050,6 @@ class tx_agency_control {
 			'uident_text' => $cryptedPassword,
 			'status' => 'login',
 		);
-
 		// Check against configured pid (defaulting to current page)
 		$GLOBALS['TSFE']->fe_user->checkPid = TRUE;
 		$GLOBALS['TSFE']->fe_user->checkPid_value = $controlData->getPid();

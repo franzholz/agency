@@ -387,6 +387,7 @@ class tx_agency_email {
 						$cObj,
 						$controlData,
 						$dataObj,
+						$theTable,
 						$cmdKey,
 						$content['user']['all'],
 						$errorFieldArray
@@ -407,6 +408,7 @@ class tx_agency_email {
 							$cObj,
 							$controlData,
 							$dataObj,
+							$theTable,
 							$cmdKey,
 							$content['userhtml']['all'],
 							$errorFieldArray
@@ -430,6 +432,7 @@ class tx_agency_email {
 						$cObj,
 						$controlData,
 						$dataObj,
+						$theTable,
 						$cmdKey,
 						$content['admin']['all'],
 						$errorFieldArray
@@ -450,6 +453,7 @@ class tx_agency_email {
 							$cObj,
 							$controlData,
 							$dataObj,
+							$theTable,
 							$cmdKey,
 							$content['adminhtml']['all'],
 							$errorFieldArray

@@ -56,7 +56,7 @@ if (t3lib_extMgm::isLoaded(STATIC_INFO_TABLES_EXT)) {
 
 if (!isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['loginSecurityLevels'])) {
 
-	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['loginSecurityLevels'] = array('', 'normal', 'rsa');
+	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['loginSecurityLevels'] = array('normal', 'rsa');
 }
 
 	// Captcha marker hook
@@ -139,8 +139,14 @@ if (
 }
 
 
-if (t3lib_extMgm::isLoaded('tt_products') && TYPO3_MODE == 'FE') {
-	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tt_products']['extendingTCA'][] = $_EXTKEY;
+if (TYPO3_MODE == 'FE') {
+	if (t3lib_extMgm::isLoaded('tt_products')) {
+		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tt_products']['extendingTCA'][] = $_EXTKEY;
+	}
+
+	if (t3lib_extMgm::isLoaded('direct_mail')) {
+		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['extendingTCA'][] = 'direct_mail';
+	}
 }
 
 ?>

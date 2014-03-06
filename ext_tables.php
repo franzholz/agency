@@ -204,8 +204,17 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 
 	t3lib_extMgm::addTCAcolumns('fe_users', $addColumnarray);
 
-	$TCA['fe_users']['interface']['showRecordFieldList'] = preg_replace('/(^|,)\s*country\s*(,|$)/', '$1zone,static_info_country,country,language$2', $TCA['fe_users']['interface']['showRecordFieldList']);
-	$TCA['fe_users']['interface']['showRecordFieldList'] = preg_replace('/(^|,)\s*title\s*(,|$)/', '$1gender,status,date_of_birth,house_no,title$2', $TCA['fe_users']['interface']['showRecordFieldList']);
+	$TCA['fe_users']['interface']['showRecordFieldList'] =
+		preg_replace(
+			'/(^|,)\s*country\s*(,|$)/', '$1zone,static_info_country,country,language$2',
+			$TCA['fe_users']['interface']['showRecordFieldList']
+		);
+	$TCA['fe_users']['interface']['showRecordFieldList'] =
+		preg_replace(
+			'/(^|,)\s*title\s*(,|$)/',
+			'$1gender,status,date_of_birth,house_no,title$2',
+			$TCA['fe_users']['interface']['showRecordFieldList']
+		);
 
 	if ($typoVersion < 6002000) {
 		$additionalFields = '';
@@ -213,13 +222,31 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 			$additionalFields = 'first_name,middle_name,last_name,';
 		}
 
-		$TCA['fe_users']['feInterface']['fe_admin_fieldList'] = preg_replace('/(^|,)\s*title\s*(,|$)/', '$1gender,' . $additionalFields . 'cnum,status,title$2', $TCA['fe_users']['feInterface']['fe_admin_fieldList']);
-		$TCA['fe_users']['feInterface']['fe_admin_fieldList'] .= ',image,disable,date_of_birth,house_no,by_invitation,terms_acknowledged,tx_agency_password,lost_password';
-		$TCA['fe_users']['feInterface']['fe_admin_fieldList'] = preg_replace('/(^|,)\s*country\s*(,|$)/', '$1zone,static_info_country,country,language,comments$2', $TCA['fe_users']['feInterface']['fe_admin_fieldList']);
+		$TCA['fe_users']['feInterface']['fe_admin_fieldList'] =
+			preg_replace(
+				'/(^|,)\s*title\s*(,|$)/', '$1gender,' . $additionalFields . 'cnum,status,title$2',
+				$TCA['fe_users']['feInterface']['fe_admin_fieldList']
+			);
+		$TCA['fe_users']['feInterface']['fe_admin_fieldList'] .=
+			',image,disable,date_of_birth,house_no,by_invitation,terms_acknowledged,tx_agency_password,lost_password';
+		$TCA['fe_users']['feInterface']['fe_admin_fieldList'] =
+			preg_replace(
+				'/(^|,)\s*country\s*(,|$)/', '$1zone,static_info_country,country,language,comments$2',
+				$TCA['fe_users']['feInterface']['fe_admin_fieldList']
+			);
 	}
 
-	$TCA['fe_users']['types']['0']['showitem'] = preg_replace('/(^|,)\s*country\s*(,|$)/', '$1 zone, static_info_country, country, language$2', $TCA['fe_users']['types']['0']['showitem']);
-	$TCA['fe_users']['types']['0']['showitem'] = preg_replace('/(^|,)\s*address\s*(,|$)/', '$1 cnum, status, date_of_birth, house_no, address$2', $TCA['fe_users']['types']['0']['showitem']);
+	$TCA['fe_users']['types']['0']['showitem'] =
+		preg_replace(
+			'/(^|,)\s*country\s*(,|$)/', '$1 zone, static_info_country, country, language$2',
+			$TCA['fe_users']['types']['0']['showitem']
+		);
+	$TCA['fe_users']['types']['0']['showitem'] =
+		preg_replace(
+			'/(^|,)\s*address\s*(,|$)/',
+			'$1 cnum, status, date_of_birth, house_no, address$2',
+			$TCA['fe_users']['types']['0']['showitem']
+		);
 
 	t3lib_extMgm::addToAllTCAtypes(
 		'fe_users',
@@ -233,11 +260,104 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 
 	$TCA['fe_users']['ctrl']['thumbnail'] = 'image';
 
-		// fe_users modified
-	if (
+	if ( // Direct Mail tables exist but Direct Mail shall not be used
 		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['enableDirectMail'] &&
 		!t3lib_extMgm::isLoaded('direct_mail')
 	) {
+		if (!$GLOBALS['TCA']['sys_dmail_category']['columns']) {
+			$GLOBALS['TCA']['sys_dmail_category'] = array(
+				'ctrl' => array(
+					'title' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:sys_dmail_category',
+					'label' => 'category',
+					'tstamp' => 'tstamp',
+					'crdate' => 'crdate',
+					'cruser_id' => 'cruser_id',
+					'languageField' => 'sys_language_uid',
+					'transOrigPointerField' => 'l18n_parent',
+					'transOrigDiffSourceField' => 'l18n_diffsource',
+					'sortby' => 'sorting',
+					'delete' => 'deleted',
+					'enablecolumns' => array(
+						'disabled' => 'hidden',
+					),
+					'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY) . 'icon_tx_directmail_category.gif',
+					)
+			);
+
+			// ******************************************************************
+			// Categories
+			// ******************************************************************
+			$GLOBALS['TCA']['sys_dmail_category'] = Array (
+				'ctrl' => $TCA['sys_dmail_category']['ctrl'],
+				'interface' => Array (
+						'showRecordFieldList' => 'hidden,category'
+				),
+				'feInterface' => $TCA['sys_dmail_category']['feInterface'],
+				'columns' => Array (
+					'sys_language_uid' => Array (
+						'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.language',
+						'config' => Array (
+							'type' => 'select',
+							'foreign_table' => 'sys_language',
+							'foreign_table_where' => 'ORDER BY sys_language.title',
+							'items' => Array(
+								Array('LLL:EXT:lang/locallang_general.xml:LGL.allLanguages',-1),
+								Array('LLL:EXT:lang/locallang_general.xml:LGL.default_value',0)
+							)
+						)
+					),
+					'l18n_parent' => Array (
+						'displayCond' => 'FIELD:sys_language_uid:>:0',
+						'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.l18n_parent',
+						'config' => Array (
+							'type' => 'select',
+							'items' => Array (
+								Array('', 0),
+							),
+							'foreign_table' => 'sys_dmail_category',
+							'foreign_table_where' => 'AND sys_dmail_category.pid=###CURRENT_PID### AND sys_dmail_category.sys_language_uid IN (-1,0)',
+						)
+					),
+					'l18n_diffsource' => Array (
+						'config' => Array (
+								'type' => 'passthrough'
+						)
+					),
+					'hidden' => Array (
+						'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
+						'config' => Array (
+							'type' => 'check',
+							'default' => '0'
+						)
+					),
+					'category' => Array (
+						'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:sys_dmail_category.category',
+						'config' => Array (
+							'type' => 'input',
+							'size' => '30',
+						)
+					),
+					'old_cat_number' => Array (
+						'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:sys_dmail_category.old_cat_number',
+						'l10n_mode' => 'exclude',
+						'config' => Array (
+							'type' => 'input',
+							'size' => '2',
+							'eval' => 'trim',
+							'max' => '2',
+						)
+					),
+				),
+				'types' => Array (
+					'0' => Array('showitem' => 'sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource,hidden;;1;;1-1-1, category')
+				),
+				'palettes' => Array (
+					'1' => Array('showitem' => '')
+				)
+			);
+		}
+
+		// fe_users modified
 		$tempCols = array(
 			'module_sys_dmail_newsletter' => array(
 				'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.module_sys_dmail_newsletter',
@@ -247,22 +367,21 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 					)
 				),
 			'module_sys_dmail_category' => array(
-				'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.module_sys_dmail_category',
+				'label'=>'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.module_sys_dmail_category',
 				'exclude' => '1',
 				'config' => array(
 					'type' => 'select',
-					'foreign_table' => 'sys_dmail_category',
-					'foreign_table_where' => 'AND sys_dmail_category.l18n_parent=0 AND sys_dmail_category.pid IN (###PAGE_TSCONFIG_IDLIST###) ORDER BY sys_dmail_category.uid',
-					'itemsProcFunc' => 'tx_agency_select_dmcategories->get_localized_categories',
-					'itemsProcFunc_config' => array (
-						'table' => 'sys_dmail_category',
-						'indexField' => 'uid',
-					),
-					'size' => 5,
-					'minitems' => 0,
-					'maxitems' => 60,
-					'renderMode' => 'checkbox',
+					'allowed' => 'sys_dmail_category',
 					'MM' => 'sys_dmail_feuser_category_mm',
+					'foreign_table' => 'sys_dmail_category',
+					'foreign_table_where' =>
+						'AND sys_dmail_category.pid IN ' .
+						'(###PAGE_TSCONFIG_IDLIST###) ORDER BY sys_dmail_category.sorting',
+					'size' => 10,
+// 					'selectedListStyle' => 'width:450px',
+					'renderMode' => 'check',
+					'minitems' => 0,
+					'maxitems' => 1000,
 				)
 			),
 			'module_sys_dmail_html' => array(
@@ -276,9 +395,12 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 
 		t3lib_extMgm::addTCAcolumns('fe_users', $tempCols);
 		if ($typoVersion < 6002000) {
-			$TCA['fe_users']['feInterface']['fe_admin_fieldList'] .= ',module_sys_dmail_newsletter,module_sys_dmail_category,module_sys_dmail_html';
+			$TCA['fe_users']['feInterface']['fe_admin_fieldList'] .=
+				',module_sys_dmail_newsletter,module_sys_dmail_category,module_sys_dmail_html';
 		}
-		t3lib_extMgm::addToAllTCATypes('fe_users','--div--;Direct mail,module_sys_dmail_newsletter;;;;1-1-1,module_sys_dmail_category,module_sys_dmail_html');
+		t3lib_extMgm::addToAllTCATypes(
+			'fe_users','--div--;Direct mail,module_sys_dmail_newsletter;;;;1-1-1,module_sys_dmail_category,module_sys_dmail_html'
+		);
 	}
 
 	$TCA['fe_groups_language_overlay'] = array(

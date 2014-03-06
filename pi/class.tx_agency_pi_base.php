@@ -105,7 +105,6 @@ class tx_agency_pi_base extends tslib_pibase {
 		}
 
 		foreach ($conflictingExtensions as $extension) {
-
 			if (t3lib_extMgm::isLoaded($extension)) {
 				$message = sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_conflicting_extension_installed'), $extension);
 				t3lib_div::sysLog($message, $this->extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);

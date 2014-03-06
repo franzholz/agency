@@ -56,7 +56,7 @@ plugin.tx_agency {
   tableName = fe_users
 
     # cat=plugin.tx_agency//; type=string; label= Country onchange attribute: Javascript to execute when the selected country is changed in the country selector box.
-  onChangeCountryAttribute = javascript:window.document.getElementById('tx-agency-fe_users_form').submit();
+  onChangeCountryAttribute = javascript:window.document.getElementById('agency-fe_users_form').submit();
 
     # cat=plugin.tx_agency//; type=int+; label= Front end user records PID: If the records edited/created are located in another page than the current, enter the PID of that page here.
   pid =
@@ -130,7 +130,7 @@ plugin.tx_agency {
     # cat=plugin.tx_agency/enable; type=boolean; label= Enable email on unsubscribe: If set, an email will be sent to the front end user to end his subscription to newsletters through a link from a mailing application.
   enableEmailOnUnsubscribe = 1
 
-    # cat=plugin.tx_agency/enable; type=boolean; label= Enable email with password: If set, an email can be sent to the front end user which contains his forgotten password.
+    # cat=plugin.tx_agency/enable; type=boolean; label= Enable email for password creation: If set, an email can be sent to the front end user who has forgotten his password. This email contains a link to enter a new password.
   enableEmailPassword = 0
 
     # cat=plugin.tx_agency/enable; type=boolean; label= Enable admin notification on confirmation request: If set, an email will be sent to the site administration when a request for confirmation of registration is sent to a user.

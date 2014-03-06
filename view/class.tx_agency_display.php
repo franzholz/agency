@@ -65,6 +65,7 @@ class tx_agency_display {
 		$cObj,
 		$controlData,
 		$dataObj,
+		$theTable,
 		$cmdKey,
 		$templateCode,
 		$errorFieldArray,
@@ -79,7 +80,6 @@ class tx_agency_display {
 		) {
 			$includedFields[] = 'username';
 		}
-
 		$infoFields = explode(',', $dataObj->getFieldList());
 		if (!is_array($infoFields)) {
 			return FALSE;
@@ -89,22 +89,24 @@ class tx_agency_display {
 			$infoFields = array_merge($infoFields, $specialFields);
 		}
 
-		if (!t3lib_extMgm::isLoaded('direct_mail')) {
-			$infoFields = array_merge(
-				$infoFields,
-				array(
-					'module_sys_dmail_category',
-					'module_sys_dmail_newsletter',
-					'module_sys_dmail_html',
-				)
-			);
-			$includedFields = array_diff(
-				$includedFields,
-				array(
-					'module_sys_dmail_category',
-					'module_sys_dmail_newsletter',
+		$directMailFields = array(
+			'module_sys_dmail_category',
+			'module_sys_dmail_newsletter',
+			'module_sys_dmail_html',
+		);
+		$infoFields = array_merge($infoFields, $directMailFields); // add always the Direct Mail fields because its markers are present in the HTML template
+
+		foreach ($directMailFields as $theField) {
+			if (
+				!is_array($GLOBALS['TCA'][$theTable]['columns'][$theField])
+			) {
+				$includedFields = array_diff(
+					$includedFields,
+					array(
+						$theField
 					)
-			);
+				);
+			}
 		}
 
 		if (!$controlData->useCaptcha($conf, $cmdKey)) {
@@ -117,7 +119,10 @@ class tx_agency_display {
 			isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address'])
 		) {
 			$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address']);
-			if (is_array($extConf) && $extConf['disableCombinedNameField'] == '1') {
+			if (
+				is_array($extConf) &&
+				$extConf['disableCombinedNameField'] == '1'
+			) {
 				$templateCode = $cObj->substituteSubpart($templateCode, '###SUB_INCLUDED_FIELD_name###', '');
 			}
 		}
@@ -170,7 +175,6 @@ class tx_agency_display {
 							'###SUB_REQUIRED_FIELD_' . $theField . '###',
 							''
 						);
-
 					if (!t3lib_div::inList($failure, $theField)) {
 						$templateCode =
 							$cObj->substituteSubpart(
@@ -285,6 +289,7 @@ class tx_agency_display {
 				$cObj,
 				$controlData,
 				$dataObj,
+				$theTable,
 				$cmdKey,
 				$templateCode,
 				$errorFieldArray,
@@ -377,12 +382,20 @@ class tx_agency_display {
 				$templateCode,
 				$markerArray
 			);
-		$markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="FE[' . $theTable . '][uid]" value="' . $currentArray['uid'] . '" />';
+		$markerArray['###HIDDENFIELDS###'] .=
+			chr(10) . '<input type="hidden" name="FE[' . $theTable . '][uid]" value="' . $currentArray['uid'] . '" />';
 
 		if ($theTable != 'fe_users') {
 			$authObj = t3lib_div::getUserObj('&tx_agency_auth');
-			$markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="' . $prefixId . '[aC]" value="' . $authObj->generateAuthCode($origArray, $conf['setfixed.']['EDIT.']['_FIELDLIST']) . '" />';
-			$markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="' . $prefixId . '[cmd]" value="edit" />';
+			$markerArray['###HIDDENFIELDS###'] .=
+				chr(10) . '<input type="hidden" name="' . $prefixId . '[aC]" value="' .
+					$authObj->generateAuthCode(
+						$origArray,
+						$conf['setfixed.']['EDIT.']['_FIELDLIST']
+					) .
+				'" />';
+			$markerArray['###HIDDENFIELDS###']
+				.= chr(10) . '<input type="hidden" name="' . $prefixId . '[cmd]" value="edit" />';
 		}
 
 		$markerObj->addHiddenFieldsMarkers(
@@ -415,8 +428,7 @@ class tx_agency_display {
 			$form =
 				tx_div2007_alpha5::getClassName_fh002(
 					$theTable . '_form',
-					$prefixId,
-					TRUE
+					$prefixId
 				);
 			$modData = $dataObj->modifyDataArrForFormUpdate($currentArray, $cmdKey);
 			$fields = $dataObj->getFieldList() . ',' . $dataObj->getAdditionalUpdateFields();
@@ -477,6 +489,7 @@ class tx_agency_display {
 		}
 
 		$templateCode = $dataObj->getTemplateCode();
+
 		$currentArray = array_merge($origArray, $dataArray);
 
 		if ($theTable == 'fe_users') {
@@ -540,6 +553,7 @@ class tx_agency_display {
 					$cObj,
 					$controlData,
 					$dataObj,
+					$theTable,
 					$cmdKey,
 					$templateCode,
 					$errorFieldArray,
@@ -646,14 +660,26 @@ class tx_agency_display {
 
 			if ($mode != MODE_PREVIEW && $bNeedUpdateJS) {
 				$fields = $dataObj->getFieldList() . ',' . $dataObj->getAdditionalUpdateFields();
-				$fields = implode(',', array_intersect(explode(',', $fields), t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)));
+				$fields = implode(
+						',',
+						array_intersect(
+							explode(
+								',',
+								$fields
+							),
+							t3lib_div::trimExplode(
+								',',
+								$conf[$cmdKey . '.']['fields'],
+								1
+							)
+						)
+					);
 				$fields = $controlData->getOpenFields($fields);
 				$modData = $dataObj->modifyDataArrForFormUpdate($dataArray, $cmdKey);
 				$form =
 					tx_div2007_alpha5::getClassName_fh002(
 						$theTable . '_form',
-						$controlData->getPrefixId(),
-						TRUE
+						$controlData->getPrefixId()
 					);
 				$updateJS =
 					$cObj->getUpdateJS(
@@ -663,7 +689,12 @@ class tx_agency_display {
 						$fields
 					);
 				$content .= $updateJS;
-				$GLOBALS['TSFE']->additionalHeaderData['JSincludeFormupdate'] = '<script type="text/javascript" src="' . $GLOBALS['TSFE']->absRefPrefix . t3lib_div::createVersionNumberedFilename(t3lib_extMgm::siteRelPath('agency')  . 'scripts/jsfunc.updateform.js') . '"></script>';
+				$GLOBALS['TSFE']->additionalHeaderData['JSincludeFormupdate'] =
+					'<script type="text/javascript" src="' .
+					$GLOBALS['TSFE']->absRefPrefix .
+					t3lib_div::createVersionNumberedFilename(t3lib_extMgm::siteRelPath('agency')  .
+					'scripts/jsfunc.updateform.js') .
+					'"></script>';
 			}
 		}
 		return $content;
@@ -894,7 +925,11 @@ class tx_agency_display {
 						$markerArray = $markerObj->getArray();
 						// Display the form, if access granted.
 
-						$markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="' . $prefixId . '[rU]" value="' .  $dataObj->getRecUid() . '" />';
+						$markerArray['###HIDDENFIELDS###'] .=
+							'<input type="hidden" name="' .
+							$prefixId . '[rU]" value="' .
+							$dataObj->getRecUid() .
+							'" />';
 						$markerObj->addGeneralHiddenFieldsMarkers($markerArray, 'delete', $token);
 						$markerObj->setArray($markerArray);
 						$content = $this->getPlainTemplate(
@@ -1033,6 +1068,7 @@ class tx_agency_display {
 					$cObj,
 					$controlData,
 					$dataObj,
+					$theTable,
 					$cmdKey,
 					$templateCode,
 					explode(',', $failure),
@@ -1228,6 +1264,7 @@ class tx_agency_display {
 					$cObj,
 					$controlData,
 					$dataObj,
+					$theTable,
 					$cmdKey,
 					$templateCode,
 					$errorFieldArray

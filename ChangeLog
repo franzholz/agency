@@ -1,7 +1,9 @@
 
-2014----- Franz Holzinger <franz@ttproducts.de>
+2014-03-06 Franz Holzinger <franz@ttproducts.de>
 	* fix bug #50838
-	
+	* fix bug with not shown Direct Mail categories
+	* modify module_sys_dmail_category in the TCE to show all categories
+	for all countries
 
 2014-02-15 Franz Holzinger <franz@ttproducts.de>
 	* New feature: alphaSpecials. Allow usernames with umlauts.

@@ -48,6 +48,9 @@
 			<label index="fe_users.lost_password">Password is lost</label>
             <label index="fe_groups_language_overlay">User Group Alternative Language</label>
             <label index="fe_groups_language_overlay.title">Translated user group name</label>
+            <label index="sys_dmail_category">Direct Mail Category</label>
+            <label index="sys_dmail_category.category">Category:</label>
+            <label index="sys_dmail_category.old_cat_number">Old category number:</label>
         </languageKey>
 	</data>
 </T3locallang>

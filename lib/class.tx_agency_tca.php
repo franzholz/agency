@@ -644,8 +644,7 @@ class tx_agency_tca {
 								$colContent = '<textarea id="' .
 									tx_div2007_alpha5::getClassName_fh002(
 										$colName,
-										$prefixId,
-										TRUE
+										$prefixId
 									) .
 									'" name="FE[' . $theTable . '][' . $colName . ']"' .
 									' title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_':'') . $cObj->caseshift($colName, 'upper') . '###"' .
@@ -662,8 +661,7 @@ class tx_agency_tca {
 									$uidText =
 										tx_div2007_alpha5::getClassName_fh002(
 											$colName,
-											$prefixId,
-											TRUE
+											$prefixId
 										);
 									if (isset($mrow) && is_array($mrow) && $mrow['uid']) {
 										$uidText .= '-' . $mrow['uid'];
@@ -687,8 +685,7 @@ class tx_agency_tca {
 											tx_div2007_alpha5::classParam_fh002(
 												'checkbox',
 												'',
-												$prefixId,
-												TRUE
+												$prefixId
 											) .
 											' id="' . $uidText . '-' . $key .
 											'" name="FE[' . $theTable . '][' . $colName . '][]" value="' . $key . '"' .
@@ -702,16 +699,16 @@ class tx_agency_tca {
 									tx_div2007_alpha5::classParam_fh002(
 										'checkbox',
 										'',
-										$prefixId,
-										TRUE
+										$prefixId
 									) .
 									' id="' .
 									tx_div2007_alpha5::getClassName_fh002(
 										$colName,
-										$prefixId,
-										TRUE
+										$prefixId
 									) .
-									'" name="FE[' . $theTable . '][' . $colName . ']" title="' . $label . '"' . ($mrow[$colName] ? ' value="on" checked="checked"' : '') . ' />';
+									'" name="FE[' . $theTable . '][' . $colName . ']" title="' .
+									$label . '"' . ($mrow[$colName] ? ' value="on" checked="checked"' : '') .
+									' />';
 								}
 								break;
 
@@ -745,26 +742,26 @@ class tx_agency_tca {
 										tx_div2007_alpha5::classParam_fh002(
 											'radio',
 											'',
-											$prefixId,
-											TRUE
+											$prefixId
 										) .
 										' id="'.
 										tx_div2007_alpha5::getClassName_fh002(
 											$colName,
-											$prefixId,
-											TRUE
+											$prefixId
 										) .
 										'-' . $i . '" name="FE[' . $theTable . '][' . $colName . ']"' .
 											' value="' . $value . '" ' . ($value == $startVal ? ' checked="checked"' : '') . ' />' .
 											'<label for="' .
 											tx_div2007_alpha5::getClassName_fh002(
 												$colName,
-												$prefixId,
-												TRUE
+												$prefixId
 											) .
 											'-' . $i . '">' . $label . '</label>';
 										$i++;
-										$colContent .= ((!$bNotLast || $i < count($itemArray) - 1 ) ?  $cObj->stdWrap($itemOut, $stdWrap) : $itemOut);
+										$colContent .=
+											((!$bNotLast || $i < count($itemArray) - 1 ) ?
+											$cObj->stdWrap($itemOut, $stdWrap) :
+											$itemOut);
 									}
 								}
 								break;
@@ -785,24 +782,21 @@ class tx_agency_tca {
 										<input id="' .
 											tx_div2007_alpha5::getClassName_fh002(
 												$colName,
-												$prefixId,
-												TRUE
+												$prefixId
 											) .
 										'" name="FE[' . $theTable . '][' . $colName . ']" value="" type="hidden" />';
 									$colContent .= '
 										<dl class="' .
 										tx_div2007_alpha5::getClassName_fh002(
 											'multiple-checkboxes',
-											$prefixId,
-											TRUE
+											$prefixId
 										) .
 										'" title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($colName, 'upper') . '###">';
 								} else {
 									$colContent .= '<select id="'.
 									tx_div2007_alpha5::getClassName_fh002(
 										'multiple-checkboxes',
-										$prefixId,
-										TRUE
+										$prefixId
 									) .
 									'" name="FE[' . $theTable . '][' . $colName . ']' . $multiple . '" title="###TOOLTIP_' .
 									(($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($colName, 'upper') . '###">';
@@ -819,22 +813,19 @@ class tx_agency_tca {
 											$colContent .= '<dt><input class="' .
 											tx_div2007_alpha5::getClassName_fh002(
 												'checkbox-checkboxes',
-												$prefixId,
-												TRUE
+												$prefixId
 											) .
 											 '" id="' .
 											tx_div2007_alpha5::getClassName_fh002(
 												$colName,
-												$prefixId,
-												TRUE
+												$prefixId
 											) .
 											'-' . $i . '" name="FE[' . $theTable . '][' . $colName . '][' . $k . ']" value="' . $k .
 											'" type="checkbox"  ' . (in_array($k, $valuesArray) ? ' checked="checked"' : '') . ' /></dt>
 												<dd><label for="' .
 												tx_div2007_alpha5::getClassName_fh002(
 													$colName,
-													$prefixId,
-													TRUE
+													$prefixId
 												) .
 												'-' . $i . '">' . $label . '</label></dd>';
 										} else {
@@ -928,21 +919,19 @@ class tx_agency_tca {
 													$colContent .= '<dt><input  class="' .
 													tx_div2007_alpha5::getClassName_fh002(
 														'checkbox',
-														$prefixId,
-														TRUE
+														$prefixId
 													) .
 													'" id="'.
 													tx_div2007_alpha5::getClassName_fh002(
 														$colName,
-														$prefixId,
-														TRUE
-													) . '-' . $row2['uid'] . '" name="FE[' . $theTable . '][' . $colName . '][' . $row2['uid'] . ']" value="'.$row2['uid'] .
+														$prefixId
+													) .
+													'-' . $row2['uid'] . '" name="FE[' . $theTable . '][' . $colName . '][' . $row2['uid'] . ']" value="'.$row2['uid'] .
 													'" type="checkbox"' . ($selected ? ' checked="checked"':'') . ' /></dt>
 													<dd><label for="' .
 													tx_div2007_alpha5::getClassName_fh002(
 														$colName,
-														$prefixId,
-														TRUE
+														$prefixId
 													) . '-' . $row2['uid'] . '">' . $titleText . '</label></dd>';
 												} else {
 													$colContent .= '<option value="' . $row2['uid'] . '"' . $selected . '>' . $titleText . '</option>';
@@ -969,21 +958,18 @@ class tx_agency_tca {
 												$colContent .= '<dt><input class="' .
 												tx_div2007_alpha5::getClassName_fh002(
 													'checkbox',
-													$prefixId,
-													TRUE
+													$prefixId
 												) .
 												'" id="'.
 												tx_div2007_alpha5::getClassName_fh002(
 													$colName,
-													$prefixId,
-													TRUE
+													$prefixId
 												) .
 												'-' . $row2['uid'] . '" name="FE[' . $theTable . '][' . $colName . '][' . $row2['uid'] . ']" value="' . $row2['uid'] . '" type="checkbox"' . (in_array($row2['uid'],  $valuesArray) ? ' checked="checked"' : '') . ' /></dt>
 												<dd><label for="' .
 												tx_div2007_alpha5::getClassName_fh002(
 													$colName,
-													$prefixId,
-													TRUE
+													$prefixId
 												) . '-' . $row2['uid'] . '">' . $titleText . '</label></dd>';
 											} else {
 												$colContent .= '<option value="' . $row2['uid'] . '"' . (in_array($row2['uid'], $valuesArray) ? 'selected="selected"' : '') . '>' . $titleText . '</option>';

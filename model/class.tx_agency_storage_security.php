@@ -191,7 +191,10 @@ class tx_agency_storage_security {
 							$password = $decryptedPassword;
 						} else {
 								// Failed to decrypt auto login password
-							$message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_decrypt_auto_login_failed');
+							$message =
+								$GLOBALS['TSFE']->sL(
+									'LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_decrypt_auto_login_failed'
+								);
 							t3lib_div::sysLog($message, $this->extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
 						}
 					} else {

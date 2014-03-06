@@ -36,8 +36,6 @@ return array(
 	'tx_agency_url' => $extensionPath . 'model/class.tx_agency_url.php',
 	'tx_agency_model_field_base' => $extensionPath . 'model/field/class.tx_agency_model_field_base.php',
 	'tx_agency_model_field_usergroup' => $extensionPath . 'model/field/class.tx_agency_model_field_usergroup.php',
-	'tx_agency_dmstatic' => $extensionPath . 'scripts/class.tx_agency_dmstatic.php',
-	'tx_agency_select_dmcategories' => $extensionPath . 'scripts/class.tx_agency_select_dmcategories.php',
 	'tx_agency_display' => $extensionPath . 'view/class.tx_agency_display.php',
 );
 ?>
