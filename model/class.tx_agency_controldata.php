@@ -55,6 +55,7 @@ class tx_agency_controldata {
 	public $cmd = '';
 	public $cmdKey = '';
 	public $pid = array();
+	public $defaultPid = '';
 	public $setfixedEnabled = 0;
 	public $bSubmit = FALSE;
 	public $bDoNotSave = FALSE;
@@ -83,6 +84,8 @@ class tx_agency_controldata {
 		$theTable
 	) {
 		$conf = $confObj->getConf();
+		$this->setDefaultPid($conf);
+
 			// Initialize array of installed captcha extensions
 		if (isset($conf['captcha.'])) {
 			foreach ($conf['captcha.'] as $k => $captchaConfig) {
@@ -326,6 +329,16 @@ class tx_agency_controldata {
 			// Generate a new token for the next created forms
 		$token = $authObj->generateToken();
 		$this->writeToken($token);
+	}
+
+	public function setDefaultPid ($conf) {
+
+		$bPidIsInt = tx_div2007_core::testInt($conf['pid']);
+		$this->defaultPid = ($bPidIsInt ? intval($conf['pid']) : $GLOBALS['TSFE']->id);
+	}
+
+	public function getDefaultPid () {
+		return $this->defaultPid;
 	}
 
 	public function setRegHash ($regHash) {
@@ -942,17 +955,15 @@ class tx_agency_controldata {
 	}
 
 	public function getPid ($type = '') {
-		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
-		$conf = $confObj->getConf();
 
 		if ($type) {
 			if (isset($this->pid[$type])) {
 				$result = $this->pid[$type];
 			}
 		}
+
 		if (!$result) {
-			$bPidIsInt = tx_div2007_core::testInt($conf['pid']);
-			$result = ($bPidIsInt ? intval($conf['pid']) : $GLOBALS['TSFE']->id);
+			$result = $this->getDefaultPid();
 		}
 		return $result;
 	}

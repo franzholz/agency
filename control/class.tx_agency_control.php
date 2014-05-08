@@ -547,6 +547,7 @@ class tx_agency_control {
 			$this->marker->setPreviewLabel('_PREVIEW');
 			$controlData->setMode(MODE_PREVIEW);
 		}
+
 			// If data is submitted, we take care of it here.
 		if (
 			$cmd == 'delete' &&

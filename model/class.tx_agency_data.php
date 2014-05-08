@@ -819,7 +819,7 @@ class tx_agency_data {
 												$hookObj->init($this);
 											}
 
-											$test = FALSE; // set it to TRUE when you test the hooks
+											$test = FALSE; // set it to TRUE if you test the following hook
 											$bInternal = FALSE;
 											$errorField = $hookObj->evalValues(
 												$staticInfoObj,
@@ -1369,7 +1369,7 @@ class tx_agency_data {
 								)
 							)
 						);
-					$newFieldList  =
+					$newFieldList =
 						implode(
 							',',
 							array_unique(
@@ -1380,7 +1380,7 @@ class tx_agency_data {
 							)
 						);
 
-						$parsedArray =
+					$parsedArray =
 						$this->parseOutgoingData(
 							$theTable,
 							$cmdKey,
@@ -1450,7 +1450,6 @@ class tx_agency_data {
 					$dataArray['uid'] = $newId;
 					$this->updateMMRelations($theTable, $dataArray);
 					$this->setSaved(TRUE);
-
 					$newRow = $GLOBALS['TSFE']->sys_page->getRawRecord($theTable, $newId);
 
 					if (is_array($newRow)) {
