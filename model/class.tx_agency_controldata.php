@@ -66,6 +66,7 @@ class tx_agency_controldata {
 	protected $securedFieldArray = array('password', 'password_again', 'tx_agency_password');
 	public $bValidRegHash;
 	public $regHash;
+	private $confObj;
 		// Whether the token was found valid
 	protected $isTokenValid = FALSE;
 		// Transmission security object
@@ -84,6 +85,7 @@ class tx_agency_controldata {
 		$theTable
 	) {
 		$conf = $confObj->getConf();
+		$this->confObj = $confObj;
 		$this->setDefaultPid($conf);
 
 			// Initialize array of installed captcha extensions
@@ -144,7 +146,8 @@ class tx_agency_controldata {
 
 			// Get hash variable if provided and if short url feature is enabled
 		$feUserData = t3lib_div::_GP($prefixId);
-		$bSecureStartCmd = (count($feUserData) == 1 && in_array($feUserData['cmd'], array('create', 'edit', 'password')));
+		$bSecureStartCmd =
+			(count($feUserData) == 1 && in_array($feUserData['cmd'], array('create', 'edit', 'password')));
 		$bValidRegHash = FALSE;
 
 		if ($conf['useShortUrls']) {
@@ -261,6 +264,7 @@ class tx_agency_controldata {
 				!count($feUserData) ||
 				$bSecureStartCmd ||
 				($token != '' && $feUserData['token'] == $token)
+// 				$cmd == 'create' && count($feUserData) <= 4 // allow a cancel in the last form
 			)
 		) {
 			$this->setTokenValid(TRUE);
@@ -331,6 +335,11 @@ class tx_agency_controldata {
 		$this->writeToken($token);
 	}
 
+	public function getConf () {
+		$result = $this->confObj->getConf();
+		return $result;
+	}
+
 	public function setDefaultPid ($conf) {
 
 		$bPidIsInt = tx_div2007_core::testInt($conf['pid']);
@@ -355,6 +364,28 @@ class tx_agency_controldata {
 
 	public function getValidRegHash () {
 		return $this->bValidRegHash;
+	}
+
+
+	static public function enableAutoLoginOnCreate (
+		array $conf
+	) {
+		$result = (
+			$conf['enableAutoLoginOnCreate']
+		);
+
+		return $result;
+	}
+
+	static public function enableAutoLoginOnConfirmation (
+		array $conf
+	) {
+		$result = (
+			$conf['enableAutoLoginOnConfirmation'] &&
+			!self::enableAutoLoginOnCreate($conf)
+		);
+
+		return $result;
 	}
 
 	/**
@@ -454,8 +485,11 @@ class tx_agency_controldata {
     *           boolean FALSE in case of an error
 	*/
 	public function readPasswordForStorage () {
+		$result = FALSE;
 		$password = $this->readPassword();
-		$result = $this->getStorageSecurity()->encryptPasswordForStorage($password);
+		if ($password) {
+			$result = $this->getStorageSecurity()->encryptPasswordForStorage($password);
+		}
 		return $result;
 	}
 
@@ -533,8 +567,7 @@ class tx_agency_controldata {
 		}
 
 		if (
-			$conf['enableAutoLoginOnConfirmation'] &&
-			!$conf['enableAutoLoginOnCreate']
+			self::enableAutoLoginOnConfirmation($conf)
 		) {
 			$password = $this->readPassword();
 			$cryptedPassword = '';

@@ -1478,6 +1478,7 @@ class tx_agency_data {
 									}
 
 									$hookObj->registrationProcess_afterSaveCreate(
+										$this->controlData,
 										$theTable,
 										$dataArray,
 										$origArray,
@@ -1510,6 +1511,7 @@ class tx_agency_data {
 	* @return void  sets $this->saved
 	*/
 	public function deleteRecord (
+		tx_agency_controldata $controlDataObj,
 		$theTable,
 		array &$origArray,
 		array &$dataArray

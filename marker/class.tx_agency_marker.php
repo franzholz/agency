@@ -109,8 +109,9 @@ class tx_agency_marker {
 
 		$this->setButtonLabelsList($buttonLabelsList);
 
-		$otherLabelsList = 'yes,no,new_password,password_again,tooltip_password_again,tooltip_invitation_password_again,click_here_to_register,tooltip_click_here_to_register,click_here_to_edit,tooltip_click_here_to_edit,click_here_to_delete,tooltip_click_here_to_delete,click_here_to_see_terms,tooltip_click_here_to_see_terms' .
-		',copy_paste_link,enter_account_info,enter_invitation_account_info,required_info_notice,excuse_us,' .
+		$otherLabelsList = 'yes,no,new_password,password_again,tooltip_password_again,tooltip_invitation_password_again,click_here_to_register,tooltip_click_here_to_register,click_here_to_edit,tooltip_click_here_to_edit,click_here_to_delete,tooltip_click_here_to_delete,click_here_to_see_terms,tooltip_click_here_to_see_terms,click_here_to_see_information,tooltip_click_here_to_see_information' .
+		',copy_paste_link,enter_account_info,enter_invitation_account_info,required_info_notice,excuse_us' .
+		',consider_terms_usage,disclaimer,signature' .
 			',tooltip_login_username,tooltip_login_password,' .
 			',registration_problem,registration_login,registration_sorry,registration_clicked_twice,registration_help,kind_regards,kind_regards_cre,kind_regards_del,kind_regards_ini,kind_regards_inv,kind_regards_upd' .
 			',v_dear,v_verify_before_create,v_verify_invitation_before_create,v_verify_before_update,v_really_wish_to_delete,v_edit_your_account' .
@@ -1108,7 +1109,7 @@ class tx_agency_marker {
 	 * @return	array		The modified $markContentArray
 	 */
 	public function fillInMarkerArray (
-		&$markerArray,
+		$markerArray,
 		$row,
 		$securedArray,
 		$controlData,
@@ -1185,7 +1186,7 @@ class tx_agency_marker {
 	 *
 	 * See: tx_agency_pi_base::checkDeprecatedMarkers
 	 */
-	public function checkDeprecatedMarkers ($templateCode, $extKey, $fileName) {
+	static public function checkDeprecatedMarkers ($templateCode, $extKey, $fileName) {
 		$messages = array();
 			// These changes apply only to agency
 		if ($extKey == 'agency') {

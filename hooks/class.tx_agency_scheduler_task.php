@@ -2,13 +2,13 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2008-2011 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2014-2014 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
-*  This script is part of the Typo3 project. The Typo3 project is
+*  This script is part of the TYPO3 project. The TYPO3 project is
 *  free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License or
+*  the Free Software Foundation; either version 2 of the License, or
 *  (at your option) any later version.
 *
 *  The GNU General Public License can be found at
@@ -27,12 +27,12 @@
 /**
  * Part of the agency (Agency Registration) extension.
  *
- * setup configuration functions
+ * hook functions for the TYPO3 cms
  *
  * $Id$
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
- *
+ * @maintainer	Franz Holzinger <franz@ttproducts.de>
  * @package TYPO3
  * @subpackage agency
  *
@@ -40,42 +40,13 @@
  */
 
 
-class tx_agency_conf {
-	protected $conf = array();
-	protected $config = array();
+class tx_agency_scheduler_task extends tx_scheduler_Task {
 
-	public function init ($conf) {
-		$this->conf = $conf;
-		$this->config = array();
-	}
-
-	public function setConf (array $dataArray, $k = '') {
-		if ($k) {
-			$this->conf[$k] = $dataArray;
-		} else {
-			$this->conf = $dataArray;
-		}
-	}
-
-	public function getConf () {
-		return $this->conf;
-	}
-
-	public function setConfig (array $dataArray, $k = '') {
-		if ($k) {
-			$this->config[$k] = $dataArray;
-		} else {
-			$this->config = $dataArray;
-		}
-	}
-
-	public function getConfig () {
-		return $this->config;
-	}
 }
 
 
-if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/lib/class.tx_agency_conf.php']) {
-  include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/lib/class.tx_agency_conf.php']);
+if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/hooks/class.tx_agency_scheduler_task.php'])	{
+	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/hooks/class.tx_agency_hooks_cms.php']);
 }
+
 ?>

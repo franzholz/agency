@@ -201,7 +201,7 @@
 			<label index="missing_invitation_title">Please enter a title!</label>
 			<label index="missing_invitation_title_informal">Please enter a title!</label>
 			<label index="terms_acknowledged">I acknowledge and agree to terms</label>
-			<label index="terms_acknowledged_informal">I acknowledge and agree to terms:</label>
+			<label index="terms_acknowledged_informal">I acknowledge and agree to terms</label>
 			<label index="company">Company</label>
 			<label index="tooltip_company">Enter the name of your company or organization.</label>
 			<label index="tooltip_company_informal">Enter the name of your company or organization.</label>
@@ -258,6 +258,11 @@
 			<label index="click_here_to_see_terms_informal">Click here to see the terms.</label>
 			<label index="tooltip_click_here_to_see_terms">Opens a page or file which shows the terms.</label>
 			<label index="tooltip_click_here_to_see_terms_informal">Opens a page or file which shows the terms.</label>
+			<label index="click_here_to_see_information">If you require additional information, please click on the link</label>
+			<label index="tooltip_click_here_to_see_information">Opens a page or file which shows additional information</label>
+			<label index="disclaimer">Disclaimer</label>
+			<label index="consider_terms_usage">Please take into consideration the general terms of usage</label>
+			<label index="signature">Name&lt;br /&gt;Address&lt;br /&gt;Telefon&lt;br /&gt;</label>
 			<label index="enter_account_info">Please complete the information for your membership.</label>
 			<label index="enter_account_info_informal">Please complete the information for your membership.</label>
 			<label index="enter_invitation_account_info">Please complete the information of the account for the invited person.</label>
@@ -322,6 +327,8 @@
 			<label index="v_registration_created_message1_informal">Your membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</label>
 			<label index="v_registration_created_message2">Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list of members.</label>
 			<label index="v_registration_created_message2_informal">Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list of members.</label>
+			<label index="v_registration_created_message3">Welcome as our new member.</label>
+			<label index="v_registration_created_message3_informal">Welcome as our new member.</label>
 			<label index="v_registration_created">%3$s created a new membership with %1$s.</label>
 			<label index="v_registration_updated_subject">Your membership details with &lt;b&gt;%1$s&lt;/b&gt; have been updated.</label>
 			<label index="v_registration_updated_subject_informal">Your membership details with &lt;b&gt;%1$s&lt;/b&gt; have been updated.</label>
@@ -528,7 +535,7 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
 			<label index="internal_infomail_configuration">Configuration error: infomail option is not available or emailField is not set in TypoScript</label>
 			<label index="internal_token_empty">The form's token is empty!</label>
 			<label index="internal_token_short">The form's token is too short!</label>
-			<label index="internal_no_text_found">Internal error in the FE user registration. No text replacement has been found for &lt;b&gt;%1$s&lt;/b&gt;.</label>
+			<label index="internal_no_text_found">Internal error in the Agency Registration. No text replacement has been found for &lt;b&gt;%1$s&lt;/b&gt;.</label>
 			<label index="internal_login_security_level">Front end login security level must be set to "normal" or to "rsa"</label>
 			<label index="internal_rsaauth_backend_not_available">Required RSA auth backend not available</label>
 			<label index="internal_decrypt_auto_login_failed">Failed to decrypt auto login password</label>
@@ -545,6 +552,7 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
 			<label index="internal_label_not_localized_by_div2007">div2007 failed to localize label %1$s</label>
 			<label index="internal_email_not_sent">An email to %s could not be sent!</label>
 			<label index="internal_invalid_token">Apparently, this link has expired.</label>
+			<label index="internal_init_language">Internal error of the language packs.</label>
 		</languageKey>
 	</data>
 </T3locallang>

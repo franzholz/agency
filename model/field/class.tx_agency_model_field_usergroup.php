@@ -99,6 +99,7 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 			t3lib_div::trimExplode(',', $conf['setfixed.']['ACCEPT.']['usergroup'], 1),
 			$this->savedReservedValues
 		);
+
 		$result = array_unique($result);
 		return $result;
 	}

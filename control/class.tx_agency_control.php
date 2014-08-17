@@ -345,7 +345,6 @@ class tx_agency_control {
 
 			// Commands with which the data will not be saved by $dataObj->save
 		$noSaveCommands = array('infomail', 'login', 'delete');
-
 		$uid = $dataObj->getRecUid();
 		$securedArray = array();
 			// Check for valid token
@@ -555,10 +554,11 @@ class tx_agency_control {
 			!$bDoNotSave
 		) {
 			// Delete record if delete command is set + the preview flag is NOT set.
-			$dataObj->deleteRecord($theTable, $origArray, $dataArray);
+			$dataObj->deleteRecord($controlData, $theTable, $origArray, $dataArray);
 		}
 		$errorContent = '';
 		$bDeleteRegHash = FALSE;
+
 
 			// Display forms
 		if ($dataObj->getSaved()) {
@@ -755,15 +755,22 @@ class tx_agency_control {
 					$theTable == 'fe_users' &&
 					$cmd == 'create' &&
 					!$controlData->getSetfixedEnabled() &&
-					$conf['enableAutoLoginOnCreate']
+					$controlData->enableAutoLoginOnCreate($conf)
 				) {
+					$cryptedPassword = '';
+					$autoLoginKey = '';
+					$loginSuccess = FALSE;
+					$cryptedPassword = $savePassword;
 					$loginSuccess =
 						$this->login(
 							$conf,
 							$langObj,
 							$controlData,
-							$finalDataArray
+							$dataArray['username'],
+							$cryptedPassword,
+							TRUE
 						);
+
 					if ($loginSuccess) {
 							// Login was successful
 						exit;
@@ -1051,6 +1058,7 @@ class tx_agency_control {
 			'uident_text' => $cryptedPassword,
 			'status' => 'login',
 		);
+
 		// Check against configured pid (defaulting to current page)
 		$GLOBALS['TSFE']->fe_user->checkPid = TRUE;
 		$GLOBALS['TSFE']->fe_user->checkPid_value = $controlData->getPid();
@@ -1072,11 +1080,19 @@ class tx_agency_control {
 			if (is_object($authServiceObj)) {
 				$authServiceClass = get_class($authServiceObj);
 			}
+			$authServiceClassArray = array(
+				'tx_saltedpasswords_sv1',
+				'TYPO3\\CMS\\Saltedpasswords\\SaltedPasswordService',
+			);
+
+			if ($conf['authServiceClass']) {
+				$moreAuthServiceClasses = t3lib_div::trimExplode(',', $conf['authServiceClass']);
+				$authServiceClassArray = array_merge($authServiceClassArray, $moreAuthServiceClasses);
+			}
 
 				// Check authentication
 			if (
-				$authServiceClass == 'tx_saltedpasswords_sv1' ||
-				$authServiceClass == 'TYPO3\\CMS\\Saltedpasswords\\SaltedPasswordService'
+				in_array($authServiceClass, $authServiceClassArray)
 			) {
 				$ok = $authServiceObj->compareUident($user, $loginData);
 
@@ -1086,30 +1102,6 @@ class tx_agency_control {
 					$GLOBALS['TSFE']->initUserGroups();
 					$GLOBALS['TSFE']->fe_user->user = $GLOBALS['TSFE']->fe_user->fetchUserSession();
 					$GLOBALS['TSFE']->loginUser = 1;
-
-						// Delete regHash
-					if (
-						$controlData->getValidRegHash()
-					) {
-						$regHash = $controlData->getRegHash();
-						$controlData->deleteShortUrl($regHash);
-					}
-
-					if ($redirect) {
-							// Redirect to configured page, if any
-						$redirectUrl = $controlData->readRedirectUrl();
-						if (!$redirectUrl) {
-							$redirectUrl = trim($conf['autoLoginRedirect_url']);
-						}
-						if (!$redirectUrl) {
-							if ($conf['loginPID']) {
-								$redirectUrl = $this->urlObj->get('', $conf['loginPID']);
-							} else {
-								$redirectUrl = $controlData->getSiteUrl();
-							}
-						}
-						header('Location: ' . t3lib_div::locationHeaderUrl($redirectUrl));
-					}
 				} else {
 						// Login failed...
 					$controlData->clearSessionData(FALSE);
@@ -1121,6 +1113,32 @@ class tx_agency_control {
 				t3lib_div::sysLog($message, $controlData->getExtKey(), t3lib_div::SYSLOG_SEVERITY_ERROR);
 				$controlData->clearSessionData(FALSE);
 				$result = FALSE;
+			}
+
+				// Delete regHash
+			if (
+				$controlData->getValidRegHash()
+			) {
+				$regHash = $controlData->getRegHash();
+				$controlData->deleteShortUrl($regHash);
+			}
+
+			if ($redirect) {
+					// Redirect to configured page, if any
+				$redirectUrl = $controlData->readRedirectUrl();
+				if (!$redirectUrl && $result == TRUE) {
+					$redirectUrl = trim($conf['autoLoginRedirect_url']);
+				}
+
+				if (!$redirectUrl) {
+					if ($conf['loginPID']) {
+						$redirectUrl = $this->urlObj->get('', $conf['loginPID']);
+					} else {
+						$redirectUrl = $controlData->getSiteUrl();
+					}
+				}
+				header('Location: ' . t3lib_div::locationHeaderUrl($redirectUrl));
+				exit;
 			}
 		} else {
 				// No enabled user of the given name

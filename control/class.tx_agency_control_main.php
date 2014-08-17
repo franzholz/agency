@@ -69,6 +69,7 @@ class tx_agency_control_main {
 		$this->extKey = $pibaseObj->extKey;
 		$staticInfoObj = FALSE;
 		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$error_message = '';
 
 		$success = $this->init(
 			$pibaseObj,
@@ -89,7 +90,6 @@ class tx_agency_control_main {
 		$templateCode = $this->data->getTemplateCode();
 
 		if ($success) {
-			$error_message = '';
 
 			$displayObj = t3lib_div::getUserObj('tx_agency_display');
 			$content = $this->control->doProcessing(
@@ -107,12 +107,12 @@ class tx_agency_control_main {
 				$origArray,
 				$dataArray,
 				$templateCode,
-				$error_message
+				$errorMessage
 			);
 		}
 
-		if ($error_message) {
-			$content = $error_message;
+		if ($errorMessage) {
+			$content = $errorMessage;
 		} else if ($success === FALSE) {
 			$content = '<em>Internal error in ' . $pibaseObj->extKey . '!</em><br /> Maybe you forgot to include the basic template file under statics from extensions.';
 		}
@@ -143,6 +143,7 @@ class tx_agency_control_main {
 		&$staticInfoObj,
 		&$errorMessage
 	) {
+		$result = TRUE;
 		$cObj = $pibaseObj->cObj;
 		$this->tca = t3lib_div::getUserObj('&tx_agency_tca');
 
@@ -183,7 +184,11 @@ class tx_agency_control_main {
 			if (class_exists('SJBR\\StaticInfoTables\\PiBaseApi')) {
 				$staticInfoObj = t3lib_div::getUserObj('&SJBR\\StaticInfoTables\\PiBaseApi');
 			} else {
-				t3lib_div::requireOnce(PATH_BE_static_info_tables . 'pi1/class.tx_staticinfotables_pi1.php');
+				if (!class_exists('tx_staticinfotables_pi1')) {
+					t3lib_div::requireOnce(
+						t3lib_extMgm::extPath(STATIC_INFO_TABLES_EXT) . 'pi1/class.tx_staticinfotables_pi1.php'
+					);
+				}
 				$staticInfoObj = t3lib_div::getUserObj('&tx_staticinfotables_pi1');
 			}
 
@@ -281,6 +286,8 @@ class tx_agency_control_main {
 				$result = FALSE;
 				$errorMessage = $this->langObj->getLL('internal_invalid_token');
 			}
+		} else {
+			$errorMessage = $this->langObj->getLL('internal_init_language');
 		}
 
 		return $result;

@@ -49,9 +49,18 @@ class tx_agency_pi_base extends tslib_pibase {
 		$this->pi_setPiVarDefaults();
 		$this->conf = $conf;
 			// Check installation requirements
-		$content = $this->checkRequirements($conf);
+		$content =
+			$this->checkRequirements(
+				$conf,
+				$this->extKey
+			);
 			// Check presence of deprecated markers
-		$content .= $this->checkDeprecatedMarkers($conf);
+		$content .=
+			$this->checkDeprecatedMarkers(
+				$this->cObj,
+				$conf,
+				$this->extKey
+			);
 
 			// If no error content, proceed
 		if ($content == '') {
@@ -66,16 +75,16 @@ class tx_agency_pi_base extends tslib_pibase {
 	 *
 	 * @return string Error message, if error found, empty string otherwise
 	 */
-	protected function checkRequirements ($conf) {
+	protected function checkRequirements ($conf, $extKey) {
 		$content = '';
 		$requiredExtensions = array();
 		$loginSecurityLevel = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
 
 			// Check if all required extensions are available
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['constraints']['depends'])) {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['constraints']['depends'])) {
 			$requiredExtensions =
 				array_diff(
-					array_keys($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['constraints']['depends']),
+					array_keys($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['constraints']['depends']),
 					array('php', 'typo3')
 				);
 		}
@@ -83,8 +92,7 @@ class tx_agency_pi_base extends tslib_pibase {
 		if (
 			$loginSecurityLevel == 'rsa' ||
 			(
-				$conf['enableAutoLoginOnConfirmation'] &&
-				!$conf['enableAutoLoginOnCreate']
+				tx_agency_controldata::enableAutoLoginOnConfirmation($conf)
 			)
 		) {
 			$requiredExtensions[] = 'rsaauth';
@@ -92,48 +100,48 @@ class tx_agency_pi_base extends tslib_pibase {
 
 		foreach ($requiredExtensions as $extension) {
 			if (!t3lib_extMgm::isLoaded($extension)) {
-				$message = sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_required_extension_missing'), $extension);
-				t3lib_div::sysLog($message, $this->extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
-				$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+				$message = sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_required_extension_missing'), $extension);
+				t3lib_div::sysLog($message, $extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
+				$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
 			}
 		}
 
 			// Check if any conflicting extension is available
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['constraints']['conflicts'])) {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['constraints']['conflicts'])) {
 			$conflictingExtensions =
-				array_keys($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['constraints']['conflicts']);
+				array_keys($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['constraints']['conflicts']);
 		}
 
 		foreach ($conflictingExtensions as $extension) {
 			if (t3lib_extMgm::isLoaded($extension)) {
-				$message = sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_conflicting_extension_installed'), $extension);
-				t3lib_div::sysLog($message, $this->extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
-				$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+				$message = sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_conflicting_extension_installed'), $extension);
+				t3lib_div::sysLog($message, $extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
+				$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
 			}
 		}
 
 			// Check if front end login security level is correctly set
-		$supportedTransmissionSecurityLevels = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->extKey]['loginSecurityLevels'];
+		$supportedTransmissionSecurityLevels = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['loginSecurityLevels'];
 
 		if (!in_array($loginSecurityLevel, $supportedTransmissionSecurityLevels)) {
-			$message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_login_security_level');
-			t3lib_div::sysLog($message, $this->extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
-			$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+			$message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_login_security_level');
+			t3lib_div::sysLog($message, $extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
+			$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
 		} else {
 				// Check if salted passwords are enabled in front end
 			if (t3lib_extMgm::isLoaded('saltedpasswords')) {
 				if (!tx_saltedpasswords_div::isUsageEnabled('FE')) {
-					$message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_salted_passwords_disabled');
-					t3lib_div::sysLog($message, $this->extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
-					$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+					$message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_salted_passwords_disabled');
+					t3lib_div::sysLog($message, $extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
+					$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
 				} else {
 						// Check if we can get a salting instance
 					$objSalt = tx_saltedpasswords_salts_factory::getSaltingInstance(NULL);
 					if (!is_object($objSalt)) {
 							// Could not get a salting instance from saltedpasswords
-						$message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_salted_passwords_no_instance');
-						t3lib_div::sysLog($message, $this->extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
-						$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+						$message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_salted_passwords_no_instance');
+						t3lib_div::sysLog($message, $extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
+						$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
 					}
 				}
 			}
@@ -149,9 +157,9 @@ class tx_agency_pi_base extends tslib_pibase {
 				$storage = tx_rsaauth_storagefactory::getStorage();
 				if (!is_object($backend) || !$backend->isAvailable() || !is_object($storage)) {
 						// Required RSA auth backend not available
-					$message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_rsaauth_backend_not_available');
-					t3lib_div::sysLog($message, $this->extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
-					$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+					$message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_rsaauth_backend_not_available');
+					t3lib_div::sysLog($message, $extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
+					$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
 				}
 			}
 		}
@@ -163,21 +171,24 @@ class tx_agency_pi_base extends tslib_pibase {
 	 *
 	 * @return string Error message, if error found, empty string otherwise
 	 */
-	protected function checkDeprecatedMarkers () {
+	protected function checkDeprecatedMarkers (
+		$cObj,
+		array $conf,
+		$extKey
+	) {
 		$content = '';
-		$templateCode = $this->cObj->fileResource($this->conf['templateFile']);
-		$marker = t3lib_div::getUserObj('&tx_agency_marker');
+		$templateCode = $cObj->fileResource($conf['templateFile']);
 
 		$messages =
-			$marker->checkDeprecatedMarkers(
+			tx_agency_marker::checkDeprecatedMarkers(
 				$templateCode,
-				$this->extKey,
-				$this->conf['templateFile']
+				$extKey,
+				$conf['templateFile']
 			);
 
 		foreach ($messages as $message) {
-			t3lib_div::sysLog($message, $this->extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
-			$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+			t3lib_div::sysLog($message, $extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
+			$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
 		}
 
 		return $content;

@@ -1323,7 +1323,7 @@ class tx_agency_display {
 			if (
 				$cmdKey == 'create' &&
 				!$conf['enableEmailConfirmation'] &&
-				!$conf['enableAutoLoginOnCreate']
+				!$controlData->enableAutoLoginOnCreate($conf)
 			) {
 				$markerObj->addPasswordTransmissionMarkers($markerArray);
 			}

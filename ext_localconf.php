@@ -1,5 +1,7 @@
 <?php
-if (!defined ('TYPO3_MODE')) die ('Access denied.');
+if (!defined ('TYPO3_MODE')) {
+	die ('Access denied.');
+}
 
 if (!defined ('AGENCY_EXT')) {
 	define('AGENCY_EXT', $_EXTKEY);
@@ -46,14 +48,6 @@ require_once(t3lib_extMgm::extPath($_EXTKEY) . 'ext_emconf.php');
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['version'] = $EM_CONF[$_EXTKEY]['version'];
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['constraints'] = $EM_CONF[$_EXTKEY]['constraints'];
 
-	// Set path to extension static_info_tables
-if (t3lib_extMgm::isLoaded(STATIC_INFO_TABLES_EXT)) {
-	if (!defined ('PATH_BE_static_info_tables')) {
-		define('PATH_BE_static_info_tables', t3lib_extMgm::extPath(STATIC_INFO_TABLES_EXT));
-	}
-}
-
-
 if (!isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['loginSecurityLevels'])) {
 
 	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['loginSecurityLevels'] = array('normal', 'rsa');
@@ -62,9 +56,17 @@ if (!isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['loginSecurityLevels
 	// Captcha marker hook
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['registrationProcess'][] = 'EXT:' . $_EXTKEY . '/hooks/captcha/class.tx_agency_captcha.php:&tx_agency_captcha';
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['model'][] = 'EXT:' . $_EXTKEY . '/hooks/captcha/class.tx_agency_captcha.php:&tx_agency_captcha';
+
 	// Freecap marker hook
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['registrationProcess'][] = 'EXT:' . $_EXTKEY . '/hooks/freecap/class.tx_agency_freecap.php:&tx_agency_freecap';
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['model'][] = 'EXT:' . $_EXTKEY . '/hooks/freecap/class.tx_agency_freecap.php:&tx_agency_freecap';
+
+	// Scheduler hook
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_agency_feusergroup_scheduler'] = array(
+	'extension' => $_EXTKEY,
+	'title' => 'LLL:EXT:' . $_EXTKEY . '/locallang.xml:feUserGroupScheduler.name',
+	'description' => 'LLL:EXT:' . $_EXTKEY . '/locallang.xml:feUserGroupScheduler.description',
+);
 
 if (TYPO3_MODE == 'BE') {
 
@@ -133,11 +135,11 @@ if (
 	$GLOBALS['TYPO3_CONF_VARS']['SYS']['livesearch'] = array_merge(
 		$GLOBALS['TYPO3_CONF_VARS']['SYS']['livesearch'],
 		array(
-			'fe_users' => 'fe_users'
+			'fe_users' => 'fe_users',
+			'fe_groups' => 'fe_groups',
 		)
 	);
 }
-
 
 if (TYPO3_MODE == 'FE') {
 	if (t3lib_extMgm::isLoaded('tt_products')) {

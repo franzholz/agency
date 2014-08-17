@@ -324,7 +324,9 @@ class tx_agency_email {
 		array $setFixedConfig,
 		&$errorCode
 	) {
+		$extKey = $controlData->getExtKey();
 		$result = TRUE;
+		$bHTMLallowed = TRUE;
 		$missingSubpartArray = array();
 		$userSubpartsFound = 0;
 		$adminSubpartsFound = 0;
@@ -335,7 +337,16 @@ class tx_agency_email {
 		}
 
 		$authObj = t3lib_div::getUserObj('&tx_agency_auth');
-		$bHTMLallowed = $DBrows[0]['module_sys_dmail_html'];
+
+		if (
+			(
+				t3lib_extMgm::isLoaded('direct_mail') ||
+				$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['enableDirectMail']
+			) &&
+			isset($DBrows[0]['module_sys_dmail_html'])
+		) {
+			$bHTMLallowed = $DBrows[0]['module_sys_dmail_html'];
+		}
 
 			// Setting CSS style markers if required
 		if ($bHTMLMailEnabled) {
@@ -505,7 +516,7 @@ class tx_agency_email {
 			$markerArray,
 			$conf,
 			$cObj,
-			$controlData->getExtKey(),
+			$extKey,
 			$theTable,
 			$DBrows[0],
 			$origRows[0],
@@ -550,6 +561,7 @@ class tx_agency_email {
 			} else {
 				$mrow = $currentRow;
 			}
+
 			$markerArray['###SYS_AUTHCODE###'] = $authObj->generateAuthCode($row);
 			$setfixedObj->computeUrl(
 				$cmd,
@@ -599,7 +611,7 @@ class tx_agency_email {
 				$markerArray,
 				$conf,
 				$cObj,
-				$controlData->getExtKey(),
+				$extKey,
 				$theTable,
 				$row,
 				$origRow,
@@ -614,18 +626,20 @@ class tx_agency_email {
 
 			foreach ($contentIndexArray as $emailType => $indexArray) {
 				$fieldMarkerArray = array();
-				$fieldMarkerArray = $markerObj->fillInMarkerArray(
-					$fieldMarkerArray,
-					$mrow,
-					$securedArray,
-					$controlData,
-					$dataObj,
-					$confObj,
-					'',
-					FALSE,
-					'FIELD_',
-					($emailType == 'html')
-				);
+				$fieldMarkerArray =
+					$markerObj->fillInMarkerArray(
+						$fieldMarkerArray,
+						$mrow,
+						$securedArray,
+						$controlData,
+						$dataObj,
+						$confObj,
+						'',
+						FALSE,
+						'FIELD_',
+						($emailType == 'html')
+					);
+
 				$tcaObj->addTcaMarkers(
 					$fieldMarkerArray,
 					$conf,
@@ -684,7 +698,7 @@ class tx_agency_email {
 					tx_div2007_alpha::wrapInBaseClass_fh001(
 						$content['userhtml']['accum'],
 						$controlData->getPrefixId(),
-						$controlData->getExtKey()
+						$extKey
 					)
 				);
 				// Remove HTML comments
@@ -714,7 +728,7 @@ class tx_agency_email {
 					tx_div2007_alpha::wrapInBaseClass_fh001(
 						$content['adminhtml']['accum'],
 						$controlData->getPrefixId(),
-						$controlData->getExtKey()
+						$extKey
 					)
 				);
 				// Remove HTML comments

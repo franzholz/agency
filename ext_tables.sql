@@ -40,3 +40,26 @@ CREATE TABLE fe_groups_language_overlay (
 	PRIMARY KEY (uid),
 	KEY parent (pid)
 );
+
+
+CREATE TABLE sys_agency_fe_users_limit_fe_groups (
+	uid int(11) unsigned DEFAULT '0' NOT NULL auto_increment,
+	pid int(11) unsigned DEFAULT '0' NOT NULL,
+	tstamp int(11) DEFAULT '0' NOT NULL,
+	crdate int(11) DEFAULT '0' NOT NULL,
+	cruser_id int(11) DEFAULT '0' NOT NULL,
+	deleted tinyint(4) DEFAULT '0' NOT NULL,
+	hidden tinyint(4) DEFAULT '0' NOT NULL,
+	starttime int(11) DEFAULT '0' NOT NULL,
+	endtime int(11) DEFAULT '0' NOT NULL,
+	codes tinytext NOT NULL,
+	fe_users_uid int(11) DEFAULT '0' NOT NULL,
+	fe_groups_uid int(11) DEFAULT '0' NOT NULL,
+	status int(11) unsigned DEFAULT '0' NOT NULL,
+
+	PRIMARY KEY (uid),
+	KEY parent (pid),
+	KEY fe_user (fe_users_uid),
+	KEY relation (fe_users_uid,fe_groups_uid)
+);
+

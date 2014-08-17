@@ -6,7 +6,7 @@
  */
 
 $key = 'agency';
-$extensionPath = t3lib_extMgm::extPath($key, $script);
+$extensionPath = t3lib_extMgm::extPath($key);
 
 return array(
 	'tx_agency_statusreport' => $extensionPath . 'hooks/statusreport/class.tx_agency_statusReport.php',
@@ -14,6 +14,7 @@ return array(
 	'tx_agency_freecap' => $extensionPath . '/hooks/freecap/class.tx_agency_freecap.php',
 	'tx_agency_hooks_cms' => $extensionPath . 'hooks/class.tx_agency_hooks_cms.php',
 	'tx_agency_hookshandler' => $extensionPath . 'hooks/class.tx_agency_hooksHandler.php',
+	'tx_agency_feusergroup_scheduler' => $extensionPath . 'hooks/class.tx_agency_feusergroup_scheduler.php',
 	'tx_agency' => $extensionPath . 'class.tx_agency.php',
 	'tx_agency_pi_base' => $extensionPath . 'pi/class.tx_agency_pi_base.php',
 	'tx_agency_control_main' => $extensionPath . 'control/class.tx_agency_control_main.php',

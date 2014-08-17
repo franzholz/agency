@@ -37,7 +37,9 @@
 class tx_agency_hooksHandler {
 	public $bHasBeenInitialised = FALSE;
 
-	public function init ($dataObject) {
+	public function init (
+		tx_agency_data $dataObject
+	) {
 		$this->bHasBeenInitialised = TRUE;
 	}
 
@@ -46,8 +48,8 @@ class tx_agency_hooksHandler {
 	}
 
 	public function registrationProcess_beforeConfirmCreate (
-		&$recordArray,
-		$controlDataObj
+		array &$recordArray,
+		tx_agency_controldata $controlDataObj
 	) {
 			// in the case of this hook, the record array is passed by reference
 			// in this example hook, we generate a username based on the first and last names of the user
@@ -91,54 +93,64 @@ class tx_agency_hooksHandler {
 
 	public function registrationProcess_afterSaveEdit (
 		$theTable,
-		$dataArray,
-		$origArray,
+		array $dataArray,
+		array $origArray,
 		$token,
-		&$newRow,
+		array &$newRow,
 		$cmd,
 		$cmdKey,
 		$pid,
 		$fieldList,
-		$pObj // object of type tx_agency_data
+		tx_agency_data $pObj
 	) {
 	}
 
 	public function registrationProcess_beforeSaveDelete (
-		&$recordArray,
+		tx_agency_controldata $controlDataObj,
+		array &$recordArray,
 		$invokingObj
 	) {
 	}
 
 	public function registrationProcess_afterSaveCreate (
+		tx_agency_controldata $controlDataObj,
 		$theTable,
-		$dataArray,
-		$origArray,
+		array $dataArray,
+		array $origArray,
 		$token,
-		&$newRow,
+		array &$newRow,
 		$cmd,
 		$cmdKey,
 		$pid,
 		$fieldList,
-		$pObj // object of type tx_agency_data
+		tx_agency_data $pObj
 	) {
 	}
 
 	public function confirmRegistrationClass_preProcess (
+		tx_agency_controldata $controlDataObj,
 		$theTable,
-		&$recordArray,
+		array &$recordArray,
 		&$newFieldList,
-		$confObj,
+		$invokingObj,
+		$errorCode
+	) {
+	}
+
+	public function confirmRegistrationClass_postProcess (
+		tx_agency_controldata $controlDataObj,
+		$theTable,
+		array &$recordArray,
+		array $currArr,
+		array $origArray,
 		$invokingObj
 	) {
 	}
 
-	public function confirmRegistrationClass_postProcess ($theTable, &$recordArray, $currArr, $origArray, $confObj, $invokingObj) {
-	}
-
 	public function addGlobalMarkers (
-		&$markerArray,
-		$controlData,
-		$confObj,
+		array &$markerArray,
+		tx_agency_controldata $controlData,
+		tx_agency_conf $confObj,
 		$markerObject
 	) {
 	}
@@ -146,12 +158,12 @@ class tx_agency_hooksHandler {
 	public function evalValues (
 		$staticInfoObj,
 		$theTable,
-		$dataArray,
-		$origArray,
-		$markContentArray,
+		array $dataArray,
+		array $origArray,
+		array $markContentArray,
 		$cmdKey,
-		$requiredArray,
-		$checkFieldArray,
+		array $requiredArray,
+		array $checkFieldArray,
 		$theField,
 		$cmdParts,
 		$bInternal,
@@ -162,7 +174,7 @@ class tx_agency_hooksHandler {
 
 	public function getFailureText (
 		$failureText,
-		$dataArray,
+		array $dataArray,
 		$theField,
 		$theRule,
 		$label,

@@ -238,17 +238,22 @@ class tx_agency_setfixed {
 						t3lib_div::trimExplode(',', $dataObj->getFieldList(), 1),
 						t3lib_div::trimExplode(',', implode($fieldArr, ','), 1)
 					));
+					$errorCode = '';
 
 						// Hook: confirmRegistrationClass_preProcess
 					foreach($hookObjectsArr as $hookObj) {
 						if (method_exists($hookObj, 'confirmRegistrationClass_preProcess')) {
 							$hookObj->confirmRegistrationClass_preProcess(
+								$controlData,
 								$theTable,
 								$row,
 								$newFieldList,
-								$confObj,
-								$this
+								$this,
+								$errorCode
 							);
+							if ($errorCode) {
+								break;
+							}
 						}
 					}
 
@@ -300,11 +305,11 @@ class tx_agency_setfixed {
 					foreach($hookObjectsArr as $hookObj) {
 						if (method_exists($hookObj, 'confirmRegistrationClass_postProcess')) {
 							$hookObj->confirmRegistrationClass_postProcess(
+								$controlData,
 								$theTable,
 								$row,
 								$currArr,
 								$origArray,
-								$confObj,
 								$this
 							);
 						}
@@ -535,7 +540,7 @@ class tx_agency_setfixed {
 							$content = $errorContent;
 						} else if (
 								// Auto-login on confirmation
-							$conf['enableAutoLoginOnConfirmation'] &&
+							$controlData->enableAutoLoginOnConfirmation($conf) &&
 							$usesPassword &&
 							(
 								($sFK == 'APPROVE' && !$conf['enableAdminReview']) ||

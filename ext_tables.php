@@ -260,6 +260,24 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 
 	$TCA['fe_users']['ctrl']['thumbnail'] = 'image';
 
+	$TCA['sys_agency_fe_users_limit_fe_groups'] = Array (
+		'ctrl' => Array (
+			'title' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:sys_agency_fe_users_limit_fe_groups',
+			'label' => 'codes',
+			'default_sortby' => 'ORDER BY codes',
+			'tstamp' => 'tstamp',
+			'crdate' => 'crdate',
+			'cruser_id' => 'cruser_id',
+			'delete' => 'deleted',
+			'enablecolumns' => Array (
+				'disabled' => 'hidden',
+				'starttime' => 'starttime',
+				'endtime' => 'endtime',
+			),
+			'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY) . 'ext_icon.gif',
+		)
+	);
+
 	if ( // Direct Mail tables exist but Direct Mail shall not be used
 		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['enableDirectMail'] &&
 		!t3lib_extMgm::isLoaded('direct_mail')
@@ -280,7 +298,7 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 					'enablecolumns' => array(
 						'disabled' => 'hidden',
 					),
-					'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY) . 'icon_tx_directmail_category.gif',
+					'iconfile' => t3lib_extMgm::extRelPath('direct_mail') . 'icon_tx_directmail_category.gif',
 					)
 			);
 

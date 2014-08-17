@@ -43,6 +43,7 @@ plugin.tx_agency {
 	allowMultipleUserGroupSelection = {$plugin.tx_agency.allowMultipleUserGroupSelection}
 
 	salutation = {$plugin.tx_agency.salutation}
+	authServiceClass = {$plugin.tx_agency.authServiceClass}
 
 	# you may modify here the conditions under which an attachment file will be added to the email
 	addAttachment =  {$plugin.tx_agency.enableEmailAttachment}

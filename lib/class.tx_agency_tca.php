@@ -534,7 +534,7 @@ class tx_agency_tca {
 
 									if (is_array($itemArray)) {
 										$itemKeyArray = $this->getItemKeyArray($itemArray);
-										for ($i = 0; $i < count ($valuesArray); $i++) {
+										for ($i = 0; $i < count($valuesArray); $i++) {
 											$label = $langObj->getLLFromString($itemKeyArray[$valuesArray[$i]][0]);
 											if ($HSC) {
 												$label = htmlspecialchars($label, ENT_QUOTES, $charset);
@@ -561,6 +561,7 @@ class tx_agency_tca {
 												$colConfig['foreign_table'],
 												$where
 											);
+
 											$languageUid = $controlData->getSysLanguageUid(
 												$conf,
 												'ALL',
@@ -578,7 +579,11 @@ class tx_agency_tca {
 													if ($HSC) {
 														$text = htmlspecialchars($text, ENT_QUOTES, $charset);
 													}
-													$colContent .= (($bNotLast || $i < count($foreignRows) - 1 ) ?  $cObj->stdWrap($text, $stdWrap) : $text);
+													$colContent .=
+														(($bNotLast || $i < count($foreignRows) - 1 ) ?
+															$cObj->stdWrap($text, $stdWrap) :
+															$text
+														);
 												}
 											}
 										}
