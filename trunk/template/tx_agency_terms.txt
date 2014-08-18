@@ -1,0 +1,13 @@
+Agency Registration
+
+Typo3 Extension agency
+
+This is just a sample terms file
+
+The terms are
+
+1.) foo
+
+2.) bar
+
+3.) ...

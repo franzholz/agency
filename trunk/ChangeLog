@@ -1,0 +1,65 @@
+2014-08-17 Franz Holzinger <franz@ttproducts.de>
+	* changes in the hook functions
+	* support for improved voucher codes of voucher extension 0.2.0
+	* make authorisation services configurable authServiceClass
+	* add table sys_agency_fe_users_limit_fe_groups to store a FE user specific start- and endtime for an assigned FE user group (added by the voucher extension).
+	* add a scheduler task to check if a FE user must be removed from a FE group membership (voucher extension)
+
+2014-03-06 Franz Holzinger <franz@ttproducts.de>
+	* fix bug #50838
+	* fix bug with not shown Direct Mail categories
+	* modify module_sys_dmail_category in the TCE to show all categories
+	for all countries
+
+2014-02-15 Franz Holzinger <franz@ttproducts.de>
+	* New feature: alphaSpecials. Allow usernames with umlauts.
+	* New feature: send an email to recreate a forgotten password
+	* support alternative for the removed fe_admin_fieldList in TYPO3 6.2
+	* change all class names from prefix tx-agency into agency
+	* allow the empty default security level FE oginSecurityLevel
+	* fix bug: wrong conf array in tx_agency_data
+	* fix bugs in invitation process
+	* fix bug: fix CSS class names
+
+2013-12-28 Franz Holzinger <franz@ttproducts.de>
+	* Fix bug #50607: sr_freecap Captcha might not be accepted after submission
+
+2013-11-19 Franz Holzinger <franz@ttproducts.de>
+	* fix bug #53741: remove apostrophe
+
+2013-11-16 Franz Holzinger <franz@ttproducts.de>
+	* bug fix to autologin
+	* add new subpart ###TEMPLATE_SETFIXED_LOGIN_FAILED###
+
+2013-09-24 Franz Holzinger <franz@ttproducts.de>
+	* new setup captcha for support of diversal captcha extensions
+	* enhancements to some hook functions
+
+2013-08-05 Franz Holzinger <franz@ttproducts.de>
+	* fix security issue TYPO3-EXT-SA-2013-011
+
+2013-07-31 Franz Holzinger <franz@ttproducts.de>
+	* fix bug #50607
+
+2013-07-31 Franz Holzinger <franz@ttproducts.de>
+	* use the markers for all fields in emails (part II)
+	* modification to the captcha hooks interface
+
+2013-07-27 Franz Holzinger <franz@ttproducts.de>
+	* use the markers for all fields in emails
+
+2013-07-12 Franz Holzinger <franz@ttproducts.de>
+	* fix bug #49881
+	* do not query static_languages with default language
+
+2013-07-09 Franz Holzinger <franz@ttproducts.de>
+	* fix bug #49802
+	* fix bugs from sr_feuser_register
+
+2013-06-21 Franz Holzinger <franz@ttproducts.de>
+	* fix bug #37022
+	* support older versions of static_info_tables
+
+2013-06-13 Franz Holzinger <franz@ttproducts.de>
+	* back to the features of sr_feuser_register 2.6.3 including the sending of a forgotten password
+	* The initial version starts as a fork from sr_feuser_register 3.0.1 with slight enhancements
