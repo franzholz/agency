@@ -298,7 +298,7 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 					'enablecolumns' => array(
 						'disabled' => 'hidden',
 					),
-					'iconfile' => t3lib_extMgm::extRelPath('direct_mail') . 'icon_tx_directmail_category.gif',
+					'iconfile' => t3lib_extMgm::extRelPath($_EXTKEY) . 'icon_tx_directmail_category.gif',
 					)
 			);
 

@@ -3,6 +3,7 @@
 	* support for improved voucher codes of voucher extension 0.2.0
 	* make authorisation services configurable authServiceClass
 	* add table sys_agency_fe_users_limit_fe_groups to store a FE user specific start- and endtime for an assigned FE user group (added by the voucher extension).
+	* add a scheduler task to check if a FE user must be removed from a FE group membership (voucher extension)
 
 2014-03-06 Franz Holzinger <franz@ttproducts.de>
 	* fix bug #50838
