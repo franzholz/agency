@@ -49,6 +49,9 @@ plugin.tx_agency {
       # cat=plugin.tx_agency/enable; type=int+; label= Generate the password: If non-zero, a random password is generated. The number of characters in the password is given by this parameter.
   generatePassword = 0
 
+      # cat=plugin.tx_srfeuserregister_pi1/enable; type=boolean; label= Do not enforce username: If set, field username is not forced to be part of formFields and requiredFields.
+  doNotEnforceUsername = 0
+
     # cat=plugin.tx_agency//; type=int+; label= Authentication code length: Length of the authentication codes. Direct Mail uses 8.
   codeLength = 12
 
@@ -121,7 +124,7 @@ plugin.tx_agency {
     # cat=plugin.tx_agency/enable; type=boolean; label= Enable email on registration: If set, an email will be sent to the front end user confirming his(her) registration. This is ignored if email confirmation request is enabled.
   enableEmailOnRegister = 1
 
-    # cat=plugin.tx_agency/enable; type=boolean; label= Enable email on profile update: If set, an email will be sent to the front end user to confirm the update of his(her) profile.
+    # cat=plugin.tx_agency/enable; type=boolean; label= Enable email on profile update: If set to 1, an email will be sent to the front end user to confirm the update of his profile. If set to 2, only the changed fields will be sent.
   enableEmailOnUpdate = 1
 
     # cat=plugin.tx_agency/enable; type=boolean; label= Enable email on delete: If set, an email will be sent to the front end user to confirm the deletion of his(her) account.

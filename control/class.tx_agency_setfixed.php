@@ -488,7 +488,7 @@ class tx_agency_setfixed {
 					if (
 						!$bEmailSent &&
 						is_array($errorCode)
-					){
+					) {
 						$errorText = $langObj->getLL($errorCode['0'], '', FALSE, TRUE);
 						$errorContent = sprintf($errorText, $errorCode['1']);
 						$content = $errorContent;
@@ -716,7 +716,8 @@ class tx_agency_setfixed {
 				}
 
 				if ($bSetfixedHash) {
-					$setfixedpiVars[$prefixId . '%5BaC%5D'] = $authObj->setfixedHash($record, $fieldList);
+					$setfixedpiVars[$prefixId . '%5BaC%5D'] =
+						$authObj->setfixedHash($record, $fieldList);
 				}
 				$setfixedpiVars[$prefixId . '%5Bcmd%5D'] = $theCmd;
 

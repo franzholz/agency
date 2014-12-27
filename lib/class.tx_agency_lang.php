@@ -33,6 +33,7 @@
  *
  * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
  * @author	Franz Holzinger <franz@ttproducts.de>
+ * @author	Oliver Klee <typo-coding@oliverklee.de>
  *
  * @package TYPO3
  * @subpackage agency
@@ -40,10 +41,8 @@
  *
  */
 
-
 class tx_agency_lang extends tx_div2007_alpha_language_base {
 	public $allowedSuffixes = array('formal', 'informal'); // list of allowed suffixes
-
 
 	public function init ($pObj, $cObj, $conf, $scriptRelPath, $extKey) {
 
@@ -66,24 +65,22 @@ class tx_agency_lang extends tx_div2007_alpha_language_base {
 		}
 	}
 
-	public function getLLFromString ($string, $bForce = TRUE) {
-		global $LOCAL_LANG, $TSFE;
-
-		$rc = '';
+	public function getLLFromString ($string, $force = TRUE) {
+		$result = '';
 		$arr = explode(':', $string);
 
 		if($arr[0] == 'LLL' && $arr[1] == 'EXT') {
 			$temp = $this->getLL($arr[3]);
-			if ($temp || !$bForce) {
-				$rc = $temp;
+			if ($temp || !$force) {
+				$result = $temp;
 			} else {
-				$rc = $TSFE->sL($string);
+				$result = $GLOBALS['TSFE']->sL($string);
 			}
 		} else {
-			$rc = $string;
+			$result = $string;
 		}
 
-		return $rc;
+		return $result;
 	}	// getLLFromString
 
 	/**
@@ -92,23 +89,23 @@ class tx_agency_lang extends tx_div2007_alpha_language_base {
 	* @return array array of selectable items
 	*/
 	public function getItemsLL ($textSchema, $bAll = TRUE, $valuesArray = array()) {
-		$rc = array();
+		$result = array();
 		if ($bAll) {
 			for ($i = 0; $i < 999; ++$i) {
 				$text = $this->getLL($textSchema . $i);
 				if ($text != '') {
-					$rc[] = array($text, $i);
+					$result[] = array($text, $i);
 				}
 			}
 		} else {
 			foreach ($valuesArray as $k => $i) {
 				$text = $this->getLL($textSchema . $i);
 				if ($text != '') {
-					$rc[] = array($text, $i);
+					$result[] = array($text, $i);
 				}
 			}
 		}
-		return $rc;
+		return $result;
 	}	// getItemsLL
 
 	/**
@@ -159,7 +156,6 @@ class tx_agency_lang extends tx_div2007_alpha_language_base {
 					$hsc
 				);
 
-				// Fall back to tslib_fe::sL
 			if ($localizedLabel == '') {
 				if ($localizedLabel == '' && $showError) {
 					$localizedLabel = 'ERROR in extension "' .  $this->extKey . '" no text for key "' . $key . '" can be found';
@@ -170,7 +166,7 @@ class tx_agency_lang extends tx_div2007_alpha_language_base {
 	}
 
 	public function loadLL () {
-		$rc = TRUE;
+		$result = TRUE;
 
 			// flatten the structure of labels overrides
 		if (is_array($this->conf['_LOCAL_LANG.'])) {
@@ -221,10 +217,10 @@ class tx_agency_lang extends tx_div2007_alpha_language_base {
 		$tmpText = $this->getLL('unsupported');
 
 		if ($tmpText == '') {
-			$rc = FALSE;
+			$result = FALSE;
 		}
 
-		return $rc;
+		return $result;
 	}	// loadLL
 } // class tx_agency_lang
 

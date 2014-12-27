@@ -43,7 +43,6 @@
 
 class tx_agency_control {
 	public $langObj;
-	public $conf = array();
 	public $marker;
 	public $auth;
 	public $email;
@@ -55,6 +54,7 @@ class tx_agency_control {
 
 
 	public function init (
+		tx_agency_conf $confObj,
 		$langObj,
 		$cObj,
 		$controlData,
@@ -64,8 +64,6 @@ class tx_agency_control {
 		$urlObj
 	) {
 		$this->langObj = $langObj;
-
-		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
 		$conf = $confObj->getConf();
 		$this->marker = $marker;
 		$this->email = $email;
@@ -95,18 +93,17 @@ class tx_agency_control {
 
 	/* write the global $conf only here */
 	public function init2 (
-		$confObj,
+		tx_agency_conf $confObj,
 		$staticInfoObj,
 		$theTable,
 		$controlData,
 		$dataObj,
-		&$adminFieldList
+		&$adminFieldList,
+		array &$origArray
 	) {
 		$conf = $confObj->getConf();
-
 		$tablesObj = t3lib_div::getUserObj('&tx_agency_lib_tables');
 		$addressObj = $tablesObj->get('address');
-		$origArray = array();
 		$extKey = $controlData->getExtKey();
 		$cmd = $controlData->getCmd();
 		$dataArray = $dataObj->getDataArray();
@@ -157,7 +154,6 @@ class tx_agency_control {
 				$dataObj->setDataArray($dataArray);
 			}
 		}
-		$dataObj->setOrigArray($origArray);
 		$fieldlist = '';
 
 		$typoVersion = tx_div2007_core::getTypoVersion();
@@ -175,7 +171,6 @@ class tx_agency_control {
 		} else {
 			$fieldlist = implode(',', tx_div2007_core::getFields($theTable));
 		}
-
 		$dataObj->setFieldList($fieldlist);
 
 		if (trim($conf['addAdminFieldList'])) {
@@ -211,6 +206,12 @@ class tx_agency_control {
 					$conf[$cmdKey . '.']['required'] = implode(',', array_unique(t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',username', 1)));
 				}
 			}
+
+			// When in edit mode, remove password from required fields
+			if ($cmdKey == 'edit') {
+				$conf[$cmdKey . '.']['required'] = implode(',', array_diff(t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), array('password')));
+			}
+
 			if ($conf[$cmdKey . '.']['generateUsername'] || $cmdKey == 'password') {
 				$conf[$cmdKey . '.']['fields'] = implode(',', array_diff(t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), array('username')));
 			}
@@ -276,6 +277,7 @@ class tx_agency_control {
 
 			// Adjust some evaluation settings
 		if (is_array($conf[$cmdKey . '.']['evalValues.'])) {
+		// TODO: Fix scope issue: unsetting $conf entry here has no effect
 				// Do not evaluate any password when inviting
 			if ($cmdKey == 'invite') {
 				unset($conf[$cmdKey . '.']['evalValues.']['password']);
@@ -319,7 +321,7 @@ class tx_agency_control {
 	*/
 	public function doProcessing (
 		$cObj,
-		$confObj,
+		tx_agency_conf $confObj,
 		$setfixedObj,
 		$langObj,
 		$displayObj,
@@ -392,7 +394,11 @@ class tx_agency_control {
 		$markerArray = $this->marker->getArray();
 
 			// Evaluate incoming data
-		if (count($finalDataArray) && !in_array($cmd, $noSaveCommands)) {
+		if (
+			is_array($finalDataArray) &&
+			count($finalDataArray) &&
+			!in_array($cmd, $noSaveCommands)
+		) {
 			$dataObj->setName($finalDataArray, $cmdKey, $theTable);
 			$dataObj->parseValues($theTable, $finalDataArray, $origArray, $cmdKey);
 			$dataObj->overrideValues($finalDataArray, $cmdKey);
@@ -403,6 +409,7 @@ class tx_agency_control {
 			) {
 					// A button was clicked on
 				$evalErrors = $dataObj->evalValues(
+					$confObj,
 					$staticInfoObj,
 					$theTable,
 					$finalDataArray,
@@ -421,9 +428,11 @@ class tx_agency_control {
 					$controlData->clearSessionData();
 				}
 
-				if ($conf['evalFunc']) {
+				if (
+					$conf['evalFunc'] &&
+					is_array($conf['evalFunc.'])
+				) {
 					$this->marker->setArray($markerArray);
-
 					$finalDataArray =
 						tx_div2007_alpha::userProcess_fh001(
 							$this,
@@ -443,6 +452,7 @@ class tx_agency_control {
 					// You come here after a click on the text "Not a member yet? click here to register."
 					// We are going to redisplay
 				$evalErrors = $dataObj->evalValues(
+					$confObj,
 					$staticInfoObj,
 					$theTable,
 					$finalDataArray,
@@ -516,6 +526,7 @@ class tx_agency_control {
 				$fetch = $controlData->getFeUserData('fetch');
 				$finalDataArray['email'] = $fetch;
 				$evalErrors = $dataObj->evalValues(
+					$confObj,
 					$staticInfoObj,
 					$theTable,
 					$finalDataArray,

@@ -156,6 +156,7 @@ class tx_agency_hooksHandler {
 	}
 
 	public function evalValues (
+		tx_agency_conf $confObj,
 		$staticInfoObj,
 		$theTable,
 		array $dataArray,

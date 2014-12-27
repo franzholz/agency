@@ -103,6 +103,15 @@
 			<label index="missing_captcha_response_informal">Please enter the captcha phrase!</label>
 			<label index="missing_invitation_address">Please enter an address!</label>
 			<label index="missing_invitation_address_informal">Please enter an address!</label>
+			<label index="house_no">House number</label>
+			<label index="tooltip_house_no">Enter your house number.</label>
+			<label index="tooltip_house_no_informal">Enter your house number.</label>
+			<label index="tooltip_invitation_house_no">Enter your house number.</label>
+			<label index="tooltip_invitation_house_no_informal">Enter your house number.</label>
+			<label index="missing_house_no">Please enter your house number!</label>
+			<label index="missing_house_no_informal">Please enter your house number!</label>
+			<label index="missing_invitation_house_no">Please enter a house number!</label>
+			<label index="missing_invitation_house_no_informal">Please enter a house number!</label>
 			<label index="city">City</label>
 			<label index="tooltip_city">Enter the name of the city or village.</label>
 			<label index="tooltip_city_informal">Enter the name of your city or village.</label>
@@ -306,8 +315,8 @@
 			<label index="v_dear_informal">Hi %3$s,</label>
 			<label index="v_dear_male">Dear Mr. %3$s,</label>
 			<label index="v_dear_female">Dear Mrs. %3$s,</label>
-			<label index="v_infomail_dear">Dear madam/sir,</label>
-			<label index="v_infomail_dear_informal">Dear madam/sir,</label>
+			<label index="v_infomail_dear">Dear Mrs./Sir,</label>
+			<label index="v_infomail_dear_informal">Dear Mrs./Sir,</label>
 			<label index="v_infomail_lost_password">Enter the email address under which you are registered.</label>
 			<label index="v_infomail_lost_password_confirm">The email with the lost password has been sent to &lt;b&gt;%4$s&lt;/b&gt;.</label>
 			<label index="v_infomail_lost_password_enter_new">The email to enter a new password has been sent to &lt;b&gt;%4$s&lt;/b&gt;.</label>
@@ -454,6 +463,7 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
 			<label index="v_registration_entered_message1_informal">Your membership &lt;b&gt;%2$s&lt;/b&gt; has been accepted.</label>
 			<label index="v_registration_entered_message2">Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</label>
 			<label index="v_registration_entered_message2_informal">Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</label>
+			<label index="v_registration_entered">%3$s accessed the login form of %1$s after acceptation of his(her) membership application.</label>
 			<label index="v_registration_deleted_subject">Your membership with &lt;b&gt;%1$s&lt;/b&gt; has been ended.</label>
 			<label index="v_registration_deleted_subject_informal">Your membership with &lt;b&gt;%1$s&lt;/b&gt; has been ended.</label>
 			<label index="v_registration_deleted_message1">As requested, we have ended your membership &lt;b&gt;%2$s&lt;/b&gt; and your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been deleted from our list.&lt;br /&gt;</label>
@@ -484,7 +494,7 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
 			<label index="evalErrors_atMost_password_informal">The password must contain at most %s characters.</label>
 			<label index="evalErrors_atMost_username">The username must contain at most %s characters.</label>
 			<label index="evalErrors_captcha">Invalid!</label>
-			<label index="evalErrors_freecap">Invalid!</label>
+			<label index="evalErrors_freecap">The entered letters did not correspond to the letters in the image.</label>
 			<label index="evalErrors_date">Please enter a valid date in format dd-mm-yyyy!</label>
 			<label index="evalErrors_date_informal">Please enter a valid date in format dd-mm-yyyy!</label>
 			<label index="evalErrors_email">Please enter a valid e-mail address.</label>

@@ -790,8 +790,8 @@ class tx_agency_controldata {
 				$value = htmlspecialchars($value);
 			}
 		}
-		$rc = $value;
-		return $rc;
+		$result = $value;
+		return $result;
 	}
 
 	/**
@@ -822,11 +822,11 @@ class tx_agency_controldata {
 
 	public function bFieldsAreFilled ($row) {
 		if (is_array($row)) {
-			$rc = isset($row['username']);
+			$result = isset($row['username']);
 		} else {
-			$rc = FALSE;
+			$result = FALSE;
 		}
-		return $rc;
+		return $result;
 	}
 
 	/*************************************
@@ -882,11 +882,11 @@ class tx_agency_controldata {
 			is_array($conf['conf.'][$theTable . '.'][$theCode . '.']) &&
 			tx_div2007_core::testInt($conf['conf.'][$theTable . '.'][$theCode . '.']['sys_language_uid'])
 		)	{
-			$rc = $conf['conf.'][$theTable . '.'][$theCode . '.']['sys_language_uid'];
+			$result = $conf['conf.'][$theTable . '.'][$theCode . '.']['sys_language_uid'];
 		} else {
-			$rc = $this->sys_language_content;
+			$result = $this->sys_language_content;
 		}
-		return $rc;
+		return $result;
 	}
 
 	public function getPidTitle () {
@@ -1055,8 +1055,8 @@ class tx_agency_controldata {
 	}
 
 	public function getBackURL () {
-		$rc = rawurldecode($this->getFeUserData('backURL'));
-		return $rc;
+		$result = rawurldecode($this->getFeUserData('backURL'));
+		return $result;
 	}
 
 	/**
@@ -1067,11 +1067,11 @@ class tx_agency_controldata {
 	public function isPreview () {
 		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
 		$conf = $confObj->getConf();
-		$rc = '';
+		$result = '';
 		$cmdKey = $this->getCmdKey();
 
-		$rc = ($conf[$cmdKey . '.']['preview'] && $this->getFeUserData('preview'));
-		return $rc;
+		$result = ($conf[$cmdKey . '.']['preview'] && $this->getFeUserData('preview'));
+		return $result;
 	}	// isPreview
 
 	/*************************************

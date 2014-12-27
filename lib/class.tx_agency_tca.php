@@ -42,11 +42,12 @@
  */
 
 class tx_agency_tca {
+	public $typoVersion;
 
 	public function init ($extKey, $theTable) {
 
-		$typoVersion = tx_div2007_core::getTypoVersion();
-		if ($typoVersion < 6002000) {
+		$this->typoVersion = tx_div2007_core::getTypoVersion();
+		if ($this->typoVersion < 6002000) {
 
 				// Get the table definition
 			tx_div2007_alpha::loadTcaAdditions_fh001(array($extKey));
@@ -336,17 +337,17 @@ class tx_agency_tca {
 		$bChangesOnly = FALSE,
 		$HSC = TRUE
 	) {
-		$bUseMissingFields = FALSE;
-
-		if ($activity == 'email') {
-			$bUseMissingFields = TRUE;
-		}
-
 		if (
 			!is_array($GLOBALS['TCA'][$theTable]) ||
 			!is_array($GLOBALS['TCA'][$theTable]['columns'])
 		) {
 			return FALSE;
+		}
+
+		$bUseMissingFields = FALSE;
+
+		if ($activity == 'email') {
+			$bUseMissingFields = TRUE;
 		}
 
 		$charset = $GLOBALS['TSFE']->renderCharset ? $GLOBALS['TSFE']->renderCharset : 'utf-8';
@@ -544,7 +545,9 @@ class tx_agency_tca {
 									}
 
 									if ($colConfig['foreign_table']) {
-										t3lib_div::loadTCA($colConfig['foreign_table']);
+										if ($this->typoVersion < 6002000) {
+											t3lib_div::loadTCA($colConfig['foreign_table']);
+										}
 										$reservedValues = array();
 										if (isset($userGroupObj) && is_object($userGroupObj)) {
 											$reservedValues = $userGroupObj->getReservedValues($conf);
@@ -844,7 +847,9 @@ class tx_agency_tca {
 									$colConfig['foreign_table'] &&
 									isset($GLOBALS['TCA'][$colConfig['foreign_table']])
 								) {
-									t3lib_div::loadTCA($colConfig['foreign_table']);
+									if ($this->typoVersion < 6002000) {
+										t3lib_div::loadTCA($colConfig['foreign_table']);
+									}
 									$titleField = $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['label'];
 									$reservedValues = array();
 									$whereClause = '1=1';

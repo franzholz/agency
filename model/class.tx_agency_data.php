@@ -203,12 +203,12 @@ class tx_agency_data {
 
 	public function getDataArray ($k = 0) {
 		if ($k) {
-			$rc = $this->dataArray[$k];
+			$result = $this->dataArray[$k];
 		} else {
-			$rc = $this->dataArray;
+			$result = $this->dataArray;
 		}
 
-		return $rc;
+		return $result;
 	}
 
 	public function resetDataArray () {
@@ -225,8 +225,8 @@ class tx_agency_data {
 
 	public function bNewAvailable () {
 		$dataArray = $this->getDataArray();
-		$rc = ($dataArray['username'] != '' || $dataArray['email'] != '');
-		return $rc;
+		$result = ($dataArray['username'] != '' || $dataArray['email'] != '');
+		return $result;
 	}
 
 	/**
@@ -371,6 +371,7 @@ class tx_agency_data {
 	* @return void  on return, the ControlData failure will contain the list of fields which were not ok
 	*/
 	public function evalValues (
+		tx_agency_conf $confObj,
 		$staticInfoObj,
 		$theTable,
 		array &$dataArray,
@@ -380,7 +381,6 @@ class tx_agency_data {
 		array $requiredArray,
 		array $checkFieldArray
 	) {
-		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
 		$conf = $confObj->getConf();
 		$failureMsg = array();
 		$displayFieldArray = t3lib_div::trimExplode(',', $conf[$cmdKey.'.']['fields'], 1);
@@ -822,6 +822,7 @@ class tx_agency_data {
 											$test = FALSE; // set it to TRUE if you test the following hook
 											$bInternal = FALSE;
 											$errorField = $hookObj->evalValues(
+												$confObj,
 												$staticInfoObj,
 												$theTable,
 												$dataArray,
@@ -1129,7 +1130,7 @@ class tx_agency_data {
 	* @return void
 	*/
 	public function checkFilename ($filename) {
-		$rc = TRUE;
+		$result = TRUE;
 
 		$fI = pathinfo($filename);
 		$fileExtension = strtolower($fI['extension']);
@@ -1137,13 +1138,13 @@ class tx_agency_data {
 			strpos($fileExtension, 'php') !== FALSE ||
 			strpos($fileExtension, 'htaccess') !== FALSE
 		) {
-			$rc = FALSE; // no php files are allowed here
+			$result = FALSE; // no php files are allowed here
 		}
 
 		if (strpos($filename, '..') !== FALSE) {
-			$rc = FALSE; //  no '..' path is allowed
+			$result = FALSE; //  no '..' path is allowed
 		}
-		return $rc;
+		return $result;
 	}
 
 	/**
@@ -1227,13 +1228,13 @@ class tx_agency_data {
 	) {
 		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
 		$conf = $confObj->getConf();
-		$rc = 0;
+		$result = 0;
 
 		switch($cmdKey) {
 			case 'edit':
 			case 'password':
 				$theUid = $dataArray['uid'];
-				$rc = $theUid;
+				$result = $theUid;
 				$authObj = t3lib_div::getUserObj('&tx_agency_auth');
 				$aCAuth = $authObj->aCAuth($origArray, $conf['setfixed.']['EDIT.']['_FIELDLIST']);
 
@@ -1408,7 +1409,7 @@ class tx_agency_data {
 							TRUE
 						);
 					$newId = $GLOBALS['TYPO3_DB']->sql_insert_id();
-					$rc = $newId;
+					$result = $newId;
 
 						// Enable users to own themselves.
 					if (
@@ -1496,13 +1497,13 @@ class tx_agency_data {
 					} else {
 						$this->setError('###TEMPLATE_NO_PERMISSIONS###');
 						$this->setSaved(FALSE);
-						$rc = FALSE;
+						$result = FALSE;
 					}
 				}
 			break;
 		}
 
-		return $rc;
+		return $result;
 	}	// save
 
 	/**
@@ -1565,7 +1566,7 @@ class tx_agency_data {
 
 						if (!$GLOBALS['TCA'][$theTable]['ctrl']['delete'] || $conf['forceFileDelete']) {
 								// If the record is being fully deleted... then remove the images or files attached.
-							$this->deleteFilesFromRecord($theTable, $this->getRecUid());
+							$this->deleteFilesFromRecord($controlDataObj, $theTable, $this->getRecUid());
 						}
 						$res =
 							$this->cObj->DBgetDelete(
@@ -1631,7 +1632,7 @@ class tx_agency_data {
 		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
 		$conf = $confObj->getConf();
 
-		$rcArray = array('m' => '', 'd' => '', 'y' => '');
+		$resultArray = array('m' => '', 'd' => '', 'y' => '');
 		$dateValue = trim($value);
 		$split = $conf['dateSplit'];
 		if (!$split) {
@@ -1651,14 +1652,14 @@ class tx_agency_data {
 				// j - day of the month without leading zeros; i.e. "1" to "31"
 				case 'd':
 				case 'j':
-					$rcArray['d'] = intval($dateValueArray[$i]);
+					$resultArray['d'] = intval($dateValueArray[$i]);
 				break;
 				// month
 				// m - month; i.e. "01" to "12"
 				// n - month without leading zeros; i.e. "1" to "12"
 				case 'm':
 				case 'n':
-					$rcArray['m'] = intval($dateValueArray[$i]);
+					$resultArray['m'] = intval($dateValueArray[$i]);
 				break;
 				// M - month, textual, 3 letters; e.g. "Jan"
 				// F - month, textual, long; e.g. "January"
@@ -1667,20 +1668,20 @@ class tx_agency_data {
 
 				// Y - year, 4 digits; e.g. "1999"
 				case 'Y':
-					$rcArray['y'] = intval($dateValueArray[$i]);
+					$resultArray['y'] = intval($dateValueArray[$i]);
 				break;
 				// y - year, 2 digits; e.g. "99"
 				case 'y':
 					$yearVal = intval($dateValueArray[$i]);
 					if($yearVal <= 11) {
-						$rcArray['y'] = '20' . $yearVal;
+						$resultArray['y'] = '20' . $yearVal;
 					} else {
-						$rcArray['y'] = '19' . $yearVal;
+						$resultArray['y'] = '19' . $yearVal;
 					}
 				break;
 			}
 		}
-		return $rcArray;
+		return $resultArray;
 	}
 
 	/** evalDate($value)
@@ -1694,11 +1695,11 @@ class tx_agency_data {
 		$dateArray = $this->fetchDate($value, $dateFormat);
 
 		if(is_numeric($dateArray['y']) && is_numeric($dateArray['m']) && is_numeric($dateArray['d'])) {
-			$rc = checkdate($dateArray['m'], $dateArray['d'], $dateArray['y']);
+			$result = checkdate($dateArray['m'], $dateArray['d'], $dateArray['y']);
 		} else {
-			$rc = FALSE;
+			$result = FALSE;
 		}
-		return $rc;
+		return $result;
 	}	// evalDate
 
 	/**
@@ -1767,10 +1768,11 @@ class tx_agency_data {
 	* @param array  $inputArr: new values
 	* @return array  updated array
 	*/
-	public function modifyDataArrForFormUpdate (array $inputArr, $cmdKey) {
-		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
-		$conf = $confObj->getConf();
-
+	public function modifyDataArrForFormUpdate (
+		array $conf,
+		array $inputArr,
+		$cmdKey
+	) {
 		if (is_array($conf[$cmdKey.'.']['evalValues.'])) {
 			foreach($conf[$cmdKey.'.']['evalValues.'] as $theField => $theValue) {
 				$listOfCommands = t3lib_div::trimExplode(',', $theValue, 1);
@@ -2101,22 +2103,22 @@ class tx_agency_data {
 	* @return boolean  TRUE if ok
 	*/
 	public function evalFileError ($error_code) {
-		$rc = FALSE;
+		$result = FALSE;
 		if ($error_code == '0') {
-			$rc = TRUE;
+			$result = TRUE;
 			// File upload okay
 		} elseif ($error_code == '1') {
-			$rc = FALSE; // filesize exceeds upload_max_filesize in php.ini
+			$result = FALSE; // filesize exceeds upload_max_filesize in php.ini
 		} elseif ($error_code == '3') {
 			return FALSE; // The file was uploaded partially
 		} elseif ($error_code == '4') {
-			$rc = TRUE;
+			$result = TRUE;
 			// No file was uploaded
 		} else {
-			$rc = TRUE;
+			$result = TRUE;
 		}
 
-		return $rc;
+		return $result;
 	}	// evalFileError
 
 	public function getInError () {

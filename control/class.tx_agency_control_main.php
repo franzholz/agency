@@ -54,7 +54,6 @@ class tx_agency_control_main {
 	public $langObj; // object of type tx_agency_lang
 	public $tca;  // object of type tx_agency_tca
 	public $marker; // object of type tx_agency_marker
-	public $extKey;
 
 
 	public function main (
@@ -66,10 +65,10 @@ class tx_agency_control_main {
 		$buttonLabelsList = '',
 		$otherLabelsList = ''
 	) {
-		$this->extKey = $pibaseObj->extKey;
 		$staticInfoObj = FALSE;
 		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
 		$error_message = '';
+		$origArray = array();
 
 		$success = $this->init(
 			$pibaseObj,
@@ -79,13 +78,14 @@ class tx_agency_control_main {
 			$adminFieldList,
 			$buttonLabelsList,
 			$otherLabelsList,
+			$origArray,
 			$staticInfoObj,
 			$errorMessage
 		);
+
 		$cmd = $this->controlData->getCmd();
 		$cmdKey = $this->controlData->getCmdKey();
 		$theTable = $this->controlData->getTable();
-		$origArray = $this->data->getOrigArray();
 		$dataArray = $this->data->getDataArray();
 		$templateCode = $this->data->getTemplateCode();
 
@@ -140,6 +140,7 @@ class tx_agency_control_main {
 		$adminFieldList,
 		$buttonLabelsList,
 		$otherLabelsList,
+		&$origArray,
 		&$staticInfoObj,
 		&$errorMessage
 	) {
@@ -156,7 +157,7 @@ class tx_agency_control_main {
 			$theTable  = $conf['table.']['name'];
 		}
 		$confObj->init($conf);
-		$this->tca->init($this->extKey, $theTable);
+		$this->tca->init($pibaseObj->extKey, $theTable);
 		$tablesObj = t3lib_div::getUserObj('&tx_agency_lib_tables');
 		$tablesObj->init($theTable);
 		$authObj = t3lib_div::getUserObj('&tx_agency_auth');
@@ -165,19 +166,19 @@ class tx_agency_control_main {
 		$this->controlData->init(
 			$confObj,
 			$pibaseObj->prefixId,
-			$this->extKey,
+			$pibaseObj->extKey,
 			$pibaseObj->piVars,
 			$theTable
 		);
 
-		if ($this->extKey != AGENCY_EXT) {
+		if ($pibaseObj->extKey != AGENCY_EXT) {
 					// Static Methods for Extensions for fetching the texts of agency
 				tx_div2007_alpha5::loadLL_fh002(
 					$pibaseObj,
 					'EXT:' . AGENCY_EXT . '/pi/locallang.xml',
 					FALSE
 				);
-		} // otherwise the labels from agency need not be included, because this has been done in
+		} // otherwise the labels from agency need not be included, because this has been done in TYPO3 pibase
 
 		if (t3lib_extMgm::isLoaded(STATIC_INFO_TABLES_EXT)) {
 				// Initialise static info library
@@ -221,7 +222,7 @@ class tx_agency_control_main {
 			$cObj,
 			$conf,
 			$pibaseObj->scriptRelPath,
-			$this->extKey
+			$pibaseObj->extKey
 		);
 		$result = $this->langObj->loadLL();
 
@@ -229,6 +230,7 @@ class tx_agency_control_main {
 
 			if ($this->controlData->isTokenValid()) {
 				$this->control->init(
+					$confObj,
 					$this->langObj,
 					$cObj,
 					$this->controlData,
@@ -254,8 +256,10 @@ class tx_agency_control_main {
 					$theTable,
 					$this->controlData,
 					$this->data,
-					$adminFieldList
+					$adminFieldList,
+					$origArray
 				);
+				$this->data->setOrigArray($origArray);
 
 				$uid = $this->data->getRecUid();
 

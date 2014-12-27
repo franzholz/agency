@@ -227,8 +227,8 @@ class tx_agency_display {
 	* @return string  the template with substituted markers
 	*/
 	protected function editForm (
-		&$markerArray,
-		$conf,
+		array &$markerArray,
+		array $conf,
 		$prefixId,
 		$cObj,
 		$langObj,
@@ -430,7 +430,12 @@ class tx_agency_display {
 					$theTable . '_form',
 					$prefixId
 				);
-			$modData = $dataObj->modifyDataArrForFormUpdate($currentArray, $cmdKey);
+			$modData =
+				$dataObj->modifyDataArrForFormUpdate(
+					$conf,
+					$currentArray,
+					$cmdKey
+				);
 			$fields = $dataObj->getFieldList() . ',' . $dataObj->getAdditionalUpdateFields();
 			$fields = implode(',', array_intersect(explode(',', $fields), t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)));
 			$fields = $controlData->getOpenFields($fields);
@@ -675,7 +680,12 @@ class tx_agency_display {
 						)
 					);
 				$fields = $controlData->getOpenFields($fields);
-				$modData = $dataObj->modifyDataArrForFormUpdate($dataArray, $cmdKey);
+				$modData =
+					$dataObj->modifyDataArrForFormUpdate(
+						$conf,
+						$dataArray,
+						$cmdKey
+					);
 				$form =
 					tx_div2007_alpha5::getClassName_fh002(
 						$theTable . '_form',
@@ -888,6 +898,8 @@ class tx_agency_display {
 		$securedArray,
 		$token
 	) {
+		$aCAuth = FALSE;
+
 		if ($conf['delete']) {
 			$templateCode = $dataObj->getTemplateCode();
 			$authObj = t3lib_div::getUserObj('&tx_agency_auth');
@@ -898,11 +910,14 @@ class tx_agency_display {
 					$theTable,
 					$dataObj->getRecUid()
 				);
-			$aCAuth =
-				$authObj->aCAuth(
-					$origArray,
-					$conf['setfixed.']['DELETE.']['_FIELDLIST']
-				);
+
+			if (is_array($origArray)) {
+				$aCAuth =
+					$authObj->aCAuth(
+						$origArray,
+						$conf['setfixed.']['DELETE.']['_FIELDLIST']
+					);
+			}
 
 			if (
 				($theTable == 'fe_users' && $GLOBALS['TSFE']->loginUser) ||
@@ -930,6 +945,12 @@ class tx_agency_display {
 							$prefixId . '[rU]" value="' .
 							$dataObj->getRecUid() .
 							'" />';
+						$markerArray['###BACK_URL###'] =
+							(
+								$controlData->getBackURL() ?
+									$controlData->getBackURL() :
+									$cObj->getTypoLink_URL($conf['loginPID'] . ',' . $GLOBALS['TSFE']->type)
+							);
 						$markerObj->addGeneralHiddenFieldsMarkers($markerArray, 'delete', $token);
 						$markerObj->setArray($markerArray);
 						$content = $this->getPlainTemplate(
@@ -1143,7 +1164,6 @@ class tx_agency_display {
 					$deleteUnusedMarkers
 				);
 		} else if ($bCheckEmpty) {
-			$langObj = t3lib_div::getUserObj('&tx_agency_lang');
 			$errorText = $langObj->getLL('internal_no_subtemplate');
 			$result = sprintf($errorText, $subpartMarker);
 		}

@@ -17,8 +17,8 @@ if (
 	}
 
 	$listType = $_EXTKEY . '';
-	$TCA['tt_content']['types']['list']['subtypes_excludelist'][$listType] = 'layout,select_key';
-	$TCA['tt_content']['types']['list']['subtypes_addlist'][$listType] = 'pi_flexform';
+	$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist'][$listType] = 'layout,select_key';
+	$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$listType] = 'pi_flexform';
 	t3lib_extMgm::addPiFlexFormValue($listType, 'FILE:EXT:' . $_EXTKEY . '/pi/flexform_ds_pi.xml');
 	t3lib_extMgm::addPlugin(array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:tt_content.list_type', $listType), 'list_type');
 }
@@ -34,19 +34,19 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 		t3lib_div::loadTCA('fe_users');
 	}
 
-	$TCA['fe_users']['columns']['username']['config']['eval'] = 'nospace,uniqueInPid,required';
-	$TCA['fe_users']['columns']['name']['config']['max'] = '100';
-	$TCA['fe_users']['columns']['company']['config']['max'] = '50';
-	$TCA['fe_users']['columns']['city']['config']['max'] = '40';
-	$TCA['fe_users']['columns']['country']['config']['max'] = '60';
-	$TCA['fe_users']['columns']['zip']['config']['size'] = '15';
-	$TCA['fe_users']['columns']['zip']['config']['max'] = '20';
-	$TCA['fe_users']['columns']['email']['config']['max'] = '255';
-	$TCA['fe_users']['columns']['telephone']['config']['max'] = '25';
-	$TCA['fe_users']['columns']['fax']['config']['max'] = '25';
-	$TCA['fe_users']['columns']['image']['config']['uploadfolder'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['uploadfolder'];
-	$TCA['fe_users']['columns']['image']['config']['max_size'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['imageMaxSize'];
-	$TCA['fe_users']['columns']['image']['config']['allowed'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['imageTypes'];
+	$GLOBALS['TCA']['fe_users']['columns']['username']['config']['eval'] = 'nospace,uniqueInPid,required';
+	$GLOBALS['TCA']['fe_users']['columns']['name']['config']['max'] = '100';
+	$GLOBALS['TCA']['fe_users']['columns']['company']['config']['max'] = '50';
+	$GLOBALS['TCA']['fe_users']['columns']['city']['config']['max'] = '40';
+	$GLOBALS['TCA']['fe_users']['columns']['country']['config']['max'] = '60';
+	$GLOBALS['TCA']['fe_users']['columns']['zip']['config']['size'] = '15';
+	$GLOBALS['TCA']['fe_users']['columns']['zip']['config']['max'] = '20';
+	$GLOBALS['TCA']['fe_users']['columns']['email']['config']['max'] = '255';
+	$GLOBALS['TCA']['fe_users']['columns']['telephone']['config']['max'] = '25';
+	$GLOBALS['TCA']['fe_users']['columns']['fax']['config']['max'] = '25';
+	$GLOBALS['TCA']['fe_users']['columns']['image']['config']['uploadfolder'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['uploadfolder'];
+	$GLOBALS['TCA']['fe_users']['columns']['image']['config']['max_size'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['imageMaxSize'];
+	$GLOBALS['TCA']['fe_users']['columns']['image']['config']['allowed'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['imageTypes'];
 
 	$addColumnarray = array(
 		'cnum' => array(
@@ -204,48 +204,48 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 
 	t3lib_extMgm::addTCAcolumns('fe_users', $addColumnarray);
 
-	$TCA['fe_users']['interface']['showRecordFieldList'] =
+	$GLOBALS['TCA']['fe_users']['interface']['showRecordFieldList'] =
 		preg_replace(
 			'/(^|,)\s*country\s*(,|$)/', '$1zone,static_info_country,country,language$2',
-			$TCA['fe_users']['interface']['showRecordFieldList']
+			$GLOBALS['TCA']['fe_users']['interface']['showRecordFieldList']
 		);
-	$TCA['fe_users']['interface']['showRecordFieldList'] =
+	$GLOBALS['TCA']['fe_users']['interface']['showRecordFieldList'] =
 		preg_replace(
 			'/(^|,)\s*title\s*(,|$)/',
 			'$1gender,status,date_of_birth,house_no,title$2',
-			$TCA['fe_users']['interface']['showRecordFieldList']
+			$GLOBALS['TCA']['fe_users']['interface']['showRecordFieldList']
 		);
 
 	if ($typoVersion < 6002000) {
 		$additionalFields = '';
-		if (strpos($TCA['fe_users']['feInterface']['fe_admin_fieldList'], 'first_name') === FALSE) {
+		if (strpos($GLOBALS['TCA']['fe_users']['feInterface']['fe_admin_fieldList'], 'first_name') === FALSE) {
 			$additionalFields = 'first_name,middle_name,last_name,';
 		}
 
-		$TCA['fe_users']['feInterface']['fe_admin_fieldList'] =
+		$GLOBALS['TCA']['fe_users']['feInterface']['fe_admin_fieldList'] =
 			preg_replace(
 				'/(^|,)\s*title\s*(,|$)/', '$1gender,' . $additionalFields . 'cnum,status,title$2',
-				$TCA['fe_users']['feInterface']['fe_admin_fieldList']
+				$GLOBALS['TCA']['fe_users']['feInterface']['fe_admin_fieldList']
 			);
-		$TCA['fe_users']['feInterface']['fe_admin_fieldList'] .=
+		$GLOBALS['TCA']['fe_users']['feInterface']['fe_admin_fieldList'] .=
 			',image,disable,date_of_birth,house_no,by_invitation,terms_acknowledged,tx_agency_password,lost_password';
-		$TCA['fe_users']['feInterface']['fe_admin_fieldList'] =
+		$GLOBALS['TCA']['fe_users']['feInterface']['fe_admin_fieldList'] =
 			preg_replace(
 				'/(^|,)\s*country\s*(,|$)/', '$1zone,static_info_country,country,language,comments$2',
-				$TCA['fe_users']['feInterface']['fe_admin_fieldList']
+				$GLOBALS['TCA']['fe_users']['feInterface']['fe_admin_fieldList']
 			);
 	}
 
-	$TCA['fe_users']['types']['0']['showitem'] =
+	$GLOBALS['TCA']['fe_users']['types']['0']['showitem'] =
 		preg_replace(
 			'/(^|,)\s*country\s*(,|$)/', '$1 zone, static_info_country, country, language$2',
-			$TCA['fe_users']['types']['0']['showitem']
+			$GLOBALS['TCA']['fe_users']['types']['0']['showitem']
 		);
-	$TCA['fe_users']['types']['0']['showitem'] =
+	$GLOBALS['TCA']['fe_users']['types']['0']['showitem'] =
 		preg_replace(
 			'/(^|,)\s*address\s*(,|$)/',
 			'$1 cnum, status, date_of_birth, house_no, address$2',
-			$TCA['fe_users']['types']['0']['showitem']
+			$GLOBALS['TCA']['fe_users']['types']['0']['showitem']
 		);
 
 	t3lib_extMgm::addToAllTCAtypes(
@@ -255,12 +255,11 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 		'after:www,'
 	);
 
-	$TCA['fe_users']['palettes']['2']['showitem'] = 'gender,--linebreak--,' . $TCA['fe_users']['palettes']['2']['showitem'];
+	$GLOBALS['TCA']['fe_users']['palettes']['2']['showitem'] = 'gender,--linebreak--,' . $GLOBALS['TCA']['fe_users']['palettes']['2']['showitem'];
 
+	$GLOBALS['TCA']['fe_users']['ctrl']['thumbnail'] = 'image';
 
-	$TCA['fe_users']['ctrl']['thumbnail'] = 'image';
-
-	$TCA['sys_agency_fe_users_limit_fe_groups'] = Array (
+	$GLOBALS['TCA']['sys_agency_fe_users_limit_fe_groups'] = Array (
 		'ctrl' => Array (
 			'title' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:sys_agency_fe_users_limit_fe_groups',
 			'label' => 'codes',
@@ -306,11 +305,11 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 			// Categories
 			// ******************************************************************
 			$GLOBALS['TCA']['sys_dmail_category'] = Array (
-				'ctrl' => $TCA['sys_dmail_category']['ctrl'],
+				'ctrl' => $GLOBALS['TCA']['sys_dmail_category']['ctrl'],
 				'interface' => Array (
 						'showRecordFieldList' => 'hidden,category'
 				),
-				'feInterface' => $TCA['sys_dmail_category']['feInterface'],
+				'feInterface' => $GLOBALS['TCA']['sys_dmail_category']['feInterface'],
 				'columns' => Array (
 					'sys_language_uid' => Array (
 						'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.language',
@@ -413,7 +412,7 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 
 		t3lib_extMgm::addTCAcolumns('fe_users', $tempCols);
 		if ($typoVersion < 6002000) {
-			$TCA['fe_users']['feInterface']['fe_admin_fieldList'] .=
+			$GLOBALS['TCA']['fe_users']['feInterface']['fe_admin_fieldList'] .=
 				',module_sys_dmail_newsletter,module_sys_dmail_category,module_sys_dmail_html';
 		}
 		t3lib_extMgm::addToAllTCATypes(
@@ -421,7 +420,7 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 		);
 	}
 
-	$TCA['fe_groups_language_overlay'] = array(
+	$GLOBALS['TCA']['fe_groups_language_overlay'] = array(
 		'ctrl' => array(
 			'title' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_groups_language_overlay',
 			'label' => 'title',
