@@ -124,7 +124,6 @@ class tx_agency_control {
 		$cmdKey = '';
 
 		if (
-			$cmd == 'edit' ||
 			$cmd == 'invite' ||
 			$cmd == 'password' ||
 			$cmd == 'infomail'
@@ -134,7 +133,8 @@ class tx_agency_control {
 			if (
 				(
 					$cmd == '' ||
-					$cmd == 'setfixed'
+					$cmd == 'setfixed' ||
+					$cmd == 'edit'
 				) &&
 				(
 					($theTable != 'fe_users' || $theUid == $GLOBALS['TSFE']->fe_user->user['uid']) &&

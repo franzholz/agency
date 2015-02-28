@@ -1,3 +1,6 @@
+2015-02-28 Franz Holzinger <franz@ttproducts.de>
+	* security fix: do not allow the edit command if the logged in FE user uid does not equal the hidden field FE[fe_users][uid]
+
 2014-12-27 Franz Holzinger <franz@ttproducts.de>
 	* incorporate modifications until sr_feuser_register 3.1.3
 
