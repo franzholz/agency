@@ -1514,7 +1514,7 @@ class tx_agency_data {
 	public function deleteRecord (
 		tx_agency_controldata $controlDataObj,
 		$theTable,
-		array &$origArray,
+		array $origArray,
 		array &$dataArray
 	) {
 		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
@@ -1557,9 +1557,11 @@ class tx_agency_data {
 									) {
 										$hookObj->init($this);
 									}
-
-
-									$hookObj->registrationProcess_beforeSaveDelete($origArray, $this);
+									$hookObj->registrationProcess_beforeSaveDelete(
+										$this->controlData,
+										$origArray,
+										$this
+									);
 								}
 							}
 						}
