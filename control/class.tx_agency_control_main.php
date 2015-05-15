@@ -90,7 +90,6 @@ class tx_agency_control_main {
 		$templateCode = $this->data->getTemplateCode();
 
 		if ($success) {
-
 			$displayObj = t3lib_div::getUserObj('tx_agency_display');
 			$content = $this->control->doProcessing(
 				$pibaseObj->cObj,
@@ -140,7 +139,7 @@ class tx_agency_control_main {
 		$adminFieldList,
 		$buttonLabelsList,
 		$otherLabelsList,
-		&$origArray,
+		array &$origArray,
 		&$staticInfoObj,
 		&$errorMessage
 	) {

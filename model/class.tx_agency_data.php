@@ -1568,7 +1568,7 @@ class tx_agency_data {
 
 						if (!$GLOBALS['TCA'][$theTable]['ctrl']['delete'] || $conf['forceFileDelete']) {
 								// If the record is being fully deleted... then remove the images or files attached.
-							$this->deleteFilesFromRecord($controlDataObj, $theTable, $this->getRecUid());
+							$this->deleteFilesFromRecord($theTable, $origArray);
 						}
 						$res =
 							$this->cObj->DBgetDelete(
@@ -1597,11 +1597,14 @@ class tx_agency_data {
 	 * @param string  $uid: record id
 	 * @return void
 	 */
-	public function deleteFilesFromRecord ($theTable, $uid) {
-		$rec = $GLOBALS['TSFE']->sys_page->getRawRecord($theTable, $uid);
+	public function deleteFilesFromRecord ($theTable, $row) {
 		$updateFields = array();
 		foreach($GLOBALS['TCA'][$theTable]['columns'] as $field => $conf) {
-			if ($conf['config']['type'] == 'group' && $conf['config']['internal_type'] == 'file') {
+			if (
+				$conf['config']['type'] == 'group' &&
+				$conf['config']['internal_type'] == 'file' &&
+				isset($row[$field])
+			) {
 				$updateFields[$field] = '';
 				$res =
 					$this->cObj->DBgetUpdate(
@@ -1612,10 +1615,13 @@ class tx_agency_data {
 						TRUE
 					);
 				unset($updateFields[$field]);
-				$delFileArr = explode(',', $rec[$field]);
+				$delFileArr = $row[$field];
+				if (!is_array($delFileArr)) {
+					$delFileArr = explode(',', $row[$field]);
+				}
 				foreach($delFileArr as $n) {
-					if ($n) {
-						$fpath = PATH_site.$conf['config']['uploadfolder'] . '/' . $n;
+					if ($n != '') {
+						$fpath = PATH_site . $conf['config']['uploadfolder'] . '/' . $n;
 						if(@is_file($fpath)) {
 							@unlink($fpath);
 						}

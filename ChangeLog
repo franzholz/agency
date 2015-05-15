@@ -1,3 +1,7 @@
+2015-05-15 Franz Holzinger <franz@ttproducts.de>
+	* bug fix: no PHP warning message for wrong array indices - illegal string offset
+	* bug fix: invite and delete
+
 2015-04-30 Franz Holzinger <franz@ttproducts.de>
 	* bug #65141: workaround for the EM in the TYPO3 backend
 

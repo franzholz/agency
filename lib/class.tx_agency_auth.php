@@ -209,9 +209,9 @@ class tx_agency_auth {
 	*/
 	public function generateToken () {
 		$time = time();
-		$rc = md5($time . getmypid() . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
+		$result = md5($time . getmypid() . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
 
-		return $rc;
+		return $result;
 	}
 }
 

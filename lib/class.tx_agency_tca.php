@@ -343,7 +343,6 @@ class tx_agency_tca {
 		) {
 			return FALSE;
 		}
-
 		$bUseMissingFields = FALSE;
 
 		if ($activity == 'email') {
@@ -381,7 +380,6 @@ class tx_agency_tca {
 		}
 
 		foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
-
 			if (t3lib_div::inList($fields, $colName) || $bUseMissingFields) {
 				$colConfig = $colSettings['config'];
 				$colContent = '';
@@ -429,12 +427,18 @@ class tx_agency_tca {
 						switch ($type) {
 							//case 'input':
 							case 'text':
-								$colContent = ($HSC ? nl2br(htmlspecialchars($mrow[$colName], ENT_QUOTES, $charset)) : $mrow[$colName]);
+								if (
+									isset($mrow[$colName]) &&
+									$mrow[$colName] != ''
+								) {
+									$colContent = ($HSC ? nl2br(htmlspecialchars($mrow[$colName], ENT_QUOTES, $charset)) : $mrow[$colName]);
+								}
 								break;
 
 							case 'check':
-								if (is_array($colConfig['items'])) {
-
+								if (
+									is_array($colConfig['items'])
+								) {
 									if (!$bStdWrap) {
 										$stdWrap['wrap'] = '<li>|</li>';
 									}
@@ -443,10 +447,15 @@ class tx_agency_tca {
 										$listWrap['wrap'] = '<ul class="agency-multiple-checked-values">|</ul>';
 									}
 									$bCheckedArray = array();
-									foreach($colConfig['items'] as $key => $value) {
-										$checked = ($mrow[$colName] & (1 << $key));
-										if ($checked) {
-											$bCheckedArray[$key] = TRUE;
+									if (
+										isset($mrow[$colName]) &&
+										$mrow[$colName] != ''
+									) {
+										foreach($colConfig['items'] as $key => $value) {
+											$checked = ($mrow[$colName] & (1 << $key));
+											if ($checked) {
+												$bCheckedArray[$key] = TRUE;
+											}
 										}
 									}
 
@@ -474,7 +483,10 @@ class tx_agency_tca {
 									$cObj->alternativeData = $colConfig['items'];
 									$colContent = $cObj->stdWrap($colContent, $listWrap);
 								} else {
-									if ($mrow[$colName]) {
+									if (
+										isset($mrow[$colName]) &&
+										$mrow[$colName] != ''
+									) {
 										$label = $langObj->getLL('yes');
 									} else {
 										$label = $langObj->getLL('no');
@@ -487,7 +499,10 @@ class tx_agency_tca {
 								break;
 
 							case 'radio':
-								if ($mrow[$colName] != '') {
+								if (
+									isset($mrow[$colName]) &&
+									$mrow[$colName] != ''
+								) {
 									$valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', $mrow[$colName]);
 									$textSchema = $theTable . '.' . $colName . '.I.';
 									$itemArray = $langObj->getItemsLL($textSchema, TRUE);
@@ -518,7 +533,10 @@ class tx_agency_tca {
 								break;
 
 							case 'select':
-								if ($mrow[$colName] != '') {
+								if (
+									isset($mrow[$colName]) &&
+									$mrow[$colName] != ''
+								) {
 									$valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', $mrow[$colName]);
 									$textSchema = $theTable . '.' . $colName . '.I.';
 									$itemArray = $langObj->getItemsLL($textSchema, TRUE);
@@ -607,26 +625,29 @@ class tx_agency_tca {
 						$itemArray = '';
 						// Configure inputs based on TCA type
 						if (in_array($type, array('check', 'radio', 'select'))) {
+							$valuesArray = array();
+							if (isset($mrow[$colName])) {
 								$valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', $mrow[$colName]);
+							}
 
-								if (!$valuesArray[0] && $colConfig['default']) {
-									$valuesArray[] = $colConfig['default'];
+							if (!$valuesArray[0] && $colConfig['default']) {
+								$valuesArray[] = $colConfig['default'];
+							}
+							$textSchema = $theTable . '.' . $colName . '.I.';
+							$itemArray = $langObj->getItemsLL($textSchema, TRUE);
+							$bUseTCA = FALSE;
+							if (!count($itemArray)) {
+								if (in_array($type, array('radio', 'select')) && $colConfig['itemsProcFunc']) {
+									$itemArray = t3lib_div::callUserFunction(
+										$colConfig['itemsProcFunc'],
+										$colConfig,
+										$this,
+										''
+									);
 								}
-								$textSchema = $theTable . '.' . $colName . '.I.';
-								$itemArray = $langObj->getItemsLL($textSchema, TRUE);
-								$bUseTCA = FALSE;
-								if (!count($itemArray)) {
-									if (in_array($type, array('radio', 'select')) && $colConfig['itemsProcFunc']) {
-										$itemArray = t3lib_div::callUserFunction(
-											$colConfig['itemsProcFunc'],
-											$colConfig,
-											$this,
-											''
-										);
-									}
-									$itemArray = $colConfig['items'];
-									$bUseTCA = TRUE;
-								}
+								$itemArray = $colConfig['items'];
+								$bUseTCA = TRUE;
+							}
 						}
 
 						switch ($type) {
@@ -676,9 +697,12 @@ class tx_agency_tca {
 									}
 									$colContent = '<ul id="' . $uidText . '" class="agency-multiple-checkboxes">';
 									if (
-										$controlData->getSubmit() ||
-										$controlData->getDoNotSave() ||
-										$cmd == 'edit'
+										isset($mrow[$colName]) &&
+										(
+											$controlData->getSubmit() ||
+											$controlData->getDoNotSave() ||
+											$cmd == 'edit'
+										)
 									) {
 										$startVal = $mrow[$colName];
 									} else {
@@ -715,16 +739,19 @@ class tx_agency_tca {
 										$prefixId
 									) .
 									'" name="FE[' . $theTable . '][' . $colName . ']" title="' .
-									$label . '"' . ($mrow[$colName] ? ' value="on" checked="checked"' : '') .
+									$label . '"' . (isset($mrow[$colName]) && $mrow[$colName] != '' ? ' value="on" checked="checked"' : '') .
 									' />';
 								}
 								break;
 
 							case 'radio':
 								if (
-									$controlData->getSubmit() ||
-									$controlData->getDoNotSave() ||
-									$cmd == 'edit'
+									isset($mrow[$colName]) &&
+									(
+										$controlData->getSubmit() ||
+										$controlData->getDoNotSave() ||
+										$cmd == 'edit'
+									)
 								) {
 									$startVal = $mrow[$colName];
 								} else {

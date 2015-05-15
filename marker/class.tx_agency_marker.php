@@ -303,8 +303,8 @@ class tx_agency_marker {
 		$cObj,
 		$extKey,
 		$theTable,
-		$row,
-		$origRow,
+		array $row,
+		array $origRow,
 		$securedArray,
 		$keepFields,
 		$requiredArray,
@@ -407,8 +407,9 @@ class tx_agency_marker {
 					}
 				}
 			} else if ($colConfig['type'] == 'check') {
-				$markerArray['###FIELD_' . $markerkey . '_CHECKED###'] = ($row[$theField]) ? 'checked' : '';
-				$markerArray['###LABEL_' . $markerkey . '_CHECKED###'] = ($row[$theField]) ? $this->langObj->getLL('yes') : $this->langObj->getLL('no');
+				$yes = (isset($row[$theField]) && $row[$theField] != '');
+				$markerArray['###FIELD_' . $markerkey . '_CHECKED###'] = ($yes ? 'checked' : '');
+				$markerArray['###LABEL_' . $markerkey . '_CHECKED###'] = ($yes ? $this->langObj->getLL('yes') : $this->langObj->getLL('no'));
 			}
 
 			if (in_array(trim($theField), $requiredArray)) {
@@ -490,10 +491,11 @@ class tx_agency_marker {
 					((isset($row['last_name']) && trim($row['last_name'])) ? ' ' . trim($row['last_name']) : '');
 				$name = trim($name);
 			}
-			if ($name == '') {
+			if ($name == '' && isset($row['uid'])) {
 				$name = 'id(' . $row['uid'] . ')';
 			}
 		}
+		$name = htmlspecialchars($name);
 
 		$this->tmpTcaMarkers = NULL; // reset function replaceVariables
 		$otherLabelsList = $this->getOtherLabelsList();
@@ -505,14 +507,36 @@ class tx_agency_marker {
 		$dataArray = array();
 		$dataArray['row'] = $row;
 		$this->setReplaceData($dataArray);
-		$username = ($row['username'] != '' ? $row['username'] : $row['email']);
+		$outputArray = array('username' => '', 'email' => '', 'password' => '');
+		foreach ($outputArray as $field => $value) {
+			if (
+				isset($row[$field]) &&
+				$row[$field] != ''
+			) {
+				$outputArray[$field] = htmlspecialchars($row[$field]); // assign it to avoid the "Illegal string offset" warning
+			}
+		}
+
+		if (
+			$outputArray['username'] == ''
+		) {
+			$outputArray['username'] = $outputArray['email'];
+		}
 
 		$genderLabelArray = array();
 		$vDear = 'v_dear';
-		if ($row['gender'] == '0' || $row['gender'] == 'm') {
-			$vDear = 'v_dear_male';
-		} else if ($row['gender'] == '1' || $row['gender'] == 'f') {
-			$vDear = 'v_dear_female';
+		if (isset($row['gender'])) {
+			if (
+				$row['gender'] == '0' ||
+				$row['gender'] == 'm'
+			) {
+				$vDear = 'v_dear_male';
+			} else if (
+				$row['gender'] == '1' ||
+				$row['gender'] == 'f'
+			) {
+				$vDear = 'v_dear_female';
+			}
 		}
 		$genderLabelArray['v_dear'] = $vDear;
 		foreach($otherLabels as $value) {
@@ -525,10 +549,10 @@ class tx_agency_marker {
 			$label = sprintf(
 				$langText,
 				$this->controlData->getPidTitle(),
-				htmlspecialchars($username),
-				htmlspecialchars($name),
-				htmlspecialchars($row['email']),
-				$row['password']
+				$outputArray['username'],
+				$name,
+				$outputArray['email'],
+				$outputArray['password']
 			);
 			$label = preg_replace_callback('/{([a-z_]+):([a-zA-Z0-9_]+)}/', array($this, 'replaceVariables'), $label);
 			$markerkey = $cObj->caseshift($value, 'upper');

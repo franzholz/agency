@@ -1066,7 +1066,7 @@ class tx_agency_display {
 		array $origArray,
 		$theTable,
 		$prefixId,
-		$row = '',
+		array $row,
 		$securedArray,
 		$bCheckEmpty = TRUE,
 		$failure = ''

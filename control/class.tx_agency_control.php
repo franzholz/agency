@@ -108,8 +108,15 @@ class tx_agency_control {
 		$cmd = $controlData->getCmd();
 		$dataArray = $dataObj->getDataArray();
 		$feUserdata = $controlData->getFeUserData();
+		$theUid = 0;
 
-		$theUid = ($dataArray['uid'] ? $dataArray['uid'] : ($feUserdata['rU'] ? $feUserdata['rU'] : (!in_array($cmd, $this->noLoginCommands) ? $GLOBALS['TSFE']->fe_user->user['uid'] : 0 )));
+		if (is_array($dataArray) && $dataArray['uid']) {
+			$theUid = $dataArray['uid'];
+		} else if (is_array($feUserdata) && $feUserdata['rU']) {
+			$theUid = $feUserdata['rU'];
+		} else if (!in_array($cmd, $this->noLoginCommands)) {
+			$theUid = $GLOBALS['TSFE']->fe_user->user['uid'];
+		}
 
 		if ($theUid) {
 			$dataObj->setRecUid($theUid);
@@ -129,23 +136,34 @@ class tx_agency_control {
 			$cmd == 'infomail'
 		) {
 			$cmdKey = $cmd;
-		} else {
+		} else if (
+			isset($origArray['uid']) &&
+			(
+				$theTable != 'fe_users' ||
+				$theUid == $GLOBALS['TSFE']->fe_user->user['uid'] || // for security reason: do not allow the change of other user records
+				$origArray['disable'] // needed for setfixed after INVITE
+			)
+		) {
 			if (
 				(
 					$cmd == '' ||
 					$cmd == 'setfixed' ||
 					$cmd == 'edit'
-				) &&
-				(
-					($theTable != 'fe_users' || $theUid == $GLOBALS['TSFE']->fe_user->user['uid']) &&
-					count($origArray)
 				)
 			) {
 				$cmdKey = 'edit';
-			} else {
-				$cmdKey = 'create';
+			} else if (
+				$cmd == 'delete'
+			) {
+				$cmdKey = 'delete';
 			}
 		}
+
+		if ($cmdKey == '') {
+			$origArray = array(); // do not use the read in original array
+			$cmdKey = 'create';
+		}
+
 		$controlData->setCmdKey($cmdKey);
 
 		if (!$theUid) {
@@ -835,7 +853,6 @@ class tx_agency_control {
 					}
 					$feuData = $controlData->getFeUserData();
 					$origArray = $dataObj->parseIncomingData($origArray, FALSE);
-
 					$content = $setfixedObj->processSetFixed(
 						$conf,
 						$cObj,

@@ -145,7 +145,6 @@ class tx_agency_setfixed {
 			} else {
 				$theAuthCode = $authObj->setfixedHash($row, $fieldList);
 			}
-
 			if (
 				!strcmp($authObj->getAuthCode(), $theAuthCode) &&
 				!($sFK == 'APPROVE' && count($origArray) && $origArray['disable'] == '0')
@@ -184,7 +183,7 @@ class tx_agency_setfixed {
 						// If the record is fully deleted... then remove the image attached.
 						$dataObj->deleteFilesFromRecord(
 							$theTable,
-							$uid
+							$row
 						);
 					}
 					$res = $cObj->DBgetDelete(
@@ -389,7 +388,7 @@ class tx_agency_setfixed {
 									$origArray,
 									$theTable,
 									$prefixId,
-									'',
+									array(),
 									''
 								);
 							$hasError = TRUE;
@@ -578,7 +577,7 @@ class tx_agency_setfixed {
 									$origArray,
 									$theTable,
 									$prefixId,
-									'',
+									array(),
 									''
 								);
 								$hasError = TRUE;
@@ -604,7 +603,7 @@ class tx_agency_setfixed {
 					$origArray,
 					$theTable,
 					$prefixId,
-					'',
+					array(),
 					''
 				);
 			}
