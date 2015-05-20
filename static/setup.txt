@@ -148,6 +148,7 @@ plugin.tx_agency {
 	enableEmailConfirmation = {$plugin.tx_agency.enableEmailConfirmation}
 	enableAutoLoginOnConfirmation = {$plugin.tx_agency.enableAutoLoginOnConfirmation}
 	enableAutoLoginOnCreate = {$plugin.tx_agency.enableAutoLoginOnCreate}
+	enableAutoLoginOnInviteConfirmation = {$plugin.tx_agency.enableAutoLoginOnInviteConfirmation}
 	enableAdminReview = {$plugin.tx_agency.enableAdminReview}
 	autoLoginRedirect_url = {$plugin.tx_agency.autoLoginRedirect_url}
 

@@ -378,12 +378,22 @@ class tx_agency_controldata {
 	}
 
 	static public function enableAutoLoginOnConfirmation (
-		array $conf
+		array $conf,
+		$cmdKey = ''
 	) {
-		$result = (
-			$conf['enableAutoLoginOnConfirmation'] &&
-			!self::enableAutoLoginOnCreate($conf)
-		);
+		$result = FALSE;
+
+		if ($conf['enableAutoLoginOnConfirmation']) {
+			$result = TRUE;
+		}
+
+		if ($cmdKey == '' || $cmdKey == 'invite') {
+			$result |= $conf['enableAutoLoginOnInviteConfirmation'];
+		}
+
+		if ($cmdKey == 'create') {
+			$result &= !self::enableAutoLoginOnCreate($conf);
+		}
 
 		return $result;
 	}
@@ -541,6 +551,7 @@ class tx_agency_controldata {
 	* @return	void
 	*/
 	public function generatePassword (
+		$cmdKey,
 		array $conf,
 		array $cmdConf,
 		array &$dataArray,
@@ -567,7 +578,7 @@ class tx_agency_controldata {
 		}
 
 		if (
-			self::enableAutoLoginOnConfirmation($conf)
+			self::enableAutoLoginOnConfirmation($conf, $cmdKey)
 		) {
 			$password = $this->readPassword();
 			$cryptedPassword = '';

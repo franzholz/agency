@@ -94,7 +94,13 @@ class tx_agency_setfixed {
 
 		if (
 			$theTable == 'fe_users' &&
-			!$row['by_invitation'] &&
+			(
+				!$row['by_invitation'] ||
+				(
+					$cmdKey == 'invite' &&
+					!$controlData->enableAutoLoginOnConfirmation($conf, $cmdKey)
+				)
+			) &&
 			!$row['lost_password']
 		) {
 			$usesPassword = TRUE;
@@ -147,10 +153,18 @@ class tx_agency_setfixed {
 			}
 			if (
 				!strcmp($authObj->getAuthCode(), $theAuthCode) &&
-				!($sFK == 'APPROVE' && count($origArray) && $origArray['disable'] == '0')
+				!(
+					$sFK == 'APPROVE' &&
+					count($origArray) &&
+					$origArray['disable'] == '0'
+				)
 			) {
 				if ($sFK == 'EDIT') {
-					$markerObj->addGeneralHiddenFieldsMarkers($markerArray, $cmd, $token);
+					$markerObj->addGeneralHiddenFieldsMarkers(
+						$markerArray,
+						$cmd,
+						$token
+					);
 					$content = $displayObj->editScreen(
 						$markerArray,
 						$conf,
@@ -401,6 +415,7 @@ class tx_agency_setfixed {
 					) {
 						$setfixedSuffix .= '_REVIEW';
 					}
+
 					if (!$content) {
 						$subpartMarker = '###TEMPLATE_' . SETFIXED_PREFIX . 'OK_' . $setfixedSuffix . '###';
 						$content =
@@ -539,7 +554,7 @@ class tx_agency_setfixed {
 							$content = $errorContent;
 						} else if (
 								// Auto-login on confirmation
-							$controlData->enableAutoLoginOnConfirmation($conf) &&
+							$controlData->enableAutoLoginOnConfirmation($conf, $cmdKey) &&
 							$usesPassword &&
 							(
 								($sFK == 'APPROVE' && !$conf['enableAdminReview']) ||

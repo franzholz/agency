@@ -129,6 +129,7 @@ class tx_agency_email {
 						$outGoingData['lost_password'] = '1';
 
 						$controlData->generatePassword(
+							$cmdKey,
 							$conf,
 							$conf[$cmdKey . '.'],
 							$outGoingData,

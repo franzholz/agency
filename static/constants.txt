@@ -181,6 +181,9 @@ plugin.tx_agency {
     # cat=plugin.tx_agency/enable; type=boolean; label= Enable auto-login on account creation: If set and if email confirmation is not set, the user will be automatically logged in upon creation of his(her) account.
   enableAutoLoginOnCreate = 0
 
+    # cat=plugin.tx_agency/enable; type=boolean; label= Enable auto-login on confirmation after invite: If set, the user will be automatically logged in upon confirmation of his(her) invitation.
+  enableAutoLoginOnInviteConfirmation = 1
+
     # cat=plugin.tx_agency//; type=string; label= Redirect_url on login: Url to which the user may be redirected to upon login, when auto login is enabled.
   autoLoginRedirect_url =
 

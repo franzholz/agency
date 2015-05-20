@@ -505,6 +505,7 @@ class tx_agency_control {
 						$cmdKey == 'create'
 					) {
 						$controlData->generatePassword(
+							$cmdKey,
 							$conf,
 							$conf[$cmdKey . '.'],
 							$finalDataArray,
@@ -1113,12 +1114,15 @@ class tx_agency_control {
 				'TYPO3\\CMS\\Saltedpasswords\\SaltedPasswordService',
 			);
 
-			if ($conf['authServiceClass']) {
+			if (
+				$conf['authServiceClass'] != '' &&
+				$conf['authServiceClass'] != '{$plugin.tx_agency.authServiceClass}'
+			) {
 				$moreAuthServiceClasses = t3lib_div::trimExplode(',', $conf['authServiceClass']);
 				$authServiceClassArray = array_merge($authServiceClassArray, $moreAuthServiceClasses);
 			}
 
-				// Check authentication
+				// Check authentification
 			if (
 				in_array($authServiceClass, $authServiceClassArray)
 			) {

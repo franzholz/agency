@@ -92,7 +92,7 @@ class tx_agency_pi_base extends tslib_pibase {
 		if (
 			$loginSecurityLevel == 'rsa' ||
 			(
-				tx_agency_controldata::enableAutoLoginOnConfirmation($conf)
+				tx_agency_controldata::enableAutoLoginOnConfirmation($conf, '')
 			)
 		) {
 			$requiredExtensions[] = 'rsaauth';
