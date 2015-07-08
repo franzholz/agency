@@ -75,6 +75,9 @@ class tx_agency_controldata {
 	protected $storageSecurity;
 		// Supported captcha extensions
 	protected $captchaExtensions = array();
+		// support for repeated password (password_again internal field)
+	protected $usePasswordAgain = FALSE;
+	protected $usePassword = FALSE;
 
 
 	public function init (
@@ -85,6 +88,9 @@ class tx_agency_controldata {
 		$theTable
 	) {
 		$conf = $confObj->getConf();
+		if ($theTable == 'fe_users') {
+			$this->initPasswordField($conf);
+		}
 		$this->confObj = $confObj;
 		$this->setDefaultPid($conf);
 
@@ -107,7 +113,10 @@ class tx_agency_controldata {
 		$this->site_url = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
 
 		if ($GLOBALS['TSFE']->absRefPrefix) {
-			if(strpos($GLOBALS['TSFE']->absRefPrefix, 'http://') === 0 || strpos($GLOBALS['TSFE']->absRefPrefix, 'https://') === 0) {
+			if(
+				strpos($GLOBALS['TSFE']->absRefPrefix, 'http://') === 0 ||
+				strpos($GLOBALS['TSFE']->absRefPrefix, 'https://') === 0
+			) {
 				$this->site_url = $GLOBALS['TSFE']->absRefPrefix;
 			} else {
 				$this->site_url = $this->site_url . ltrim($GLOBALS['TSFE']->absRefPrefix, '/');
@@ -209,7 +218,7 @@ class tx_agency_controldata {
 			$this->setFeUserData($feUserData);
 		}
 
-			// Establishing compatibility with Direct Mail extension
+			// Establishing compatibility with the extension Direct Mail
 		$piVarArray = array('rU', 'aC', 'cmd', 'sFK');
 		foreach ($piVarArray as $pivar) {
 			$value = htmlspecialchars(t3lib_div::_GP($pivar));
@@ -217,6 +226,7 @@ class tx_agency_controldata {
 				$this->setFeUserData($value, $pivar);
 			}
 		}
+
 		$aC = $this->getFeUserData('aC');
 		$authObj->setAuthCode($aC);
 			// Query variable &prefixId[cmd] overrides query variable &cmd, if not empty
@@ -235,6 +245,14 @@ class tx_agency_controldata {
 			// Cleanup input values
 		$feUserData = $this->getFeUserData();
 		$this->secureInput($feUserData);
+
+		if ($this->getUsePassword()) {
+			// Establishing compatibility with the extension Felogin
+			$value = t3lib_div::_GP('pass');
+			if ($value != '') {
+				$this->writePassword($value, '');
+			}
+		}
 
 			// Get the data for the uid provided in query parameters
 		$bRuIsInt = tx_div2007_core::testInt($feUserData['rU']);
@@ -327,7 +345,7 @@ class tx_agency_controldata {
 				// Erase all FE user data when the token is not valid
 			$this->setFeUserData(array());
 				// Erase any stored password
-			$this->writePassword('');
+			$this->writePassword('', '');
 		}
 
 			// Generate a new token for the next created forms
@@ -338,6 +356,25 @@ class tx_agency_controldata {
 	public function getConf () {
 		$result = $this->confObj->getConf();
 		return $result;
+	}
+
+	public function initPasswordField ($conf) {
+		$this->usePassword = FALSE;
+		$this->usePasswordAgain = FALSE;
+		if (isset($conf['create.']['evalValues.']['password'])) {
+			$this->usePassword = TRUE;
+			if (t3lib_div::inList($conf['create.']['evalValues.']['password'], 'twice')) {
+				$this->usePasswordAgain = TRUE;
+			}
+		}
+	}
+
+	public function getUsePassword () {
+		return $this->usePassword;
+	}
+
+	public function getUsePasswordAgain () {
+		return $this->usePasswordAgain;
 	}
 
 	public function setDefaultPid ($conf) {
@@ -527,20 +564,15 @@ class tx_agency_controldata {
 	public function securePassword (array &$row) {
 		$data = array();
 			// Decrypt incoming password (and eventually other encrypted fields)
-		$passwordDecrypted = $this->getTransmissionSecurity()->decryptIncomingFields($row);
+		$passwordRow = array('password' => $this->readPassword());
+		$message = '';
+		$passwordDecrypted = $this->getTransmissionSecurity()->decryptIncomingFields($passwordRow, $message);
 			// Collect secured fields
-		$securedFieldArray = $this->getSecuredFieldArray();
-		foreach ($securedFieldArray as $securedField) {
-			if (isset($row[$securedField]) && !empty($row[$securedField])) {
-				$data[$securedField] = $row[$securedField];
-				if ($securedField == 'password' || $securedField == 'password_again') {
-					unset($row[$securedField]);
-				}
-			}
-		}
-			// Update FE user session data if required
-		if (!empty($data)) {
-			$this->writeSessionData($data);
+
+		if ($passwordDecrypted) {
+			$this->writePassword($passwordRow['password'], $passwordRow['password']);
+		} else if ($message == '') {
+			$this->writePassword($passwordRow['password'], $row['password_again']);
 		}
 	}
 
@@ -573,7 +605,7 @@ class tx_agency_controldata {
 					);
 				$dataArray['password'] = $generatedPassword;
 				$dataArray['password_again'] = $generatedPassword;
-				$this->writePassword($generatedPassword);
+				$this->writePassword($generatedPassword, $generatedPassword);
 			}
 		}
 
@@ -602,13 +634,16 @@ class tx_agency_controldata {
 	* @param	string	$password: the password
 	* @return	void
 	*/
-	protected function writePassword ($password) {
+	protected function writePassword ($password, $passwordAgain = '') {
 		$sessionData = $this->readSessionData();
 		if ($password == '') {
 			$sessionData['password'] = '__UNSET';
 			$sessionData['password_again'] = '__UNSET';
 		} else {
 			$sessionData['password'] = $password;
+			if ($passwordAgain != '') {
+				$sessionData['password_again'] = $passwordAgain;
+			}
 		}
 		$this->writeSessionData($sessionData);
 	}
@@ -732,6 +767,7 @@ class tx_agency_controldata {
 				$data['token'] = $token;
 			}
 		}
+
 		if ($keepRedirectUrl && !isset($data['redirect_url'])) {
 			$redirect_url = $this->readRedirectUrl();
 			if ($redirect_url != '') {
@@ -741,16 +777,18 @@ class tx_agency_controldata {
 		$extKey = $this->getExtKey();
 			// Read all session data
 		$allSessionData = $this->readSessionData(TRUE);
-		if (is_array($allSessionData[$extKey])) {
+
+		if (
+			isset($allSessionData[$extKey]) &&
+			is_array($allSessionData[$extKey])
+		) {
 			$keys = array_keys($allSessionData[$extKey]);
 			if ($clearSession) {
 				foreach ($keys as $key) {
 					unset($allSessionData[$extKey][$key]);
 				}
 			} else {
-				$typoVersion = tx_div2007_core::getTypoVersion();
-
-				if ($typoVersion < 4007000) {
+				if (version_compare(TYPO3_version, '4.7.0', '<')) {
 					foreach ($keys as $key) {
 						if ($data[$key] == '__UNSET') {
 							unset($data[$key]);
@@ -759,12 +797,10 @@ class tx_agency_controldata {
 					}
 				}
 			}
-
-			$allSessionData[$extKey] = t3lib_div::array_merge_recursive_overrule($allSessionData[$extKey], $data);
+			tx_div2007_core::mergeRecursiveWithOverrule($allSessionData[$extKey], $data);
 		} else {
 			$allSessionData[$extKey] = $data;
 		}
-
 		$GLOBALS['TSFE']->fe_user->setKey('ses', 'feuser', $allSessionData);
 			// The feuser session data shall not get lost when coming back from external scripts
 		$GLOBALS['TSFE']->fe_user->storeSessionData();

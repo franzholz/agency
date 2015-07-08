@@ -149,7 +149,10 @@ class tx_agency_pi_base extends tslib_pibase {
 				// Check if we can get a backend from rsaauth
 			if (t3lib_extMgm::isLoaded('rsaauth')) {
 					// rsaauth in TYPO3 4.5 misses autoload
-				if (!class_exists('tx_rsaauth_backendfactory')) {
+				if (
+					version_compare(TYPO3_version, '6.2.0', '<') &&
+					!class_exists('tx_rsaauth_backendfactory')
+				) {
 					require_once(t3lib_extMgm::extPath('rsaauth') . 'sv1/backends/class.tx_rsaauth_backendfactory.php');
 					require_once(t3lib_extMgm::extPath('rsaauth') . 'sv1/storage/class.tx_rsaauth_storagefactory.php');
 				}

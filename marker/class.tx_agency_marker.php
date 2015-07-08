@@ -282,8 +282,15 @@ class tx_agency_marker {
 	* @return string  FE[tablename][fieldname]  ... POST var to transmit the entries with the form
 	*/
 	public function getFieldName ($theTable, $theField) {
-		$rc = 'FE[' . $theTable . '][' . $theField . ']';
-		return $rc;
+		$result = 'FE[' . $theTable . '][' . $theField . ']';
+
+		if (
+			$theField == 'password' &&
+			(version_compare(TYPO3_version, '6.2.0', '>='))
+		) {
+			$result = 'pass'; // make the RSA script working: FrontendLoginFormRsaEncryption.js
+		}
+		return $result;
 	}
 
 	/**
@@ -832,12 +839,12 @@ class tx_agency_marker {
 	* @param array  $markerArray: the input marker array
 	* @return void
 	*/
-	public function addPasswordTransmissionMarkers (&$markerArray) {
+	public function addPasswordTransmissionMarkers (&$markerArray, $checkPasswordAgain) {
 		if (!$markerArray) {
  			$markerArray = $this->getArray();
  		}
  		if ($this->controlData->getTable() == 'fe_users') {
- 			$this->controlData->getTransmissionSecurity()->getMarkers($markerArray);
+ 			$this->controlData->getTransmissionSecurity()->getMarkers($markerArray, $checkPasswordAgain);
  		}
 	}
 

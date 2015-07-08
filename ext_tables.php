@@ -3,40 +3,13 @@ if (!defined ('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
-$typoVersion = 0;
-
-if (class_exists('tx_div2007_core')) {
-	$typoVersion = tx_div2007_core::getTypoVersion();
-} else { // workaround for bug #55727
-	$result = FALSE;
-	$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility';
-	if (
-		class_exists($callingClassName) &&
-		method_exists($callingClassName, 'convertVersionNumberToInteger')
-	) {
-		$result = call_user_func($callingClassName . '::convertVersionNumberToInteger', TYPO3_version);
-	} else if (
-		class_exists('t3lib_utility_VersionNumber') &&
-		method_exists('t3lib_utility_VersionNumber', 'convertVersionNumberToInteger')
-	) {
-		$result = t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version);
-	} else if (
-		class_exists('t3lib_div') &&
-		method_exists('t3lib_div', 'int_from_ver')
-	) {
-		$result = t3lib_div::int_from_ver(TYPO3_version);
-	}
-
-	$typoVersion = $result;
-}
-
 if (
 	TYPO3_MODE == 'BE' &&
 	!$loadTcaAdditions
 ) {
 	t3lib_extMgm::addStaticFile($_EXTKEY, 'static/', 'Agency Registration');
 
-	if ($typoVersion < 6001000) {
+	if (version_compare(TYPO3_version, '6.1.0', '<')) {
 
 		t3lib_div::loadTCA('tt_content');
 	}
@@ -50,7 +23,7 @@ if (
 
 if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 
-	if ($typoVersion < 6001000) {
+	if (version_compare(TYPO3_version, '6.1.0', '<')) {
 
 		/**
 		* Setting up country, country subdivision, preferred language, first_name and last_name in fe_users table
@@ -241,7 +214,7 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 			$GLOBALS['TCA']['fe_users']['interface']['showRecordFieldList']
 		);
 
-	if ($typoVersion < 6002000) {
+	if (version_compare(TYPO3_version, '6.2.0', '<')) {
 		$additionalFields = '';
 		if (strpos($GLOBALS['TCA']['fe_users']['feInterface']['fe_admin_fieldList'], 'first_name') === FALSE) {
 			$additionalFields = 'first_name,middle_name,last_name,';
@@ -436,7 +409,7 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 		);
 
 		t3lib_extMgm::addTCAcolumns('fe_users', $tempCols);
-		if ($typoVersion < 6002000) {
+		if (version_compare(TYPO3_version, '6.2.0', '<')) {
 			$GLOBALS['TCA']['fe_users']['feInterface']['fe_admin_fieldList'] .=
 				',module_sys_dmail_newsletter,module_sys_dmail_category,module_sys_dmail_html';
 		}

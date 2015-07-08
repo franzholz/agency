@@ -22,7 +22,7 @@ CREATE TABLE fe_users (
 	module_sys_dmail_html tinyint(3) unsigned DEFAULT '0' NOT NULL,
 	terms_acknowledged tinyint(4) unsigned DEFAULT '0' NOT NULL,
 	token varchar(32) DEFAULT '' NOT NULL,
-	tx_agency_password blob NOT NULL
+	tx_agency_password blob NOT NULL,
 	lost_password tinyint(4) unsigned DEFAULT '0' NOT NULL,
 );
 

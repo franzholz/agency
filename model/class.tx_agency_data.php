@@ -453,6 +453,7 @@ class tx_agency_data {
 					) {
 						unset($dataArray[$theField]);
 					}
+
 					if (
 						isset($dataArray[$theField . '_again']) &&
 						empty($dataArray[$theField . '_again']) &&
@@ -462,7 +463,12 @@ class tx_agency_data {
 					}
 				}
 
-				if (isset($dataArray[$theField]) || isset($dataArray[$theField . '_again']) || !count($origArray) || !isset($origArray[$theField])) {
+				if (
+					isset($dataArray[$theField]) ||
+					isset($dataArray[$theField . '_again']) ||
+					!count($origArray) ||
+					!isset($origArray[$theField])
+				) {
 					foreach ($listOfCommands as $k => $cmd) {
 						$cmdParts = preg_split('/\[|\]/', $cmd); // Point is to enable parameters after each command enclosed in brackets [..]. These will be in position 1 in the array.
 						$theCmd = trim($cmdParts[0]);

@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2013 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2007-2015 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -781,18 +781,10 @@ class tx_agency_setfixed {
 	/**
 	 *  Store the setfixed vars and return a replacement hash
 	 */
-	public function storeFixedPiVars ($vars) {
+	public function storeFixedPiVars (array $params) {
 
-			// Create a unique hash value
-		if (class_exists('t3lib_cacheHash')) {
-			$cacheHash = t3lib_div::makeInstance('t3lib_cacheHash');
-			$regHash_calc = $cacheHash->calculateCacheHash($vars);
-			$regHash_calc = substr($regHash_calc, 0, 20);
-		} else {
-				// t3lib_div::cHashParams is deprecated in TYPO3 4.7
-			$regHash_array = t3lib_div::cHashParams(t3lib_div::implodeArrayForUrl('', $vars));
-			$regHash_calc = t3lib_div::shortMD5(serialize($regHash_array), 20);
-		}
+		$regHash_calc = tx_div2007_core::generateHash($params, 20);
+
 			// and store it with a serialized version of the array in the DB
 		$res =
 			$GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -810,7 +802,7 @@ class tx_agency_setfixed {
 				'md5hash' => $regHash_calc,
 				'tstamp' => time(),
 				'type' => 99,
-				'params' => serialize($vars)
+				'params' => serialize($params)
 			);
 
 			$GLOBALS['TYPO3_DB']->exec_INSERTquery(

@@ -494,13 +494,12 @@ class tx_agency_display {
 		}
 
 		$templateCode = $dataObj->getTemplateCode();
-
 		$currentArray = array_merge($origArray, $dataArray);
 
-		if ($theTable == 'fe_users') {
-			if (!isset($currentArray['password'])) {
-				$currentArray['password'] = '';
-			}
+		if ($controlData->getUsePassword() && !isset($currentArray['password'])) {
+			$currentArray['password'] = '';
+		}
+		if ($controlData->getUsePasswordAgain()) {
 			$currentArray['password_again'] = $currentArray['password'];
 		}
 
@@ -539,8 +538,9 @@ class tx_agency_display {
 			}
 
 			if ($bNeedUpdateJS) {
-				$markerObj->addPasswordTransmissionMarkers($markerArray);
+				$markerObj->addPasswordTransmissionMarkers($markerArray, $controlData->getUsePasswordAgain());
 			}
+
 			$templateCode = $cObj->getSubpart($templateCode, $subpartKey);
 			$failure = t3lib_div::_GP('noWarnings') ? FALSE : $controlData->getFailure();
 
@@ -575,6 +575,7 @@ class tx_agency_display {
 					'',
 					TRUE
 				);
+
 			$markerObj->addStaticInfoMarkers(
 				$markerArray,
 				$prefixId,
@@ -707,6 +708,7 @@ class tx_agency_display {
 					'"></script>';
 			}
 		}
+
 		return $content;
 	} // createScreen
 

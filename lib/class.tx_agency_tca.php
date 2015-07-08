@@ -42,12 +42,9 @@
  */
 
 class tx_agency_tca {
-	public $typoVersion;
-
 	public function init ($extKey, $theTable) {
 
-		$this->typoVersion = tx_div2007_core::getTypoVersion();
-		if ($this->typoVersion < 6002000) {
+		if (version_compare(TYPO3_version, '6.2.0', '<')) {
 
 				// Get the table definition
 			tx_div2007_alpha::loadTcaAdditions_fh001(array($extKey));
@@ -344,6 +341,7 @@ class tx_agency_tca {
 			return FALSE;
 		}
 		$bUseMissingFields = FALSE;
+		$useXHTML = $GLOBALS['TSFE']->config['config']['xhtmlDoctype'] != '';
 
 		if ($activity == 'email') {
 			$bUseMissingFields = TRUE;
@@ -563,7 +561,7 @@ class tx_agency_tca {
 									}
 
 									if ($colConfig['foreign_table']) {
-										if ($this->typoVersion < 6002000) {
+										if (version_compare(TYPO3_version, '6.2.0', '<')) {
 											t3lib_div::loadTCA($colConfig['foreign_table']);
 										}
 										$reservedValues = array();
@@ -664,7 +662,7 @@ class tx_agency_tca {
 									$label = htmlspecialchars($label, ENT_QUOTES, $charset);
 									$colContent .= ' value="' . $label . '"';
 								}
-								$colContent .= ' />';
+								$colContent .= ($useXHTML ? ' /' : ' ' ) . '>';
 								break;
 
 							case 'text':
@@ -721,7 +719,7 @@ class tx_agency_tca {
 											) .
 											' id="' . $uidText . '-' . $key .
 											'" name="FE[' . $theTable . '][' . $colName . '][]" value="' . $key . '"' .
-											$checked . ' /><label for="' . $uidText . '-' . $key . '">' .
+											$checked . ($useXHTML ? ' /' : ' ' ) . '><label for="' . $uidText . '-' . $key . '">' .
 											$label .
 											'</label></li>';
 									}
@@ -740,7 +738,7 @@ class tx_agency_tca {
 									) .
 									'" name="FE[' . $theTable . '][' . $colName . ']" title="' .
 									$label . '"' . (isset($mrow[$colName]) && $mrow[$colName] != '' ? ' value="on" checked="checked"' : '') .
-									' />';
+									($useXHTML ? ' /' : ' ' ) . '>';
 								}
 								break;
 
@@ -785,7 +783,7 @@ class tx_agency_tca {
 											$prefixId
 										) .
 										'-' . $i . '" name="FE[' . $theTable . '][' . $colName . ']"' .
-											' value="' . $value . '" ' . ($value == $startVal ? ' checked="checked"' : '') . ' />' .
+											' value="' . $value . '" ' . ($value == $startVal ? ' checked="checked"' : '') . ($useXHTML ? ' /' : ' ' ) . '>' .
 											'<label for="' .
 											tx_div2007_alpha5::getClassName_fh002(
 												$colName,
@@ -803,38 +801,66 @@ class tx_agency_tca {
 
 							case 'select':
 								$colContent ='';
-								if ($colConfig['maxitems'] > 1) {
-									$multiple = '[]" multiple="multiple';
-								} else {
-									$multiple = '';
+								$attributeMultiple = '';
+								$attributeClass = '';
+
+								if (
+									$colConfig['maxitems'] > 1 &&
+									(
+										$colName != 'usergroup' ||
+										$conf['allowMultipleUserGroupSelection'] ||
+										$theTable != 'fe_users'
+									)
+								) {
+									if ($useXHTML) {
+										$attributeMultiple = ' multiple="multiple"';
+									} else {
+										$attributeMultiple = ' multiple';
+									}
 								}
-								if ($theTable == 'fe_users' && $colName == 'usergroup' && !$conf['allowMultipleUserGroupSelection']) {
-									$multiple = '';
+
+								$attributeIdName = ' id="' .
+									tx_div2007_alpha5::getClassName_fh002(
+										$colName,
+										$prefixId
+									) .
+									'" name="FE[' . $theTable . '][' . $colName . ']';
+
+								if ($attributeMultiple != '') {
+									$attributeIdName .= '[]';
+								}
+								$attributeIdName .= '"';
+
+								$attributeTitle = ' title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($colName, 'upper') . '###"';
+
+								if ($attributeMultiple != '') {
+									$attributeClass = ' class="' . tx_div2007_alpha5::getClassName_fh002(
+										'multiple-checkboxes',
+										$prefixId
+									) . '"';
 								}
 
 								if ($colConfig['renderMode'] == 'checkbox') {
 									$colContent .= '
-										<input id="' .
-											tx_div2007_alpha5::getClassName_fh002(
-												$colName,
-												$prefixId
-											) .
-										'" name="FE[' . $theTable . '][' . $colName . ']" value="" type="hidden" />';
-									$colContent .= '
-										<dl class="' .
-										tx_div2007_alpha5::getClassName_fh002(
-											'multiple-checkboxes',
-											$prefixId
-										) .
-										'" title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($colName, 'upper') . '###">';
+										<input' . $attributeIdName . ' value="" type="hidden" />';
+										$colContent .= '
+											<dl ';
+										if ($attributeClass != '') {
+											$colContent .= $attributeClass;
+										}
+										$colContent .=
+											$attributeTitle .
+											($useXHTML ? ' /' : ' ' ) . '>';
 								} else {
-									$colContent .= '<select id="'.
-									tx_div2007_alpha5::getClassName_fh002(
-										'multiple-checkboxes',
-										$prefixId
-									) .
-									'" name="FE[' . $theTable . '][' . $colName . ']' . $multiple . '" title="###TOOLTIP_' .
-									(($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($colName, 'upper') . '###">';
+									$colContent .= '<select' . $attributeIdName;
+									if ($attributeClass != '') {
+										$colContent .= $attributeClass;
+									}
+
+									$colContent .=
+										$attributeMultiple .
+										$attributeTitle .
+										'>';
 								}
 
 								if (is_array($itemArray)) {
@@ -856,7 +882,7 @@ class tx_agency_tca {
 												$prefixId
 											) .
 											'-' . $i . '" name="FE[' . $theTable . '][' . $colName . '][' . $k . ']" value="' . $k .
-											'" type="checkbox"  ' . (in_array($k, $valuesArray) ? ' checked="checked"' : '') . ' /></dt>
+											'" type="checkbox"  ' . (in_array($k, $valuesArray) ? ' checked="checked"' : '') . ($useXHTML ? ' /' : ' ' ) . '></dt>
 												<dd><label for="' .
 												tx_div2007_alpha5::getClassName_fh002(
 													$colName,
@@ -874,7 +900,7 @@ class tx_agency_tca {
 									$colConfig['foreign_table'] &&
 									isset($GLOBALS['TCA'][$colConfig['foreign_table']])
 								) {
-									if ($this->typoVersion < 6002000) {
+									if (version_compare(TYPO3_version, '6.2.0', '<')) {
 										t3lib_div::loadTCA($colConfig['foreign_table']);
 									}
 									$titleField = $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['label'];
@@ -964,7 +990,7 @@ class tx_agency_tca {
 														$prefixId
 													) .
 													'-' . $row2['uid'] . '" name="FE[' . $theTable . '][' . $colName . '][' . $row2['uid'] . ']" value="'.$row2['uid'] .
-													'" type="checkbox"' . ($selected ? ' checked="checked"':'') . ' /></dt>
+													'" type="checkbox"' . ($selected ? ' checked="checked"':'') . ($useXHTML ? ' /' : ' ' ) . '></dt>
 													<dd><label for="' .
 													tx_div2007_alpha5::getClassName_fh002(
 														$colName,
@@ -1002,7 +1028,7 @@ class tx_agency_tca {
 													$colName,
 													$prefixId
 												) .
-												'-' . $row2['uid'] . '" name="FE[' . $theTable . '][' . $colName . '][' . $row2['uid'] . ']" value="' . $row2['uid'] . '" type="checkbox"' . (in_array($row2['uid'],  $valuesArray) ? ' checked="checked"' : '') . ' /></dt>
+												'-' . $row2['uid'] . '" name="FE[' . $theTable . '][' . $colName . '][' . $row2['uid'] . ']" value="' . $row2['uid'] . '" type="checkbox"' . (in_array($row2['uid'],  $valuesArray) ? ' checked="checked"' : '') . ($useXHTML ? ' /' : ' ' ) . '></dt>
 												<dd><label for="' .
 												tx_div2007_alpha5::getClassName_fh002(
 													$colName,

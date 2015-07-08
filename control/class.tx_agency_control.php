@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2013 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2007-2015 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -174,8 +174,7 @@ class tx_agency_control {
 		}
 		$fieldlist = '';
 
-		$typoVersion = tx_div2007_core::getTypoVersion();
-		if ($typoVersion < 6002000) {
+		if (version_compare(TYPO3_version, '6.2.0', '<')) {
 
 				// Setting the list of fields allowed for editing and creation.
 			$tcaFieldArray =
@@ -388,10 +387,8 @@ class tx_agency_control {
 			if ($theTable == 'fe_users') {
 				$securedArray = $controlData->readSecuredArray();
 			}
-			$finalDataArray = t3lib_div::array_merge_recursive_overrule(
-				$dataArray,
-				$securedArray
-			);
+			$finalDataArray = $dataArray;
+			tx_div2007_core::mergeRecursiveWithOverrule($finalDataArray, $securedArray);
 		} else {
 			$finalDataArray = $dataArray;
 		}
@@ -489,7 +486,9 @@ class tx_agency_control {
 					$controlData->clearSessionData();
 				}
 				$this->marker->setArray($markerArray);
-				$controlData->setFailure('submit'); // internal error simulation needed in order not to save in the next step
+				if (t3lib_div::inList($controlData->getFailure(), 'username')) {
+					$controlData->setFailure('submit'); // internal error simulation without any error message needed in order not to save in the next step. This happens e.g. at the first call to the create page
+				}
 			}
 			$dataObj->setUsername($theTable, $finalDataArray, $cmdKey);
 			$dataObj->setDataArray($finalDataArray);
@@ -537,7 +536,18 @@ class tx_agency_control {
 				}
 
 				if ($dataObj->getSaved()) {
-					$controlData->clearSessionData();
+						// if auto login on create
+					if (
+						$theTable == 'fe_users' &&
+						$cmd == 'create' &&
+						!$controlData->getSetfixedEnabled() &&
+						$controlData->enableAutoLoginOnCreate($conf)
+					) {
+						// do nothing
+						// conserve the session for the following auto login
+					} else {
+						$controlData->clearSessionData();
+					}
 				}
 			}
 		} else if ($cmd == 'infomail') {
@@ -780,24 +790,23 @@ class tx_agency_control {
 					exit;
 				}
 
-					// Auto-login on create
+					// Auto login on create
 				if (
 					$theTable == 'fe_users' &&
 					$cmd == 'create' &&
 					!$controlData->getSetfixedEnabled() &&
 					$controlData->enableAutoLoginOnCreate($conf)
 				) {
-					$cryptedPassword = '';
 					$autoLoginKey = '';
 					$loginSuccess = FALSE;
-					$cryptedPassword = $savePassword;
+					$password = $controlData->readPassword();
 					$loginSuccess =
 						$this->login(
 							$conf,
 							$langObj,
 							$controlData,
 							$dataArray['username'],
-							$cryptedPassword,
+							$password,
 							TRUE
 						);
 
@@ -846,7 +855,6 @@ class tx_agency_control {
 			if ($cmd == '' && $controlData->getFeUserData('preview')) {
 				$cmd = $cmdKey;
 			}
-
 			switch ($cmd) {
 				case 'setfixed':
 					if ($conf['infomail']) {
@@ -1067,7 +1075,7 @@ class tx_agency_control {
 	/**
 	 * Perform user login and redirect to configured url, if any
 	 *
-	 * @param boolen $redirect: whether to redirect after login or not
+	 * @param boolen $redirect: whether to redirect after login or not. If TRUE, then you must immediately call exit after this call
 	 * @return boolean TRUE, if login was successful, FALSE otherwise
 	 */
 	public function login (
@@ -1079,6 +1087,7 @@ class tx_agency_control {
 		$redirect = TRUE
 	) {
 		$result = TRUE;
+		$message = '';
 
 			// Log the user in
 		$loginData = array(
@@ -1121,7 +1130,6 @@ class tx_agency_control {
 				$moreAuthServiceClasses = t3lib_div::trimExplode(',', $conf['authServiceClass']);
 				$authServiceClassArray = array_merge($authServiceClassArray, $moreAuthServiceClasses);
 			}
-
 				// Check authentification
 			if (
 				in_array($authServiceClass, $authServiceClassArray)
@@ -1135,15 +1143,13 @@ class tx_agency_control {
 					$GLOBALS['TSFE']->fe_user->user = $GLOBALS['TSFE']->fe_user->fetchUserSession();
 					$GLOBALS['TSFE']->loginUser = 1;
 				} else {
-						// Login failed...
-					$controlData->clearSessionData(FALSE);
+						// auto login failed...
+					$message = $langObj->getLL('internal_auto_login_failed');
 					$result = FALSE;
 				}
 			} else {
 					// Required authentication service not available
 				$message = $langObj->getLL('internal_required_authentication_service_not_available');
-				t3lib_div::sysLog($message, $controlData->getExtKey(), t3lib_div::SYSLOG_SEVERITY_ERROR);
-				$controlData->clearSessionData(FALSE);
 				$result = FALSE;
 			}
 
@@ -1154,28 +1160,37 @@ class tx_agency_control {
 				$regHash = $controlData->getRegHash();
 				$controlData->deleteShortUrl($regHash);
 			}
-
-			if ($redirect) {
-					// Redirect to configured page, if any
-				$redirectUrl = $controlData->readRedirectUrl();
-				if (!$redirectUrl && $result == TRUE) {
-					$redirectUrl = trim($conf['autoLoginRedirect_url']);
-				}
-
-				if (!$redirectUrl) {
-					if ($conf['loginPID']) {
-						$redirectUrl = $this->urlObj->get('', $conf['loginPID']);
-					} else {
-						$redirectUrl = $controlData->getSiteUrl();
-					}
-				}
-				header('Location: ' . t3lib_div::locationHeaderUrl($redirectUrl));
-				exit;
-			}
 		} else {
 				// No enabled user of the given name
-			$controlData->clearSessionData(FALSE);
+			$message = sprintf($langObj->getLL('internal_no_enabled_user'), $loginData['uname']);
 			$result = FALSE;
+		}
+
+		if ($result == FALSE) {
+			$controlData->clearSessionData(FALSE);
+
+			if ($message != '') {
+				t3lib_div::sysLog($message, $controlData->getExtKey(), t3lib_div::SYSLOG_SEVERITY_ERROR);
+			}
+		}
+
+		if (
+			$redirect
+		) {
+				// Redirect to configured page, if any
+			$redirectUrl = $controlData->readRedirectUrl();
+			if (!$redirectUrl && $result == TRUE) {
+				$redirectUrl = trim($conf['autoLoginRedirect_url']);
+			}
+
+			if (!$redirectUrl) {
+				if ($conf['loginPID']) {
+					$redirectUrl = $this->urlObj->get('', $conf['loginPID']);
+				} else {
+					$redirectUrl = $controlData->getSiteUrl();
+				}
+			}
+			header('Location: ' . t3lib_div::locationHeaderUrl($redirectUrl));
 		}
 
 		return $result;

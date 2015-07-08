@@ -556,6 +556,8 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
 			<label index="internal_required_extension_missing">The extension "%1$s" is required and must be installed</label>
 			<label index="internal_conflicting_extension_installed">The conflicting extension "%1$s" must be uninstalled</label>
 			<label index="internal_required_authentication_service_not_available">Required authentication service not available</label>
+			<label index="internal_auto_login_failed">The auto login has failed.</label>
+			<label index="internal_no_enabled_user">The user "%s" is not existent or enabled.</label>
 			<label index="internal_check_requirements_frontend">&lt;p&gt;&lt;big&gt;&lt;b&gt;Agency Registration (agency): %1$s.&lt;/b&gt;&lt;/big&gt;&lt;/p&gt;</label>
 			<label index="internal_replace_deprecated_marker">Deprecated marker %1$s must be replaced by marker %2$s in HTML template file %3$s</label>
 			<label index="internal_remove_deprecated_marker">Deprecated marker %1$s must be removed from HTML template file %2$s</label>

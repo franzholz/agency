@@ -75,20 +75,12 @@ class tx_agency_transmission_security {
 	* Decrypts fields that were encrypted for transmission
 	*
 	* @param array $row: incoming data array that may contain encrypted fields
-	* @return boolean TRUE if decryption was successful
+	* @return boolean TRUE if a decryption has been done
 	*/
-	public function decryptIncomingFields (array &$row) {
-		$success = TRUE;
-		$fields = array('password', 'password_again');
-		$incomingFieldSet = FALSE;
-		foreach ($fields as $field) {
-			if (isset($row[$field])) {
-				$incomingFieldSet = TRUE;
-				break;
-			}
-		}
+	public function decryptIncomingFields (array &$row, $message = '') {
+		$decrypted = FALSE;
 
-		if ($incomingFieldSet) {
+		if (count($row)) {
 			switch ($this->getTransmissionSecurityLevel()) {
 				case 'rsa':
 						// Get services from rsaauth
@@ -99,18 +91,18 @@ class tx_agency_transmission_security {
 					if (is_object($backend) && is_object($storage)) {
 						$key = $storage->get();
 						if ($key != NULL) {
-							foreach ($fields as $field) {
-								if (isset($row[$field]) && $row[$field] != '') {
-									if (substr($row[$field], 0, 4) == 'rsa:') {
+							foreach ($row as $field => $value) {
+								if (isset($value) && $value != '') {
+									if (substr($value, 0, 4) == 'rsa:') {
 											// Decode password
-										$result = $backend->decrypt($key, substr($row[$field], 4));
+										$result = $backend->decrypt($key, substr($value, 4));
 										if ($result) {
 											$row[$field] = $result;
+											$decrypted = TRUE;
 										} else {
 												// RSA auth service failed to process incoming password
 												// May happen if the key is wrong
 												// May happen if multiple instance of rsaauth on same page
-											$success = FALSE;
 											$message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_rsaauth_process_incoming_password_failed');
 											t3lib_div::sysLog($message, $this->extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
 										}
@@ -122,14 +114,12 @@ class tx_agency_transmission_security {
 						} else {
 								// RSA auth service failed to retrieve private key
 								// May happen if the key was already removed
-							$success = FALSE;
 							$message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_rsaauth_retrieve_private_key_failed');
 							t3lib_div::sysLog($message, $this->extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
 						}
 					} else {
 							// Required RSA auth backend not available
 							// Should not happen: checked in tx_agency_pi_base::checkRequirements
-						$success = FALSE;
 						$message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_rsaauth_backend_not_available');
 						t3lib_div::sysLog($message, $this->extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
 					}
@@ -140,7 +130,7 @@ class tx_agency_transmission_security {
 					break;
 			}
 		}
-		return $success;
+		return $decrypted;
 	}
 
 	/**
@@ -149,9 +139,12 @@ class tx_agency_transmission_security {
 	* @param array $markerArray: marker array
 	* @return void
 	*/
-	public function getMarkers (array &$markerArray) {
- 		switch ($this->getTransmissionSecurityLevel()) {
+	public function getMarkers (array &$markerArray, $checkPasswordAgain) {
+		$markerArray['###FORM_ONSUBMIT###'] = '';
+
+		switch ($this->getTransmissionSecurityLevel()) {
 			case 'rsa':
+				$onSubmit = '';
 				$extraHiddenFieldsArray = array();
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs'])) {
 					$_params = array();
@@ -164,18 +157,30 @@ class tx_agency_transmission_security {
 						// Should not happen: checked in tx_agency_pi_base::checkRequirements
 					$message = sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_required_extension_missing'), 'rsaauth');
 					t3lib_div::sysLog($message, $this->extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
+					return;
 				}
+
+				if (version_compare(TYPO3_version, '6.2.0', '<')) {
+					$headerData = '<script type="text/javascript" src="' . $GLOBALS['TSFE']->absRefPrefix . t3lib_div::createVersionNumberedFilename(t3lib_extMgm::siteRelPath('agency')  . 'scripts/rsaauth.js') . '"></script>';
+					$GLOBALS['TSFE']->additionalHeaderData['agency_rsaauth'] = $headerData;
+					$onSubmit = 'x_agency_encrypt(this); return true;';
+				} else {
+					if ($checkPasswordAgain) {
+						$onSubmit = 'if (this.pass.value != this[\'FE[fe_users][password_again]\'].value) {this.password_again_failure.value = 1; this.pass.value = \'X\'; this[\'FE[fe_users][password_again]\'].value = \'\'; return true;} else { this[\'FE[fe_users][password_again]\'].value = \'\'; ' . $onSubmit . '}';
+						$extraHiddenFieldsArray[] = '<input type="hidden" name="password_again_failure" value="0">';
+					}
+				}
+
+				$markerArray['###FORM_ONSUBMIT###'] = ' onsubmit="' . $onSubmit . '"';
+
+				$extraHiddenFields = '';
 				if (count($extraHiddenFieldsArray)) {
-					$extraHiddenFields = implode(LF, $extraHiddenFieldsArray);
+					$extraHiddenFields = LF . implode(LF, $extraHiddenFieldsArray);
 				}
-				$headerData = '<script type="text/javascript" src="' . $GLOBALS['TSFE']->absRefPrefix . t3lib_div::createVersionNumberedFilename(t3lib_extMgm::siteRelPath('agency')  . 'scripts/rsaauth.js') . '"></script>';
-				$GLOBALS['TSFE']->additionalHeaderData['agency_rsaauth'] = $headerData;
-				$markerArray['###FORM_ONSUBMIT###'] = ' onsubmit="tx_agency_encrypt(this); return true;"';
-				$markerArray['###HIDDENFIELDS###'] .= LF . $extraHiddenFields;
+				$markerArray['###HIDDENFIELDS###'] .= $extraHiddenFields;
 				break;
 			case 'normal':
 			default:
-				$markerArray['###FORM_ONSUBMIT###'] = '';
 				$markerArray['###HIDDENFIELDS###'] .= LF;
 				break;
 		}
