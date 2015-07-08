@@ -238,7 +238,7 @@ class tx_agency_email {
 							$origArr,
 							$theTable,
 							$prefixId,
-							(is_array($DBrows) ? $DBrows[0] : (is_array($fetchArray) ? $fetchArray[0] : '')),
+							(is_array($DBrows) ? $DBrows[0] : (is_array($fetchArray) ? $fetchArray[0] : array())),
 							$securedArray,
 							FALSE
 						);
@@ -266,7 +266,7 @@ class tx_agency_email {
 						$origArr,
 						$theTable,
 						$prefixId,
-						'',
+						array(),
 						$securedArray,
 						TRUE,
 						$failure

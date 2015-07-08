@@ -1013,7 +1013,7 @@ class tx_agency_display {
 						$origArray,
 						$theTable,
 						$prefixId,
-						'',
+						array(),
 						$securedArray
 					);
 				} else {
@@ -1032,7 +1032,7 @@ class tx_agency_display {
 						$origArray,
 						$theTable,
 						$prefixId,
-						'',
+						array(),
 						$securedArray
 					);
 				}
@@ -1050,7 +1050,7 @@ class tx_agency_display {
 	* @param array $langObj: the language object
 	* @param array $controlData: the object of the control data
 	* @param string  $subpartMarker: the template subpart marker
-	* @param array  $row: the data array, if any
+	* @param array  $row: the data array or empty array
 	* @return string  the template with substituted parts and markers
 	*/
 	public function getPlainTemplate (
@@ -1101,7 +1101,7 @@ class tx_agency_display {
 			$markerArray =
 				$markerObj->fillInMarkerArray(
 					$markerArray,
-					is_array($row) ? $row : array(),
+					$row,
 					$securedArray,
 					$controlData,
 					$dataObj,
