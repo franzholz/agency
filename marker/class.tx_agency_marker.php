@@ -839,10 +839,7 @@ class tx_agency_marker {
 	* @param array  $markerArray: the input marker array
 	* @return void
 	*/
-	public function addPasswordTransmissionMarkers (&$markerArray, $checkPasswordAgain) {
-		if (!$markerArray) {
- 			$markerArray = $this->getArray();
- 		}
+	public function addPasswordTransmissionMarkers (array &$markerArray, $checkPasswordAgain) {
  		if ($this->controlData->getTable() == 'fe_users') {
  			$this->controlData->getTransmissionSecurity()->getMarkers($markerArray, $checkPasswordAgain);
  		}

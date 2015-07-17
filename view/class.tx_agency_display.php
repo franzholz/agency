@@ -282,7 +282,10 @@ class tx_agency_display {
 					''
 				);
 		}
-		$markerObj->addPasswordTransmissionMarkers($markerArray);
+		$markerObj->addPasswordTransmissionMarkers(
+			$markerArray,
+			$controlData->getUsePasswordAgain()
+		);
 		$templateCode =
 			$this->removeRequired(
 				$conf,
@@ -722,7 +725,7 @@ class tx_agency_display {
 	* @return string  the template with substituted markers
 	*/
 	public function editScreen (
-		&$markerArray,
+		array &$markerArray,
 		$conf,
 		$cObj,
 		$langObj,
@@ -1347,7 +1350,10 @@ class tx_agency_display {
 				!$conf['enableEmailConfirmation'] &&
 				!$controlData->enableAutoLoginOnCreate($conf)
 			) {
-				$markerObj->addPasswordTransmissionMarkers($markerArray);
+				$markerObj->addPasswordTransmissionMarkers(
+					$markerArray,
+					$controlData->getUsePasswordAgain()
+				);
 			}
 
 			if (isset($conf[$cmdKey . '.']['marker.'])) {

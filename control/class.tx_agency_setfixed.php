@@ -337,7 +337,7 @@ class tx_agency_setfixed {
 				) {
 					$markerObj->addGeneralHiddenFieldsMarkers($markerArray, $usesPassword ? 'login' : 'password', $token);
 					if ($usesPassword) {
-						$markerObj->addPasswordTransmissionMarkers($markerArray);
+						$markerObj->addPasswordTransmissionMarkers($markerArray, $controlData->getUsePasswordAgain());
 						$markerObj->setArray($markerArray);
 					}
 				} else {
