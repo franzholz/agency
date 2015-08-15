@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2013 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2015 Franz Holzinger (franz@ttproducts.de)
 *  (c) 2012 Stanislas Rolland (typo3(arobas)sjbr.ca)
 *  All rights reserved
 *
@@ -248,7 +248,7 @@ class tx_agency_controldata {
 
 		if ($this->getUsePassword()) {
 			// Establishing compatibility with the extension Felogin
-			$value = t3lib_div::_GP('pass');
+			$value = $this->getFormPassword();
 			if ($value != '') {
 				$this->writePassword($value, '');
 			}
@@ -367,6 +367,11 @@ class tx_agency_controldata {
 				$this->usePasswordAgain = TRUE;
 			}
 		}
+	}
+
+	public function getFormPassword () {
+		$result = t3lib_div::_POST('pass');
+		return $result;
 	}
 
 	public function getUsePassword () {
@@ -562,6 +567,8 @@ class tx_agency_controldata {
 	* @return void
 	*/
 	public function securePassword (array &$row) {
+		$result = TRUE;
+
 		$data = array();
 			// Decrypt incoming password (and eventually other encrypted fields)
 		$passwordRow = array('password' => $this->readPassword());
@@ -573,7 +580,10 @@ class tx_agency_controldata {
 			$this->writePassword($passwordRow['password'], $passwordRow['password']);
 		} else if ($message == '') {
 			$this->writePassword($passwordRow['password'], $row['password_again']);
+		} else {
+			$result = FALSE;
 		}
+		return $result;
 	}
 
 	/**
@@ -589,6 +599,7 @@ class tx_agency_controldata {
 		array &$dataArray,
 		&$autoLoginKey
 	) {
+
 // 		$this->getStorageSecurity()->initializeAutoLoginPassword($finalDataArray);
 		// We generate an interim password in the case of an invitation
 		if (

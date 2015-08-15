@@ -2,7 +2,7 @@
 	/***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2012 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2007-2015 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -112,7 +112,8 @@ class tx_agency_display {
 		if (!$controlData->useCaptcha($conf, $cmdKey)) {
 			$templateCode = $cObj->substituteSubpart($templateCode, '###SUB_INCLUDED_FIELD_captcha_response###', '');
 		}
-			// Honour Address List (tt_address) configuration setting
+
+		// Honour Address List (tt_address) configuration setting
 		if (
 			$controlData->getTable() == 'tt_address' &&
 			t3lib_extMgm::isLoaded('tt_address') &&
@@ -667,7 +668,10 @@ class tx_agency_display {
 					$deleteUnusedMarkers
 				);
 
-			if ($mode != MODE_PREVIEW && $bNeedUpdateJS) {
+			if (
+				$mode != MODE_PREVIEW &&
+				$bNeedUpdateJS
+			) {
 				$fields = $dataObj->getFieldList() . ',' . $dataObj->getAdditionalUpdateFields();
 				$fields = implode(
 						',',

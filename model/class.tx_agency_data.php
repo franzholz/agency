@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2013 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2007-2015 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -93,18 +93,6 @@ class tx_agency_data {
 
 		if (isset($fe) && is_array($fe) && $this->controlData->isTokenValid()) {
 			$feDataArray = $fe[$theTable];
-			$bHtmlSpecialChars = FALSE;
-			$controlData->secureInput($feDataArray, $bHtmlSpecialChars);
-			$this->tca->modifyRow(
-				$staticInfoObj,
-				$theTable,
-				$feDataArray,
-				FALSE
-			);
-
-			if ($theTable == 'fe_users') {
-				$controlData->securePassword($feDataArray);
-			}
 			$this->setDataArray($feDataArray);
 		}
 
@@ -1250,14 +1238,21 @@ class tx_agency_data {
 					($GLOBALS['TSFE']->loginUser || $aCAuth)
 				) {
 						// Must be logged in in order to edit  (OR be validated by email)
-					$newFieldList = implode(',', array_intersect(explode(',', $this->getFieldList()), t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)));
+					$newFieldList =
+						implode(
+							',',
+							array_intersect(
+								explode(',', $this->getFieldList()),
+								t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)
+							)
+						);
 					$newFieldArray =
-							array_unique(
-								array_merge(
-									explode(',', $newFieldList),
-									explode(',', $this->getAdminFieldList())
-								)
-							);
+						array_unique(
+							array_merge(
+								explode(',', $newFieldList),
+								explode(',', $this->getAdminFieldList())
+							)
+						);
 					$fieldArray = t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1);
 
 						// Do not reset the name if we have no new value
@@ -1315,7 +1310,13 @@ class tx_agency_data {
 						$this->updateMMRelations($theTable, $dataArray);
 						$this->setSaved(TRUE);
 						$newRow = $this->parseIncomingData($outGoingData);
-						$this->tca->modifyRow($staticInfoObj, $theTable, $newRow, TRUE);
+						$this->tca->modifyRow(
+							$staticInfoObj,
+							$theTable,
+							$newRow,
+							$this->getFieldList(),
+							TRUE
+						);
 						$newRow = array_merge($origArray, $newRow);
 						tx_div2007_alpha::userProcess_fh001(
 							$this->control,
@@ -1462,7 +1463,13 @@ class tx_agency_data {
 					if (is_array($newRow)) {
 							// Post-create processing: call user functions and hooks
 						$newRow = $this->parseIncomingData($newRow);
-						$this->tca->modifyRow($staticInfoObj, $theTable, $newRow, TRUE);
+						$this->tca->modifyRow(
+							$staticInfoObj,
+							$theTable,
+							$newRow,
+							$this->getFieldList(),
+							TRUE
+						);
 
 						tx_div2007_alpha::userProcess_fh001(
 							$this->control,

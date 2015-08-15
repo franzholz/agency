@@ -1,3 +1,7 @@
+2015-08-15 Franz Holzinger <franz@ttproducts.de>
+	* bug fix: The password command after INVITE must not modify any of the other fields. There is no uncheck of a checkbox in this case.
+	* bug fix: the field list must be determined before modifyRow
+
 2015-07-17 Franz Holzinger <franz@ttproducts.de>
 	* bug fix: forgotten parameter 2 for method addPasswordTransmissionMarkers
 	* change: set uploadFolder to fileadmin/user_uploads for TYPO3 6.2

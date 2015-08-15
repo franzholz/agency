@@ -96,8 +96,8 @@ class tx_agency_control {
 		tx_agency_conf $confObj,
 		$staticInfoObj,
 		$theTable,
-		$controlData,
-		$dataObj,
+		tx_agency_controldata $controlData,
+		tx_agency_data $dataObj,
 		&$adminFieldList,
 		array &$origArray
 	) {
@@ -107,6 +107,51 @@ class tx_agency_control {
 		$extKey = $controlData->getExtKey();
 		$cmd = $controlData->getCmd();
 		$dataArray = $dataObj->getDataArray();
+		$fieldlist = '';
+		$modifyPassword = FALSE;
+
+		$bHtmlSpecialChars = FALSE;
+		$controlData->secureInput($dataArray, $bHtmlSpecialChars);
+
+		if (
+			$theTable == 'fe_users'
+		) {
+			$modifyPassword = $controlData->securePassword($dataArray);
+		}
+		$dataObj->setDataArray($dataArray);
+
+		if (version_compare(TYPO3_version, '6.2.0', '<')) {
+
+				// Setting the list of fields allowed for editing and creation.
+			$tcaFieldArray =
+				t3lib_div::trimExplode(
+					',',
+					$GLOBALS['TCA'][$theTable]['feInterface']['fe_admin_fieldList'],
+					1
+				);
+			$tcaFieldArray = array_unique($tcaFieldArray);
+			$fieldlist = implode(',', $tcaFieldArray);
+		} else {
+			$fieldlist = implode(',', tx_div2007_core::getFields($theTable));
+		}
+
+		// new
+		if ($cmd == 'password') {
+			$fieldlist = implode(',', array_keys($dataArray));
+			if ($modifyPassword) {
+				$fieldlist .= ',password';
+			}
+		}
+
+		$dataObj->setFieldList($fieldlist);
+		$this->tca->modifyRow(
+			$staticInfoObj,
+			$theTable,
+			$dataArray,
+			$fieldlist,
+			FALSE
+		);
+
 		$feUserdata = $controlData->getFeUserData();
 		$theUid = 0;
 
@@ -123,7 +168,13 @@ class tx_agency_control {
 			$newOrigArray = $GLOBALS['TSFE']->sys_page->getRawRecord($theTable, $theUid);
 
 			if (isset($newOrigArray) && is_array($newOrigArray)) {
-				$this->tca->modifyRow($staticInfoObj, $theTable, $newOrigArray, TRUE);
+				$this->tca->modifyRow(
+					$staticInfoObj,
+					$theTable,
+					$newOrigArray,
+					$dataObj->getFieldList(),
+					TRUE
+				);
 				$origArray = $newOrigArray;
 			}
 		}
@@ -172,23 +223,6 @@ class tx_agency_control {
 				$dataObj->setDataArray($dataArray);
 			}
 		}
-		$fieldlist = '';
-
-		if (version_compare(TYPO3_version, '6.2.0', '<')) {
-
-				// Setting the list of fields allowed for editing and creation.
-			$tcaFieldArray =
-				t3lib_div::trimExplode(
-					',',
-					$GLOBALS['TCA'][$theTable]['feInterface']['fe_admin_fieldList'],
-					1
-				);
-			$tcaFieldArray = array_unique($tcaFieldArray);
-			$fieldlist = implode(',', $tcaFieldArray);
-		} else {
-			$fieldlist = implode(',', tx_div2007_core::getFields($theTable));
-		}
-		$dataObj->setFieldList($fieldlist);
 
 		if (trim($conf['addAdminFieldList'])) {
 			$adminFieldList .= ',' . trim($conf['addAdminFieldList']);
@@ -417,6 +451,7 @@ class tx_agency_control {
 			$dataObj->setName($finalDataArray, $cmdKey, $theTable);
 			$dataObj->parseValues($theTable, $finalDataArray, $origArray, $cmdKey);
 			$dataObj->overrideValues($finalDataArray, $cmdKey);
+
 			if (
 				$bSubmit ||
 				$bDoNotSave ||
@@ -486,7 +521,7 @@ class tx_agency_control {
 					$controlData->clearSessionData();
 				}
 				$this->marker->setArray($markerArray);
-				if (t3lib_div::inList($controlData->getFailure(), 'username')) {
+				if (!count($controlData->getFeUserData())) {
 					$controlData->setFailure('submit'); // internal error simulation without any error message needed in order not to save in the next step. This happens e.g. at the first call to the create page
 				}
 			}
@@ -1130,6 +1165,7 @@ class tx_agency_control {
 				$moreAuthServiceClasses = t3lib_div::trimExplode(',', $conf['authServiceClass']);
 				$authServiceClassArray = array_merge($authServiceClassArray, $moreAuthServiceClasses);
 			}
+
 				// Check authentification
 			if (
 				in_array($authServiceClass, $authServiceClassArray)

@@ -96,6 +96,7 @@ class tx_agency_transmission_security {
 									if (substr($value, 0, 4) == 'rsa:') {
 											// Decode password
 										$result = $backend->decrypt($key, substr($value, 4));
+
 										if ($result) {
 											$row[$field] = $result;
 											$decrypted = TRUE;

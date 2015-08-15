@@ -157,6 +157,7 @@ class tx_agency_tca {
 		$staticInfoObj,
 		$theTable,
 		&$dataArray,
+		$fieldList,
 		$bColumnIsCount = TRUE
 	) {
 		if (
@@ -167,10 +168,14 @@ class tx_agency_tca {
 			return FALSE;
 		}
 
-		$fieldsList = array_keys($dataArray);
+		$dataFieldList = array_keys($dataArray);
 		foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
 			$colConfig = $colSettings['config'];
-			if (!$colConfig || !is_array($colConfig)) {
+			if (
+				!$colConfig ||
+				!is_array($colConfig) ||
+				!t3lib_div::inList($fieldList, $colName)
+			) {
 				continue;
 			}
 
@@ -190,7 +195,7 @@ class tx_agency_tca {
 						$dataArray[$colName] = $value = '';
 					}
 
-					if (in_array($colName, $fieldsList) && $colConfig['MM'] != '' && isset($value)) {
+					if (in_array($colName, $dataFieldList) && $colConfig['MM'] != '' && isset($value)) {
 						if ($value == '' || is_array($value)) {
 							// the value contains the count of elements from a mm table
 						} else if ($bColumnIsCount) {
@@ -253,7 +258,6 @@ class tx_agency_tca {
 				$dataArray['zone'] = '';
 			}
 		}
-
 		return TRUE;
 	} // modifyRow
 
