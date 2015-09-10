@@ -426,7 +426,7 @@ class tx_agency_control {
 		} else {
 			$finalDataArray = $dataArray;
 		}
-		$submitData = $controlData->getFeUserData('submit');
+		$submitData = !empty($controlData->getFeUserData('submit')) || !empty($controlData->getFeUserData('submit-security'));
 
 		if ($submitData != '') {
 			$bSubmit = TRUE;
@@ -449,13 +449,16 @@ class tx_agency_control {
 			!in_array($cmd, $noSaveCommands)
 		) {
 			$dataObj->setName($finalDataArray, $cmdKey, $theTable);
-			$dataObj->parseValues($theTable, $finalDataArray, $origArray, $cmdKey);
+			$parseResult = $dataObj->parseValues($theTable, $finalDataArray, $origArray, $cmdKey);
 			$dataObj->overrideValues($finalDataArray, $cmdKey);
 
 			if (
-				$bSubmit ||
-				$bDoNotSave ||
-				$controlData->getFeUserData('linkToPID')
+				$parseResult &&
+				(
+					$bSubmit ||
+					$bDoNotSave ||
+					$controlData->getFeUserData('linkToPID')
+				)
 			) {
 					// A button was clicked on
 				$evalErrors = $dataObj->evalValues(
@@ -529,6 +532,7 @@ class tx_agency_control {
 			$dataObj->setDataArray($finalDataArray);
 
 			if (
+				$parseResult &&
 				$controlData->getFailure() == '' &&
 				!$controlData->getFeUserData('preview') &&
 				!$bDoNotSave
@@ -612,7 +616,10 @@ class tx_agency_control {
 			}
 		}
 
-		if ($controlData->getFailure() != '') {
+		if (
+			$controlData->getFailure() != '' ||
+			!$parseResult
+		) {
 			$controlData->setFeUserData(0, 'preview');
 		}
 
@@ -647,10 +654,10 @@ class tx_agency_control {
 			}
 
 			if (
-				$bDefaultMode
-				&& ($cmdKey != 'edit')
-				&& $conf['enableAdminReview']
-				&& ($conf['enableEmailConfirmation'] || $conf['infomail'])
+				$bDefaultMode &&
+				($cmdKey != 'edit') &&
+				$conf['enableAdminReview'] &&
+				($conf['enableEmailConfirmation'] || $conf['infomail'])
 			) {
 				$bCustomerConfirmsMode = TRUE;
 			}

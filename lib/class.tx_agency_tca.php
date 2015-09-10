@@ -227,7 +227,10 @@ class tx_agency_tca {
 							}
 						}
 					} else {
-						if ($dataArray[$colName] == '1' || $dataArray[$colName] == 'on') {
+						if (
+							$dataArray[$colName] == '1' ||
+							$dataArray[$colName] == 'on'
+						) {
 							$dataArray[$colName] = '1';
 						} else {
 							$dataArray[$colName] = '0';
@@ -453,10 +456,16 @@ class tx_agency_tca {
 										isset($mrow[$colName]) &&
 										$mrow[$colName] != ''
 									) {
-										foreach($colConfig['items'] as $key => $value) {
-											$checked = ($mrow[$colName] & (1 << $key));
-											if ($checked) {
-												$bCheckedArray[$key] = TRUE;
+										if (is_array($mrow[$colName])) {
+											foreach($mrow[$colName] as $key => $value) {
+												$bCheckedArray[$value] = TRUE;
+											}
+										} else {
+											foreach($colConfig['items'] as $key => $value) {
+												$checked = ($mrow[$colName] & (1 << $key));
+												if ($checked) {
+													$bCheckedArray[$key] = TRUE;
+												}
 											}
 										}
 									}
@@ -465,19 +474,19 @@ class tx_agency_tca {
 									$checkedCount = 0;
 									foreach($colConfig['items'] as $key => $value) {
 										$count++;
-										$label = $langObj->getLLFromString($colConfig['items'][$key][0]);
-										if ($HSC) {
-											$label =
-												htmlspecialchars(
-													$label,
-													ENT_QUOTES,
-													$charset
-												);
-										}
 										$checked = ($bCheckedArray[$key]);
 
 										if ($checked) {
 											$checkedCount++;
+											$label = $langObj->getLLFromString($colConfig['items'][$key][0]);
+											if ($HSC) {
+												$label =
+													htmlspecialchars(
+														$label,
+														ENT_QUOTES,
+														$charset
+													);
+											}
 											$label = ($checked ? $label : '');
 											$colContent .= ((!$bNotLast || $checkedCount < count($bCheckedArray)) ?  $cObj->stdWrap($label,$stdWrap) : $label);
 										}
@@ -653,7 +662,6 @@ class tx_agency_tca {
 						}
 
 						switch ($type) {
-
 							case 'input':
 								$colContent = '<input type="input" name="FE[' . $theTable . '][' . $colName . ']"' .
 									' title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($colName, 'upper') . '###"' .
@@ -698,6 +706,7 @@ class tx_agency_tca {
 										$uidText .= '-' . $mrow['uid'];
 									}
 									$colContent = '<ul id="' . $uidText . '" class="agency-multiple-checkboxes">';
+
 									if (
 										isset($mrow[$colName]) &&
 										(
@@ -712,10 +721,21 @@ class tx_agency_tca {
 									}
 
 									foreach ($itemArray as $key => $value) {
-										$checked = ($startVal & (1 << $key)) ? ' checked="checked"' : '';
+										$checked = FALSE;
+
+										if (is_array($startVal)) {
+											$checked = in_array($key, $startVal);
+										} else {
+											$checked = ($startVal & (1 << $key)) ? ' checked="checked"' : '';
+										}
+										$checkedHtml = '';
+										if ($checked) {
+											$checkedHtml = ($useXHTML ? ' checked="checked"' : ' checked');
+										}
+
 										$label = $langObj->getLLFromString($itemArray[$key][0]);
 										$label = htmlspecialchars($label, ENT_QUOTES, $charset);
-										$colContent .= '<li><input type="checkbox"' .
+										$newContent = '<li><input type="checkbox"' .
 											tx_div2007_alpha5::classParam_fh002(
 												'checkbox',
 												'',
@@ -723,9 +743,10 @@ class tx_agency_tca {
 											) .
 											' id="' . $uidText . '-' . $key .
 											'" name="FE[' . $theTable . '][' . $colName . '][]" value="' . $key . '"' .
-											$checked . ($useXHTML ? ' /' : ' ' ) . '><label for="' . $uidText . '-' . $key . '">' .
+											$checkedHtml . ($useXHTML ? ' /' : ' ' ) . '><label for="' . $uidText . '-' . $key . '">' .
 											$label .
 											'</label></li>';
+										$colContent .= $newContent;
 									}
 									$colContent .= '</ul>';
 								} else {
@@ -870,7 +891,8 @@ class tx_agency_tca {
 								if (is_array($itemArray)) {
 									$itemArray = $this->getItemKeyArray($itemArray);
 									$i = 0;
-									foreach ($itemArray as $k => $item)	{
+
+									foreach ($itemArray as $k => $item) {
 										$label = $langObj->getLLFromString($item[0], TRUE);
 										$label = htmlspecialchars($label, ENT_QUOTES, $charset);
 										if ($colConfig['renderMode'] == 'checkbox') {
@@ -894,7 +916,7 @@ class tx_agency_tca {
 												) .
 												'-' . $i . '">' . $label . '</label></dd>';
 										} else {
-											$colContent .= '<option value="'.$k. '" ' . (in_array($k, $valuesArray) ? 'selected="selected"' : '') . '>' . $label . '</option>';
+											$colContent .= '<option value="' . $k . '" ' . (in_array($k, $valuesArray) ? 'selected="selected"' : '') . '>' . $label . '</option>';
 										}
 										$i++;
 									}

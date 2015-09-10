@@ -466,6 +466,7 @@ class tx_agency_data {
 							case 'uniqueLocal':
 							case 'uniqueDeletedLocal':
 								$where = $theField . '=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($dataArray[$theField], $theTable);
+
 								if ($theCmd == 'uniqueLocal' || $theCmd == 'uniqueGlobal') {
 									$where .= $GLOBALS['TSFE']->sys_page->deleteClause($theTable);
 								}
@@ -679,6 +680,7 @@ class tx_agency_data {
 														$failureMsg[$theField][] =
 															sprintf(
 																$this->getFailureText(
+																	$dataArray,
 																	$theField,
 																	'isfile',
 																	($bWritePermissionError ? 'evalErrors_write_permission' : 'evalErrors_file_upload')
@@ -937,9 +939,10 @@ class tx_agency_data {
 	/**
 	* Transforms fields into certain things...
 	*
-	* @return void  all parsing done directly on input array $dataArray
+	* @return boolean  all parsing done directly on input array $dataArray
 	*/
 	public function parseValues ($theTable, array &$dataArray, array $origArray, $cmdKey) {
+		$result = TRUE;
 
 		$cObj = t3lib_div::getUserObj('&tx_div2007_cobj');
 		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
@@ -1015,8 +1018,13 @@ class tx_agency_data {
 										$theTable,
 										$theField,
 										$fieldDataArray,
-										$cmdKey
+										$cmdKey,
+										$fileDeleted
 									);
+
+								if ($fileDeleted) {
+									$result = FALSE;
+								}
 							break;
 							case 'multiple':
 								$fieldDataArray = array();
@@ -1115,6 +1123,8 @@ class tx_agency_data {
 				}
 			}
 		}
+
+		return $result;
 	}	// parseValues
 
 	/**
@@ -1148,7 +1158,8 @@ class tx_agency_data {
 	* @param string  $theField: the name of the field
 	* @return array file names
 	*/
-	public function processFiles ($theTable, $theField, array $fieldDataArray, $cmdKey) {
+	public function processFiles ($theTable, $theField, array $fieldDataArray, $cmdKey, &$deleted) {
+		$deleted = FALSE;
 
 		if (is_array($GLOBALS['TCA'][$theTable]['columns'][$theField])) {
 			$uploadPath = $GLOBALS['TCA'][$theTable]['columns'][$theField]['config']['uploadfolder'];
@@ -1161,11 +1172,12 @@ class tx_agency_data {
 					if (is_array($file)) {
 						if ($this->checkFilename($file['name'])) {
 							if ($file['submit_delete']) {
-								if ($cmdKey !== 'edit') {
+// 								if ($cmdKey != 'edit') {
 									if (@is_file(PATH_site . $uploadPath . '/' . $file['name'])) {
 										@unlink(PATH_site . $uploadPath . '/' . $file['name']);
+										$deleted = TRUE;
 									}
-								}
+// 								}
 							} else {
 								$fileNameArray[] = $file['name'];
 							}
@@ -1177,6 +1189,7 @@ class tx_agency_data {
 					}
 				}
 			}
+
 			if (is_array($_FILES['FE']['name'][$theTable][$theField])) {
 				foreach($_FILES['FE']['name'][$theTable][$theField] as $i => $filename) {
 
@@ -1199,6 +1212,7 @@ class tx_agency_data {
 				}
 			}
 		}
+
 		return $fileNameArray;
 	}
 
@@ -2096,9 +2110,11 @@ class tx_agency_data {
 					);
 				}
 
-				if (is_array($parsedArray[$colName])) {
+				if (
+					is_array($parsedArray[$colName]) &&
+					in_array($colName, $fieldsList)
+				) {
 					if (
-						in_array($colName, $fieldsList) &&
 						$colSettings['config']['type'] == 'select' &&
 						$colSettings['config']['MM']
 					) {
@@ -2108,6 +2124,12 @@ class tx_agency_data {
 						} else {
 							$parsedArray[$colName] = '';
 						}
+					} else if ($colSettings['config']['type'] == 'check') {
+						$value = 0;
+						foreach ($parsedArray[$colName] as $dec) {  // Combine values to one hexidecimal number
+							$value |= (1 << $dec);
+						}
+						$parsedArray[$colName] = $value;
 					} else {
 						$parsedArray[$colName] = implode (',', $parsedArray[$colName]);
 					}

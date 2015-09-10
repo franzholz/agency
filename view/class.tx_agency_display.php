@@ -1,5 +1,5 @@
 <?php
-	/***************************************************************
+/***************************************************************
 *  Copyright notice
 *
 *  (c) 2007-2015 Stanislas Rolland <typo3(arobas)sjbr.ca>
@@ -253,6 +253,7 @@ class tx_agency_display {
 		} else {
 			$currentArray = $origArray;
 		}
+
 		if ($cmdKey == 'password') {
 			$subpart = '###TEMPLATE_SETFIXED_OK_APPROVE_INVITE###';
 		} else {
@@ -315,6 +316,7 @@ class tx_agency_display {
 			$prefixId,
 			$currentArray
 		);
+
 		$tcaObj->addTcaMarkers(
 			$markerArray,
 			$conf,
@@ -329,6 +331,7 @@ class tx_agency_display {
 			$prefixId,
 			TRUE
 		);
+
 		$tcaObj->addTcaMarkers(
 			$markerArray,
 			$conf,
@@ -419,6 +422,7 @@ class tx_agency_display {
 		$markerArray['###FIELD_password###'] = '';
 		$markerArray['###FIELD_password_again###'] = '';
 		$deleteUnusedMarkers = TRUE;
+
 		$content =
 			$cObj->substituteMarkerArray(
 				$templateCode,

@@ -147,6 +147,7 @@ class tx_agency_transmission_security {
 			case 'rsa':
 				$onSubmit = '';
 				$extraHiddenFieldsArray = array();
+
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs'])) {
 					$_params = array();
 					foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs'] as $funcRef) {
@@ -167,8 +168,8 @@ class tx_agency_transmission_security {
 					$onSubmit = 'x_agency_encrypt(this); return true;';
 				} else {
 					if ($checkPasswordAgain) {
-						$onSubmit = 'if (this.pass.value != this[\'FE[fe_users][password_again]\'].value) {this.password_again_failure.value = 1; this.pass.value = \'X\'; this[\'FE[fe_users][password_again]\'].value = \'\'; return true;} else { this[\'FE[fe_users][password_again]\'].value = \'\'; ' . $onSubmit . '}';
-						$extraHiddenFieldsArray[] = '<input type="hidden" name="password_again_failure" value="0">';
+						$onSubmit = 'if (!this.'. $this->extKey . '-password.value) return 0; if (this.pass.value != this[\'FE[fe_users][password_again]\'].value) {this.password_again_failure.value = 1; this.'. $this->extKey . '-password.value = \'X\'; this[\'FE[fe_users][password_again]\'].value = \'\'; return true;} else { this[\'' . $this->extKey . '[submit-security]\'].value =\'1\'; this[\'FE[fe_users][password_again]\'].value = \'\'; ' . $onSubmit . '}';
+						$extraHiddenFieldsArray[] = '<input type="hidden" name="password_again_failure" value="0">' . LF . '<input type="hidden" name="'. $this->extKey . '[submit-security]" value="0">';
 					}
 				}
 

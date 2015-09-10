@@ -1,3 +1,7 @@
+2015-09-10 Franz Holzinger <franz@ttproducts.de>
+	* bug fix: deletion of image. The Javascript onsubmit function of the deletion image input field loses the field name called submit_delete. Write a new Javascript function to have also fewer code.
+	* bug fix: show TCA type check correctly in the preview and save it as a bit field integer
+
 2015-08-15 Franz Holzinger <franz@ttproducts.de>
 	* bug fix: The password command after INVITE must not modify any of the other fields. There is no uncheck of a checkbox in this case.
 	* bug fix: the field list must be determined before modifyRow

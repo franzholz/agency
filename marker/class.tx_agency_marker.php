@@ -866,7 +866,13 @@ class tx_agency_marker {
 		$activity = '',
 		$bHtml = TRUE
 	) {
+		$useXHTML = $GLOBALS['TSFE']->config['config']['xhtmlDoctype'] != '';
 		$HTMLContent = '';
+		$xhtmlFix = '';
+		if ($useXHTML) {
+			$xhtmlFix = ' /';
+		}
+
 		$tablePrefix = 'FE[' . $theTable . ']';
 		$size = $config['maxitems'];
 		$cmdParts = preg_split('/\[|\]/', $this->conf[$cmdKey . '.']['evalValues.'][$theField]);
@@ -882,7 +888,7 @@ class tx_agency_marker {
 				$HTMLContent .= $filenameArray[$i];
 				if ($activity == 'email') {
 					if ($bHtml)	{
-						$HTMLContent .= '<br />';
+						$HTMLContent .= '<br' . $xhtmlFix . '>';
 					} else {
 						$HTMLContent .= chr(13) . chr(10);
 					}
@@ -895,31 +901,50 @@ class tx_agency_marker {
 					) .
 					' target="_blank" title="' . $this->langObj->getLL('file_view') . '">' .
 						$this->langObj->getLL('file_view') .
-					'</a><br />';
+					'</a><br' . $xhtmlFix .'>';
 				}
 			}
 		} else {
+			$HTMLContent = '<script>' . chr(13) . '
+var submitFile = function(id){
+	if(confirm(\'' . $this->langObj->getLL('confirm_file_delete') . '\')) {
+		document.getElementById(id).value=\'1\';
+		return true;
+	} else
+		return false;
+};' . chr(13) .
+			'</script>' . chr(13);
 			for($i = 0; $i < sizeof($filenameArray); $i++) {
-				$HTMLContent .=
-					$filenameArray[$i] . '<input type="image" src="' .
-					$GLOBALS['TSFE']->tmpl->getFileName($this->conf['icon_delete']) . '" name="' . $tablePrefix . '[' . $theField . '][' . $i . '][submit_delete]" value="1" title="' .
-					$this->langObj->getLL('icon_delete') . '" alt="' . $this->langObj->getLL('icon_delete') . '"' .
+				$partContent =
+					$filenameArray[$i] . '<input type="hidden" id="' . $prefixId . '-file-' . $i . '" name="' . $tablePrefix . '[' . $theField . '][' . $i . '][submit_delete]" value=""' .
+					' title="' .
+					$this->langObj->getLL('icon_delete') .
+					'" alt="' . $this->langObj->getLL('icon_delete') . '"' .
 					tx_div2007_alpha5::classParam_fh002(
 						'delete-view',
 						'',
 						$prefixId
 					) .
-					' onclick=\'if(confirm("' .
-					$this->langObj->getLL('confirm_file_delete') . '")) return true; else return false;\' />'
-					. '<a href="' . $dir . '/' . $filenameArray[$i] . '" ' .
+					' ' . $xhtmlFix .'>';
+
+				$partContent .=
+					'<input type="image" name="submit_delete" src="' .
+					$GLOBALS['TSFE']->tmpl->getFileName($this->conf['icon_delete']) . '"' .
+					' onclick="return submitFile(\'' . $prefixId . '-file-' . $i . '\');"' .
+					' ' . $xhtmlFix .'>';
+
+				$partContent .=
+					'<a href="' . $dir . '/' . $filenameArray[$i] . '" ' .
 					tx_div2007_alpha5::classParam_fh002(
 						'file-view',
 						'',
 						$prefixId
 					) .
 					' target="_blank" title="' . $this->langObj->getLL('file_view') . '">' .
-					$this->langObj->getLL('file_view') . '</a><br />';
-				$HTMLContent .= '<input type="hidden" name="' . $tablePrefix . '[' . $theField . '][' . $i . '][name]' . '" value="' . $filenameArray[$i] . '" />';
+					$this->langObj->getLL('file_view') . '</a>' .
+					'<br' . $xhtmlFix . '>';
+				$HTMLContent .= $partContent . '<input type="hidden" name="' . $tablePrefix . '[' . $theField . '][' . $i . '][name]' . '" value="' . $filenameArray[$i] .
+				'" ' . $xhtmlFix .'>';
 			}
 
 			for ($i = sizeof($filenameArray); $i < $number + sizeof($filenameArray); $i++) {
@@ -936,7 +961,7 @@ class tx_agency_marker {
 					'',
 					$prefixId
 				) .
-				' /><br />';
+				' /><br' . $xhtmlFix .'>';
 			}
 		}
 		return $HTMLContent;
