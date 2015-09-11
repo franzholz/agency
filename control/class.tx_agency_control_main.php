@@ -86,7 +86,6 @@ class tx_agency_control_main {
 		$cmd = $this->controlData->getCmd();
 		$cmdKey = $this->controlData->getCmdKey();
 		$theTable = $this->controlData->getTable();
-		$dataArray = $this->data->getDataArray();
 		$templateCode = $this->data->getTemplateCode();
 
 		if ($success) {
@@ -104,7 +103,6 @@ class tx_agency_control_main {
 				$cmd,
 				$cmdKey,
 				$origArray,
-				$dataArray,
 				$templateCode,
 				$errorMessage
 			);

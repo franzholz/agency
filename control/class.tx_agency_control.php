@@ -144,13 +144,19 @@ class tx_agency_control {
 		}
 
 		$dataObj->setFieldList($fieldlist);
-		$this->tca->modifyRow(
-			$staticInfoObj,
-			$theTable,
-			$dataArray,
-			$fieldlist,
-			FALSE
-		);
+		if (
+			isset($dataArray) &&
+			is_array($dataArray) &&
+			!empty($dataArray)
+		) {
+			$this->tca->modifyRow(
+				$staticInfoObj,
+				$theTable,
+				$dataArray,
+				$fieldlist,
+				FALSE
+			);
+		}
 
 		$feUserdata = $controlData->getFeUserData();
 		$theUid = 0;
@@ -220,7 +226,6 @@ class tx_agency_control {
 		if (!$theUid) {
 			if (!count($dataArray)) {
 				$dataArray = $dataObj->readDefaultValues($cmdKey);
-				$dataObj->setDataArray($dataArray);
 			}
 		}
 
@@ -360,8 +365,9 @@ class tx_agency_control {
 				1
 			)
 		);
+		$dataObj->setDataArray($dataArray);
 		$controlData->setRequiredArray($requiredArray);
-	}
+	} // init2
 
 	/**
 	* All processing of the codes is done here
@@ -383,10 +389,10 @@ class tx_agency_control {
 		$cmd,
 		$cmdKey,
 		array $origArray,
-		$dataArray,
 		$templateCode,
 		&$error_message
 	) {
+		$dataArray = $dataObj->getDataArray();
 		$conf = $confObj->getConf();
 		$extKey = $controlData->getExtKey();
 		$prefixId = $controlData->getPrefixId();
@@ -426,7 +432,9 @@ class tx_agency_control {
 		} else {
 			$finalDataArray = $dataArray;
 		}
-		$submitData = !empty($controlData->getFeUserData('submit')) || !empty($controlData->getFeUserData('submit-security'));
+		$submitData =
+			!empty($controlData->getFeUserData('submit')) ||
+			!empty($controlData->getFeUserData('submit-security'));
 
 		if ($submitData != '') {
 			$bSubmit = TRUE;
