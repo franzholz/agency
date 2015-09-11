@@ -29,7 +29,7 @@
  *
  * Storage security functions
  *
- * $Id: class.tx_srfeuserregister_transmission_security.php$
+ * $Id$
  *
  * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
  *
