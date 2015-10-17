@@ -401,6 +401,7 @@ class tx_agency_control {
 		$savePassword = '';
 		$autoLoginKey = '';
 		$hasError = FALSE;
+		$parseResult = TRUE;
 
 			// Commands with which the data will not be saved by $dataObj->save
 		$noSaveCommands = array('infomail', 'login', 'delete');
@@ -1162,42 +1163,47 @@ class tx_agency_control {
 			);
 
 		if (is_array($user)) {
-			$authServiceClass = '';
-				// Get the appropriate authentication service
-			$authServiceObj = t3lib_div::makeInstanceService('auth', 'authUserFE');
-			if (is_object($authServiceObj)) {
-				$authServiceClass = get_class($authServiceObj);
+			$serviceKeyArray = array();
+
+			if (class_exists('\\TYPO3\\CMS\\Saltedpasswords\\SaltedPasswordService')) {
+				$serviceKeyArray[] = 'TYPO3\\CMS\\Saltedpasswords\\SaltedPasswordService';
+			} else {
+				$serviceKeyArray[] = 'tx_saltedpasswords_sv1';
 			}
-			$authServiceClassArray = array(
-				'tx_saltedpasswords_sv1',
-				'TYPO3\\CMS\\Saltedpasswords\\SaltedPasswordService',
-			);
 
 			if (
 				$conf['authServiceClass'] != '' &&
-				$conf['authServiceClass'] != '{$plugin.tx_agency.authServiceClass}'
+				$conf['authServiceClass'] != '{$plugin.tx_agency.authServiceClass}' &&
+				class_exists($conf['authServiceClass'])
 			) {
-				$moreAuthServiceClasses = t3lib_div::trimExplode(',', $conf['authServiceClass']);
-				$authServiceClassArray = array_merge($authServiceClassArray, $moreAuthServiceClasses);
+				$serviceKeyArray = array_merge($serviceKeyArray, t3lib_div::trimExplode(',', $conf['authServiceClass']));
 			}
 
-				// Check authentification
-			if (
-				in_array($authServiceClass, $authServiceClassArray)
-			) {
-				$ok = $authServiceObj->compareUident($user, $loginData);
+			$serviceChain = '';
+			$ok = FALSE;
+			$authServiceObj = FALSE;
 
+			while (is_object($authServiceObj = t3lib_div::makeInstanceService('auth', 'authUserFE', $serviceChain))) {
+				$serviceChain .= ',' . $authServiceObj->getServiceKey();
+				$ok = $authServiceObj->compareUident($user, $loginData);
 				if ($ok) {
-						// Login successfull: create user session
-					$GLOBALS['TSFE']->fe_user->createUserSession($user);
-					$GLOBALS['TSFE']->initUserGroups();
-					$GLOBALS['TSFE']->fe_user->user = $GLOBALS['TSFE']->fe_user->fetchUserSession();
-					$GLOBALS['TSFE']->loginUser = 1;
-				} else {
-						// auto login failed...
-					$message = $langObj->getLL('internal_auto_login_failed');
-					$result = FALSE;
+					break;
 				}
+			}
+
+			if ($ok) {
+					// Login successfull: create user session
+				$GLOBALS['TSFE']->fe_user->createUserSession($user);
+				$GLOBALS['TSFE']->initUserGroups();
+				$GLOBALS['TSFE']->fe_user->user = $GLOBALS['TSFE']->fe_user->fetchUserSession();
+				$GLOBALS['TSFE']->loginUser = 1;
+			} else if (
+				is_object($authServiceObj) &&
+				in_array(get_class($authServiceObj), $serviceKeyArray)
+			) {
+					// auto login failed...
+				$message = $langObj->getLL('internal_auto_login_failed');
+				$result = FALSE;
 			} else {
 					// Required authentication service not available
 				$message = $langObj->getLL('internal_required_authentication_service_not_available');
