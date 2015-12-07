@@ -111,7 +111,7 @@ class tx_agency_control_main {
 		if ($errorMessage) {
 			$content = $errorMessage;
 		} else if ($success === FALSE) {
-			$content = '<em>Internal error in ' . $pibaseObj->extKey . '!</em><br /> Maybe you forgot to include the basic template file under statics from extensions.';
+			$content = '<em>Internal error in ' . $pibaseObj->extKey . '!</em><br /> Maybe you forgot to include the basic template file under "include statics from extensions".';
 		}
 
 		$content = tx_div2007_alpha::wrapInBaseClass_fh001($content, $pibaseObj->prefixId, $pibaseObj->extKey);
@@ -224,6 +224,17 @@ class tx_agency_control_main {
 		$result = $this->langObj->loadLL();
 
 		if ($result !== FALSE) {
+			$templateFile = $conf['templateFile'];
+			$templateCode = $cObj->fileResource($templateFile);
+			if (
+				(!$templateFile || empty($templateCode))
+			) {
+				$errorText = tx_div2007_alpha5::getLL_fh002(
+						$this->langObj,
+						'internal_no_template'
+					);
+				$errorMessage = sprintf($errorText, $templateFile, 'plugin.tx_' . $pibaseObj->extKey . '.templateFile');
+			}
 
 			if ($this->controlData->isTokenValid()) {
 				$this->control->init(
@@ -243,6 +254,7 @@ class tx_agency_control_main {
 					$this->tca,
 					$this->control,
 					$theTable,
+					$templateCode,
 					$this->controlData,
 					$staticInfoObj
 				);

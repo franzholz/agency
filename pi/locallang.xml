@@ -565,6 +565,7 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
 			<label index="internal_email_not_sent">An email to %s could not be sent!</label>
 			<label index="internal_invalid_token">Apparently, this link has expired.</label>
 			<label index="internal_init_language">Internal error of the language packs.</label>
+			<label index="internal_no_template">The template file "%s" has not been found. Check your template setup about %s.</label>
 		</languageKey>
 	</data>
 </T3locallang>

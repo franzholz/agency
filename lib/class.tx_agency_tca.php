@@ -55,7 +55,13 @@ class tx_agency_tca {
 				$this->fixAddressFeAdminFieldList($theTable);
 			}
 
-			tx_div2007_alpha::loadTcaAdditions_fh001($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['extendingTCA']);
+			if (
+				!empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['extendingTCA'])
+			) {
+				tx_div2007_alpha::loadTcaAdditions_fh001(
+					$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['extendingTCA']
+				);
+			}
 			$this->fixAddressFeAdminFieldList($theTable);
 		}
 	}

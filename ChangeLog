@@ -1,3 +1,10 @@
+2015-12-07 Franz Holzinger <franz@ttproducts.de>
+	* bug fix: multiple checkbox looses the first zero value 0. parseValues must take care of a zero 0.
+	* bug fix: PHP 5.4 fatal error. Can't use method return value in write context with empty around getFeUserData
+	* feature: Show an error message if the template file is not found.
+	* fix bug #60509
+	* fix bug #59450: Missing SQL definition for telephone. Extend the table fields of fe_users.
+
 2015-10-17 Franz Holzinger <franz@ttproducts.de>
 	* bug fix: Build a loop over all login methods until salted passwords are supported.
 	* bug fix: do not skip the preview before a deletion

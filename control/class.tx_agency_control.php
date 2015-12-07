@@ -433,16 +433,19 @@ class tx_agency_control {
 		} else {
 			$finalDataArray = $dataArray;
 		}
-		$submitData =
-			!empty($controlData->getFeUserData('submit')) ||
-			!empty($controlData->getFeUserData('submit-security'));
 
-		if ($submitData != '') {
+		$hasSubmitData = (
+			$controlData->getFeUserData('submit') != '' ||
+			$controlData->getFeUserData('submit-security') != ''
+		);
+
+		if ($hasSubmitData) {
 			$bSubmit = TRUE;
 			$controlData->setSubmit(TRUE);
 		}
 
 		$doNotSaveData = $controlData->getFeUserData('doNotSave');
+
 		if ($doNotSaveData != '') {
 			$bDoNotSave = TRUE;
 			$controlData->setDoNotSave(TRUE);
@@ -1103,7 +1106,11 @@ class tx_agency_control {
 			}
 
 			if (
-				($cmd != 'setfixed' || $cmdKey != 'edit' || $cmdKey != 'password') &&
+				(
+					$cmd != 'setfixed' ||
+					$cmdKey != 'edit' ||
+					$cmdKey != 'password'
+				) &&
 				!$errorContent &&
 				!$hasError &&
 				!$controlData->getFeUserData('preview')

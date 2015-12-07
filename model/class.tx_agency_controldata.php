@@ -998,12 +998,18 @@ class tx_agency_controldata {
 	 * @return mixed the value of the specified key or the full array
 	 */
 	public function getFeUserData ($key = '') {
-		if ($key != '') {
-			$value = $this->feUserData[$key];
+		$result = FALSE;
+
+		if (
+			$key != ''
+		) {
+			if (isset($this->feUserData[$key])) {
+				$result = $this->feUserData[$key];
+			}
 		} else {
-			$value = $this->feUserData;
+			$result = $this->feUserData;
 		}
-		return $value;
+		return $result;
 	}
 
 	/**

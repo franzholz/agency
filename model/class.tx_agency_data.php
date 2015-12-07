@@ -61,7 +61,7 @@ class tx_agency_data {
 	public $recUid = 0;
 	public $missing = array(); // array of required missing fields
 	public $inError = array(); // array of fields with eval errors other than absence
-	public $templateCode;
+	public $templateCode = '';
 
 
 	public function init (
@@ -70,18 +70,19 @@ class tx_agency_data {
 		$tca,
 		$control,
 		$theTable,
+		$templateCode,
 		$controlData,
 		$staticInfoObj
 	) {
-		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
-		$conf = $confObj->getConf();
-
 		$this->lang = $lang;
 		$this->tca = $tca;
 		$this->control = $control;
 		$this->controlData = $controlData;
 		$this->cObj = $cObj;
 		$this->fileFunc = t3lib_div::makeInstance('t3lib_basicFileFunctions');
+
+			// Fetching the template file
+		$this->setTemplateCode($templateCode);
 
 		$captchaExtensions = $controlData->getCaptchaExtensions();
 		if (!empty($captchaExtensions)) {
@@ -95,9 +96,6 @@ class tx_agency_data {
 			$feDataArray = $fe[$theTable];
 			$this->setDataArray($feDataArray);
 		}
-
-			// Fetching the template file
-		$this->setTemplateCode($cObj->fileResource($conf['templateFile']));
 	}
 
 	public function setError ($error) {
@@ -1028,11 +1026,21 @@ class tx_agency_data {
 							break;
 							case 'multiple':
 								$fieldDataArray = array();
-								if (!empty($dataArray[$theField])) {
+								if (
+									!empty($dataArray[$theField]) ||
+									$dataArray[$theField] == '0' // A zero value is different from an empty value. It must be kept for the case when only the first element of a checkbox with the value 0 has been selected.
+								) {
 									if (is_array($dataArray[$theField])) {
 										$fieldDataArray = $dataArray[$theField];
-									} else if (is_string($dataArray[$theField]) && $dataArray[$theField]) {
-										$fieldDataArray = t3lib_div::trimExplode(',', $dataArray[$theField], 1);
+									} else if (
+										is_string($dataArray[$theField])
+									) {
+										$fieldDataArray =
+											t3lib_div::trimExplode(
+												',',
+												$dataArray[$theField],
+												1
+											);
 									}
 								}
 								$dataValue = $fieldDataArray;
