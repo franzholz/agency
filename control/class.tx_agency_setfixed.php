@@ -29,8 +29,6 @@
  *
  * setfixed functions
  *
- * $Id$
- *
  * @author	Kasper Skaarhoj <kasperXXXX@typo3.com>
  * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
  * @author	Franz Holzinger <franz@ttproducts.de>
@@ -819,4 +817,3 @@ class tx_agency_setfixed {
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/control/class.tx_agency_setfixed.php']) {
   include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/control/class.tx_agency_setfixed.php']);
 }
-?>

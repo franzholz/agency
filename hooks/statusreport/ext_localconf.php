@@ -9,4 +9,3 @@ if (TYPO3_MODE == 'BE') {
 		// Register Status Report Hook
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers'][$_EXTKEY][] = 'tx_agency_statusReport';
 }
-?>

@@ -54,4 +54,3 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 	);
 }
 
-?>

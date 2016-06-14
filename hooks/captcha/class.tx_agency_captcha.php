@@ -27,8 +27,6 @@
  *
  * captcha hook functions
  *
- * $Id$
- *
  * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
  *
  * @package TYPO3
@@ -104,5 +102,3 @@ class tx_agency_captcha {
 if (defined('TYPO3_MODE') && isset($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/hooks/captcha/class.tx_agency_captcha.php'])) {
 	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/hooks/captcha/class.tx_agency_captcha.php']);
 }
-
-?>

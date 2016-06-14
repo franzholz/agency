@@ -119,7 +119,7 @@ class tx_agency_statusReport implements tx_reports_StatusProvider {
 			$message = $GLOBALS['LANG']->sL('LLL:EXT:' . AGENCY_EXT . '/hooks/statusreport/locallang.xlf:must_be_normal_or_rsa');
 			$status = tx_reports_reports_status_Status::ERROR;
 		} else {
-			$value = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];;
+			$value = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
 			$message = '';
 			$status = tx_reports_reports_status_Status::OK;
 		}
@@ -158,4 +158,3 @@ class tx_agency_statusReport implements tx_reports_StatusProvider {
 if (defined('TYPO3_MODE') && isset($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/hooks/statusreport/class.tx_agency_statusReport.php'])) {
 	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/hooks/statusreport/class.tx_agency_statusReport.php']);
 }
-?>

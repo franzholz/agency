@@ -31,8 +31,6 @@
  * Front End creating/editing/deleting records authenticated by fe_user login.
  * A variant restricted to front end user self-registration and profile maintenance, with a number of enhancements (see the manual).
  *
- * $Id: class.tx_agency_control_main.php 90318 2015-12-07 14:21:14Z franzholz $
- *
  * @author	Kasper Skårhøj <kasperYYYY@typo3.com>
  * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
  * @author	Franz Holzinger <franz@ttproducts.de>
@@ -310,4 +308,3 @@ class tx_agency_control_main {
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/control/class.tx_agency_control_main.php']) {
 	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/control/class.tx_agency_control_main.php']);
 }
-?>

@@ -29,8 +29,6 @@
  *
  * data store functions
  *
- * $Id$
- *
  * @author	Kasper Skaarhoj <kasper2008@typo3.com>
  * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
  * @author	Franz Holzinger <franz@ttproducts.de>
@@ -2225,4 +2223,3 @@ class tx_agency_data {
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/model/class.tx_agency_data.php']) {
   include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/model/class.tx_agency_data.php']);
 }
-?>

@@ -29,8 +29,6 @@
  *
  * TCA front end functions
  *
- * $Id$
- *
  * @author	Kasper Skaarhoj <kasper2007@typo3.com>
  * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
  * @author	Franz Holzinger <franz@ttproducts.de>
@@ -1185,4 +1183,3 @@ class tx_agency_tca {
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/lib/class.tx_agency_tca.php'])  {
   include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/lib/class.tx_agency_tca.php']);
 }
-?>

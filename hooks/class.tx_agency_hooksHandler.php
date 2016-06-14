@@ -27,8 +27,6 @@
  *
  * Example of hook handler for extension Agency Registration (agency)
  *
- * $Id$
- *
  * @author Stanislas Rolland <stanislas.rolland(arobas)sjbr.ca>
  *
  */
@@ -191,4 +189,3 @@ if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['
 	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/hooks/class.tx_agency_hooksHandler.php']);
 }
 
-?>

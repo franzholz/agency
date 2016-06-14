@@ -5,8 +5,6 @@
 </head>
 <body>
 
-<!-- $Id$ -->
-
 <h1>AGENCY REGISTRATION</h1>
 <h2>EXAMPLE</h2>
 <h3>Attention: Please don't forget to add '&nbsp;' after the data values in the preview mode. If you don't, you will get problems with your IE-browser users</h3>
@@ -47,7 +45,7 @@
 		<!-- ###SUB_REQUIRED_FIELD_password### -->
 		<p class="agency-error">###MISSING_PASSWORD###</p>
 		<!-- ###SUB_REQUIRED_FIELD_password### -->
-		<input id="agency-password" type="password" size="10" maxlength="40" title="###TOOLTIP_PASSWORD###" name="###NAME_PASSWORD###" value="" class="agency-password" ###PASSWORD_ONCHANGE### />
+		<input id="agency-password" type="password" size="10" maxlength="40" title="###TOOLTIP_PASSWORD###" name="###NAME_PASSWORD###" value="" class="agency-password" />
 	</dd>
 
 	<dt>
@@ -693,7 +691,9 @@
 	<dd><input type="text" class="agency-text" name="user" value="###FIELD_username###"  size="40" maxlength="50" /></dd>
 
 	<dt>###LABEL_PASSWORD###</dt>
-	<dd><input type="password" name="pass" value="" size="10" maxlength="40" ###PASSWORD_ONCHANGE### /></dd>
+	<dd>
+		<input id="agency-password" type="password" name="pass" class="agency-password" value="" size="10" maxlength="40" title="###TOOLTIP_PASSWORD###" />
+	</dd>
 
 	<dt>&nbsp;</dt>
 	<dd>
@@ -1370,13 +1370,13 @@ The user is informed that a message has been sent to the email address and that 
 		<!-- ###SUB_REQUIRED_FIELD_password### -->
 		<p class="agency-error">###MISSING_PASSWORD###</p>
 		<!-- ###SUB_REQUIRED_FIELD_password### -->
-		<input id="agency-password" type="password" size="10" maxlength="40" title="###TOOLTIP_PASSWORD###" name="###NAME_PASSWORD###" value="" class="agency-password" ###PASSWORD_ONCHANGE### />
+		<input id="agency-password" type="password" name="pass" class="agency-password" value="" size="10" maxlength="40" title="###TOOLTIP_PASSWORD###" />
 	</dd>
 	<dt>
 		<label for="agency-password_again">###LABEL_PASSWORD_AGAIN###</label>
 	</dt>
 	<dd>
-		<input id="agency-password_again" type="password" size="10" maxlength="40" title="###LABEL_TOOLTIP_PASSWORD_AGAIN###" name="###NAME_PASSWORD_AGAIN###" value="" class="agency-password" ###PASSWORD_ONCHANGE### />
+		<input id="agency-password_again" type="password" size="10" maxlength="40" title="###LABEL_TOOLTIP_PASSWORD_AGAIN###" name="###NAME_PASSWORD_AGAIN###" value="" class="agency-password" />
 	</dd>
 	<!-- ###SUB_INCLUDED_FIELD_password### -->
 
@@ -2041,7 +2041,7 @@ The user is informed that a message has been sent to the email address and that 
 	<dt><label for="agency-username">###LABEL_USERNAME###</label></dt>
 	<dd> <input type="text" class="agency-text" id="agency-username" size="40" maxlength="50" title="###LABEL_TOOLTIP_LOGIN_USERNAME###" name="user" value="###FIELD_username###" /> </dd>
 	<dt><label for="agency-pass">###LABEL_PASSWORD###</label></dt>
-	<dd> <input type="password" id="agency-pass" title="###LABEL_TOOLTIP_LOGIN_PASSWORD###" name="pass" value="" size="10" maxlength="40" ###PASSWORD_ONCHANGE### /> </dd>
+	<dd> <input type="password" id="agency-pass" title="###LABEL_TOOLTIP_LOGIN_PASSWORD###" name="pass" value="" size="10" maxlength="40" /> </dd>
 
 	<dt>&nbsp;</dt>
 	<dd>
@@ -2095,7 +2095,7 @@ The user is informed that a message has been sent to the email address and that 
 	<dd><input type="text" class="agency-text" id="agency-username" size="40" maxlength="50" title="###LABEL_TOOLTIP_LOGIN_USERNAME###" name="user" value="###FIELD_username###" /></dd>
 
 	<dt><label for="agency-pass">###LABEL_PASSWORD###</label></dt>
-	<dd><input type="password" id="agency-pass" title="###LABEL_TOOLTIP_LOGIN_PASSWORD###" name="pass" value="" size="10" maxlength="40" ###PASSWORD_ONCHANGE### /></dd>
+	<dd><input type="password" title="###LABEL_TOOLTIP_LOGIN_PASSWORD###" name="pass" value="" size="10" maxlength="40" /></dd>
 
 	<dt>&nbsp;</dt>
 	<dd>
@@ -2130,7 +2130,7 @@ The user is informed that a message has been sent to the email address and that 
 		<!-- ###SUB_REQUIRED_FIELD_password### -->
 		<p class="agency-error">###MISSING_PASSWORD###</p>
 		<!-- ###SUB_REQUIRED_FIELD_password### -->
-		<input id="agency-password" type="password" size="10" maxlength="40" title="###TOOLTIP_PASSWORD###" name="###NAME_PASSWORD###" value="" class="agency-password" ###PASSWORD_ONCHANGE### />
+		<input id="agency-password" type="password" name="pass" class="agency-password" value="" size="10" maxlength="40" title="###TOOLTIP_PASSWORD###" />
 	</dd>
 	<dt>
 		<label for="agency-password_again" class="agency-password-again">###LABEL_PASSWORD_AGAIN###</label>

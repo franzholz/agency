@@ -29,8 +29,6 @@
  * Part of the agency (Agency Registration) extension.
  * A variant restricted to front end user self-registration and profile maintenance, with a number of enhancements (see the manual).
  *
- * $Id$
- *
  * @author	Kasper Skårhøj <kasperYYYY@typo3.com>
  * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
  * @author	Franz Holzinger <franz@ttproducts.de>
@@ -201,4 +199,3 @@ class tx_agency_pi_base extends tslib_pibase {
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/pi/class.tx_agency_pi_base.php']) {
 	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/pi/class.tx_agency_pi_base.php']);
 }
-?>

@@ -29,8 +29,6 @@
  *
  * table class for creation of database table classes and table view classes
  *
- * $Id$
- *
  * @author	Franz Holzinger <franz@ttproducts.de>
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
  * @package TYPO3
@@ -127,4 +125,3 @@ class tx_agency_lib_tables {
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/lib/class.tx_agency_lib_tables.php']) {
 	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT .  '/lib/class.tx_agency_lib_tables.php']);
 }
-?>

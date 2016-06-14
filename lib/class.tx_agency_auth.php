@@ -29,8 +29,6 @@
  *
  * authentication functions
  *
- * $Id$
- *
  * @author	Kasper Skaarhoj <kasper2007@typo3.com>
  * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
  * @author	Franz Holzinger <franz@ttproducts.de>
@@ -218,4 +216,3 @@ class tx_agency_auth {
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/lib/class.tx_agency_auth.php']) {
   include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/lib/class.tx_agency_auth.php']);
 }
-?>

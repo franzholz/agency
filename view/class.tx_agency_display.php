@@ -29,8 +29,6 @@
  *
  * display functions
  *
- * $Id$
- *
  * @author	Kasper Skaarhoj <kasper2010@typo3.com>
  * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
  * @author	Franz Holzinger <franz@ttproducts.de>
@@ -1452,4 +1450,3 @@ if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['
   include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/view/class.tx_agency_display.php']);
 }
 
-?>

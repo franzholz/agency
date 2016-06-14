@@ -29,8 +29,6 @@
  *
  * setup configuration functions
  *
- * $Id$
- *
  * @author	Franz Holzinger <franz@ttproducts.de>
  *
  * @package TYPO3
@@ -78,4 +76,3 @@ class tx_agency_conf {
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/lib/class.tx_agency_conf.php']) {
   include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/lib/class.tx_agency_conf.php']);
 }
-?>

@@ -1,7 +1,6 @@
 ##
 ## @package TYPO3
 ## @subpackage agency
-## @version $Id$
 ##
 
 plugin.tx_agency = USER_INT

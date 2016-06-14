@@ -2,11 +2,20 @@
 /*
  * Register necessary class names with autoloader
  *
- * $Id$
  */
 
-$key = 'agency';
-$extensionPath = t3lib_extMgm::extPath($key);
+$emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
+
+if (
+	class_exists($emClass) &&
+	method_exists($emClass, 'extPath')
+) {
+	// nothing
+} else {
+	$emClass = 't3lib_extMgm';
+}
+
+$extensionPath = call_user_func($emClass . '::extPath', 'agency');
 
 return array(
 	'tx_agency_statusreport' => $extensionPath . 'hooks/statusreport/class.tx_agency_statusReport.php',
@@ -39,4 +48,3 @@ return array(
 	'tx_agency_model_field_usergroup' => $extensionPath . 'model/field/class.tx_agency_model_field_usergroup.php',
 	'tx_agency_display' => $extensionPath . 'view/class.tx_agency_display.php',
 );
-?>

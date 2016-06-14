@@ -30,8 +30,6 @@
  *
  * control data store functions
  *
- * $Id$
- *
  * @author	Franz Holzinger <franz@ttproducts.de>
  *
  * @package TYPO3
@@ -1212,4 +1210,3 @@ class tx_agency_controldata {
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/model/class.tx_agency_controldata.php'])  {
   include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/model/class.tx_agency_controldata.php']);
 }
-?>

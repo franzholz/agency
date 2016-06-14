@@ -29,8 +29,6 @@
  *
  * Storage security functions
  *
- * $Id: class.tx_srfeuserregister_storage_security.php$
- *
  * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
  *
  * @package TYPO3
@@ -214,4 +212,3 @@ class tx_agency_storage_security {
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/model/class.tx_agency_storage_security.php']) {
   include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/model/class.tx_agency_storage_security.php']);
 }
-?>

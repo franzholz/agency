@@ -436,4 +436,3 @@ if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
 	t3lib_extMgm::addToInsertRecords('fe_groups_language_overlay');
 }
 
-?>

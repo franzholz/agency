@@ -29,8 +29,6 @@
  *
  * language functions
  *
- * $Id: class.tx_agency_lang.php 87854 2014-12-27 21:18:09Z franzholz $
- *
  * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
  * @author	Franz Holzinger <franz@ttproducts.de>
  * @author	Oliver Klee <typo-coding@oliverklee.de>
@@ -227,4 +225,3 @@ class tx_agency_lang extends tx_div2007_alpha_language_base {
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/lib/class.tx_agency_lang.php']) {
   include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/lib/class.tx_agency_lang.php']);
 }
-?>

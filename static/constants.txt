@@ -1,6 +1,4 @@
 
-## $Id$
-
 
 plugin.tx_agency {
 

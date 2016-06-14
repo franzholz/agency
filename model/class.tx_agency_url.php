@@ -29,8 +29,6 @@
  *
  * url functions
  *
- * $Id$
- *
  * @author	Kasper Skaarhoj <kasper2007@typo3.com>
  * @author	Stanislas Rolland <stanislas.rolland(arobas)fructifor.ca>
  * @author	Franz Holzinger <franz@ttproducts.de>
@@ -98,4 +96,3 @@ if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['
   include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/model/class.tx_agency_url.php']);
 }
 
-?>
