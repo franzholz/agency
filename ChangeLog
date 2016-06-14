@@ -1,3 +1,6 @@
+2016-06-14 Franz Holzinger <franz@ttproducts.de>
+	* bugfix for PHP 7.x: The method init of tx_agency_lang cannot overload init of tx_div2007_alpha_language_base. init1 must be used instead.
+
 2015-12-07 Franz Holzinger <franz@ttproducts.de>
 	* bug fix: multiple checkbox looses the first zero value 0. parseValues must take care of a zero 0.
 	* bug fix: PHP 5.4 fatal error. Can't use method return value in write context with empty around getFeUserData
