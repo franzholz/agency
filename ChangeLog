@@ -2,7 +2,8 @@
 	* bugfix for PHP 7.x: The method init of tx_agency_lang cannot overload init of tx_div2007_alpha_language_base. init1 must be used instead.
 	* remove the $Id$ file versions which have been used by subversion
 	* remove the closing php brackets
-	* remove the marker ###PASSWORD_ONCHANGE###
+	* remove the markers ###PASSWORD_ONCHANGE### and ###NAME_PASSWORD###
+	* change the input password attributes into the order type, name, id, class, ... title, value
 
 2015-12-07 Franz Holzinger <franz@ttproducts.de>
 	* bug fix: multiple checkbox looses the first zero value 0. parseValues must take care of a zero 0.
