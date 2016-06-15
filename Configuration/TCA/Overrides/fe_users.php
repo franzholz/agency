@@ -160,6 +160,48 @@ if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['forceGender']) {
 }
 
 
+if ( // Direct Mail tables exist but Direct Mail shall not be used
+	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['enableDirectMail'] &&
+	!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('direct_mail')
+) {
+	// fe_users modified
+	$directMailTemporaryColumns = array(
+		'module_sys_dmail_newsletter' => array(
+			'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.module_sys_dmail_newsletter',
+			'exclude' => '1',
+			'config'=>array(
+				'type'=>'check'
+				)
+			),
+		'module_sys_dmail_category' => array(
+			'label'=>'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.module_sys_dmail_category',
+			'exclude' => '1',
+			'config' => array(
+				'type' => 'select',
+				'allowed' => 'sys_dmail_category',
+				'MM' => 'sys_dmail_feuser_category_mm',
+				'foreign_table' => 'sys_dmail_category',
+				'foreign_table_where' =>
+					'AND sys_dmail_category.pid IN ' .
+					'(###PAGE_TSCONFIG_IDLIST###) ORDER BY sys_dmail_category.sorting',
+				'size' => 10,
+				'renderMode' => 'check',
+				'minitems' => 0,
+				'maxitems' => 1000,
+			)
+		),
+		'module_sys_dmail_html' => array(
+			'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.module_sys_dmail_html',
+			'exclude' => '1',
+			'config' => array(
+				'type'=>'check'
+			)
+		)
+	);
+
+	$temporaryColumns = array_merge($temporaryColumns, $directMailTemporaryColumns);
+}
+
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('fe_users', $temporaryColumns);
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
 	'fe_users',
@@ -168,6 +210,15 @@ if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['forceGender']) {
 	'after:www,'
 );
 
+if ( // Direct Mail tables exist but Direct Mail shall not be used
+	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['enableDirectMail'] &&
+	!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('direct_mail')
+) {
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
+		'fe_users',
+		'--div--;Direct mail, module_sys_dmail_newsletter;;;;1-1-1, module_sys_dmail_category, module_sys_dmail_html'
+	);
+}
 
 $GLOBALS['TCA']['fe_users']['columns']['username']['config']['eval'] = 'nospace,uniqueInPid,required';
 $GLOBALS['TCA']['fe_users']['columns']['name']['config']['max'] = '100';

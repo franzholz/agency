@@ -4,6 +4,7 @@
 	* bugfix for TYPO3 6.2 and 7.x: use the TYPO3 6.2 class name
 		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility instead of t3lib_extMgm and
 		\TYPO3\CMS\Core\Utility\GeneralUtility instead of t3lib_div
+	* bugfix for TYPO3 6.2 and 7.x: consider the DirectMail categories if DirectMail is not installed.
 
 2016-06-14 Franz Holzinger <franz@ttproducts.de>
 	* bugfix for PHP 7.x: The method init of tx_agency_lang cannot overload init of tx_div2007_alpha_language_base. init1 must be used instead.

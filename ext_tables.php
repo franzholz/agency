@@ -321,7 +321,7 @@ if (
 						'disabled' => 'hidden',
 					),
 					'iconfile' => call_user_func($emClass . '::extRelPath', AGENCY_EXT) . 'icon_tx_directmail_category.gif',
-					)
+				)
 			);
 
 			// ******************************************************************
@@ -467,4 +467,13 @@ if (
 
 call_user_func($emClass . '::allowTableOnStandardPages', 'fe_groups_language_overlay');
 call_user_func($emClass . '::addToInsertRecords', 'fe_groups_language_overlay');
+
+if ( // Direct Mail tables exist but Direct Mail shall not be used
+	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['enableDirectMail'] &&
+	!call_user_func($emClass . '::isLoaded', 'direct_mail')
+) {
+	call_user_func($emClass . '::allowTableOnStandardPages', 'sys_dmail_category');
+	call_user_func($emClass . '::addToInsertRecords', 'sys_dmail_category');
+}
+
 
