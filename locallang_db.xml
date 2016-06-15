@@ -9,6 +9,8 @@
     </meta>
     <data type="array">
         <languageKey index="default" type="array">
+			<label index="tstamp">Time stamp</label>
+			<label index="crdate">Creation date</label>
             <label index="tt_content.list_type">Agency Registration</label>
             <label index="tt_content.pi_flexform.display_mode">Display mode</label>
             <label index="tt_content.pi_flexform.display_mode.1">Default</label>
@@ -49,6 +51,8 @@
             <label index="fe_groups_language_overlay">User Group Alternative Language</label>
             <label index="fe_groups_language_overlay.title">Translated user group name</label>
             <label index="sys_agency_fe_users_limit_fe_groups">Relation FE users to FE groups</label>
+            <label index="sys_agency_fe_users_limit_fe_groups.codes">Codes</label>
+            <label index="sys_agency_fe_users_limit_fe_groups.status">Status</label>
             <label index="sys_dmail_category">Direct Mail Category</label>
             <label index="sys_dmail_category.category">Category:</label>
             <label index="sys_dmail_category.old_cat_number">Old category number:</label>

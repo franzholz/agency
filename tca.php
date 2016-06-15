@@ -4,8 +4,21 @@ if (!defined ('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
-if (!t3lib_extMgm::isLoaded('sr_feuser_register')) {
+$emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
 
+if (
+	class_exists($emClass) &&
+	method_exists($emClass, 'extPath')
+) {
+	// nothing
+} else {
+	$emClass = 't3lib_extMgm';
+}
+
+if (
+	version_compare(TYPO3_version, '6.2.0', '<') &&
+	!call_user_func($emClass . '::isLoaded', 'sr_feuser_register')
+) {
 	$GLOBALS['TCA']['fe_groups_language_overlay'] = array(
 		'ctrl' => $GLOBALS['TCA']['fe_groups_language_overlay']['ctrl'],
 		'interface' => array(

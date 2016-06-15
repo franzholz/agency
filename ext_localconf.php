@@ -3,20 +3,31 @@ if (!defined ('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
+$emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
+
+if (
+	class_exists($emClass) &&
+	method_exists($emClass, 'extPath')
+) {
+	// nothing
+} else {
+	$emClass = 't3lib_extMgm';
+}
+
 if (!defined ('AGENCY_EXT')) {
 	define('AGENCY_EXT', $_EXTKEY);
 }
 
 if (!defined ('PATH_BE_AGENCY')) {
-	define('PATH_BE_AGENCY', t3lib_extMgm::extPath($_EXTKEY));
+	define('PATH_BE_AGENCY', call_user_func($emClass . '::extPath', $_EXTKEY));
 }
 
 if (!defined ('PATH_BE_AGENCY_REL')) {
-	define('PATH_BE_AGENCY_REL', t3lib_extMgm::extRelPath($_EXTKEY));
+	define('PATH_BE_AGENCY_REL', call_user_func($emClass . '::extRelPath', $_EXTKEY));
 }
 
 if (!defined ('PATH_FE_AGENCY_REL')) {
-	define('PATH_FE_AGENCY_REL', t3lib_extMgm::siteRelPath($_EXTKEY));
+	define('PATH_FE_AGENCY_REL', call_user_func($emClass . '::siteRelPath', $_EXTKEY));
 }
 
 if (!defined(STATIC_INFO_TABLES_EXT)) {
@@ -26,7 +37,7 @@ if (!defined(STATIC_INFO_TABLES_EXT)) {
 	// Add Status Report
 require_once(PATH_BE_AGENCY . 'hooks/statusreport/ext_localconf.php');
 
-t3lib_extMgm::addPItoST43($_EXTKEY, 'class.tx_agency.php', '', 'list_type', 0);
+call_user_func($emClass . '::addPItoST43', $_EXTKEY, 'class.tx_agency.php', '', 'list_type', 0);
 
 $_EXTCONF = unserialize($_EXTCONF);    // unserializing the configuration so we can use it here:
 
@@ -52,7 +63,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['confirmRegistrationClass'][] =
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['registrationProcess'][] = 'EXT:' . $_EXTKEY . '/hooks/class.tx_agency_hooksHandler.php:&tx_agency_hooksHandler';
 
 	// Save extension version and constraints
-require_once(t3lib_extMgm::extPath($_EXTKEY) . 'ext_emconf.php');
+require_once(call_user_func($emClass . '::extPath', $_EXTKEY) . 'ext_emconf.php');
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['version'] = $EM_CONF[$_EXTKEY]['version'];
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['constraints'] = $EM_CONF[$_EXTKEY]['constraints'];
 
@@ -78,7 +89,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_agency_feuse
 
 if (TYPO3_MODE == 'BE') {
 
-	if (t3lib_extMgm::isLoaded(DIV2007_EXT)) {
+	if (call_user_func($emClass . '::isLoaded', DIV2007_EXT)) {
 		// replace the output of the former CODE field with the flexform
 		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info'][$_EXTKEY . '_pi'][] = 'EXT:' . $_EXTKEY . '/hooks/class.tx_agency_hooks_cms.php:&tx_agency_hooks_cms->pmDrawItem';
 	}
@@ -149,12 +160,15 @@ if (
 	);
 }
 
-if (TYPO3_MODE == 'FE') {
-	if (t3lib_extMgm::isLoaded('tt_products')) {
+if (
+	TYPO3_MODE == 'FE' &&
+	version_compare(TYPO3_version, '6.2.0', '<')
+) {
+	if (call_user_func($emClass . '::isLoaded', 'tt_products')) {
 		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tt_products']['extendingTCA'][] = $_EXTKEY;
 	}
 
-	if (t3lib_extMgm::isLoaded('direct_mail')) {
+	if (call_user_func($emClass . '::isLoaded', 'direct_mail')) {
 		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['extendingTCA'][] = 'direct_mail';
 	}
 }

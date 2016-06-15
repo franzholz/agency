@@ -14,3 +14,5 @@ enableDirectMail = 0
   # cat=basic; type=boolean; label=Gender is set by default: This will force the gender to be set to 0 for male and 1 for female. If set no undefined gender is allowed.
 forceGender = 0
 
+  # cat=basic/enable; type=integer; label=endtime year: Enter the year for the endtime field. Some Microsoft Windows systems are limited to 2038 for the PHP function mktime.
+endtimeYear = 2021
