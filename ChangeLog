@@ -1,4 +1,7 @@
 2016-06-15 Franz Holzinger <franz@ttproducts.de>
+	* feature: Support for TYPO3 7.x. Make a copy of class tx_agency_display under JambageCom\\Agency\\View\\CreateView which calls the div2007 method FrontendUtility::getUpdateJS instead of the TYPO3 CONTENT object
+
+2016-06-15 Franz Holzinger <franz@ttproducts.de>
 	* bugfix: The first view of the creation page must not show any error messages.
 	* feature: Consider Microsoft Windows limitations to the endtime year 2038
 	* bugfix for TYPO3 6.2 and 7.x: use the TYPO3 6.2 class name

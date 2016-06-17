@@ -559,11 +559,11 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
 			<label index="internal_auto_login_failed">The auto login has failed.</label>
 			<label index="internal_no_enabled_user">The user "%s" is not existent or enabled.</label>
 			<label index="internal_check_requirements_frontend">&lt;p&gt;&lt;big&gt;&lt;b&gt;Agency Registration (agency): %1$s.&lt;/b&gt;&lt;/big&gt;&lt;/p&gt;</label>
-			<label index="internal_replace_deprecated_marker">Deprecated marker %1$s must be replaced by marker %2$s in HTML template file %3$s</label>
-			<label index="internal_remove_deprecated_marker">Deprecated marker %1$s must be removed from HTML template file %2$s</label>
-			<label index="internal_label_not_localized_by_div2007">div2007 failed to localize label %1$s</label>
-			<label index="internal_email_not_sent">An email to %s could not be sent!</label>
-			<label index="internal_invalid_token">Apparently, this link has expired.</label>
+			<label index="internal_replace_deprecated_marker">Deprecated marker %1$s must be replaced by marker %2$s in the HTML template file %3$s</label>
+			<label index="internal_remove_deprecated_marker">Deprecated marker %1$s must be removed from the HTML template file %2$s</label>
+			<label index="internal_label_not_localized_by_div2007">The extenson div2007 failed to localize the label %1$s</label>
+			<label index="internal_email_not_sent">The email to %s could not be sent!</label>
+			<label index="internal_invalid_token">Apparently this link has expired.</label>
 			<label index="internal_init_language">Internal error of the language packs.</label>
 			<label index="internal_no_template">The template file "%s" has not been found. Check your template setup about %s.</label>
 		</languageKey>

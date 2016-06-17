@@ -161,7 +161,12 @@ class tx_agency_transmission_security {
 				}
 
 				if (version_compare(TYPO3_version, '6.2.0', '<')) {
-					$headerData = '<script type="text/javascript" src="' . $GLOBALS['TSFE']->absRefPrefix . t3lib_div::createVersionNumberedFilename(t3lib_extMgm::siteRelPath('agency')  . 'scripts/rsaauth.js') . '"></script>';
+					$headerData = '<script type="text/javascript" src="' .
+						$GLOBALS['TSFE']->absRefPrefix .
+						t3lib_div::createVersionNumberedFilename(
+							t3lib_extMgm::siteRelPath('agency') . 'scripts/rsaauth.js'
+						) .
+						'"></script>';
 					$GLOBALS['TSFE']->additionalHeaderData['agency_rsaauth'] = $headerData;
 					$onSubmit = 'x_agency_encrypt(this); return true;';
 				} else {

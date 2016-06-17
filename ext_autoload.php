@@ -47,4 +47,5 @@ return array(
 	'tx_agency_model_field_base' => $extensionPath . 'model/field/class.tx_agency_model_field_base.php',
 	'tx_agency_model_field_usergroup' => $extensionPath . 'model/field/class.tx_agency_model_field_usergroup.php',
 	'tx_agency_display' => $extensionPath . 'view/class.tx_agency_display.php',
+	'JambageCom\\Agency\\View\\CreateView' => $extensionPath . 'Classes/View/CreateView.php',
 );

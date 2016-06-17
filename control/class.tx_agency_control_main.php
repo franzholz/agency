@@ -87,7 +87,12 @@ class tx_agency_control_main {
 		$templateCode = $this->data->getTemplateCode();
 
 		if ($success) {
-			$displayObj = t3lib_div::getUserObj('tx_agency_display');
+			$displayClassName = 'JambageCom\\Agency\\View\\CreateView';
+			if (version_compare(TYPO3_version, '6.2.0', '<')) {
+				$displayClassName = 'tx_agency_display';
+			}
+
+			$displayObj = t3lib_div::getUserObj($displayClassName);
 			$content = $this->control->doProcessing(
 				$pibaseObj->cObj,
 				$confObj,

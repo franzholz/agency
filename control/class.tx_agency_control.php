@@ -533,6 +533,7 @@ class tx_agency_control {
 				) {
 					$controlData->clearSessionData();
 				}
+
 				$this->marker->setArray($markerArray);
 				if (!$bSubmit) {
 					$controlData->setFailure('submit'); // internal error simulation without any error message needed in order not to save in the next step. This happens e.g. at the first call to the create page
