@@ -1,4 +1,7 @@
-2016-06-15 Franz Holzinger <franz@ttproducts.de>
+2016-06-18 Franz Holzinger <franz@ttproducts.de>
+	* bugfix in file Configuration/TCA/sys_dmail_category.php
+
+2016-06-17 Franz Holzinger <franz@ttproducts.de>
 	* feature: Support for TYPO3 7.x. Make a copy of class tx_agency_display under JambageCom\\Agency\\View\\CreateView which calls the div2007 method FrontendUtility::getUpdateJS instead of the TYPO3 CONTENT object
 
 2016-06-15 Franz Holzinger <franz@ttproducts.de>

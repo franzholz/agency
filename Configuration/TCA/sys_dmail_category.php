@@ -24,22 +24,26 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
 	// Categories
 	// ******************************************************************
 	$result = array (
-		'ctrl' => array(
-				'title' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:sys_dmail_category',
-				'label' => 'category',
-				'tstamp' => 'tstamp',
-				'crdate' => 'crdate',
-				'cruser_id' => 'cruser_id',
-				'languageField' => 'sys_language_uid',
-				'transOrigPointerField' => 'l18n_parent',
-				'transOrigDiffSourceField' => 'l18n_diffsource',
-				'sortby' => 'sorting',
-				'delete' => 'deleted',
-				'enablecolumns' => array(
-					'disabled' => 'hidden',
-				),
-				'iconfile' => call_user_func($emClass . '::extRelPath', AGENCY_EXT) . 'icon_tx_directmail_category.gif',
-			)
+		'ctrl' => array (
+			'title' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:sys_dmail_category',
+			'label' => 'category',
+			'tstamp' => 'tstamp',
+			'crdate' => 'crdate',
+			'cruser_id' => 'cruser_id',
+			'languageField' => 'sys_language_uid',
+			'transOrigPointerField' => 'l18n_parent',
+			'transOrigDiffSourceField' => 'l18n_diffsource',
+			'sortby' => 'sorting',
+			'delete' => 'deleted',
+			'enablecolumns' => array (
+				'disabled' => 'hidden',
+			),
+			'iconfile' =>
+				call_user_func(
+					$emClass . '::extRelPath',
+					AGENCY_EXT
+				) .
+				'icon_tx_directmail_category.gif',
 		),
 		'interface' => array (
 				'showRecordFieldList' => 'hidden,category'
