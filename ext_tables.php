@@ -28,7 +28,7 @@ if (
 	TYPO3_MODE == 'BE' &&
 	!$loadTcaAdditions
 ) {
-	call_user_func($emClass . '::addStaticFile', AGENCY_EXT, 'static/', 'Agency Registration');
+	call_user_func($emClass . '::addStaticFile', AGENCY_EXT, 'Configuration/TypoScript/PluginSetup/', 'Agency Registration');
 
 	if (version_compare(TYPO3_version, '6.1.0', '<')) {
 

@@ -1,3 +1,6 @@
+2016-07-23 Franz Holzinger <franz@ttproducts.de>
+	* restructuring: move constants.txt and setup.txt from folder static into /Configuration/TypoScript/PluginSetup/
+
 2016-06-18 Franz Holzinger <franz@ttproducts.de>
 	* bugfix in file Configuration/TCA/sys_dmail_category.php
 
