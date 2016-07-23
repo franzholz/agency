@@ -1,9 +1,12 @@
 <?php
+
+namespace JambageCom\Agency\Controller;
+
 /***************************************************************
 *  Copyright notice
 *
 *  (c) 1999-2003 Kasper Skårhøj (kasperYYYY@typo3.com)
-*  (c) 2004-2015 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2004-2016 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -25,7 +28,6 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 /**
- * deprecated file: only used for TYPO3 4.x
  *
  * Part of the agency (Agency Registration) extension.
  *
@@ -39,7 +41,7 @@
  *
  *
  */
-class tx_agency_control_main {
+class InitializationController {
 	public $config = array();
 	public $incomingData = FALSE;
 	public $nc = ''; // "&no_cache=1" if you want that parameter sent.
@@ -65,7 +67,7 @@ class tx_agency_control_main {
 		$otherLabelsList = ''
 	) {
 		$staticInfoObj = FALSE;
-		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
+		$confObj = \t3lib_div::getUserObj('&tx_agency_conf');
 		$error_message = '';
 		$origArray = array();
 
@@ -84,7 +86,6 @@ class tx_agency_control_main {
 
 		$cmd = $this->controlData->getCmd();
 		$cmdKey = $this->controlData->getCmdKey();
-		$theTable = $this->controlData->getTable();
 		$templateCode = $this->data->getTemplateCode();
 
 		if ($success) {
@@ -93,7 +94,7 @@ class tx_agency_control_main {
 				$displayClassName = 'tx_agency_display';
 			}
 
-			$displayObj = t3lib_div::getUserObj($displayClassName);
+			$displayObj = \t3lib_div::getUserObj($displayClassName);
 			$content = $this->control->doProcessing(
 				$pibaseObj->cObj,
 				$confObj,
@@ -118,7 +119,7 @@ class tx_agency_control_main {
 			$content = '<em>Internal error in ' . $pibaseObj->extKey . '!</em><br /> Maybe you forgot to include the basic template file under "include statics from extensions".';
 		}
 
-		$content = tx_div2007_alpha::wrapInBaseClass_fh001($content, $pibaseObj->prefixId, $pibaseObj->extKey);
+		$content = \tx_div2007_alpha::wrapInBaseClass_fh001($content, $pibaseObj->prefixId, $pibaseObj->extKey);
 		return $content;
 	}
 
@@ -147,23 +148,15 @@ class tx_agency_control_main {
 	) {
 		$result = TRUE;
 		$cObj = $pibaseObj->cObj;
-		$this->tca = t3lib_div::getUserObj('&tx_agency_tca');
+		$this->tca = \t3lib_div::getUserObj('&tx_agency_tca');
 
-			// plugin initialization
-		if (
-			isset($conf['table.']) &&
-			is_array($conf['table.']) &&
-			$conf['table.']['name']
-		) {
-			$theTable  = $conf['table.']['name'];
-		}
 		$confObj->init($conf);
 		$this->tca->init($pibaseObj->extKey, $theTable);
-		$tablesObj = t3lib_div::getUserObj('&tx_agency_lib_tables');
+		$tablesObj = \t3lib_div::getUserObj('&tx_agency_lib_tables');
 		$tablesObj->init($theTable);
-		$authObj = t3lib_div::getUserObj('&tx_agency_auth');
+		$authObj = \t3lib_div::getUserObj('&tx_agency_auth');
 		$authObj->init($confObj); // $config is changed
-		$this->controlData = t3lib_div::getUserObj('&tx_agency_controldata');
+		$this->controlData = \t3lib_div::getUserObj('&tx_agency_controldata');
 		$this->controlData->init(
 			$confObj,
 			$pibaseObj->prefixId,
@@ -174,24 +167,24 @@ class tx_agency_control_main {
 
 		if ($pibaseObj->extKey != AGENCY_EXT) {
 					// Static Methods for Extensions for fetching the texts of agency
-				tx_div2007_alpha5::loadLL_fh002(
+				\tx_div2007_alpha5::loadLL_fh002(
 					$pibaseObj,
 					'EXT:' . AGENCY_EXT . '/pi/locallang.xml',
 					FALSE
 				);
 		} // otherwise the labels from agency need not be included, because this has been done in TYPO3 pibase
 
-		if (t3lib_extMgm::isLoaded(STATIC_INFO_TABLES_EXT)) {
+		if (\t3lib_extMgm::isLoaded(STATIC_INFO_TABLES_EXT)) {
 				// Initialise static info library
 			if (class_exists('SJBR\\StaticInfoTables\\PiBaseApi')) {
-				$staticInfoObj = t3lib_div::getUserObj('&SJBR\\StaticInfoTables\\PiBaseApi');
+				$staticInfoObj = \t3lib_div::getUserObj('&SJBR\\StaticInfoTables\\PiBaseApi');
 			} else {
 				if (!class_exists('tx_staticinfotables_pi1')) {
-					t3lib_div::requireOnce(
-						t3lib_extMgm::extPath(STATIC_INFO_TABLES_EXT) . 'pi1/class.tx_staticinfotables_pi1.php'
+					\t3lib_div::requireOnce(
+						\t3lib_extMgm::extPath(STATIC_INFO_TABLES_EXT) . 'pi1/class.tx_staticinfotables_pi1.php'
 					);
 				}
-				$staticInfoObj = t3lib_div::getUserObj('&tx_staticinfotables_pi1');
+				$staticInfoObj = \t3lib_div::getUserObj('&tx_staticinfotables_pi1');
 			}
 
 			if (
@@ -205,13 +198,13 @@ class tx_agency_control_main {
 			}
 		}
 
-		$this->langObj = t3lib_div::getUserObj('&tx_agency_lang');
-		$this->urlObj = t3lib_div::getUserObj('&tx_agency_url');
-		$this->data = t3lib_div::getUserObj('&tx_agency_data');
-		$this->marker = t3lib_div::getUserObj('&tx_agency_marker');
-		$this->setfixedObj = t3lib_div::getUserObj('&tx_agency_setfixed');
-		$this->email = t3lib_div::getUserObj('&tx_agency_email');
-		$this->control = t3lib_div::getUserObj('&tx_agency_control');
+		$this->langObj = \t3lib_div::getUserObj('&tx_agency_lang');
+		$this->urlObj = \t3lib_div::getUserObj('&tx_agency_url');
+		$this->data = \t3lib_div::getUserObj('&tx_agency_data');
+		$this->marker = \t3lib_div::getUserObj('&tx_agency_marker');
+		$this->setfixedObj = \t3lib_div::getUserObj('&tx_agency_setfixed');
+		$this->email = \t3lib_div::getUserObj('&tx_agency_email');
+		$this->control = \t3lib_div::getUserObj('&tx_agency_control');
 
 		$this->urlObj->init(
 			$this->controlData,
@@ -233,7 +226,7 @@ class tx_agency_control_main {
 			if (
 				(!$templateFile || empty($templateCode))
 			) {
-				$errorText = tx_div2007_alpha5::getLL_fh002(
+				$errorText = \tx_div2007_alpha5::getLL_fh002(
 						$this->langObj,
 						'internal_no_template'
 					);
@@ -311,6 +304,3 @@ class tx_agency_control_main {
 	}	// init
 }
 
-if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/control/class.tx_agency_control_main.php']) {
-	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/control/class.tx_agency_control_main.php']);
-}

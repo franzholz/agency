@@ -26,7 +26,6 @@ return array(
 	'tx_agency_feusergroup_scheduler' => $extensionPath . 'hooks/class.tx_agency_feusergroup_scheduler.php',
 	'tx_agency' => $extensionPath . 'class.tx_agency.php',
 	'tx_agency_pi_base' => $extensionPath . 'pi/class.tx_agency_pi_base.php',
-	'tx_agency_control_main' => $extensionPath . 'control/class.tx_agency_control_main.php',
 	'tx_agency_control' => $extensionPath . 'control/class.tx_agency_control.php',
 	'tx_agency_setfixed' => $extensionPath . 'control/class.tx_agency_setfixed.php',
 	'tx_agency_auth' => $extensionPath . 'lib/class.tx_agency_auth.php',
@@ -48,4 +47,9 @@ return array(
 	'tx_agency_model_field_usergroup' => $extensionPath . 'model/field/class.tx_agency_model_field_usergroup.php',
 	'tx_agency_display' => $extensionPath . 'view/class.tx_agency_display.php',
 	'JambageCom\\Agency\\View\\CreateView' => $extensionPath . 'Classes/View/CreateView.php',
+	'JambageCom\\Agency\\Configuration\\ConfigurationCheck' => $extensionPath . 'Classes/Configuration/ConfigurationCheck.php',
+	'JambageCom\\Agency\\Controller\\InitializationController' => $extensionPath . 'Classes/Controller/InitializationController.php',
+	'JambageCom\\Agency\\Controller\\RegisterPluginController' => $extensionPath . 'Classes/Controller/RegisterPluginController.php',
 );
+
+

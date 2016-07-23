@@ -4,8 +4,14 @@
 ##
 
 plugin.tx_agency = USER_INT
-plugin.tx_agency {
 
+[compatVersion = 6.1.0]
+plugin.tx_agency {
+	userFunc = JambageCom\Agency\Controller\RegisterPluginController->main
+}
+[global]
+
+plugin.tx_agency {
 	table.name = {$plugin.tx_agency.tableName}
 
 	templateFile = {$plugin.tx_agency.file.templateFile}

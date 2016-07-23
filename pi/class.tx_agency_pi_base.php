@@ -25,6 +25,7 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 /**
+ * deprecated file: only used for TYPO3 4.x
  *
  * Part of the agency (Agency Registration) extension.
  * A variant restricted to front end user self-registration and profile maintenance, with a number of enhancements (see the manual).
