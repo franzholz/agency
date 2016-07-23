@@ -76,7 +76,7 @@ class tx_agency_control {
 		if ($cmd == '') {
 				// Check the flexform
 			$cObj->data['pi_flexform'] = t3lib_div::xml2array($cObj->data['pi_flexform']);
-			$cmd = tx_div2007_alpha::getSetupOrFFvalue_fh002(
+			$cmd = tx_div2007_alpha5::getSetupOrFFvalue_fh004(
 				$langObj,
 				'',
 				'',

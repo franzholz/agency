@@ -1,6 +1,7 @@
 2016-07-23 Franz Holzinger <franz@ttproducts.de>
 	* restructuring: move constants.txt and setup.txt from folder static into /Configuration/TypoScript/PluginSetup/
 	* restructuring: copy files  pi/class.tx_agency_pi_base.php and control/class.tx_agency_control_main.php into Classes/Controller/RegisterPluginController.php, Classes/Controller/InitializationController.php and Classes/Configuration/ConfigurationCheck.php.
+	* fix bug #77229: use the newer class tx_div2007_alpha5::getSetupOrFFvalue_fh004 instead of tx_div2007_alpha::getSetupOrFFvalue_fh002 .
 
 2016-06-18 Franz Holzinger <franz@ttproducts.de>
 	* bugfix in file Configuration/TCA/sys_dmail_category.php
