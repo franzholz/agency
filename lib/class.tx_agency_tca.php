@@ -45,18 +45,18 @@ class tx_agency_tca {
 		if (version_compare(TYPO3_version, '6.2.0', '<')) {
 
 				// Get the table definition
-			tx_div2007_alpha::loadTcaAdditions_fh001(array($extKey));
+			tx_div2007_alpha5::loadTcaAdditions_fh002(array($extKey));
 			$this->fixAddressFeAdminFieldList($theTable);
 
 			if (t3lib_extMgm::isLoaded('direct_mail')) {
-				tx_div2007_alpha::loadTcaAdditions_fh001(array('direct_mail'));
+				tx_div2007_alpha5::loadTcaAdditions_fh002(array('direct_mail'));
 				$this->fixAddressFeAdminFieldList($theTable);
 			}
 
 			if (
 				!empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['extendingTCA'])
 			) {
-				tx_div2007_alpha::loadTcaAdditions_fh001(
+				tx_div2007_alpha5::loadTcaAdditions_fh002(
 					$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['extendingTCA']
 				);
 			}

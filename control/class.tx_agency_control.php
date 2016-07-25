@@ -497,7 +497,7 @@ class tx_agency_control {
 				) {
 					$this->marker->setArray($markerArray);
 					$finalDataArray =
-						tx_div2007_alpha::userProcess_fh001(
+						tx_div2007_alpha5::userProcess_fh002(
 							$this,
 							$conf,
 							'evalFunc',

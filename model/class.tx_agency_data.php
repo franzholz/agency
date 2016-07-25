@@ -1338,7 +1338,7 @@ class tx_agency_data {
 							TRUE
 						);
 						$newRow = array_merge($origArray, $newRow);
-						tx_div2007_alpha::userProcess_fh001(
+						tx_div2007_alpha5::userProcess_fh002(
 							$this->control,
 							$conf['edit.'],
 							'userFunc_afterSave',
@@ -1491,7 +1491,7 @@ class tx_agency_data {
 							TRUE
 						);
 
-						tx_div2007_alpha::userProcess_fh001(
+						tx_div2007_alpha5::userProcess_fh002(
 							$this->control,
 							$conf['create.'],
 							'userFunc_afterSave',
@@ -1863,7 +1863,7 @@ class tx_agency_data {
 		}
 
 		$inputArr =
-			tx_div2007_alpha::userProcess_fh001(
+			tx_div2007_alpha5::userProcess_fh002(
 				$this->control,
 				$conf,
 				'userFunc_updateArray',

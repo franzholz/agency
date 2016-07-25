@@ -119,7 +119,7 @@ class InitializationController {
 			$content = '<em>Internal error in ' . $pibaseObj->extKey . '!</em><br /> Maybe you forgot to include the basic template file under "include statics from extensions".';
 		}
 
-		$content = \tx_div2007_alpha::wrapInBaseClass_fh001($content, $pibaseObj->prefixId, $pibaseObj->extKey);
+		$content = \tx_div2007_alpha5::wrapInBaseClass_fh002($content, $pibaseObj->prefixId, $pibaseObj->extKey);
 		return $content;
 	}
 

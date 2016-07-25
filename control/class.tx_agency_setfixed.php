@@ -305,7 +305,7 @@ class tx_agency_setfixed {
 							$modArray
 						);
 					$row = array_merge($row, $modArray);
-					tx_div2007_alpha::userProcess_fh001(
+					tx_div2007_alpha5::userProcess_fh002(
 						$pObj,
 						$conf['setfixed.'],
 						'userFunc_afterSave',

@@ -694,7 +694,7 @@ class tx_agency_email {
 				$cObj->substituteSubpart(
 					$content['userhtml']['all'],
 					'###SUB_RECORD###',
-					tx_div2007_alpha::wrapInBaseClass_fh001(
+					tx_div2007_alpha5::wrapInBaseClass_fh002(
 						$content['userhtml']['accum'],
 						$controlData->getPrefixId(),
 						$extKey
@@ -724,7 +724,7 @@ class tx_agency_email {
 				$cObj->substituteSubpart(
 					$content['adminhtml']['all'],
 					'###SUB_RECORD###',
-					tx_div2007_alpha::wrapInBaseClass_fh001(
+					tx_div2007_alpha5::wrapInBaseClass_fh002(
 						$content['adminhtml']['accum'],
 						$controlData->getPrefixId(),
 						$extKey
