@@ -1,5 +1,6 @@
 2016-07-25 Franz Holzinger <franz@ttproducts.de>
 	* fix bug #77232: bugfix for PHP 7.x. replace all tx_div2007_alpha class methods by corresponding tx_div2007_alpha5 methods
+	* feature for bug #77217: set keepUnselectableUserGroups to 1 by default
 
 2016-07-23 Franz Holzinger <franz@ttproducts.de>
 	* restructuring: move constants.txt and setup.txt from folder static into /Configuration/TypoScript/PluginSetup/

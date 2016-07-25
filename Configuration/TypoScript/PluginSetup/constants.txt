@@ -216,7 +216,7 @@ plugin.tx_agency {
   deniedUserGroups =
 
     # cat=plugin.tx_agency/enable; type=boolean; label= Keep unselectable user groups: If set then the user groups which the TYPO3 admin has assigned are not removed after editing.
-  keepUnselectableUserGroups = 0
+  keepUnselectableUserGroups = 1
 
     # cat=plugin.tx_agency//; type=int+; label= Minimum password length: The minimum number of characters that the password must contain.
   passwordAtLeast = 5
