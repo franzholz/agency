@@ -1,3 +1,7 @@
+2016-07-30 Franz Holzinger <franz@ttproducts.de>
+	* fix bugs for PHP 7
+	* make the securedFieldArray static because they should not be changed dynamically
+
 2016-07-29 Franz Holzinger <franz@ttproducts.de>
 	* fix bug #77211: The password field on the edit form must not be prefilled by Firefox or other browsers
 

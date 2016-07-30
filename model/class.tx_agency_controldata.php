@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2015 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2016 Franz Holzinger (franz@ttproducts.de)
 *  (c) 2012 Stanislas Rolland (typo3(arobas)sjbr.ca)
 *  All rights reserved
 *
@@ -61,7 +61,7 @@ class tx_agency_controldata {
 	public $sys_language_content;
 	public $feUserData = array();
 		// Names of secured fields
-	protected $securedFieldArray = array('password', 'password_again', 'tx_agency_password');
+	static protected $securedFieldArray = array('password', 'password_again', 'tx_agency_password');
 	public $bValidRegHash;
 	public $regHash;
 	private $confObj;
@@ -466,7 +466,7 @@ class tx_agency_controldata {
 
 	/* reduces to the field list which are allowed to be shown */
 	public function getOpenFields ($fields) {
-		$securedFieldArray = $this->getSecuredFieldArray();
+		$securedFieldArray = self::getSecuredFieldArray();
 		$newFieldArray = array();
 		$fieldArray = t3lib_div::trimExplode(',', $fields);
 		array_unique($fieldArray);
@@ -492,7 +492,7 @@ class tx_agency_controldata {
 	public function readSecuredArray () {
 		$securedArray = array();
 		$sessionData = $this->readSessionData();
-		$securedFieldArray = $this->getSecuredFieldArray();
+		$securedFieldArray = self::getSecuredFieldArray();
 		foreach ($securedFieldArray as $securedField) {
 			if (isset($sessionData[$securedField])) {
 				$securedArray[$securedField] = $sessionData[$securedField];
@@ -506,23 +506,8 @@ class tx_agency_controldata {
 	*
 	* @return	array	names of secured fields
 	*/
-	public function getSecuredFieldArray () {
-		return $this->securedFieldArray;
-	}
-
-	/**
-	* Sets the array of names of secured fields
-	*
-	* @param	array	array of names of secured fields
-	* @return	void
-	*/
-	public function setSecuredFieldArray (array $securedFieldArray) {
-		$this->securedFieldArray =
-			array_merge(
-				$securedFieldArray,
-				array('password', 'password_again', 'tx_agency_password')
-			);
-
+	static public function getSecuredFieldArray () {
+		return self::$securedFieldArray;
 	}
 
 	/*************************************
@@ -831,12 +816,12 @@ class tx_agency_controldata {
 	*
 	* @return void
 	*/
-	public function getSecuredValue (
+	static public function getSecuredValue (
 		$field,
 		$value,
 		$bHtmlSpecial
 	) {
-		$securedFieldArray = $this->getSecuredFieldArray();
+		$securedFieldArray = self::getSecuredFieldArray();
 
 		if ($field != '' && in_array($field, $securedFieldArray)) {
 			// nothing for password and password_again
@@ -855,7 +840,7 @@ class tx_agency_controldata {
 	*
 	* @return void
 	*/
-	public function secureInput (&$dataArray, $bHtmlSpecial = TRUE) {
+	static public function secureInput (&$dataArray, $bHtmlSpecial = TRUE) {
 
 		if (isset($dataArray) && is_array($dataArray)) {
 			foreach ($dataArray as $k => $value) {
@@ -863,14 +848,14 @@ class tx_agency_controldata {
 					foreach ($value as $k2 => $value2) {
 						if (is_array($value2)) {
 							foreach ($value2 as $k3 => $value3) {
-								$dataArray[$k][$k2][$k3] = $this->getSecuredValue($k3, $value3, $bHtmlSpecial);
+								$dataArray[$k][$k2][$k3] = self::getSecuredValue($k3, $value3, $bHtmlSpecial);
 							}
 						} else {
-							$dataArray[$k][$k2] = $this->getSecuredValue($k2, $value2, $bHtmlSpecial);
+							$dataArray[$k][$k2] = self::getSecuredValue($k2, $value2, $bHtmlSpecial);
 						}
 					}
 				} else {
-					$dataArray[$k] = $this->getSecuredValue($k, $value, $bHtmlSpecial);
+					$dataArray[$k] = self::getSecuredValue($k, $value, $bHtmlSpecial);
 				}
 			}
 		}

@@ -102,31 +102,6 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 		return $result;
 	}
 
-	/*
-	 * Removes reserved user groups from the usergroup field of an array
-	 *
-	 * @param array $row: array
-	 * @return void
-	 */
-// 	public function removeReservedValues ($conf, &$row) {
-// 		if (isset($row['usergroup'])) {
-// 			$reservedValues = $this->getReservedValues($conf);
-// 			if (is_array($row['usergroup'])) {
-// 				$userGroupArray = $row['usergroup'];
-// 				$bUseArray = TRUE;
-// 			} else {
-// 				$userGroupArray = explode(',', $row['usergroup']);
-// 				$bUseArray = FALSE;
-// 			}
-// 			$userGroupArray = array_diff($userGroupArray, $reservedValues);
-// 			if ($bUseArray) {
-// 				$row['usergroup'] = $userGroupArray;
-// 			} else {
-// 				$row['usergroup'] = implode(',', $userGroupArray);
-// 			}
-// 		}
-// 	}
-
 	public function removeInvalidValues (
 		$conf,
 		$cmdKey,
@@ -241,7 +216,6 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 							$cmdKey,
 							FALSE
 						);
-
 					$rowArray =
 						$GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 							'uid',
