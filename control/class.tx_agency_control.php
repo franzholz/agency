@@ -112,7 +112,8 @@ class tx_agency_control {
 		$controlData->secureInput($dataArray, $bHtmlSpecialChars);
 
 		if (
-			$theTable == 'fe_users'
+			$theTable == 'fe_users' &&
+			!empty($dataArray)
 		) {
 			$modifyPassword = $controlData->securePassword($dataArray);
 		}
@@ -158,11 +159,15 @@ class tx_agency_control {
 
 		$feUserdata = $controlData->getFeUserData();
 		$theUid = 0;
+		$setFixedUid = FALSE;
 
 		if (is_array($dataArray) && $dataArray['uid']) {
 			$theUid = $dataArray['uid'];
 		} else if (is_array($feUserdata) && $feUserdata['rU']) {
 			$theUid = $feUserdata['rU'];
+			if ($cmd == 'setfixed') {
+				$setFixedUid = TRUE;
+			}
 		} else if (!in_array($cmd, $this->noLoginCommands)) {
 			$theUid = $GLOBALS['TSFE']->fe_user->user['uid'];
 		}
@@ -214,7 +219,10 @@ class tx_agency_control {
 			}
 		}
 
-		if ($cmdKey == '') {
+		if (
+			$cmdKey == '' &&
+			!$setFixedUid // Setfixed needs the original array in order to calculate the authorization key
+		) {
 			$origArray = array(); // do not use the read in original array
 			$cmdKey = 'create';
 		}
@@ -908,6 +916,7 @@ class tx_agency_control {
 			if ($cmd == '' && $controlData->getFeUserData('preview')) {
 				$cmd = $cmdKey;
 			}
+
 			switch ($cmd) {
 				case 'setfixed':
 					if ($conf['infomail']) {

@@ -81,7 +81,6 @@ class tx_agency_control_main {
 			$staticInfoObj,
 			$errorMessage
 		);
-
 		$cmd = $this->controlData->getCmd();
 		$cmdKey = $this->controlData->getCmdKey();
 		$theTable = $this->controlData->getTable();

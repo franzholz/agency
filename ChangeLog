@@ -1,3 +1,9 @@
+2016-08-23 Franz Holzinger <franz@ttproducts.de>
+	* bugfix: Setfixed needs the read in original array in order to generated the authorization key by the user group. It must not be cleared.
+	* bugfix: Support STRICT sql mode STRICT_ALL_TABLES and STRICT_TRANS_TABLES.
+	  Add default NULL values to tinytext, text and blob
+	* bugfix: TYPO3 does not support the compatVersion in the setup. Users of TYPO3 4.5 must add the additional setup for Agency Registration compatibility TYPO3 4.5
+
 2016-07-30 Franz Holzinger <franz@ttproducts.de>
 	* fix bugs for PHP 7
 	* make the securedFieldArray static because they should not be changed dynamically

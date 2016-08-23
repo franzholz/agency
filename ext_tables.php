@@ -30,6 +30,10 @@ if (
 ) {
 	call_user_func($emClass . '::addStaticFile', AGENCY_EXT, 'Configuration/TypoScript/PluginSetup/', 'Agency Registration');
 
+	if (version_compare(TYPO3_version, '6.2.0', '<')) {
+		call_user_func($emClass . '::addStaticFile', AGENCY_EXT, 'Configuration/TypoScript/PluginSetup/Compatibility4.5/', 'Agency Registration compatibility TYPO3 4.5');
+	}
+
 	if (version_compare(TYPO3_version, '6.1.0', '<')) {
 
 		call_user_func($divClass . '::loadTCA', 'tt_content');

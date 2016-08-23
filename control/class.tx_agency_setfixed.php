@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2015 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2007-2016 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -120,7 +120,7 @@ class tx_agency_setfixed {
 				foreach ($fD as $field => $value) {
 					$row[$field] = rawurldecode($value);
 					if ($field == 'usergroup') {
-						$setfixedUsergroup = rawurldecode($value);
+						$setfixedUsergroup = $row[$field];
 					}
 					$fieldArr[] = $field;
 				}
@@ -143,12 +143,17 @@ class tx_agency_setfixed {
 			$fieldList = $row['_FIELDLIST'];
 			$codeLength = strlen($authObj->getAuthCode());
 			$theAuthCode = '';
+
 				// Let's try with a code length of 8 in case this link is coming from direct mail
-			if ($codeLength == 8 && in_array($sFK, array('DELETE', 'EDIT', 'UNSUBSCRIBE'))) {
+			if (
+				$codeLength == 8 &&
+				in_array($sFK, array('DELETE', 'EDIT', 'UNSUBSCRIBE'))
+			) {
 				$theAuthCode = $authObj->setfixedHash($row, $fieldList, $codeLength);
 			} else {
 				$theAuthCode = $authObj->setfixedHash($row, $fieldList);
 			}
+
 			if (
 				!strcmp($authObj->getAuthCode(), $theAuthCode) &&
 				!(

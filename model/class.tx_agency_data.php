@@ -935,11 +935,10 @@ class tx_agency_data {
 	/**
 	* Transforms fields into certain things...
 	*
-	* @return boolean  all parsing done directly on input array $dataArray
+	* @return boolean  all parsing done directly on input and output array $dataArray
 	*/
 	public function parseValues ($theTable, array &$dataArray, array $origArray, $cmdKey) {
 		$result = TRUE;
-
 		$cObj = t3lib_div::getUserObj('&tx_div2007_cobj');
 		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
 		$conf = $confObj->getConf();
@@ -956,7 +955,7 @@ class tx_agency_data {
 				if (
 					isset($dataArray[$theField]) ||
 					isset($origArray[$theField]) ||
-					$internalType=='file'
+					$internalType == 'file'
 				) {
 					foreach($listOfCommands as $cmd) {
 						$cmdParts = preg_split('/\[|\]/', $cmd); // Point is to enable parameters after each command enclosed in brackets [..]. These will be in position 1 in the array.
@@ -1093,7 +1092,7 @@ class tx_agency_data {
 								}
 							break;
 							case 'date':
-								if(
+								if (
 									$dataValue &&
 									$this->evalDate(
 										$dataValue,
@@ -1115,6 +1114,8 @@ class tx_agency_data {
 									$dataValue = str_replace($searchArray, $replaceArray, $conf['dateFormat']);
 								} else if (!isset($dataArray[$theField])) {
 									$bValueAssigned = FALSE;
+								} else if (!$dataValue) {
+									$dataValue = '';
 								}
 							break;
 							default:
@@ -1122,7 +1123,7 @@ class tx_agency_data {
 							break;
 						}
 
-						if ($bValueAssigned)	{
+						if ($bValueAssigned) {
 							$dataArray[$theField] = $dataValue;
 						}
 					}

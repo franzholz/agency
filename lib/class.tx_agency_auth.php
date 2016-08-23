@@ -142,6 +142,7 @@ class tx_agency_auth {
 		if ($this->conf['authcodeFields.']['addDate']) {
 			$extraArray[] = date($this->conf['authcodeFields.']['addDate']);
 		}
+
 		$extras = !empty($extraArray) ? implode('|', $extraArray) : '';
 			// In t3lib_div::stdAuthCode, $extras is empty
 		$authCode = $preKey . '|' . $extras . '|' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'];

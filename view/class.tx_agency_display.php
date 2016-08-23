@@ -456,6 +456,7 @@ class tx_agency_display {
 			$content .= $updateJS;
 			$GLOBALS['TSFE']->additionalHeaderData['JSincludeFormupdate'] = '<script type="text/javascript" src="' . $GLOBALS['TSFE']->absRefPrefix . t3lib_div::createVersionNumberedFilename(t3lib_extMgm::siteRelPath('agency')  . 'scripts/jsfunc.updateform.js') . '"></script>';
 		}
+
 		return $content;
 	}	// editForm
 

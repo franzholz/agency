@@ -1,0 +1,13 @@
+## compatible with TYPO3 4.5
+## @package TYPO3
+## @subpackage agency
+##
+
+
+plugin.tx_agency {
+	includeLibs = EXT:agency/class.tx_agency.php
+	userFunc >
+}
+
+
+

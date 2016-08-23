@@ -196,7 +196,10 @@ class tx_agency_controldata {
 						t3lib_div::_GETset($v, $k);
 					}
 
-					if ($restoredFeUserData['rU'] > 0 && $restoredFeUserData['rU'] == $feUserData['rU']) {
+					if (
+						$restoredFeUserData['rU'] > 0 &&
+						$restoredFeUserData['rU'] == $feUserData['rU']
+					) {
 						$feUserData = array_merge($feUserData, $restoredFeUserData);
 					} else {
 						$feUserData = $restoredFeUserData;
@@ -207,6 +210,7 @@ class tx_agency_controldata {
 					} else {
 						$feUserData = $origFeuserData;
 					}
+
 					$this->setRegHash($regHash);
 				}
 			}
@@ -795,6 +799,7 @@ class tx_agency_controldata {
 		} else {
 			$allSessionData[$extKey] = $data;
 		}
+
 		$GLOBALS['TSFE']->fe_user->setKey('ses', 'feuser', $allSessionData);
 			// The feuser session data shall not get lost when coming back from external scripts
 		$GLOBALS['TSFE']->fe_user->storeSessionData();
@@ -823,7 +828,10 @@ class tx_agency_controldata {
 	) {
 		$securedFieldArray = self::getSecuredFieldArray();
 
-		if ($field != '' && in_array($field, $securedFieldArray)) {
+		if (
+			$field != '' &&
+			in_array($field, $securedFieldArray)
+		) {
 			// nothing for password and password_again
 		} else {
 			$value = htmlspecialchars_decode($value);

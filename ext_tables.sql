@@ -1,6 +1,6 @@
 
 # THESE create statements will NOT work if this file is piped into MySQL.
-# Rather they will be detected by the Typo3 Install Tool and through that
+# Rather they will be detected by the TYPO3 Install Tool and through that
 # you should upgrade the tables to content these fields.
 
 CREATE TABLE fe_users (
@@ -22,12 +22,12 @@ CREATE TABLE fe_users (
 	email varchar(255) DEFAULT '' NOT NULL,
 	company varchar(50) DEFAULT '' NOT NULL,
 	date_of_birth int(11) DEFAULT '0' NOT NULL,
-	comments text NOT NULL,
+	comments text DEFAULT NULL,
 	by_invitation tinyint(4) unsigned DEFAULT '0' NOT NULL,
 	module_sys_dmail_html tinyint(3) unsigned DEFAULT '0' NOT NULL,
 	terms_acknowledged tinyint(4) unsigned DEFAULT '0' NOT NULL,
 	token varchar(32) DEFAULT '' NOT NULL,
-	tx_agency_password blob NOT NULL,
+	tx_agency_password blob DEFAULT NULL,
 	lost_password tinyint(4) unsigned DEFAULT '0' NOT NULL,
 );
 
@@ -57,7 +57,7 @@ CREATE TABLE sys_agency_fe_users_limit_fe_groups (
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	starttime int(11) DEFAULT '0' NOT NULL,
 	endtime int(11) DEFAULT '0' NOT NULL,
-	codes tinytext NOT NULL,
+	codes tinytext DEFAULT NULL,
 	fe_users_uid int(11) DEFAULT '0' NOT NULL,
 	fe_groups_uid int(11) DEFAULT '0' NOT NULL,
 	status int(11) unsigned DEFAULT '0' NOT NULL,
