@@ -22,12 +22,12 @@ CREATE TABLE fe_users (
 	email varchar(255) DEFAULT '' NOT NULL,
 	company varchar(50) DEFAULT '' NOT NULL,
 	date_of_birth int(11) DEFAULT '0' NOT NULL,
-	comments text DEFAULT NULL,
+	comments text,
 	by_invitation tinyint(4) unsigned DEFAULT '0' NOT NULL,
 	module_sys_dmail_html tinyint(3) unsigned DEFAULT '0' NOT NULL,
 	terms_acknowledged tinyint(4) unsigned DEFAULT '0' NOT NULL,
 	token varchar(32) DEFAULT '' NOT NULL,
-	tx_agency_password blob DEFAULT NULL,
+	tx_agency_password blob,
 	lost_password tinyint(4) unsigned DEFAULT '0' NOT NULL,
 );
 
@@ -57,7 +57,7 @@ CREATE TABLE sys_agency_fe_users_limit_fe_groups (
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 	starttime int(11) DEFAULT '0' NOT NULL,
 	endtime int(11) DEFAULT '0' NOT NULL,
-	codes tinytext DEFAULT NULL,
+	codes tinytext,
 	fe_users_uid int(11) DEFAULT '0' NOT NULL,
 	fe_groups_uid int(11) DEFAULT '0' NOT NULL,
 	status int(11) unsigned DEFAULT '0' NOT NULL,

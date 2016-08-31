@@ -1,6 +1,9 @@
+2016-08-31 Franz Holzinger <franz@ttproducts.de>
+	* bugfix: text and blob must have a default null value by TCA and not by SQL
+
 2016-08-23 Franz Holzinger <franz@ttproducts.de>
 	* bugfix: Setfixed needs the read in original array in order to generated the authorization key by the user group. It must not be cleared.
-	* bugfix: Support STRICT sql mode STRICT_ALL_TABLES and STRICT_TRANS_TABLES.
+	* bugfix: Support STRICT mysql mode STRICT_ALL_TABLES and STRICT_TRANS_TABLES.
 	  Add default NULL values to tinytext, text and blob
 	* bugfix: TYPO3 does not support the compatVersion in the setup. Users of TYPO3 4.5 must add the additional setup for Agency Registration compatibility TYPO3 4.5
 

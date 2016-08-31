@@ -96,7 +96,9 @@ $temporaryColumns = array(
 		'config' => array(
 			'type' => 'text',
 			'rows' => '5',
-			'cols' => '48'
+			'cols' => '48',
+			'eval' => 'null',
+			'default' => NULL,
 		)
 	),
 	'by_invitation' => array(
