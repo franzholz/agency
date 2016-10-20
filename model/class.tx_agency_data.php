@@ -90,7 +90,11 @@ class tx_agency_data {
 			// Get POST parameters
 		$fe = t3lib_div::_GP('FE');
 
-		if (isset($fe) && is_array($fe) && $this->controlData->isTokenValid()) {
+		if (
+			isset($fe) &&
+			is_array($fe) &&
+			$this->controlData->isTokenValid()
+		) {
 			$feDataArray = $fe[$theTable];
 			$this->setDataArray($feDataArray);
 		}
@@ -130,7 +134,7 @@ class tx_agency_data {
 		return $this->fieldList;
 	}
 
-	public function setFieldList (&$fieldList) {
+	public function setFieldList ($fieldList) {
 		$this->fieldList = $fieldList;
 	}
 
@@ -227,7 +231,11 @@ class tx_agency_data {
 		// Addition of overriding values
 		if (is_array($conf[$cmdKey . '.']['overrideValues.'])) {
 			foreach ($conf[$cmdKey . '.']['overrideValues.'] as $theField => $theValue) {
-				if ($theField == 'usergroup' && $this->controlData->getTable() == 'fe_users' && $conf[$cmdKey.'.']['allowUserGroupSelection']) {
+				if (
+					$theField == 'usergroup' &&
+					$this->controlData->getTable() == 'fe_users' &&
+					$conf[$cmdKey.'.']['allowUserGroupSelection']
+				) {
 					$overrideArray = t3lib_div::trimExplode(',', $theValue, 1);
 					if (is_array($dataArray[$theField])) {
 						$dataValue = array_merge($dataArray[$theField], $overrideArray);
@@ -239,7 +247,9 @@ class tx_agency_data {
 					$stdWrap = $conf[$cmdKey . '.']['overrideValues.'][$theField.'.'];
 					if ($stdWrap) {
 						$dataValue = $cObj->stdWrap($theValue, $stdWrap);
-					} else if (isset($conf[$cmdKey . '.']['overrideValues.'][$theField])) {
+					} else if (
+						isset($conf[$cmdKey . '.']['overrideValues.'][$theField])
+					) {
 						$dataValue = $conf[$cmdKey . '.']['overrideValues.'][$theField];
 					} else {
 						$dataValue = $theValue;
