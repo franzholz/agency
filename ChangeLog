@@ -1,3 +1,6 @@
+2016-11-16 Franz Holzinger <franz@ttproducts.de>
+	* bugfix: Check if the table sys_dmail_category exists before its TCA is added. Otherwise the LIST module will produce SQL errors.
+
 2016-08-31 Franz Holzinger <franz@ttproducts.de>
 	* bugfix: text and blob must have a default null value by TCA and not by SQL
 

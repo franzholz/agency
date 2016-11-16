@@ -15,11 +15,23 @@ if (
 }
 
 $result = FALSE;
+$tableExists = FALSE;
 
 if ( // Direct Mail tables exist but Direct Mail shall not be used
 	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['enableDirectMail'] &&
 	!call_user_func($emClass . '::isLoaded', 'direct_mail')
 ) {
+	$table = 'sys_dmail_category';
+	$queryResult =
+		$GLOBALS['TYPO3_DB']->admin_query(
+			'SELECT * FROM INFORMATION_SCHEMA.TABLES ' .
+			'WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=\'' . $table . '\''
+		);
+	$tableExists = $GLOBALS['TYPO3_DB']->sql_num_rows($queryResult) > 0;
+}
+
+if ($tableExists) {
+
 	// ******************************************************************
 	// Categories
 	// ******************************************************************
