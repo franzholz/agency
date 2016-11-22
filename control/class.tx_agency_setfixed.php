@@ -541,7 +541,8 @@ class tx_agency_setfixed {
 								$cmdKey,
 								$templateCode,
 								$dataObj->getInError(),
-								$conf['setfixed.']
+								$conf['setfixed.'],
+								$errorCode
 							);
 
 							if (

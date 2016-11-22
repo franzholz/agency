@@ -109,6 +109,14 @@ $temporaryColumns = array(
 			'default' => '0'
 		)
 	),
+	'has_privileges' => array(
+		'exclude' => 0,
+		'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.has_privileges',
+		'config' => array(
+			'type' => 'check',
+			'default' => '0'
+		)
+	),
 	'terms_acknowledged' => array(
 		'exclude' => 0,
 		'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.terms_acknowledged',
@@ -207,7 +215,7 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('fe_users', $temporaryColumns);
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
 	'fe_users',
-	'comments, by_invitation, terms_acknowledged, lost_password',
+	'comments, by_invitation, has_privileges, terms_acknowledged, lost_password',
 	'',
 	'after:www,'
 );

@@ -26,6 +26,7 @@
 ***************************************************************/
 /**
  * Part of the agency (Agency Registration) extension.
+ * Only used for TYPO3 < 6.2
  *
  * display functions
  *
@@ -442,9 +443,11 @@ class tx_agency_display {
 					$currentArray,
 					$cmdKey
 				);
+
 			$fields = $dataObj->getFieldList() . ',' . $dataObj->getAdditionalUpdateFields();
 			$fields = implode(',', array_intersect(explode(',', $fields), t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)));
 			$fields = $controlData->getOpenFields($fields);
+
 			$updateJS =
 				$cObj->getUpdateJS(
 					$modData,

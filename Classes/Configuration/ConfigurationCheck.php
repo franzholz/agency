@@ -82,11 +82,16 @@ class ConfigurationCheck {
 				array_keys($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['constraints']['conflicts']);
 		}
 
-		foreach ($conflictingExtensions as $extension) {
-			if (\t3lib_extMgm::isLoaded($extension)) {
-				$message = sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_conflicting_extension_installed'), $extension);
-				\t3lib_div::sysLog($message, $extensionKey, \t3lib_div::SYSLOG_SEVERITY_ERROR);
-				$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+		if (
+			isset($conflictingExtensions) &&
+			is_array($conflictingExtensions)
+		) {
+			foreach ($conflictingExtensions as $extension) {
+				if (\t3lib_extMgm::isLoaded($extension)) {
+					$message = sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_conflicting_extension_installed'), $extension);
+					\t3lib_div::sysLog($message, $extensionKey, \t3lib_div::SYSLOG_SEVERITY_ERROR);
+					$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+				}
 			}
 		}
 

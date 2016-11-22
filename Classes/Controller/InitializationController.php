@@ -49,7 +49,6 @@ class InitializationController {
 	public $auth; // object of type tx_agency_auth
 	public $control; // object of type tx_agency_control
 	public $controlData; // data used for the control
-	public $data; // object of type tx_agency_data
 	public $urlObj;
 	public $email; // object of type tx_agency_email
 	public $langObj; // object of type tx_agency_lang
@@ -67,6 +66,7 @@ class InitializationController {
 		$otherLabelsList = ''
 	) {
 		$staticInfoObj = FALSE;
+		$dataObj = FALSE; // object of type tx_agency_data
 		$confObj = \t3lib_div::getUserObj('&tx_agency_conf');
 		$error_message = '';
 		$origArray = array();
@@ -81,11 +81,12 @@ class InitializationController {
 			$otherLabelsList,
 			$origArray,
 			$staticInfoObj,
+			$dataObj,
 			$errorMessage
 		);
 		$cmd = $this->controlData->getCmd();
 		$cmdKey = $this->controlData->getCmdKey();
-		$templateCode = $this->data->getTemplateCode();
+		$templateCode = $dataObj->getTemplateCode();
 
 		if ($success) {
 			$displayClassName = 'JambageCom\\Agency\\View\\CreateView';
@@ -98,7 +99,7 @@ class InitializationController {
 				$this->langObj,
 				$displayObj,
 				$this->controlData,
-				$this->data,
+				$dataObj,
 				$staticInfoObj,
 				$theTable,
 				$cmd,
@@ -140,6 +141,7 @@ class InitializationController {
 		$otherLabelsList,
 		array &$origArray,
 		&$staticInfoObj,
+		&$dataObj,
 		&$errorMessage
 	) {
 		$result = TRUE;
@@ -196,7 +198,7 @@ class InitializationController {
 
 		$this->langObj = \t3lib_div::getUserObj('&tx_agency_lang');
 		$this->urlObj = \t3lib_div::getUserObj('&tx_agency_url');
-		$this->data = \t3lib_div::getUserObj('&tx_agency_data');
+		$dataObj = \t3lib_div::getUserObj('&tx_agency_data');
 		$this->marker = \t3lib_div::getUserObj('&tx_agency_marker');
 		$this->setfixedObj = \t3lib_div::getUserObj('&tx_agency_setfixed');
 		$this->email = \t3lib_div::getUserObj('&tx_agency_email');
@@ -241,7 +243,7 @@ class InitializationController {
 					$this->urlObj
 				);
 
-				$this->data->init(
+				$dataObj->init(
 					$cObj,
 					$this->langObj,
 					$this->tca,
@@ -257,17 +259,16 @@ class InitializationController {
 					$staticInfoObj,
 					$theTable,
 					$this->controlData,
-					$this->data,
+					$dataObj,
 					$adminFieldList,
 					$origArray
 				);
-				$this->data->setOrigArray($origArray);
-
-				$uid = $this->data->getRecUid();
+				$dataObj->setOrigArray($origArray);
+				$uid = $dataObj->getRecUid();
 
 				$this->marker->init(
 					$confObj,
-					$this->data,
+					$dataObj,
 					$this->tca,
 					$this->langObj,
 					$this->controlData,

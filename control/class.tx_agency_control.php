@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2015 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2007-2016 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -274,7 +274,10 @@ class tx_agency_control {
 				$conf[$cmdKey . '.']['required'] = implode(',', array_diff(t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), array('password')));
 			}
 
-			if ($conf[$cmdKey . '.']['generateUsername'] || $cmdKey == 'password') {
+			if (
+				$conf[$cmdKey . '.']['generateUsername'] ||
+				$cmdKey == 'password'
+			) {
 				$conf[$cmdKey . '.']['fields'] = implode(',', array_diff(t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), array('username')));
 			}
 
@@ -468,7 +471,7 @@ class tx_agency_control {
 		) {
 			$dataObj->setName($finalDataArray, $cmdKey, $theTable);
 			$parseResult = $dataObj->parseValues($theTable, $finalDataArray, $origArray, $cmdKey);
-			$dataObj->overrideValues($finalDataArray, $cmdKey);
+			$dataObj->overrideValues($finalDataArray, $conf[$cmdKey . '.']);
 
 			if (
 				$parseResult &&
@@ -904,7 +907,6 @@ class tx_agency_control {
 				'',
 				FALSE
 			);
-
 			$this->marker->setArray($markerArray);
 			$content = $cObj->substituteMarkerArray($templateCode, $markerArray);
 		} else {

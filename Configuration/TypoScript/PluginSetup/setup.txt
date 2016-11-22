@@ -82,6 +82,7 @@ plugin.tx_agency {
 			disable = {$plugin.tx_agency.enableEmailConfirmation}
 			by_invitation = 0
 			lost_password = 0
+			has_privileges = 0
 		}
 
 		overrideValues {
@@ -117,6 +118,7 @@ plugin.tx_agency {
 			module_sys_dmail_newsletter =
 			usergroup =
 			by_invitation =
+			has_privileges =
 			captcha_response =
 			lost_password =
 		}

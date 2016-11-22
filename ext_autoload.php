@@ -27,6 +27,7 @@ return array(
 	'tx_agency' => $extensionPath . 'class.tx_agency.php',
 	'tx_agency_pi_base' => $extensionPath . 'pi/class.tx_agency_pi_base.php',
 	'tx_agency_control' => $extensionPath . 'control/class.tx_agency_control.php',
+	'tx_agency_control_main' => $extensionPath . 'control/class.tx_agency_control_main.php',
 	'tx_agency_setfixed' => $extensionPath . 'control/class.tx_agency_setfixed.php',
 	'tx_agency_auth' => $extensionPath . 'lib/class.tx_agency_auth.php',
 	'tx_agency_conf' => $extensionPath . 'lib/class.tx_agency_conf.php',

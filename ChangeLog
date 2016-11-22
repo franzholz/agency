@@ -1,3 +1,7 @@
+2016-11-22 Franz Holzinger <franz@ttproducts.de>
+	* bugfix PHP error: Missing argument 25 for tx_agency_email::compile
+	* new feature: FE has_privileges in order to have special features to this user in other extensions like discounts in tt_products and voucher
+
 2016-11-16 Franz Holzinger <franz@ttproducts.de>
 	* bugfix: Check if the table sys_dmail_category exists before its TCA is added. Otherwise the LIST module will produce SQL errors.
 

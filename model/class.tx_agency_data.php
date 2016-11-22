@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2015 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2007-2016 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -54,6 +54,7 @@ class tx_agency_data {
 
 	public $error;
 	public $additionalUpdateFields = '';
+	public $additionalOverrideFields = array();
 	public $fieldList = ''; // List of fields from $TCA[table]['columns'] or fe_admin_fieldList (TYPO3 below 6.2)
 	public $specialfieldlist = ''; // list of special fields like captcha
 	public $recUid = 0;
@@ -162,6 +163,14 @@ class tx_agency_data {
 		$this->additionalUpdateFields = $additionalUpdateFields;
 	}
 
+	public function getAdditionalOverrideFields () {
+		return $this->additionalOverrideFields;
+	}
+
+	public function setAdditionalOverrideFields ($fields) {
+		$this->additionalOverrideFields = $fields;
+	}
+
 	public function setRecUid ($uid) {
 		$this->recUid = intval($uid);
 	}
@@ -222,16 +231,66 @@ class tx_agency_data {
 	*
 	* @return void  all overriding done directly on array $this->dataArray
 	*/
-	public function overrideValues (array &$dataArray, $cmdKey) {
+	public function overrideValues (array &$dataArray, $overrideConf) {
 
 		$cObj = t3lib_div::getUserObj('&tx_div2007_cobj');
-		$confObj = t3lib_div::getUserObj('&tx_agency_conf');
-		$conf = $confObj->getConf();
+		$overrideFieldArray = array();
 
 		// Addition of overriding values
-		if (is_array($conf[$cmdKey . '.']['overrideValues.'])) {
-			foreach ($conf[$cmdKey . '.']['overrideValues.'] as $theField => $theValue) {
+		if (is_array($overrideConf['overrideValues.'])) {
+			foreach ($overrideConf['overrideValues.'] as $theField => $theValue) {
 				if (
+					$theField == 'if.'
+				) {
+					$ifCondition = $theValue;
+
+					if (is_array($ifCondition)) {
+						foreach ($ifCondition as $k => $ifLine) {
+							if (is_array($ifLine)) {
+								$conditionMatch = FALSE;
+								if (!isset($ifLine['where'])) {
+									continue;
+								}
+								$whereParts = t3lib_div::trimExplode('=', $ifLine['where']);
+
+								if (
+									empty($whereParts) ||
+									count($whereParts) != 2
+								) {
+									continue;
+								}
+								$whereField = $whereParts['0'];
+								$whereValue = $whereParts['1'];
+
+								if (
+									$dataArray[$whereField] == $whereValue
+								) {
+									$conditionMatch = TRUE;
+								}
+
+								if ($conditionMatch) {
+									foreach ($ifLine as $ifField => $ifValue) {
+										if (
+											is_array($ifValue) &&
+											strpos($ifField, '.') == strlen($ifField) - 1
+										) {
+											$command = substr($ifField, 0, strlen($ifField) - 1);
+											switch ($command) {
+												case 'set':
+													$dataArray = array_merge($dataArray, $ifValue);
+													$overrideFieldArray = array_merge($overrideFieldArray, array_keys($ifValue));
+													break;
+												default:
+													// nothing
+													break;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				} else if (
 					$theField == 'usergroup' &&
 					$this->controlData->getTable() == 'fe_users' &&
 					$conf[$cmdKey.'.']['allowUserGroupSelection']
@@ -244,19 +303,23 @@ class tx_agency_data {
 					}
 					$dataValue = array_unique($dataValue);
 				} else {
-					$stdWrap = $conf[$cmdKey . '.']['overrideValues.'][$theField.'.'];
+					$stdWrap = $overrideConf[$theField . '.'];
 					if ($stdWrap) {
 						$dataValue = $cObj->stdWrap($theValue, $stdWrap);
 					} else if (
-						isset($conf[$cmdKey . '.']['overrideValues.'][$theField])
+						isset($overrideConf[$theField])
 					) {
-						$dataValue = $conf[$cmdKey . '.']['overrideValues.'][$theField];
+						$dataValue = $overrideConf[$theField];
 					} else {
 						$dataValue = $theValue;
 					}
 				}
 				$dataArray[$theField] = $dataValue;
 			}
+		}
+
+		if (!empty($overrideFieldArray)) {
+			$this->setAdditionalOverrideFields($overrideFieldArray);
 		}
 	}	// overrideValues
 
@@ -1281,7 +1344,8 @@ class tx_agency_data {
 						array_unique(
 							array_merge(
 								explode(',', $newFieldList),
-								explode(',', $this->getAdminFieldList())
+								explode(',', $this->getAdminFieldList()),
+								$this->getAdditionalOverrideFields()
 							)
 						);
 					$fieldArray = t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1);
@@ -2104,11 +2168,11 @@ class tx_agency_data {
 			// update the MM relation count field
 		$fieldsList = array_keys($parsedArray);
 		foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
+
 			if (isset($parsedArray[$colName])) {
-
 				$fieldObj = $addressObj->getFieldObj($colName);
-				if (isset($fieldObj) && is_object($fieldObj)) {
 
+				if (isset($fieldObj) && is_object($fieldObj)) {
 					$foreignTable =
 						$this->tca->getForeignTable(
 							$theTable,
