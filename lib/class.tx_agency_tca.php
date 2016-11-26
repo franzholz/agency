@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2013 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2007-2016 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -199,7 +199,11 @@ class tx_agency_tca {
 						$dataArray[$colName] = $value = '';
 					}
 
-					if (in_array($colName, $dataFieldList) && $colConfig['MM'] != '' && isset($value)) {
+					if (
+						in_array($colName, $dataFieldList) &&
+						$colConfig['MM'] != '' &&
+						isset($value)
+					) {
 						if ($value == '' || is_array($value)) {
 							// the value contains the count of elements from a mm table
 						} else if ($bColumnIsCount) {
@@ -389,7 +393,11 @@ class tx_agency_tca {
 		}
 
 		foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
-			if (t3lib_div::inList($fields, $colName) || $bUseMissingFields) {
+
+			if (
+				t3lib_div::inList($fields, $colName) ||
+				$bUseMissingFields
+			) {
 				$colConfig = $colSettings['config'];
 				$colContent = '';
 
@@ -407,7 +415,7 @@ class tx_agency_tca {
 						is_array($conf[$type . '.'][$activity . '.'][$colName . '.']) &&
 						is_array($conf[$type . '.'][$activity . '.'][$colName . '.']['item.'])
 					) {
-						$stdWrap = $conf[$type. '.'][$activity . '.'][$colName . '.']['item.'];
+						$stdWrap = $conf[$type . '.'][$activity . '.'][$colName . '.']['item.'];
 						$bStdWrap = TRUE;
 						if ($conf[$type . '.'][$activity . '.'][$colName . '.']['item.']['notLast']) {
 							$bNotLast = TRUE;
@@ -417,9 +425,12 @@ class tx_agency_tca {
 					$bListWrap = FALSE;
 
 					// any list wraps set?
-					if (is_array($conf[$type . '.']) && is_array($conf[$type . '.'][$activity.'.']) &&
+					if (
+						is_array($conf[$type . '.']) &&
+						is_array($conf[$type . '.'][$activity.'.']) &&
 						is_array($conf[$type . '.'][$activity . '.'][$colName . '.']) &&
-						is_array($conf[$type . '.'][$activity . '.'][$colName . '.']['list.'])) {
+						is_array($conf[$type . '.'][$activity . '.'][$colName . '.']['list.'])
+					) {
 						$listWrap = $conf[$type . '.'][$activity . '.'][$colName . '.']['list.'];
 						$bListWrap = TRUE;
 					} else {
@@ -430,7 +441,10 @@ class tx_agency_tca {
 						$userGroupObj = $addressObj->getFieldObj('usergroup');
 					}
 
-					if ($mode == MODE_PREVIEW || $viewOnly) {
+					if (
+						$mode == MODE_PREVIEW ||
+						$viewOnly
+					) {
 						// Configure preview based on input type
 
 						switch ($type) {
@@ -500,12 +514,14 @@ class tx_agency_tca {
 								} else {
 									if (
 										isset($mrow[$colName]) &&
-										$mrow[$colName] != ''
+										$mrow[$colName] != '' &&
+										$mrow[$colName] != '0'
 									) {
 										$label = $langObj->getLL('yes');
 									} else {
 										$label = $langObj->getLL('no');
 									}
+
 									if ($HSC) {
 										$label = htmlspecialchars($label, ENT_QUOTES, $charset);
 									}
@@ -604,7 +620,10 @@ class tx_agency_tca {
 												$colConfig['foreign_table']
 											);
 
-											if (is_array($foreignRows) && count($foreignRows) > 0) {
+											if (
+												is_array($foreignRows) &&
+												count($foreignRows) > 0
+											) {
 												for ($i = 0; $i < count($foreignRows); $i++) {
 													if ($theTable == 'fe_users' && $colName == 'usergroup') {
 														$foreignRows[$i] = $this->getUsergroupOverlay($conf, $controlData, $foreignRows[$i]);
@@ -652,7 +671,10 @@ class tx_agency_tca {
 							$itemArray = $langObj->getItemsLL($textSchema, TRUE);
 							$bUseTCA = FALSE;
 							if (!count($itemArray)) {
-								if (in_array($type, array('radio', 'select')) && $colConfig['itemsProcFunc']) {
+								if (
+									in_array($type, array('radio', 'select')) &&
+									$colConfig['itemsProcFunc']
+								) {
 									$itemArray = t3lib_div::callUserFunction(
 										$colConfig['itemsProcFunc'],
 										$colConfig,
@@ -754,20 +776,22 @@ class tx_agency_tca {
 									}
 									$colContent .= '</ul>';
 								} else {
-									$colContent = '<input type="checkbox"' .
-									tx_div2007_alpha5::classParam_fh002(
-										'checkbox',
-										'',
-										$prefixId
-									) .
-									' id="' .
-									tx_div2007_alpha5::getClassName_fh002(
-										$colName,
-										$prefixId
-									) .
-									'" name="FE[' . $theTable . '][' . $colName . ']" title="' .
-									$label . '"' . (isset($mrow[$colName]) && $mrow[$colName] != '' ? ' value="on" checked="checked"' : '') .
-									($useXHTML ? ' /' : ' ' ) . '>';
+									$colContent =
+										'<input type="checkbox"' .
+										tx_div2007_alpha5::classParam_fh002(
+											'checkbox',
+											'',
+											$prefixId
+										) .
+										' id="' .
+										tx_div2007_alpha5::getClassName_fh002(
+											$colName,
+											$prefixId
+										) .
+										'" name="FE[' . $theTable . '][' . $colName . ']" title="' .
+										$label . '"' . (isset($mrow[$colName]) && $mrow[$colName] != '' ? ' value="on" checked="checked"' : '') .
+										($useXHTML ? ' /' : ' ' ) .
+										'>';
 								}
 								break;
 

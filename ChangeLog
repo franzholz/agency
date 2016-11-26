@@ -1,3 +1,6 @@
+2016-11-26 Franz Holzinger <franz@ttproducts.de>
+	* bugfix: zero (0) checkbox value has been wrongly converted into On
+
 2016-11-22 Franz Holzinger <franz@ttproducts.de>
 	* bugfix PHP error: Missing argument 25 for tx_agency_email::compile
 	* new feature: FE has_privileges in order to have special features to this user in other extensions like discounts in tt_products and voucher
