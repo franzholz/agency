@@ -1,3 +1,6 @@
+2017-02-10 Franz Holzinger <franz@ttproducts.de>
+    * bugfix: value set by overrideValues if must not be overwritten again
+
 2016-11-26 Franz Holzinger <franz@ttproducts.de>
 	* bugfix: zero (0) checkbox value has been wrongly converted into On
 

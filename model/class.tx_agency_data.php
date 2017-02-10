@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2016 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2007-2017 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -239,9 +239,12 @@ class tx_agency_data {
 		// Addition of overriding values
 		if (is_array($overrideConf['overrideValues.'])) {
 			foreach ($overrideConf['overrideValues.'] as $theField => $theValue) {
+				$control = FALSE;
+
 				if (
 					$theField == 'if.'
 				) {
+					$control = TRUE;
 					$ifCondition = $theValue;
 
 					if (is_array($ifCondition)) {
@@ -314,7 +317,10 @@ class tx_agency_data {
 						$dataValue = $theValue;
 					}
 				}
-				$dataArray[$theField] = $dataValue;
+
+				if (!$control) {
+					$dataArray[$theField] = $dataValue;
+				}
 			}
 		}
 
@@ -491,7 +497,7 @@ class tx_agency_data {
 			$countArray['hook'] = array();
 			$countArray['preg'] = array();
 
-			foreach ($conf[$cmdKey.'.']['evalValues.'] as $theField => $theValue) {
+			foreach ($conf[$cmdKey . '.']['evalValues.'] as $theField => $theValue) {
 				if (
 					count($checkFieldArray) &&
 					!in_array($theField, $checkFieldArray)
@@ -1455,7 +1461,7 @@ class tx_agency_data {
 				}
 			break;
 			default:
-				if (is_array($conf[$cmdKey.'.'])) {
+				if (is_array($conf[$cmdKey . '.'])) {
 
 					$newFieldList =
 						implode(
@@ -1477,8 +1483,15 @@ class tx_agency_data {
 							',',
 							array_unique(
 								array_merge(
-									explode(',', $newFieldList),
-									explode(',', $this->getAdminFieldList())
+									explode(
+										',',
+										$newFieldList
+									),
+									explode(
+										',',
+										$this->getAdminFieldList()
+									),
+									$this->getAdditionalOverrideFields()
 								)
 							)
 						);
@@ -2168,7 +2181,6 @@ class tx_agency_data {
 			// update the MM relation count field
 		$fieldsList = array_keys($parsedArray);
 		foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
-
 			if (isset($parsedArray[$colName])) {
 				$fieldObj = $addressObj->getFieldObj($colName);
 
@@ -2217,6 +2229,7 @@ class tx_agency_data {
 				}
 			}
 		}
+
 		return $parsedArray;
 	}	// parseOutgoingData
 

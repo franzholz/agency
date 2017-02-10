@@ -99,6 +99,7 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 		);
 
 		$result = array_unique($result);
+
 		return $result;
 	}
 

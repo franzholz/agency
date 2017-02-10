@@ -25,6 +25,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 /**
+ * deprecated
+ *
  * Part of the agency (Agency Registration) extension.
  * Only used for TYPO3 < 6.2
  *
@@ -665,6 +667,7 @@ class tx_agency_display {
 			$markerArray['###FIELD_password###'] = '';
 			$markerArray['###FIELD_password_again###'] = '';
 			$deleteUnusedMarkers = TRUE;
+
 			$content =
 				$cObj->substituteMarkerArray(
 					$templateCode,
@@ -715,10 +718,13 @@ class tx_agency_display {
 				$content .= $updateJS;
 				$GLOBALS['TSFE']->additionalHeaderData['JSincludeFormupdate'] =
 					'<script type="text/javascript" src="' .
-					$GLOBALS['TSFE']->absRefPrefix .
-					t3lib_div::createVersionNumberedFilename(t3lib_extMgm::siteRelPath('agency')  .
-					'scripts/jsfunc.updateform.js') .
-					'"></script>';
+						$GLOBALS['TSFE']->absRefPrefix .
+						t3lib_div::createVersionNumberedFilename(
+							t3lib_extMgm::siteRelPath('agency')  .
+							'scripts/jsfunc.updateform.js'
+						) .
+						'">' .
+					'</script>';
 			}
 		}
 

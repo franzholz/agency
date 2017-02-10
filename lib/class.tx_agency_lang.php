@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2012 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2007-2017 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -202,14 +202,6 @@ class tx_agency_lang extends tx_div2007_alpha_language_base {
 		}
 		$locallang = $this->LOCAL_LANG;
 		tx_div2007_alpha5::loadLL_fh002($this);
-
-		if ($locallang != '') {
-			foreach ($this->LOCAL_LANG as $key => $langArray) {
-				if (isset($locallang[$key]) && is_array($locallang[$key])) {
-					$this->LOCAL_LANG[$key] = array_merge($locallang[$key], $langArray);
-				}
-			}
-		}
 
 		// do a check if the language file works
 		$tmpText = $this->getLL('unsupported');

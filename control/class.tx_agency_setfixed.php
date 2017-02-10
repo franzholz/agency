@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2016 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2007-2017 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -86,7 +86,7 @@ class tx_agency_setfixed {
 		$token,
 		&$hasError
 	) {
-		$content = FALSE;
+        $content = FALSE;
 		$row = $origArray;
 		$usesPassword = FALSE;
 
@@ -338,13 +338,26 @@ class tx_agency_setfixed {
 						// LOGIN is here only for an error case  ???
 					in_array($sFK, array('APPROVE', 'ENTER', 'LOGIN'))
 				) {
-					$markerObj->addGeneralHiddenFieldsMarkers($markerArray, $usesPassword ? 'login' : 'password', $token);
+					$markerObj->addGeneralHiddenFieldsMarkers(
+						$markerArray,
+						$usesPassword ?
+							'login' :
+							'password',
+						$token
+					);
 					if ($usesPassword) {
-						$markerObj->addPasswordTransmissionMarkers($markerArray, $controlData->getUsePasswordAgain());
+						$markerObj->addPasswordTransmissionMarkers(
+							$markerArray,
+							$controlData->getUsePasswordAgain()
+						);
 						$markerObj->setArray($markerArray);
 					}
 				} else {
-					$markerObj->addGeneralHiddenFieldsMarkers($markerArray, 'setfixed', $token);
+					$markerObj->addGeneralHiddenFieldsMarkers(
+						$markerArray,
+						'setfixed',
+						$token
+					);
 				}
 
 				if ($sFK != 'EDIT') {

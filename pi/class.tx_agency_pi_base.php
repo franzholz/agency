@@ -64,7 +64,6 @@ class tx_agency_pi_base extends tslib_pibase {
 			// If no error content, proceed
 		if ($content == '') {
 			$mainObj = t3lib_div::getUserObj('&tx_agency_control_main');
-			debug ($mainObj, '$mainObj');
 			$mainObj->cObj = $this->cObj;
 			$content = $mainObj->main($content, $conf, $this, 'fe_users');
 		}

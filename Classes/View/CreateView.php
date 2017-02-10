@@ -5,7 +5,7 @@ namespace JambageCom\Agency\View;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2016 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2007-2017 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -527,7 +527,7 @@ class CreateView {
 						$hookObj->init($dataObj);
 					}
 
-					if (method_exists($hookObj,'registrationProcess_beforeConfirmCreate')) {
+					if (method_exists($hookObj, 'registrationProcess_beforeConfirmCreate')) {
 						$hookObj->registrationProcess_beforeConfirmCreate(
 							$dataArray,
 							$controlData
@@ -576,7 +576,8 @@ class CreateView {
 					$errorFieldArray,
 					$failure
 				);
-			$markerArray =
+
+            $markerArray =
 				$markerObj->fillInMarkerArray(
 					$markerArray,
 					$currentArray,
