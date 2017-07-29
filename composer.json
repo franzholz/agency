@@ -1,0 +1,61 @@
+{
+  "name": "jambagecom/agency",
+  "type": "typo3-cms-extension",
+  "description": "An improved variant of Kasper Skårhøj's Front End User Admin extension",
+  "keywords": [
+    "TYPO3",
+    "extension",
+    "frontend user",
+    "registration"
+  ],
+  "support": {
+    "issues": "https://github.com/franzholz/agency/issues"
+  },
+  "homepage": "https://jambage.com",
+  "authors": [
+    {
+      "name": "Franz Holzinger",
+      "role": "Developer",
+      "homepage": "http://ttproducts.de"
+    }
+  ],
+  "license": [
+    "GPL-2.0+"
+  ],
+  "require": {
+    "typo3/cms-core": ">=4.5.0,<8.99.99"
+  },
+  "autoload": {
+    "psr-4": {
+      "JambageCom\\Agency\\": "Classes"
+    },
+    "classmap": [
+      "/",
+      "hooks/",
+      "lib/",
+      "marker/",
+      "model/",
+      "pi/",
+      "view/"
+    ]
+  },
+  "replace": {
+    "agency": "self.version",
+    "typo3-ter/agency": "self.version"
+  },
+  "config": {
+    "vendor-dir": ".Build/vendor",
+    "bin-dir": ".Build/bin",
+    "preferred-install": {
+      "typo3/cms": "source",
+      "typo3/cms-core": "source",
+      "*": "dist"
+    }
+  },
+  "extra": {
+    "typo3/cms": {
+      "cms-package-dir": "{$vendor-dir}/typo3/cms",
+      "web-dir": ".Build/Web"
+    }
+  }
+}

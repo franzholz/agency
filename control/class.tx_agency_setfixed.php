@@ -89,6 +89,11 @@ class tx_agency_setfixed {
         $content = FALSE;
 		$row = $origArray;
 		$usesPassword = FALSE;
+		$enableAutoLoginOnConfirmation =
+            $controlData->enableAutoLoginOnConfirmation(
+                $conf,
+                $cmdKey
+            );
 
 		if (
 			$theTable == 'fe_users' &&
@@ -96,7 +101,7 @@ class tx_agency_setfixed {
 				!$row['by_invitation'] ||
 				(
 					$cmdKey == 'invite' &&
-					!$controlData->enableAutoLoginOnConfirmation($conf, $cmdKey)
+					!$enableAutoLoginOnConfirmation
 				)
 			) &&
 			!$row['lost_password']
@@ -363,8 +368,14 @@ class tx_agency_setfixed {
 				if ($sFK != 'EDIT') {
 					if (
 						$theTable == 'fe_users' &&
-						($sFK == 'APPROVE' || $sFK == 'ENTER') &&
-						!$usesPassword
+						(
+                            $setFixedKey == 'ENTER' ||
+                            (
+                                $setFixedKey == 'APPROVE' &&
+                                $enableAutoLoginOnConfirmation
+                            )
+                        )
+                        !$usesPassword
 					) {
 							// Auto-login
 						$loginSuccess =
@@ -571,7 +582,7 @@ class tx_agency_setfixed {
 							$content = $errorContent;
 						} else if (
 								// Auto-login on confirmation
-							$controlData->enableAutoLoginOnConfirmation($conf, $cmdKey) &&
+							$enableAutoLoginOnConfirmation &&
 							$usesPassword &&
 							(
 								($sFK == 'APPROVE' && !$conf['enableAdminReview']) ||

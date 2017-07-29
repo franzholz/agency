@@ -283,8 +283,8 @@ class tx_agency_controldata {
 			(
 				!count($feUserData) ||
 				$bSecureStartCmd ||
-				($token != '' && $feUserData['token'] == $token)
-// 				$cmd == 'create' && count($feUserData) <= 4 // allow a cancel in the last form
+				($token != '' && $feUserData['token'] == $token) ||
+                ($token == '' && $feUserData['token'] != '' && $cmd == 'create') // Allow always the creation of a new user. No session data exists in this case.
 			)
 		) {
 			$this->setTokenValid(TRUE);

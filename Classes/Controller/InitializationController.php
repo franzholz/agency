@@ -5,8 +5,7 @@ namespace JambageCom\Agency\Controller;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 1999-2003 Kasper Skårhøj (kasperYYYY@typo3.com)
-*  (c) 2004-2016 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2017 Stanislas Rolland (typo3(arobas)sjbr.ca)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -28,276 +27,291 @@ namespace JambageCom\Agency\Controller;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 /**
- *
- * Part of the agency (Agency Registration) extension.
- *
- * Front End creating/editing/deleting records authenticated by fe_user login.
- * A variant restricted to front end user self-registration and profile maintenance, with a number of enhancements (see the manual).
- *
- * @author	Kasper Skårhøj <kasperYYYY@typo3.com>
- * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
- * @author	Franz Holzinger <franz@ttproducts.de>
- * @maintainer	Franz Holzinger <franz@ttproducts.de>
- *
- *
- */
+*
+* Part of the agency (Agency Registration) extension.
+*
+* Front End creating/editing/deleting records authenticated by fe_user login.
+* A variant restricted to front end user self-registration and profile maintenance, with a number of enhancements (see the manual).
+*
+* @author   Kasper Skårhøj <kasperYYYY@typo3.com>
+* @author   Stanislas Rolland <typo3(arobas)sjbr.ca>
+* @author   Franz Holzinger <franz@ttproducts.de>
+* @maintainer   Franz Holzinger <franz@ttproducts.de>
+*
+*
+*/
+
+
+
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 class InitializationController {
-	public $config = array();
-	public $incomingData = FALSE;
-	public $nc = ''; // "&no_cache=1" if you want that parameter sent.
-	public $additionalUpdateFields = '';
-	public $auth; // object of type tx_agency_auth
-	public $control; // object of type tx_agency_control
-	public $controlData; // data used for the control
-	public $urlObj;
-	public $email; // object of type tx_agency_email
-	public $langObj; // object of type tx_agency_lang
-	public $tca;  // object of type tx_agency_tca
-	public $marker; // object of type tx_agency_marker
+    public $config = array();
+    public $incomingData = false;
+    public $nc = ''; // "&no_cache=1" if you want that parameter sent.
+    public $additionalUpdateFields = '';
+    public $auth; // object of type tx_agency_auth
+    public $control; // object of type tx_agency_control
+    public $email; // object of type tx_agency_email
+    public $langObj; // object of type tx_agency_lang
+    public $tca;  // object of type tx_agency_tca
+    public $marker; // object of type tx_agency_marker
 
 
-	public function main (
-		$content,
-		$conf,
-		$pibaseObj,
-		$theTable,
-		$adminFieldList = 'username,password,name,disable,usergroup,by_invitation,tx_agency_password,lost_password',
-		$buttonLabelsList = '',
-		$otherLabelsList = ''
-	) {
-		$staticInfoObj = FALSE;
-		$dataObj = FALSE; // object of type tx_agency_data
-		$confObj = \t3lib_div::getUserObj('&tx_agency_conf');
-		$error_message = '';
-		$origArray = array();
+    /**
+    * Creates and initializes all component classes
+    *
+    * @param object pi_base object
+    * @param array $conf: the configuration of the cObj
+    * @param string $theTable: the table in use
+    * @param string $adminFieldList: list of table fields that are considered reserved for administration purposes
+    * @param string $buttonLabelsList: a list of button label names
+    * @param string $otherLabelsList: a list of other label names
+    * @return boolean true, if initialization was successful, false otherwise
+    */
+    public function init (
+        &$controlData,
+        array &$origArray,
+        &$staticInfoObj,
+        &$dataObj,
+        &$errorMessage,
+        \JambageCom\Agency\Controller\RegisterPluginController $pibaseObj,
+        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
+        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
+        $conf,
+        $theTable,
+        $adminFieldList,
+        $buttonLabelsList,
+        $otherLabelsList
+    ) {
+        $result = true;
+        $this->tca = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tca::class);
 
-		$success = $this->init(
-			$pibaseObj,
-			$confObj,
-			$conf,
-			$theTable,
-			$adminFieldList,
-			$buttonLabelsList,
-			$otherLabelsList,
-			$origArray,
-			$staticInfoObj,
-			$dataObj,
-			$errorMessage
-		);
-		$cmd = $this->controlData->getCmd();
-		$cmdKey = $this->controlData->getCmdKey();
-		$templateCode = $dataObj->getTemplateCode();
+        $confObj->init($conf);
+        $this->tca->init($pibaseObj->extKey, $theTable);
+        $tablesObj = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tables::class);
+        $tablesObj->init($theTable);
+        $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
+        $authObj->init($confObj); // $config is changed
+        $controlData = GeneralUtility::makeInstance(\JambageCom\Agency\Request\Parameters::class);
+        $controlData->init(
+            $confObj,
+            $pibaseObj->prefixId,
+            $pibaseObj->extKey,
+            $pibaseObj->piVars,
+            $theTable
+        );
 
-		if ($success) {
-			$displayClassName = 'JambageCom\\Agency\\View\\CreateView';
+        if ($pibaseObj->extKey != AGENCY_EXT) {
+                    // Static Methods for Extensions for fetching the texts of agency
+                \tx_div2007_alpha5::loadLL_fh002(
+                    $pibaseObj,
+                    'EXT:' . AGENCY_EXT . '/pi/locallang.xml',
+                    false
+                );
+        } // otherwise the labels from agency need not be included, because this has been done in TYPO3 pibase
 
-			$displayObj = \t3lib_div::getUserObj($displayClassName);
-			$content = $this->control->doProcessing(
-				$pibaseObj->cObj,
-				$confObj,
-				$this->setfixedObj,
-				$this->langObj,
-				$displayObj,
-				$this->controlData,
-				$dataObj,
-				$staticInfoObj,
-				$theTable,
-				$cmd,
-				$cmdKey,
-				$origArray,
-				$templateCode,
-				$errorMessage
-			);
-		}
+        if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded(STATIC_INFO_TABLES_EXT)) {
+                // Initialise static info library
+            if (class_exists('SJBR\\StaticInfoTables\\PiBaseApi')) {
+                $staticInfoObj = GeneralUtility::makeInstance(\SJBR\StaticInfoTables\PiBaseApi::class);
+            }
 
-		if ($errorMessage) {
-			$content = $errorMessage;
-		} else if ($success === FALSE) {
-			$content = '<em>Internal error in ' . $pibaseObj->extKey . '!</em><br /> Maybe you forgot to include the basic template file under "include statics from extensions".';
-		}
+            if (
+                is_object($staticInfoObj) &&
+                (
+                    !method_exists($staticInfoObj, 'needsInit') ||
+                    $staticInfoObj->needsInit()
+                )
+            ) {
+                $staticInfoObj->init();
+            }
+        }
 
-		$content = \tx_div2007_alpha5::wrapInBaseClass_fh002($content, $pibaseObj->prefixId, $pibaseObj->extKey);
-		return $content;
-	}
+        $this->langObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Localization::class);
+        $urlObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Url::class);
+        $coreQuery = GeneralUtility::makeInstance(
+                \JambageCom\Div2007\Database\CoreQuery::class,
+                $this->getTypoScriptFrontendController()
+            );
+        $dataObj =
+            GeneralUtility::makeInstance(
+                \JambageCom\Agency\Domain\Data::class,
+                $coreQuery
+            );
+        $this->marker = GeneralUtility::makeInstance(\JambageCom\Agency\View\Marker::class);
+        $this->setfixedObj = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\SetFixed::class);
+        $this->email = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Email::class);
+        $this->control = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\ActionController::class);
 
-	/**
-	* Creates and initializes all component classes
-	*
-	* @param object pi_base object
-	* @param array $conf: the configuration of the cObj
-	* @param string $theTable: the table in use
-	* @param string $adminFieldList: list of table fields that are considered reserved for administration purposes
-	* @param string $buttonLabelsList: a list of button label names
-	* @param string $otherLabelsList: a list of other label names
-	* @return boolean TRUE, if initialization was successful, FALSE otherwise
-	*/
-	public function init (
-		$pibaseObj,
-		$confObj,
-		$conf,
-		$theTable,
-		$adminFieldList,
-		$buttonLabelsList,
-		$otherLabelsList,
-		array &$origArray,
-		&$staticInfoObj,
-		&$dataObj,
-		&$errorMessage
-	) {
-		$result = TRUE;
-		$cObj = $pibaseObj->cObj;
-		$this->tca = \t3lib_div::getUserObj('&tx_agency_tca');
+        $urlObj->init(
+            $cObj,
+            $controlData->getPiVars(),
+            $controlData->getPrefixId()
+        );
 
-		$confObj->init($conf);
-		$this->tca->init($pibaseObj->extKey, $theTable);
-		$tablesObj = \t3lib_div::getUserObj('&tx_agency_lib_tables');
-		$tablesObj->init($theTable);
-		$authObj = \t3lib_div::getUserObj('&tx_agency_auth');
-		$authObj->init($confObj); // $config is changed
-		$this->controlData = \t3lib_div::getUserObj('&tx_agency_controldata');
-		$this->controlData->init(
-			$confObj,
-			$pibaseObj->prefixId,
-			$pibaseObj->extKey,
-			$pibaseObj->piVars,
-			$theTable
-		);
+        $this->langObj->init1(
+            $pibaseObj,
+            $cObj,
+            $conf,
+            'pi/class.tx_agency_pi_base.php',
+            $pibaseObj->extKey
+        );
+        $result = $this->langObj->loadLL();
+        if ($result !== false) {
+            $templateFile = $conf['templateFile'];
+            $templateCode = $cObj->fileResource($templateFile);
+            if (
+                (!$templateFile || empty($templateCode))
+            ) {
+                $errorText = \tx_div2007_alpha5::getLL_fh002(
+                        $this->langObj,
+                        'internal_no_template'
+                    );
+                $errorMessage = sprintf($errorText, $templateFile, 'plugin.tx_' . $pibaseObj->extKey . '.templateFile');
+            }
 
-		if ($pibaseObj->extKey != AGENCY_EXT) {
-					// Static Methods for Extensions for fetching the texts of agency
-				\tx_div2007_alpha5::loadLL_fh002(
-					$pibaseObj,
-					'EXT:' . AGENCY_EXT . '/pi/locallang.xml',
-					FALSE
-				);
-		} // otherwise the labels from agency need not be included, because this has been done in TYPO3 pibase
+            if ($controlData->isTokenValid()) {
+                $this->control->init(
+                    $confObj,
+                    $this->langObj,
+                    $cObj,
+                    $controlData,
+                    $this->marker,
+                    $this->email,
+                    $this->tca,
+                    $urlObj
+                );
 
-		if (\t3lib_extMgm::isLoaded(STATIC_INFO_TABLES_EXT)) {
-				// Initialise static info library
-			if (class_exists('SJBR\\StaticInfoTables\\PiBaseApi')) {
-				$staticInfoObj = \t3lib_div::getUserObj('&SJBR\\StaticInfoTables\\PiBaseApi');
-			} else {
-				if (!class_exists('tx_staticinfotables_pi1')) {
-					\t3lib_div::requireOnce(
-						\t3lib_extMgm::extPath(STATIC_INFO_TABLES_EXT) . 'pi1/class.tx_staticinfotables_pi1.php'
-					);
-				}
-				$staticInfoObj = \t3lib_div::getUserObj('&tx_staticinfotables_pi1');
-			}
+                $dataObj->init(
+                    $cObj,
+                    $this->langObj,
+                    $this->tca,
+                    $this->control,
+                    $theTable,
+                    $templateCode,
+                    $controlData,
+                    $staticInfoObj
+                );
 
-			if (
-				is_object($staticInfoObj) &&
-				(
-					!method_exists($staticInfoObj, 'needsInit') ||
-					$staticInfoObj->needsInit()
-				)
-			) {
-				$staticInfoObj->init();
-			}
-		}
+                $this->control->init2( // only here the $conf is changed
+                    $confObj,
+                    $staticInfoObj,
+                    $theTable,
+                    $controlData,
+                    $dataObj,
+                    $adminFieldList,
+                    $origArray
+                );
+                $dataObj->setOrigArray($origArray);
+                $uid = $dataObj->getRecUid();
 
-		$this->langObj = \t3lib_div::getUserObj('&tx_agency_lang');
-		$this->urlObj = \t3lib_div::getUserObj('&tx_agency_url');
-		$dataObj = \t3lib_div::getUserObj('&tx_agency_data');
-		$this->marker = \t3lib_div::getUserObj('&tx_agency_marker');
-		$this->setfixedObj = \t3lib_div::getUserObj('&tx_agency_setfixed');
-		$this->email = \t3lib_div::getUserObj('&tx_agency_email');
-		$this->control = \t3lib_div::getUserObj('&tx_agency_control');
+                $this->marker->init(
+                    $confObj,
+                    $dataObj,
+                    $this->tca,
+                    $controlData,
+                    $controlData->getBackURL(),
+                    $controlData->getExtKey(),
+                    $controlData->getPrefixId(),
+                    $controlData->getTable(),
+                    $urlObj,
+                    $staticInfoObj,
+                    $uid,
+                    $controlData->readToken()
+                );
 
-		$this->urlObj->init(
-			$this->controlData,
-			$cObj
-		);
+                if ($buttonLabelsList != '') {
+                    $this->marker->setButtonLabelsList($buttonLabelsList);
+                }
 
-		$this->langObj->init1(
-			$pibaseObj,
-			$cObj,
-			$conf,
-			$pibaseObj->scriptRelPath,
-			$pibaseObj->extKey
-		);
-		$result = $this->langObj->loadLL();
+                if ($otherLabelsList != '') {
+                    $this->marker->addOtherLabelsList($otherLabelsList);
+                }
+            } else {
+                $result = false;
+                $errorMessage = $this->langObj->getLL('internal_invalid_token');
+            }
+        } else {
+            $errorMessage = $this->langObj->getLL('internal_init_language');
+        }
 
-		if ($result !== FALSE) {
-			$templateFile = $conf['templateFile'];
-			$templateCode = $cObj->fileResource($templateFile);
-			if (
-				(!$templateFile || empty($templateCode))
-			) {
-				$errorText = \tx_div2007_alpha5::getLL_fh002(
-						$this->langObj,
-						'internal_no_template'
-					);
-				$errorMessage = sprintf($errorText, $templateFile, 'plugin.tx_' . $pibaseObj->extKey . '.templateFile');
-			}
+        return $result;
+    } // init
 
-			if ($this->controlData->isTokenValid()) {
-				$this->control->init(
-					$confObj,
-					$this->langObj,
-					$cObj,
-					$this->controlData,
-					$this->marker,
-					$this->email,
-					$this->tca,
-					$this->urlObj
-				);
 
-				$dataObj->init(
-					$cObj,
-					$this->langObj,
-					$this->tca,
-					$this->control,
-					$theTable,
-					$templateCode,
-					$this->controlData,
-					$staticInfoObj
-				);
+    public function main (
+        \JambageCom\Agency\Controller\RegisterPluginController $pibaseObj,
+        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
+        $content,
+        $conf,
+        $theTable,
+        $adminFieldList = 'username,password,name,disable,usergroup,by_invitation,tx_agency_password,lost_password',
+        $buttonLabelsList = '',
+        $otherLabelsList = ''
+    ) {
+        $staticInfoObj = null;
+        $dataObj = null; // object of type tx_agency_data
+        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
+        $error_message = '';
+        $origArray = array();
 
-				$this->control->init2( // only here the $conf is changed
-					$confObj,
-					$staticInfoObj,
-					$theTable,
-					$this->controlData,
-					$dataObj,
-					$adminFieldList,
-					$origArray
-				);
-				$dataObj->setOrigArray($origArray);
-				$uid = $dataObj->getRecUid();
+        $success = $this->init(
+            $controlData,
+            $origArray,
+            $staticInfoObj,
+            $dataObj,
+            $errorMessage,
+            $pibaseObj,
+            $cObj,
+            $confObj,
+            $conf,
+            $theTable,
+            $adminFieldList,
+            $buttonLabelsList,
+            $otherLabelsList
+        );
+        $cmd = $controlData->getCmd();
+        $cmdKey = $controlData->getCmdKey();
+        $templateCode = $dataObj->getTemplateCode();
 
-				$this->marker->init(
-					$confObj,
-					$dataObj,
-					$this->tca,
-					$this->langObj,
-					$this->controlData,
-					$this->controlData->getBackURL(),
-					$this->controlData->getExtKey(),
-					$this->controlData->getPrefixId(),
-					$this->controlData->getTable(),
-					$this->urlObj,
-					$staticInfoObj,
-					$uid,
-					$this->controlData->readToken()
-				);
+        if ($success) {
+            $displayObj = GeneralUtility::makeInstance(\JambageCom\Agency\View\CreateView::class);
+            $content = $this->control->doProcessing(
+                $pibaseObj->cObj,
+                $confObj,
+                $this->setfixedObj,
+                $this->langObj,
+                $displayObj,
+                $controlData,
+                $dataObj,
+                $staticInfoObj,
+                $theTable,
+                $cmd,
+                $cmdKey,
+                $origArray,
+                $templateCode,
+                $errorMessage
+            );
+        }
 
-				if ($buttonLabelsList != '') {
-					$this->marker->setButtonLabelsList($buttonLabelsList);
-				}
+        if ($errorMessage) {
+            $content = $errorMessage;
+        } else if ($success === false) {
+            $content = '<em>Internal error in ' . $pibaseObj->extKey . '!</em><br /> Maybe you forgot to include the basic template file under "include statics from extensions".';
+        }
 
-				if ($otherLabelsList != '') {
-					$this->marker->addOtherLabelsList($otherLabelsList);
-				}
-			} else {
-				$result = FALSE;
-				$errorMessage = $this->langObj->getLL('internal_invalid_token');
-			}
-		} else {
-			$errorMessage = $this->langObj->getLL('internal_init_language');
-		}
+        $content = \tx_div2007_alpha5::wrapInBaseClass_fh002($content, $pibaseObj->prefixId, $pibaseObj->extKey);
+        return $content;
+    }
 
-		return $result;
-	}	// init
+
+    /**
+     * @return \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
+     */
+    static protected function getTypoScriptFrontendController ()
+    {
+        return $GLOBALS['TSFE'];
+    }
 }
 

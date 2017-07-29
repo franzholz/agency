@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2008-2008 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2008-2017 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -93,7 +93,7 @@ class tx_agency_model_table_base {
 		$path = $classArray['path'];
 
 		include_once ($path . 'model/field/class.' . $className . '.php');
-		$fieldObj = t3lib_div::getUserObj('&' . $className);	// fetch and store it as persistent object
+		$fieldObj = t3lib_div::getUserObj($className);	// fetch and store it as persistent object
 		if ($fieldObj->needsInit()) {
 			$fieldObj->init($this->cObj);
 		}

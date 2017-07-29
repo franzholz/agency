@@ -5,8 +5,8 @@ namespace JambageCom\Agency\Controller;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 1999-2003 Kasper Skårhøj (kasperYYYY@typo3.com)
-*  (c) 2004-2016 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2003 Kasper Skårhøj (kasperYYYY@typo3.com)
+*  (c) 2017 Stanislas Rolland (typo3(arobas)sjbr.ca)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -28,84 +28,90 @@ namespace JambageCom\Agency\Controller;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 /**
- *
- * Part of the agency (Agency Registration) extension.
- *
- * Front End creating/editing/deleting records authenticated by fe_user login.
- * A variant restricted to front end user self-registration and profile maintenance, with a number of enhancements (see the manual).
- *
- * @author	Kasper Skårhøj <kasperYYYY@typo3.com>
- * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
- * @author	Franz Holzinger <franz@ttproducts.de>
- * @maintainer	Franz Holzinger <franz@ttproducts.de>
- *
- *
- */
+*
+* Part of the agency (Agency Registration) extension.
+*
+* Front End creating/editing/deleting records authenticated by fe_user login.
+* A variant restricted to front end user self-registration and profile maintenance, with a number of enhancements (see the manual).
+*
+* @author   Kasper Skårhøj <kasperYYYY@typo3.com>
+* @author   Stanislas Rolland <typo3(arobas)sjbr.ca>
+* @author   Franz Holzinger <franz@ttproducts.de>
+* @maintainer   Franz Holzinger <franz@ttproducts.de>
+*
+*
+*/
 
 use JambageCom\Agency\Configuration\ConfigurationCheck;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 class RegisterPluginController extends \tslib_pibase {
 
-		// Plugin initialization variables
-	public $prefixId = 'agency';
-	public $scriptRelPath = 'pi/class.tx_agency_pi_base.php'; // Path to this script relative to the extension dir.
-	public $extKey = AGENCY_EXT;		// Extension key.
+        // Plugin initialization variables
+    public $prefixId = 'agency';
+    public $scriptRelPath = 'Classes/Controller/RegisterPluginController.php'; // Path to this script relative to the extension dir.
+    public $extKey = AGENCY_EXT;		// Extension key.
 
 
-	public function main ($content, $conf) {
-		$this->pi_setPiVarDefaults();
-		$this->conf = $conf;
+    public function main ($content, $conf) {
+        $this->pi_setPiVarDefaults();
+        $this->conf = $conf;
 
-			// Check installation requirements
-		$content =
-			ConfigurationCheck::checkRequirements(
-				$conf,
-				$this->extKey
-			);
+            // Check installation requirements
+        $content =
+            ConfigurationCheck::checkRequirements(
+                $conf,
+                $this->extKey
+            );
 
-			// Check installation security settings
-		$content =
-			ConfigurationCheck::checkSecuritySettings(
-				$this->extKey
-			);
+            // Check installation security settings
+        $content =
+            ConfigurationCheck::checkSecuritySettings(
+                $this->extKey
+            );
 
-			// Check presence of deprecated markers
-		$content .=
-			ConfigurationCheck::checkDeprecatedMarkers(
-				$this->cObj,
-				$conf,
-				$this->extKey
-			);
+            // Check presence of deprecated markers
+        $content .=
+            ConfigurationCheck::checkDeprecatedMarkers(
+                $this->cObj,
+                $conf,
+                $this->extKey
+            );
 
-		$theTable = '';
-		// The table must be configured
-		if (
-			isset($conf['table.']) &&
-			is_array($conf['table.']) &&
-			$conf['table.']['name']
-		) {
-			$theTable  = $conf['table.']['name'];
-		}
+        $theTable = '';
+        // The table must be configured
+        if (
+            isset($conf['table.']) &&
+            is_array($conf['table.']) &&
+            $conf['table.']['name']
+        ) {
+            $theTable  = $conf['table.']['name'];
+        }
 
-		// Check presence of configured table in TCA
-		if (
-			$theTable == '' ||
-			!is_array($GLOBALS['TCA'][$theTable]) ||
-			!is_array($GLOBALS['TCA'][$theTable]['columns'])
-		) {
-			$errorText = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_table_without_TCA');
-			$content = sprintf($errorText, $theTable);
-		}
+        // Check presence of configured table in TCA
+        if (
+            $theTable == '' ||
+            !is_array($GLOBALS['TCA'][$theTable]) ||
+            !is_array($GLOBALS['TCA'][$theTable]['columns'])
+        ) {
+            $errorText = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_table_without_TCA');
+            $content = sprintf($errorText, $theTable);
+        }
 
-			// If no error content, proceed
-		if ($content == '') {
-			$mainObj = \t3lib_div::getUserObj('JambageCom\\Agency\\Controller\\InitializationController');
-			$mainObj->cObj = $this->cObj;
-			$content = $mainObj->main($content, $conf, $this, 'fe_users');
-		}
-		return $content;
-	}
-
+            // If no error content, proceed
+        if ($content == '') {
+            $mainObj = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\InitializationController::class);
+            $content =
+                $mainObj->main(
+                    $this,
+                    $this->cObj,
+                    $content,
+                    $conf,
+                    'fe_users'
+                );
+        }
+        return $content;
+    }
 }
 

@@ -1,3 +1,8 @@
+2017-07-29 Franz Holzinger <franz@ttproducts.de>
+    * bugfix: The security hash must always be valid during a CREATE if no former value exists.
+    * bugfix: No automatic login must be tempted after an APPROVE
+    * support for TYPO3 8.x
+
 2017-02-10 Franz Holzinger <franz@ttproducts.de>
     * bugfix: value set by overrideValues if must not be overwritten again
 
