@@ -90,8 +90,10 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                 case 'rsa':
                         // Get services from rsaauth
                         // Can't simply use the authentication service because we have two fields to decrypt
-                    $backend = tx_rsaauth_backendfactory::getBackend();
-                    $storage = tx_rsaauth_storagefactory::getStorage();
+                    /** @var $backend \TYPO3\CMS\Rsaauth\Backend\AbstractBackend */
+                    $backend = BackendFactory::getBackend();
+                    /** @var $storage \TYPO3\CMS\Rsaauth\Storage\AbstractStorage */
+                    $storage = StorageFactory::getStorage();
                     /* @var $storage tx_rsaauth_abstract_storage */
                     if (is_object($backend) && is_object($storage)) {
                         $key = $storage->get();
