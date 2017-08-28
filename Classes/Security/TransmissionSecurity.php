@@ -41,6 +41,8 @@ namespace JambageCom\Agency\Security;
 */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Rsaauth\Backend\BackendFactory;
+use TYPO3\CMS\Rsaauth\Storage\StorageFactory;
 
 
 class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
