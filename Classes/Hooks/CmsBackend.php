@@ -1,8 +1,11 @@
 <?php
+
+namespace JambageCom\Agency\Hooks;
+
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2007-2008 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2017 Franz Holzinger <franz@ttproducts.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -38,13 +41,8 @@
  */
 
 
-class tx_agency_hooks_cms extends tx_div2007_hooks_cms {
-	public $extKey = AGENCY_EXT;
+class CmsBackend extends \JambageCom\Div2007\Base\CmsHookBase {
+    public $extKey = AGENCY_EXT;
 
-}
-
-
-if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/hooks/class.agency_hooks_cms.php'])	{
-	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/hooks/class.tx_agency_hooks_cms.php']);
 }
 

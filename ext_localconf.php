@@ -104,7 +104,8 @@ if (TYPO3_MODE == 'BE') {
 
 	if (call_user_func($emClass . '::isLoaded', DIV2007_EXT)) {
 		// replace the output of the former CODE field with the flexform
-		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info'][$_EXTKEY . '_pi'][] = 'EXT:' . $_EXTKEY . '/hooks/class.tx_agency_hooks_cms.php:&tx_agency_hooks_cms->pmDrawItem';
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info'][$_EXTKEY . '_pi'][] =
+            'JambageCom\\Agency\\Hooks\\CmsBackend->pmDrawItem';
 	}
 
 	if (!defined($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['cms']['db_layout']['addTables']['fe_users']['MENU'])) {
