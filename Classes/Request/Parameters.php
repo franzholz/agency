@@ -78,8 +78,6 @@ class Parameters
     protected $transmissionSecurity;
         // Storage security object
     protected $storageSecurity;
-        // Supported captcha extensions
-    protected $captchaExtensions = array();
         // support for repeated password (password_again internal field)
     protected $usePasswordAgain = false;
     protected $usePassword = false;
@@ -99,22 +97,6 @@ class Parameters
         $this->confObj = $confObj;
         $this->setDefaultPid($conf);
 
-            // Initialize array of installed captcha extensions
-        if (isset($conf['captcha.'])) {
-            foreach ($conf['captcha.'] as $k => $captchaConfig) {
-                $extensionKey = $captchaConfig['extensionKey'];
-                if (
-                    $extensionKey != '' &&
-                    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extensionKey) &&
-                    $captchaConfig['evalRule'] != ''
-                ) {
-                    $this->captchaExtensions[$extensionKey] = array(
-                        'extensionKey' => $extensionKey,
-                        'evalRule' => $captchaConfig['evalRule']
-                    );
-                }
-            }
-        }
         $this->site_url = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 
         if ($GLOBALS['TSFE']->absRefPrefix) {
@@ -133,15 +115,10 @@ class Parameters
         $this->setTable($theTable);
         $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
 
-        $bSysLanguageUidIsInt = MathUtility::canBeInterpretedAsInteger($GLOBALS['TSFE']->config['config']['sys_language_uid']);
-        $this->sys_language_content = ($bSysLanguageUidIsInt ? $GLOBALS['TSFE']->config['config']['sys_language_uid'] : 0);
+        $this->sys_language_content = intval($GLOBALS['TSFE']->config['config']['sys_language_uid']);
 
             // set the title language overlay
-        $pidRecord = GeneralUtility::makeInstance('t3lib_pageSelect');
-        $pidRecord->init(0);
-        $pidRecord->sys_language_uid = $this->sys_language_content;
-        $row = $pidRecord->getPage($this->getPid());
-        $this->thePidTitle = trim($conf['pidTitleOverride']) ? trim($conf['pidTitleOverride']) : $row['title'];
+        $this->setPidTitle($conf, $this->sys_language_content);
 
         $pidTypeArray = array('login', 'register', 'edit', 'infomail', 'confirm', 'confirmInvitation', 'password');
         // set the pid's
@@ -361,6 +338,20 @@ class Parameters
             // Generate a new token for the next created forms
         $token = $authObj->generateToken();
         $this->writeToken($token);
+    }
+
+
+    /**
+     * Set the title of the page of the records
+     *
+     * @return void
+     */
+    protected function setPidTitle ($conf, $sys_language_uid) {
+        $pidRecord = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Page\PageRepository::class);
+        $pidRecord->init(0);
+        $pidRecord->sys_language_uid = (int) $sys_language_uid;
+        $row = $pidRecord->getPage((int) $this->getPid());
+        $this->thePidTitle = trim($conf['pidTitleOverride']) ?: $row['title'];
     }
 
 
@@ -922,48 +913,6 @@ class Parameters
             $result = false;
         }
         return $result;
-    }
-
-
-    /*************************************
-    * CAPTCHA
-
-    *************************************/
-    /**
-     * Gets the array of loaded captcha extensions
-     *
-     * @return array true, if the use of captcha is enabled
-     */
-    public function getCaptchaExtensions() {
-        return $this->captchaExtensions;
-    }
-
-
-    /**
-     * Determines whether the use of captcha is enabled
-     *
-     * @param string $cmdKey: the cmdKey for which the check is requested
-     * @return boolean true, if the use of captcha is enabled
-     */
-    public function useCaptcha ($conf, $cmdKey) {
-        $useCaptcha = false;
-
-        if (
-            GeneralUtility::inList($conf[$cmdKey . '.']['fields'], 'captcha_response') &&
-            is_array($conf[$cmdKey . '.']) &&
-            is_array($conf[$cmdKey . '.']['evalValues.'])
-        ) {
-            $captchaExtensions = $this->getCaptchaExtensions();
-            foreach ($captchaExtensions as $captchaExtension) {
-                if (
-                    $conf[$cmdKey . '.']['evalValues.']['captcha_response'] == $captchaExtension['evalRule']
-                ) {
-                    $useCaptcha = true;
-                    break;
-                }
-            }
-        }
-        return $useCaptcha;
     }
 
 

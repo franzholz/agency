@@ -112,8 +112,19 @@ class CreateView {
             }
         }
 
-        if (!$controlData->useCaptcha($conf, $cmdKey)) {
-            $templateCode = $cObj->substituteSubpart($templateCode, '###SUB_INCLUDED_FIELD_captcha_response###', '');
+        if (
+            !\JambageCom\Agency\Captcha\CaptchaManager::useCaptcha(
+                $cmdKey,
+                $conf,
+                $controlData->getExtKey()
+            )
+        ) {
+            $templateCode =
+                $cObj->substituteSubpart(
+                    $templateCode,
+                    '###SUB_INCLUDED_FIELD_captcha_response###',
+                    ''
+                );
         }
 
         // Honour Address List (tt_address) configuration setting
@@ -127,7 +138,12 @@ class CreateView {
                 is_array($extConf) &&
                 $extConf['disableCombinedNameField'] == '1'
             ) {
-                $templateCode = $cObj->substituteSubpart($templateCode, '###SUB_INCLUDED_FIELD_name###', '');
+                $templateCode =
+                    $cObj->substituteSubpart(
+                        $templateCode,
+                        '###SUB_INCLUDED_FIELD_name###',
+                        ''
+                    );
             }
         }
 

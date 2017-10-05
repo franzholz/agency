@@ -1178,13 +1178,14 @@ var submitFile = function(id){
         $prefix = 'FIELD_',
         $HSC = TRUE
     ) {
+        $conf = $confObj->getConf();
         if (is_array($securedArray)) {
             foreach ($securedArray as $field => $value) {
                 $row[$field] = $securedArray[$field];
             }
         }
 
-        if ($fieldList)	{
+        if ($fieldList) {
             $fArr = GeneralUtility::trimExplode(',', $fieldList, 1);
             foreach($fArr as $field) {
                 $markerArray['###' . $prefix . $field . '###'] = $nl2br ? nl2br($row[$field]) : $row[$field];
@@ -1226,6 +1227,26 @@ var submitFile = function(id){
                         $controlData,
                         $confObj,
                         $this
+                    );
+                }
+            }
+        }
+
+        // Add captcha markers
+        if (
+            \JambageCom\Agency\Captcha\CaptchaManager::useCaptcha(
+                $controlData->getCmdKey(),
+                $conf,
+                $controlData->getExtKey()
+            )
+        ) {
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$controlData->getExtKey()]['captcha'])) {
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$controlData->getExtKey()]['captcha'] as $classRef) {
+                    $hookObj = GeneralUtility::makeInstance($classRef);
+                    $hookObj->addGlobalMarkers(
+                        $markerArray,
+                        $controlData->getCmdKey(),
+                        $conf
                     );
                 }
             }

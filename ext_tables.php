@@ -1,6 +1,6 @@
 <?php
 if (!defined ('TYPO3_MODE')) {
-	die ('Access denied.');
+    die ('Access denied.');
 }
 
 $emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
@@ -24,14 +24,18 @@ if (
 	$divClass = 't3lib_div';
 }
 
+if (!isset($_EXTKEY)) {
+    $_EXTKEY = AGENCY_EXT;
+}
+
 if (
 	TYPO3_MODE == 'BE' &&
 	!$loadTcaAdditions
 ) {
-	call_user_func($emClass . '::addStaticFile', AGENCY_EXT, 'Configuration/TypoScript/PluginSetup/', 'Agency Registration');
+	call_user_func($emClass . '::addStaticFile', $_EXTKEY, 'Configuration/TypoScript/PluginSetup/', 'Agency Registration');
 
 	if (version_compare(TYPO3_version, '6.2.0', '<')) {
-		call_user_func($emClass . '::addStaticFile', AGENCY_EXT, 'Configuration/TypoScript/PluginSetup/Compatibility4.5/', 'Agency Registration compatibility TYPO3 4.5');
+		call_user_func($emClass . '::addStaticFile', $_EXTKEY, 'Configuration/TypoScript/PluginSetup/Compatibility4.5/', 'Agency Registration compatibility TYPO3 4.5');
 	}
 
 	if (version_compare(TYPO3_version, '6.1.0', '<')) {
@@ -39,11 +43,11 @@ if (
 		call_user_func($divClass . '::loadTCA', 'tt_content');
 	}
 
-	$listType = AGENCY_EXT . '';
+	$listType = $_EXTKEY . '';
 	$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist'][$listType] = 'layout,select_key';
 	$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$listType] = 'pi_flexform';
-	call_user_func($emClass . '::addPiFlexFormValue', $listType, 'FILE:EXT:' . AGENCY_EXT . '/pi/flexform_ds_pi.xml');
-	call_user_func($emClass . '::addPlugin', array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:tt_content.list_type', $listType), 'list_type');
+	call_user_func($emClass . '::addPiFlexFormValue', $listType, 'FILE:EXT:' . $_EXTKEY . '/pi/flexform_ds_pi.xml');
+	call_user_func($emClass . '::addPlugin', array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:tt_content.list_type', $listType), 'list_type');
 }
 
 if (
@@ -70,14 +74,14 @@ if (
 	$GLOBALS['TCA']['fe_users']['columns']['email']['config']['max'] = '255';
 	$GLOBALS['TCA']['fe_users']['columns']['telephone']['config']['max'] = '25';
 	$GLOBALS['TCA']['fe_users']['columns']['fax']['config']['max'] = '25';
-	$GLOBALS['TCA']['fe_users']['columns']['image']['config']['uploadfolder'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['uploadfolder'];
-	$GLOBALS['TCA']['fe_users']['columns']['image']['config']['max_size'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['imageMaxSize'];
-	$GLOBALS['TCA']['fe_users']['columns']['image']['config']['allowed'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['imageTypes'];
+	$GLOBALS['TCA']['fe_users']['columns']['image']['config']['uploadfolder'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['uploadfolder'];
+	$GLOBALS['TCA']['fe_users']['columns']['image']['config']['max_size'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['imageMaxSize'];
+	$GLOBALS['TCA']['fe_users']['columns']['image']['config']['allowed'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['imageTypes'];
 
 	$addColumnarray = array(
 		'cnum' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.cnum',
+			'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.cnum',
 			'config' => array(
 				'type' => 'input',
 				'size' => '20',
@@ -88,7 +92,7 @@ if (
 		),
 		'static_info_country' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.static_info_country',
+			'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.static_info_country',
 			'config' => array(
 				'type' => 'input',
 				'size' => '5',
@@ -99,7 +103,7 @@ if (
 		),
 		'zone' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.zone',
+			'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.zone',
 			'config' => array(
 				'type' => 'input',
 				'size' => '20',
@@ -110,7 +114,7 @@ if (
 		),
 		'language' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.language',
+			'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.language',
 			'config' => array(
 				'type' => 'input',
 				'size' => '4',
@@ -121,7 +125,7 @@ if (
 		),
 		'date_of_birth' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.date_of_birth',
+			'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.date_of_birth',
 			'config' => array(
 				'type' => 'input',
 				'size' => '10',
@@ -133,27 +137,27 @@ if (
 		),
 		'gender' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.gender',
+			'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.gender',
 			'config' => array(
 				'type' => 'radio',
 				'items' => array(
-					array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.gender.I.99', '99'),
-					array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.gender.I.0', '0'),
-					array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.gender.I.1', '1')
+					array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.gender.I.99', '99'),
+					array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.gender.I.0', '0'),
+					array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.gender.I.1', '1')
 				),
 			)
 		),
 		'status' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.status',
+			'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.status',
 			'config' => array(
 				'type' => 'select',
 				'items' => array(
-					array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.status.I.0', '0'),
-					array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.status.I.1', '1'),
-					array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.status.I.2', '2'),
-					array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.status.I.3', '3'),
-					array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.status.I.4', '4'),
+					array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.status.I.0', '0'),
+					array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.status.I.1', '1'),
+					array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.status.I.2', '2'),
+					array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.status.I.3', '3'),
+					array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.status.I.4', '4'),
 				),
 				'size' => 1,
 				'maxitems' => 1,
@@ -161,7 +165,7 @@ if (
 		),
 		'comments' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.comments',
+			'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.comments',
 			'config' => array(
 				'type' => 'text',
 				'rows' => '5',
@@ -170,7 +174,7 @@ if (
 		),
 		'by_invitation' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.by_invitation',
+			'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.by_invitation',
 			'config' => array(
 				'type' => 'check',
 				'default' => '0'
@@ -178,7 +182,7 @@ if (
 		),
 		'terms_acknowledged' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.terms_acknowledged',
+			'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.terms_acknowledged',
 			'config' => array(
 				'type' => 'check',
 				'default' => '0',
@@ -187,7 +191,7 @@ if (
 		),
 		'token' => array(
 			'exclude' => 1,
-			'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.token',
+			'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.token',
 			'config' => array(
 				'type' => 'text',
 				'rows' => '1',
@@ -196,14 +200,14 @@ if (
 		),
 		'tx_agency_password' => array (
 			'exclude' => 1,
-			'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.tx_agency_password',
+			'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.tx_agency_password',
 			'config' => array (
 				'type' => 'passthrough',
 			)
 		),
 		'house_no' => array(
 			'exclude' => 1,
-			'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.house_no',
+			'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.house_no',
 			'config' => array(
 				'type' => 'input',
 				'eval' => 'trim',
@@ -213,7 +217,7 @@ if (
 		),
 		'lost_password' => array(
 			'exclude' => 0,
-			'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.lost_password',
+			'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.lost_password',
 			'config' => array(
 				'type' => 'check',
 				'default' => '0'
@@ -221,10 +225,10 @@ if (
 		),
 	);
 
-	if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['forceGender']) {
+	if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['forceGender']) {
 		$addColumnarray['gender']['config']['items'] = array(
-			array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.gender.I.0', '0'),
-			array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.gender.I.1', '1')
+			array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.gender.I.0', '0'),
+			array('LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.gender.I.1', '1')
 		);
 	}
 
@@ -288,7 +292,7 @@ if (
 
 	$GLOBALS['TCA']['sys_agency_fe_users_limit_fe_groups'] = Array (
 		'ctrl' => Array (
-			'title' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:sys_agency_fe_users_limit_fe_groups',
+			'title' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:sys_agency_fe_users_limit_fe_groups',
 			'label' => 'codes',
 			'default_sortby' => 'ORDER BY codes',
 			'tstamp' => 'tstamp',
@@ -300,18 +304,18 @@ if (
 				'starttime' => 'starttime',
 				'endtime' => 'endtime',
 			),
-			'iconfile' => call_user_func($emClass . '::extRelPath', AGENCY_EXT) . 'ext_icon.gif',
+			'iconfile' => call_user_func($emClass . '::extRelPath', $_EXTKEY) . 'ext_icon.gif',
 		)
 	);
 
 	if ( // Direct Mail tables exist but Direct Mail shall not be used
-		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['enableDirectMail'] &&
+		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['enableDirectMail'] &&
 		!call_user_func($emClass . '::isLoaded', 'direct_mail')
 	) {
 		if (!$GLOBALS['TCA']['sys_dmail_category']['columns']) {
 			$GLOBALS['TCA']['sys_dmail_category'] = array(
 				'ctrl' => array(
-					'title' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:sys_dmail_category',
+					'title' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:sys_dmail_category',
 					'label' => 'category',
 					'tstamp' => 'tstamp',
 					'crdate' => 'crdate',
@@ -324,7 +328,7 @@ if (
 					'enablecolumns' => array(
 						'disabled' => 'hidden',
 					),
-					'iconfile' => call_user_func($emClass . '::extRelPath', AGENCY_EXT) . 'icon_tx_directmail_category.gif',
+					'iconfile' => call_user_func($emClass . '::extRelPath', $_EXTKEY) . 'icon_tx_directmail_category.gif',
 				)
 			);
 
@@ -375,14 +379,14 @@ if (
 						)
 					),
 					'category' => Array (
-						'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:sys_dmail_category.category',
+						'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:sys_dmail_category.category',
 						'config' => Array (
 							'type' => 'input',
 							'size' => '30',
 						)
 					),
 					'old_cat_number' => Array (
-						'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:sys_dmail_category.old_cat_number',
+						'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:sys_dmail_category.old_cat_number',
 						'l10n_mode' => 'exclude',
 						'config' => Array (
 							'type' => 'input',
@@ -404,14 +408,14 @@ if (
 		// fe_users modified
 		$tempCols = array(
 			'module_sys_dmail_newsletter' => array(
-				'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.module_sys_dmail_newsletter',
+				'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.module_sys_dmail_newsletter',
 				'exclude' => '1',
 				'config'=>array(
 					'type'=>'check'
 					)
 				),
 			'module_sys_dmail_category' => array(
-				'label'=>'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.module_sys_dmail_category',
+				'label'=>'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.module_sys_dmail_category',
 				'exclude' => '1',
 				'config' => array(
 					'type' => 'select',
@@ -429,7 +433,7 @@ if (
 				)
 			),
 			'module_sys_dmail_html' => array(
-				'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.module_sys_dmail_html',
+				'label' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_users.module_sys_dmail_html',
 				'exclude' => '1',
 				'config' => array(
 					'type'=>'check'
@@ -454,7 +458,7 @@ if (
 
 	$GLOBALS['TCA']['fe_groups_language_overlay'] = array(
 		'ctrl' => array(
-			'title' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_groups_language_overlay',
+			'title' => 'LLL:EXT:' . $_EXTKEY . '/locallang_db.xml:fe_groups_language_overlay',
 			'label' => 'title',
 			'default_sortby' => 'ORDER BY fe_groups_uid',
 			'sortby' => 'sorting',
@@ -462,7 +466,7 @@ if (
 			'enablecolumns' => array(
 				'disabled' => 'hidden'
 			),
-			'dynamicConfigFile' => call_user_func($emClass . '::extPath', AGENCY_EXT) . 'tca.php',
+			'dynamicConfigFile' => call_user_func($emClass . '::extPath', $_EXTKEY) . 'tca.php',
 			'iconfile' => 'gfx/i/fe_groups.gif',
 		)
 	);
@@ -473,7 +477,7 @@ call_user_func($emClass . '::allowTableOnStandardPages', 'fe_groups_language_ove
 call_user_func($emClass . '::addToInsertRecords', 'fe_groups_language_overlay');
 
 if ( // Direct Mail tables exist but Direct Mail shall not be used
-	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['enableDirectMail'] &&
+	$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['enableDirectMail'] &&
 	!call_user_func($emClass . '::isLoaded', 'direct_mail')
 ) {
 	call_user_func($emClass . '::allowTableOnStandardPages', 'sys_dmail_category');

@@ -261,13 +261,19 @@ class tx_agency_control {
 
 		$theTable = $controlData->getTable();
 		if ($theTable == 'fe_users') {
-				// When not in edit mode, add username to lists of fields and required fields unless explicitly disabled
-			if (empty($conf[$cmdKey.'.']['doNotEnforceUsername'])) {
-				if ($cmdKey != 'edit' && $cmdKey != 'password') {
-					$conf[$cmdKey . '.']['fields'] = implode(',', array_unique(t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',username', 1)));
-					$conf[$cmdKey . '.']['required'] = implode(',', array_unique(t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',username', 1)));
-				}
-			}
+            if (
+                $cmdKey != 'edit' &&
+                $cmdKey != 'password'
+            ) {
+                    // When not in edit mode, add username to lists of fields and required fields unless explicitly disabled
+                if (!empty($conf[$cmdKey.'.']['doNotEnforceUsername'])) {
+                    $conf[$cmdKey . '.']['fields'] = t3lib_div::rmFromList('username', $conf[$cmdKey . '.']['fields']);
+                    $conf[$cmdKey . '.']['required'] = t3lib_div::rmFromList('username', $conf[$cmdKey . '.']['required']);
+                } else {
+                    $conf[$cmdKey . '.']['fields'] = implode(',', array_unique(t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',username', 1)));
+                    $conf[$cmdKey . '.']['required'] = implode(',', array_unique(t3lib_div::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',username', 1)));
+                }
+            }
 
 			// When in edit mode, remove password from required fields
 			if ($cmdKey == 'edit') {

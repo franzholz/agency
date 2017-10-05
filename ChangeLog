@@ -1,3 +1,9 @@
+2017-10-05 Franz Holzinger <franz@ttproducts.de>
+    * support for extensions like agency_tt_address
+    * bugfix: CaptchaManager for TYPO3 7 and 8
+    * bugfix: doNotEnforceUsername must not require the username even if it is in setup
+    * replace all t3lib functions in the new classname code
+
 2017-07-29 Franz Holzinger <franz@ttproducts.de>
     * bugfix: The security hash must always be valid during a CREATE if no former value exists.
     * bugfix: No automatic login must be tempted after an APPROVE

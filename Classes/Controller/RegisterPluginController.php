@@ -46,7 +46,7 @@ use JambageCom\Agency\Configuration\ConfigurationCheck;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
-class RegisterPluginController extends \tslib_pibase {
+class RegisterPluginController extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 
         // Plugin initialization variables
     public $prefixId = 'agency';

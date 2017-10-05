@@ -586,12 +586,13 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                             $reservedValues = $userGroupObj->getReservedValues($conf);
                                             $valuesArray = array_diff($valuesArray, $reservedValues);
                                         }
-                                        reset($valuesArray);
+                                        $valuesArray = array_filter($valuesArray, 'strlen'); // removes null values
                                         $firstValue = current($valuesArray);
 
                                         if (!empty($firstValue) || count($valuesArray) > 1) {
                                             $titleField = $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['label'];
                                             $where = 'uid IN (' . implode(',', $valuesArray) . ')';
+
                                             $foreignRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
                                                 '*',
                                                 $colConfig['foreign_table'],

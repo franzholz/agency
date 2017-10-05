@@ -67,11 +67,11 @@ class Tables implements \TYPO3\CMS\Core\SingletonInterface {
     }
 
     public function getTableClass ($functablename, $bView = false) {
-        $rc = '';
+        $result = '';
         if ($functablename) {
-            $rc = $this->tableClassArray[$functablename] . ($bView ? '_view' : '');
+            $result = $this->tableClassArray[$functablename] . ($bView ? '_view' : '');
         }
-        return $rc;
+        return $result;
     }
 
     public function get ($functablename, $bView = false) {
@@ -91,7 +91,7 @@ class Tables implements \TYPO3\CMS\Core\SingletonInterface {
         foreach ($classNameArray as $k => $className) {
             if ($className != 'skip') {
                 if (strpos($className, ':') === false) {
-//                     $path = PATH_BE_AGENCY;
+                    // nothing
                 } else {
                     list($extKey, $className) = GeneralUtility::trimExplode(':', $className, true);
 
@@ -99,10 +99,7 @@ class Tables implements \TYPO3\CMS\Core\SingletonInterface {
                         debug('Error in ' . AGENCY_EXT . '. No extension "' . $extKey . '" has been loaded to use class class.' . $className . '.','internal error'); // keep this
                         continue;
                     }
-//                     $path = ExtensionManagementUtility::extPath($extKey);
                 }
-//                 $classRef = 'class.' . $className;
-//                 $classRef = $path . $k . '/' . $classRef . '.php:' . $className;
                 $tableObj[$k] = GeneralUtility::makeInstance($className); // fetch and store it as persistent object
             }
         }

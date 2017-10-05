@@ -45,7 +45,7 @@ namespace JambageCom\Agency\Controller;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class InitializationController {
+class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
     public $config = array();
     public $incomingData = false;
     public $nc = ''; // "&no_cache=1" if you want that parameter sent.
@@ -75,7 +75,7 @@ class InitializationController {
         &$staticInfoObj,
         &$dataObj,
         &$errorMessage,
-        \JambageCom\Agency\Controller\RegisterPluginController $pibaseObj,
+        \TYPO3\CMS\Frontend\Plugin\AbstractPlugin $pibaseObj,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         $conf,
@@ -111,7 +111,11 @@ class InitializationController {
                 );
         } // otherwise the labels from agency need not be included, because this has been done in TYPO3 pibase
 
-        if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded(STATIC_INFO_TABLES_EXT)) {
+        if (
+            \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded(
+                STATIC_INFO_TABLES_EXT
+            )
+        ) {
                 // Initialise static info library
             if (class_exists('SJBR\\StaticInfoTables\\PiBaseApi')) {
                 $staticInfoObj = GeneralUtility::makeInstance(\SJBR\StaticInfoTables\PiBaseApi::class);
@@ -241,7 +245,7 @@ class InitializationController {
 
 
     public function main (
-        \JambageCom\Agency\Controller\RegisterPluginController $pibaseObj,
+        \TYPO3\CMS\Frontend\Plugin\AbstractPlugin $pibaseObj,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         $content,
         $conf,
@@ -301,7 +305,12 @@ class InitializationController {
             $content = '<em>Internal error in ' . $pibaseObj->extKey . '!</em><br /> Maybe you forgot to include the basic template file under "include statics from extensions".';
         }
 
-        $content = \tx_div2007_alpha5::wrapInBaseClass_fh002($content, $pibaseObj->prefixId, $pibaseObj->extKey);
+        $content =
+            \tx_div2007_alpha5::wrapInBaseClass_fh002(
+                $content,
+                $pibaseObj->prefixId,
+                $pibaseObj->extKey
+            );
         return $content;
     }
 

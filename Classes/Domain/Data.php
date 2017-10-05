@@ -95,13 +95,16 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $this->control = $control;
         $this->controlData = $controlData;
         $this->cObj = $cObj;
-        $this->fileFunc = GeneralUtility::makeInstance('t3lib_basicFileFunctions');
+        $this->fileFunc = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Utility\File\BasicFileUtility::class);
 
             // Fetching the template file
         $this->setTemplateCode($templateCode);
 
-        $captchaExtensions = $controlData->getCaptchaExtensions();
-        if (!empty($captchaExtensions)) {
+        if (
+            \JambageCom\Agency\Captcha\CaptchaManager::isLoaded(
+                $controlData->getExtKey()
+            )
+        ) {
             $this->setSpecialFieldList('captcha_response');
         }
 
@@ -468,8 +471,19 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $conf = $confObj->getConf();
         $failureMsg = array();
         $displayFieldArray = GeneralUtility::trimExplode(',', $conf[$cmdKey.'.']['fields'], 1);
-        if ($this->controlData->useCaptcha($conf, $cmdKey)) {
-            $displayFieldArray = array_merge($displayFieldArray, array('captcha_response'));
+
+        if (
+            \JambageCom\Agency\Captcha\CaptchaManager::useCaptcha(
+                $cmdKey,
+                $conf,
+                $this->controlData->getExtKey()
+            )
+        ) {
+            $displayFieldArray =
+                array_merge(
+                    $displayFieldArray,
+                    array('captcha_response')
+                );
         }
 
         // Check required, set failure if not ok.

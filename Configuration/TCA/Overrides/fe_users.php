@@ -5,6 +5,9 @@ if (!defined ('TYPO3_MODE')) {
 }
 
 
+$table = 'fe_users';
+
+
 $temporaryColumns = array(
     'cnum' => array(
         'exclude' => 0,
@@ -188,6 +191,7 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
             'exclude' => '1',
             'config' => array(
                 'type' => 'select',
+                'renderType' => 'selectSingle',
                 'allowed' => 'sys_dmail_category',
                 'MM' => 'sys_dmail_feuser_category_mm',
                 'foreign_table' => 'sys_dmail_category',
@@ -212,9 +216,9 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
     $temporaryColumns = array_merge($temporaryColumns, $directMailTemporaryColumns);
 }
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('fe_users', $temporaryColumns);
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, $temporaryColumns);
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
-    'fe_users',
+    $table,
     'comments, by_invitation, has_privileges, terms_acknowledged, lost_password',
     '',
     'after:www,'
@@ -225,58 +229,58 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
     !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('direct_mail')
 ) {
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
-        'fe_users',
+        $table,
         '--div--;Direct mail, module_sys_dmail_newsletter;;;;1-1-1, module_sys_dmail_category, module_sys_dmail_html'
     );
 }
 
-$GLOBALS['TCA']['fe_users']['columns']['username']['config']['eval'] = 'nospace,uniqueInPid,required';
-$GLOBALS['TCA']['fe_users']['columns']['name']['config']['max'] = '100';
-$GLOBALS['TCA']['fe_users']['columns']['company']['config']['max'] = '50';
-$GLOBALS['TCA']['fe_users']['columns']['city']['config']['max'] = '40';
-$GLOBALS['TCA']['fe_users']['columns']['country']['config']['max'] = '60';
-$GLOBALS['TCA']['fe_users']['columns']['zip']['config']['size'] = '15';
-$GLOBALS['TCA']['fe_users']['columns']['zip']['config']['max'] = '20';
-$GLOBALS['TCA']['fe_users']['columns']['email']['config']['max'] = '255';
-$GLOBALS['TCA']['fe_users']['columns']['telephone']['config']['max'] = '25';
-$GLOBALS['TCA']['fe_users']['columns']['fax']['config']['max'] = '25';
-$GLOBALS['TCA']['fe_users']['columns']['image']['config']['uploadfolder'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['uploadfolder'];
-$GLOBALS['TCA']['fe_users']['columns']['image']['config']['max_size'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['imageMaxSize'];
-$GLOBALS['TCA']['fe_users']['columns']['image']['config']['allowed'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['imageTypes'];
+$GLOBALS['TCA'][$table]['columns']['username']['config']['eval'] = 'nospace,uniqueInPid,required';
+$GLOBALS['TCA'][$table]['columns']['name']['config']['max'] = '100';
+$GLOBALS['TCA'][$table]['columns']['company']['config']['max'] = '50';
+$GLOBALS['TCA'][$table]['columns']['city']['config']['max'] = '40';
+$GLOBALS['TCA'][$table]['columns']['country']['config']['max'] = '60';
+$GLOBALS['TCA'][$table]['columns']['zip']['config']['size'] = '15';
+$GLOBALS['TCA'][$table]['columns']['zip']['config']['max'] = '20';
+$GLOBALS['TCA'][$table]['columns']['email']['config']['max'] = '255';
+$GLOBALS['TCA'][$table]['columns']['telephone']['config']['max'] = '25';
+$GLOBALS['TCA'][$table]['columns']['fax']['config']['max'] = '25';
+$GLOBALS['TCA'][$table]['columns']['image']['config']['uploadfolder'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['uploadfolder'];
+$GLOBALS['TCA'][$table]['columns']['image']['config']['max_size'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['imageMaxSize'];
+$GLOBALS['TCA'][$table]['columns']['image']['config']['allowed'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['imageTypes'];
 
 
-$GLOBALS['TCA']['fe_users']['interface']['showRecordFieldList'] =
+$GLOBALS['TCA'][$table]['interface']['showRecordFieldList'] =
     preg_replace(
         '/(^|,)\s*country\s*(,|$)/', '$1zone,static_info_country,country,language$2',
-        $GLOBALS['TCA']['fe_users']['interface']['showRecordFieldList']
+        $GLOBALS['TCA'][$table]['interface']['showRecordFieldList']
     );
-$GLOBALS['TCA']['fe_users']['interface']['showRecordFieldList'] =
+$GLOBALS['TCA'][$table]['interface']['showRecordFieldList'] =
     preg_replace(
         '/(^|,)\s*title\s*(,|$)/',
         '$1gender,status,date_of_birth,house_no,title$2',
-        $GLOBALS['TCA']['fe_users']['interface']['showRecordFieldList']
+        $GLOBALS['TCA'][$table]['interface']['showRecordFieldList']
     );
 
-$GLOBALS['TCA']['fe_users']['types']['0']['showitem'] =
+$GLOBALS['TCA'][$table]['types']['0']['showitem'] =
     preg_replace(
         '/(^|,)\s*country\s*(,|$)/', '$1 zone, static_info_country, country, language$2',
-        $GLOBALS['TCA']['fe_users']['types']['0']['showitem']
+        $GLOBALS['TCA'][$table]['types']['0']['showitem']
     );
-$GLOBALS['TCA']['fe_users']['types']['0']['showitem'] =
+$GLOBALS['TCA'][$table]['types']['0']['showitem'] =
     preg_replace(
         '/(^|,)\s*address\s*(,|$)/',
         '$1 cnum, status, date_of_birth, house_no, address$2',
-        $GLOBALS['TCA']['fe_users']['types']['0']['showitem']
+        $GLOBALS['TCA'][$table]['types']['0']['showitem']
     );
 
-$GLOBALS['TCA']['fe_users']['palettes']['2']['showitem'] = 'gender,--linebreak--,' . $GLOBALS['TCA']['fe_users']['palettes']['2']['showitem'];
+$GLOBALS['TCA'][$table]['palettes']['2']['showitem'] = 'gender,--linebreak--,' . $GLOBALS['TCA'][$table]['palettes']['2']['showitem'];
 
-$GLOBALS['TCA']['fe_users']['ctrl']['thumbnail'] = 'image';
+$GLOBALS['TCA'][$table]['ctrl']['thumbnail'] = 'image';
 
 
 
-$searchFields = explode(',', $GLOBALS['TCA']['fe_users']['ctrl']['searchFields'] . ',cnum,comments');
+$searchFields = explode(',', $GLOBALS['TCA'][$table]['ctrl']['searchFields'] . ',cnum,comments');
 $searchFields = array_unique($searchFields);
-$GLOBALS['TCA']['fe_users']['ctrl']['searchFields'] = implode(',', $searchFields);
+$GLOBALS['TCA'][$table]['ctrl']['searchFields'] = implode(',', $searchFields);
 
 
