@@ -79,8 +79,13 @@ class ConfigurationCheck {
         foreach ($requiredExtensions as $extension) {
             if (!ExtensionManagementUtility::isLoaded($extension)) {
                 $message = sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_required_extension_missing'), $extension);
-                GeneralUtility::sysLog($message, $extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
-                $content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+                GeneralUtility::sysLog(
+                    $message,
+                    $extensionKey,
+                    GeneralUtility::SYSLOG_SEVERITY_ERROR
+                );
+                $content .=
+                    sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
             }
         }
 
@@ -123,6 +128,7 @@ class ConfigurationCheck {
             $supportedTransmissionSecurityLevels = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['loginSecurityLevels'];
 
             if (
+                $loginSecurityLevel != '' &&
                 !in_array(
                     $loginSecurityLevel,
                     $supportedTransmissionSecurityLevels

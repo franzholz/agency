@@ -76,6 +76,17 @@ class tx_agency_pi_base extends tslib_pibase {
 	 */
 	protected function checkRequirements ($conf, $extKey) {
 		$content = '';
+
+        if (
+            !isset($conf['table.']) ||
+            isset($conf['table.']['name'])
+        ) {
+            $message = sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_required_typoscript_missing'), $extension);
+            t3lib_div::sysLog($message, $extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
+            $content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+            return $content;
+        }
+
 		$requiredExtensions = array();
 		$loginSecurityLevel = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
 
@@ -122,7 +133,13 @@ class tx_agency_pi_base extends tslib_pibase {
 			// Check if front end login security level is correctly set
 		$supportedTransmissionSecurityLevels = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['loginSecurityLevels'];
 
-		if (!in_array($loginSecurityLevel, $supportedTransmissionSecurityLevels)) {
+		if (
+            (
+                $loginSecurityLevel != '' ||
+                version_compare(TYPO3_version, '6.2.0', '<')
+            ) &&
+            !in_array($loginSecurityLevel, $supportedTransmissionSecurityLevels)
+        ) {
 			$message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_login_security_level');
 			t3lib_div::sysLog($message, $extKey, t3lib_div::SYSLOG_SEVERITY_ERROR);
 			$content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
