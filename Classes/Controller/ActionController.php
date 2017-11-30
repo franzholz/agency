@@ -74,7 +74,7 @@ class ActionController {
         $this->tca = $tca;
         $this->urlObj = $urlObj;
             // Retrieve the extension key
-        $extKey = $controlData->getExtKey();
+        $extensionKey = $controlData->getExtensionKey();
             // Get the command as set in piVars
         $cmd = $controlData->getCmd();
 
@@ -109,7 +109,7 @@ class ActionController {
         $conf = $confObj->getConf();
         $tablesObj = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tables::class);
         $addressObj = $tablesObj->get('address');
-        $extKey = $controlData->getExtKey();
+        $extensionKey = $controlData->getExtensionKey();
         $cmd = $controlData->getCmd();
         $dataArray = $dataObj->getDataArray();
         $fieldlist = '';
@@ -380,7 +380,6 @@ class ActionController {
         $controlData->setRequiredArray($requiredArray);
     } // init2
 
-
     /**
     * All processing of the codes is done here
     *
@@ -406,9 +405,12 @@ class ActionController {
     ) {
         $dataArray = $dataObj->getDataArray();
         $conf = $confObj->getConf();
-        $extKey = $controlData->getExtKey();
+        $extensionKey = $controlData->getExtensionKey();
         $prefixId = $controlData->getPrefixId();
         $controlData->setMode(MODE_NORMAL);
+        $controlData->initCaptcha(
+            $cmdKey
+        );
 
         $savePassword = '';
         $autoLoginKey = '';
@@ -510,7 +512,8 @@ class ActionController {
                     $markerArray,
                     $cmdKey,
                     $controlData->getRequiredArray(),
-                    array()
+                    array(),
+                    $controlData->getCaptcha()
                 );
 
                     // If the two password fields are not equal, clear session data
@@ -553,7 +556,8 @@ class ActionController {
                     $markerArray,
                     $cmdKey,
                     $controlData->getRequiredArray(),
-                    $checkFieldArray
+                    $checkFieldArray,
+                    $controlData->getCaptcha()
                 );
 
                      // If the two password fields are not equal, clear session data
@@ -609,7 +613,7 @@ class ActionController {
                     $cmdKey,
                     $controlData->getPid(),
                     $savePassword,
-                    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess']
+                    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['registrationProcess']
                 );
 
                 if ($newDataArray) {
@@ -644,7 +648,8 @@ class ActionController {
                     $markerArray,
                     $cmdKey,
                     array(),
-                    array()
+                    array(),
+                    $controlData->getCaptcha()
                 );
             }
             $controlData->setRequiredArray(array());
@@ -915,7 +920,7 @@ class ActionController {
                 $conf,
                 $cObj,
                 $langObj,
-                $controlData->getExtKey(),
+                $controlData->getExtensionKey(),
                 $theTable,
                 $finalDataArray,
                 $dataObj->getOrigArray(),
@@ -1024,7 +1029,7 @@ class ActionController {
                         $markerArray,
                         $conf,
                         $prefixId,
-                        $extKey,
+                        $extensionKey,
                         $cObj,
                         $langObj,
                         $controlData,
@@ -1080,7 +1085,7 @@ class ActionController {
                         $markerArray,
                         $conf,
                         $prefixId,
-                        $extKey,
+                        $extensionKey,
                         $cObj,
                         $langObj,
                         $controlData,
@@ -1113,7 +1118,7 @@ class ActionController {
                         $markerArray,
                         $conf,
                         $prefixId,
-                        $extKey,
+                        $extensionKey,
                         $cObj,
                         $langObj,
                         $controlData,
@@ -1272,7 +1277,7 @@ class ActionController {
             $controlData->clearSessionData(false);
 
             if ($message != '') {
-                GeneralUtility::sysLog($message, $controlData->getExtKey(), GeneralUtility::SYSLOG_SEVERITY_ERROR);
+                GeneralUtility::sysLog($message, $controlData->getExtensionKey(), GeneralUtility::SYSLOG_SEVERITY_ERROR);
             }
         }
 

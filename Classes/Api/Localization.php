@@ -166,7 +166,7 @@ class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements 
 
             if ($localizedLabel == '') {
                 if ($localizedLabel == '' && $showError) {
-                    $localizedLabel = 'ERROR in extension "' .  $this->getExtKey() . '" no text for key "' . $key . '" can be found';
+                    $localizedLabel = 'ERROR in extension "' .  $this->getExtensionKey() . '" no text for key "' . $key . '" can be found';
                 }
             }
         }

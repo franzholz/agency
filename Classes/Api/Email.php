@@ -329,7 +329,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         array $setFixedConfig,
         &$errorCode
     ) {
-        $extKey = $controlData->getExtKey();
+        $extKey = $controlData->getExtensionKey();
         $result = true;
         $bHTMLallowed = true;
         $missingSubpartArray = array();

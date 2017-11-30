@@ -43,6 +43,8 @@ namespace JambageCom\Agency\Domain;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use JambageCom\Div2007\Database\CoreQuery;
 
+use JambageCom\Div2007\Captcha\CaptchaInterface;
+
 class Data implements \TYPO3\CMS\Core\SingletonInterface {
     public $lang;
     public $tca;
@@ -101,8 +103,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $this->setTemplateCode($templateCode);
 
         if (
-            \JambageCom\Agency\Captcha\CaptchaManager::isLoaded(
-                $controlData->getExtKey()
+            \JambageCom\Div2007\Captcha\CaptchaManager::isLoaded(
+                $controlData->getExtensionKey()
             )
         ) {
             $this->setSpecialFieldList('captcha_response');
@@ -466,24 +468,16 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         array &$markContentArray,
         $cmdKey,
         array $requiredArray,
-        array $checkFieldArray
+        array $checkFieldArray,
+        $captcha
     ) {
         $conf = $confObj->getConf();
         $failureMsg = array();
-        $displayFieldArray = GeneralUtility::trimExplode(',', $conf[$cmdKey.'.']['fields'], 1);
-
+        $displayFieldArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1);
         if (
-            \JambageCom\Agency\Captcha\CaptchaManager::useCaptcha(
-                $cmdKey,
-                $conf,
-                $this->controlData->getExtKey()
-            )
+            $captcha instanceof CaptchaInterface
         ) {
-            $displayFieldArray =
-                array_merge(
-                    $displayFieldArray,
-                    array('captcha_response')
-                );
+            $displayFieldArray[] = 'captcha_response';
         }
 
         // Check required, set failure if not ok.
@@ -911,7 +905,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                 } else {
                                     $countArray['hook'][$theCmd] = 1;
                                 }
-                                $extKey = $this->controlData->getExtKey();
+                                $extKey = $this->controlData->getExtensionKey();
                                 $hookClassArray = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['model'];
                                 if (is_array($hookClassArray)) {
                                     foreach ($hookClassArray as $classRef) {
@@ -987,6 +981,41 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                             }
                                         } else {
                                             debug($classRef, 'error in the class name for the hook "model"'); // keep this
+                                        }
+                                    }
+                                }
+
+                                if (
+                                    $captcha instanceof CaptchaInterface
+                                ) {
+                                    $errorField = '';
+
+                                    if (
+                                        !$captcha->evalValues(
+                                            $dataArray[$theField],
+                                            $cmdParts[0]
+                                        )
+                                    ) {
+                                        $errorField = $theField;
+                                    }
+
+                                    if ($errorField != '') {
+                                        $failureArray[] = $errorField;
+                                        $this->evalErrors[$theField][] = $theCmd;
+
+                                        if (!$test) {
+                                            $this->inError[$theField] = true;
+                                            $failureText =
+                                                $this->getFailureText(
+                                                    $dataArray,
+                                                    $theField,
+                                                    $theCmd,
+                                                    'evalErrors_' . $theCmd,
+                                                    $countArray['hook'][$theCmd],
+                                                    $cmd,
+                                                    $bInternal
+                                                );
+                                            $failureMsg[$theField][] = $failureText;
                                         }
                                     }
                                 }
@@ -1702,7 +1731,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                         )
                     ) {
                             // Delete the record and display form, if access granted.
-                        $extKey = $controlDataObj->getExtKey();
+                        $extKey = $controlDataObj->getExtensionKey();
 
                             // <Ries van Twisk added registrationProcess hooks>
                             // Call all beforeSaveDelete hooks BEFORE the record is deleted

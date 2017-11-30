@@ -240,8 +240,8 @@ class SetFixed {
 
                         // Hook: first we initialize the hooks
                     $hookObjectsArr = array();
-                    if (is_array ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$controlData->getExtKey()]['confirmRegistrationClass'])) {
-                        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$controlData->getExtKey()]['confirmRegistrationClass'] as $classRef) {
+                    if (is_array ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$controlData->getExtensionKey()]['confirmRegistrationClass'])) {
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$controlData->getExtensionKey()]['confirmRegistrationClass'] as $classRef) {
                             $hookObj = GeneralUtility::makeInstance($classRef);
                             if (
                                 method_exists($hookObj, 'needsInit') &&
@@ -714,7 +714,7 @@ class SetFixed {
                             if (is_object($userGroupObj)) {
                                 $fieldValue =
                                     $userGroupObj->getExtendedValue(
-                                        $controlData->getExtKey(),
+                                        $controlData->getExtensionKey(),
                                         $fieldValue,
                                         $data['usergroup.'],
                                         $record

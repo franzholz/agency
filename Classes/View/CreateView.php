@@ -85,7 +85,7 @@ class CreateView {
         }
         $infoFields = explode(',', $dataObj->getFieldList());
         if (!is_array($infoFields)) {
-            return FALSE;
+            return false;
         }
         $specialFields = explode(',', $dataObj->getSpecialFieldList());
         if (is_array($specialFields) && count($specialFields)) {
@@ -113,11 +113,7 @@ class CreateView {
         }
 
         if (
-            !\JambageCom\Agency\Captcha\CaptchaManager::useCaptcha(
-                $cmdKey,
-                $conf,
-                $controlData->getExtKey()
-            )
+            !$controlData->getCaptcha()
         ) {
             $templateCode =
                 $cObj->substituteSubpart(
@@ -146,15 +142,18 @@ class CreateView {
                     );
             }
         }
-
         $infoFields = array_unique($infoFields);
+
         foreach ($infoFields as $k => $theField) {
             if ($theField == '') {
                 continue;
             }
 
                 // Remove field required subpart, if field is not required
-            if (in_array(trim($theField), $requiredArray)) {
+            if (
+                in_array(trim($theField), $requiredArray) ||
+                in_array(trim($theField), $specialFields)
+            ) {
                 if (!GeneralUtility::inList($failure, $theField)) {
                     $templateCode =
                         $cObj->substituteSubpart(
@@ -371,7 +370,7 @@ class CreateView {
             $conf,
             $cObj,
             $langObj,
-            $controlData->getExtKey(),
+            $controlData->getExtensionKey(),
             $theTable,
             $currentArray,
             $origArray,
@@ -430,7 +429,7 @@ class CreateView {
         $markerObj->addHiddenFieldsMarkers(
             $markerArray,
             $theTable,
-            $controlData->getExtKey(),
+            $controlData->getExtensionKey(),
             $prefixId,
             $cmdKey,
             $mode,
@@ -614,7 +613,11 @@ class CreateView {
                     '',
                     TRUE
                 );
-
+            $markerObj->fillInCaptchaMarker(
+                $markerArray,
+                $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$controlData->getExtensionKey()]['captcha'],
+                $conf[$cmdKey . '.']['evalValues.']['captcha_response']
+            );
             $markerObj->addStaticInfoMarkers(
                 $markerArray,
                 $langObj,
@@ -661,7 +664,7 @@ class CreateView {
                 $conf,
                 $cObj,
                 $langObj,
-                $controlData->getExtKey(),
+                $controlData->getExtensionKey(),
                 $theTable,
                 $dataArray,
                 $origArray,
@@ -697,6 +700,7 @@ class CreateView {
             $markerArray['###FIELD_password###'] = '';
             $markerArray['###FIELD_password_again###'] = '';
             $deleteUnusedMarkers = TRUE;
+
             $content =
                 $cObj->substituteMarkerArray(
                     $templateCode,
@@ -1175,7 +1179,7 @@ class CreateView {
                 $conf,
                 $cObj,
                 $langObj,
-                $controlData->getExtKey(),
+                $controlData->getExtensionKey(),
                 $theTable,
                 $row,
                 $origArray,
@@ -1372,7 +1376,7 @@ class CreateView {
                 $conf,
                 $cObj,
                 $langObj,
-                $controlData->getExtKey(),
+                $controlData->getExtensionKey(),
                 $theTable,
                 $dataArray,
                 $origArray,

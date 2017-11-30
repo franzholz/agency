@@ -111,6 +111,7 @@ class RegisterPluginController extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
                     'fe_users'
                 );
         }
+
         return $content;
     }
 }

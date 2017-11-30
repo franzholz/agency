@@ -218,18 +218,6 @@ plugin.tx_agency {
 		generatePassword = 32
 		evalValues {
 			email = email,atMost[80],required
-			captcha_response = freecap
-		}
-	}
-
-	captcha {
-		10 {
-			extensionKey = sr_freecap
-			evalRule = freecap
-		}
-		20 {
-			extensionKey = captcha
-			evalRule = captcha
 		}
 	}
 

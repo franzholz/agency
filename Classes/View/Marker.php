@@ -710,7 +710,7 @@ class Marker {
         $authCode = $authObj->getAuthCode();
 
         $backUrl = $this->controlData->getBackURL();
-        $extKey = $this->controlData->getExtKey();
+        $extKey = $this->controlData->getExtensionKey();
         $prefixId = $this->controlData->getPrefixId();
 
         $localMarkerArray['###HIDDENFIELDS###'] = $markerArray['###HIDDENFIELDS###'] . ($cmd ? '<input type="hidden" name="' . $prefixId . '[cmd]" value="' . $cmd . '" />':'');
@@ -1207,7 +1207,7 @@ var submitFile = function(id){
             }
         }
             // Add global markers
-        $extKey = $controlData->getExtKey();
+        $extKey = $controlData->getExtensionKey();
 
         if (is_array ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'])) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'] as $classRef) {
@@ -1232,27 +1232,30 @@ var submitFile = function(id){
             }
         }
 
-        // Add captcha markers
-        if (
-            \JambageCom\Agency\Captcha\CaptchaManager::useCaptcha(
-                $controlData->getCmdKey(),
-                $conf,
-                $controlData->getExtKey()
-            )
-        ) {
-            if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$controlData->getExtKey()]['captcha'])) {
-                foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$controlData->getExtKey()]['captcha'] as $classRef) {
-                    $hookObj = GeneralUtility::makeInstance($classRef);
+        return $markerArray;
+    }
+
+    static public function fillInCaptchaMarker (
+        &$markerArray,
+        $captchaHooks,
+        $captchaName
+    ) {
+    // TODO: do not use the captcha hook array but only the currently used captcha object
+        if (is_array($captchaHooks)) {
+            foreach ($captchaHooks as $classRef) {
+                $hookObj = GeneralUtility::makeInstance($classRef);
+                if (
+                    is_object($hookObj) &&
+                    method_exists($hookObj, 'addGlobalMarkers') &&
+                    method_exists($hookObj, 'getName')
+                ) {
                     $hookObj->addGlobalMarkers(
                         $markerArray,
-                        $controlData->getCmdKey(),
-                        $conf
+                        $captchaName == $hookObj->getName()
                     );
                 }
             }
         }
-
-        return $markerArray;
     }
 
     /*

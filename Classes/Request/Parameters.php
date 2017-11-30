@@ -43,6 +43,7 @@ namespace JambageCom\Agency\Request;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
+use JambageCom\Div2007\Captcha\CaptchaInterface;
 
 
 /**
@@ -56,7 +57,7 @@ class Parameters
     public $site_url;
     public $prefixId;
     public $piVars;
-    public $extKey;
+    public $extensionKey;
     public $cmd = '';
     public $cmdKey = '';
     public $pid = array();
@@ -81,12 +82,13 @@ class Parameters
         // support for repeated password (password_again internal field)
     protected $usePasswordAgain = false;
     protected $usePassword = false;
+    protected $captcha = '';
 
 
     public function init (
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         $prefixId,
-        $extKey,
+        $extensionKey,
         $piVars,
         $theTable
     ) {
@@ -110,7 +112,7 @@ class Parameters
             }
         }
         $this->setPrefixId($prefixId);
-        $this->extKey = $extKey;
+        $this->setExtensionKey($extensionKey);
         $this->piVars = $piVars;
         $this->setTable($theTable);
         $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
@@ -340,6 +342,31 @@ class Parameters
         $this->writeToken($token);
     }
 
+    public function initCaptcha (
+        $cmdKey
+    ) {
+        $captcha = '';
+
+        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
+        $conf = $confObj->getConf();
+        $extensionKey = $this->getExtensionKey();
+
+        $usesCaptcha =
+            GeneralUtility::inList($conf[$cmdKey . '.']['fields'], 'captcha_response') &&
+            is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha']) &&
+            is_array($conf[$cmdKey . '.']) &&
+            is_array($conf[$cmdKey . '.']['evalValues.']) &&
+            is_object(
+                $captcha = \JambageCom\Div2007\Captcha\CaptchaManager::getCaptcha(
+                    $extensionKey,
+                    $conf[$cmdKey . '.']['evalValues.']['captcha_response']
+                )
+            );
+
+        if ($usesCaptcha) {
+            $this->setCaptcha($captcha);
+        }
+    }
 
     /**
      * Set the title of the page of the records
@@ -768,7 +795,7 @@ class Parameters
     */
     public function readSessionData ($readAll = false) {
         $sessionData = array();
-        $extKey = $this->getExtKey();
+        $extensionKey = $this->getExtensionKey();
         $allSessionData = $GLOBALS['TSFE']->fe_user->getKey('ses', 'feuser');
 
         if (
@@ -777,8 +804,8 @@ class Parameters
         ) {
             if ($readAll) {
                 $sessionData = $allSessionData;
-            } else if (isset($allSessionData[$extKey])) {
-                $sessionData = $allSessionData[$extKey];
+            } else if (isset($allSessionData[$extensionKey])) {
+                $sessionData = $allSessionData[$extensionKey];
             }
         }
         return $sessionData;
@@ -812,23 +839,23 @@ class Parameters
                 $data['redirect_url'] = $redirect_url;
             }
         }
-        $extKey = $this->getExtKey();
+        $extensionKey = $this->getExtensionKey();
             // Read all session data
         $allSessionData = $this->readSessionData(true);
 
         if (
-            isset($allSessionData[$extKey]) &&
-            is_array($allSessionData[$extKey])
+            isset($allSessionData[$extensionKey]) &&
+            is_array($allSessionData[$extensionKey])
         ) {
-            $keys = array_keys($allSessionData[$extKey]);
+            $keys = array_keys($allSessionData[$extensionKey]);
             if ($clearSession) {
                 foreach ($keys as $key) {
-                    unset($allSessionData[$extKey][$key]);
+                    unset($allSessionData[$extensionKey][$key]);
                 }
             }
-            \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($allSessionData[$extKey], $data);
+            \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($allSessionData[$extensionKey], $data);
         } else {
-            $allSessionData[$extKey] = $data;
+            $allSessionData[$extensionKey] = $data;
         }
 
         $GLOBALS['TSFE']->fe_user->setKey('ses', 'feuser', $allSessionData);
@@ -957,8 +984,13 @@ class Parameters
     }
 
 
-    public function getExtKey () {
-        return $this->extKey;
+    public function getExtensionKey () {
+        return $this->extensionKey;
+    }
+
+
+    public function setExtensionKey ($extensionKey) {
+        $this->extensionKey = $extensionKey;
     }
 
 
@@ -1029,16 +1061,21 @@ class Parameters
         }
     }
 
-
-    public function getFailure () {
-        return $this->failure;
+    public function setCaptcha (CaptchaInterface $captcha) {
+        $this->captcha = $captcha;
     }
 
+    public function getCaptcha () {
+        return $this->captcha;
+    }
 
     public function setFailure ($failure) {
         $this->failure = $failure;
     }
 
+    public function getFailure () {
+        return $this->failure;
+    }
 
     public function setSubmit ($bSubmit) {
         $this->bSubmit = $bSubmit;

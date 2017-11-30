@@ -216,7 +216,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
                     $this->tca,
                     $controlData,
                     $controlData->getBackURL(),
-                    $controlData->getExtKey(),
+                    $controlData->getExtensionKey(),
                     $controlData->getPrefixId(),
                     $controlData->getTable(),
                     $urlObj,
