@@ -615,8 +615,7 @@ class CreateView {
                 );
             $markerObj->fillInCaptchaMarker(
                 $markerArray,
-                $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$controlData->getExtensionKey()]['captcha'],
-                $conf[$cmdKey . '.']['evalValues.']['captcha_response']
+                $controlData->getCaptcha()
             );
             $markerObj->addStaticInfoMarkers(
                 $markerArray,

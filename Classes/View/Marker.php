@@ -44,6 +44,7 @@ namespace JambageCom\Agency\View;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use JambageCom\Div2007\Captcha\CaptchaInterface;
 
 define('SAVED_SUFFIX', '_SAVED');
 define('SETFIXED_PREFIX', 'SETFIXED_');
@@ -1237,24 +1238,15 @@ var submitFile = function(id){
 
     static public function fillInCaptchaMarker (
         &$markerArray,
-        $captchaHooks,
-        $captchaName
+        $captcha
     ) {
-    // TODO: do not use the captcha hook array but only the currently used captcha object
-        if (is_array($captchaHooks)) {
-            foreach ($captchaHooks as $classRef) {
-                $hookObj = GeneralUtility::makeInstance($classRef);
-                if (
-                    is_object($hookObj) &&
-                    method_exists($hookObj, 'addGlobalMarkers') &&
-                    method_exists($hookObj, 'getName')
-                ) {
-                    $hookObj->addGlobalMarkers(
-                        $markerArray,
-                        $captchaName == $hookObj->getName()
-                    );
-                }
-            }
+        if (
+            $captcha instanceof CaptchaInterface
+        ) {
+            $captcha->addGlobalMarkers(
+                $markerArray,
+                true
+            );
         }
     }
 

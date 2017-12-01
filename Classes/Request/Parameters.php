@@ -82,7 +82,7 @@ class Parameters
         // support for repeated password (password_again internal field)
     protected $usePasswordAgain = false;
     protected $usePassword = false;
-    protected $captcha = '';
+    protected $captcha = null;
 
 
     public function init (
@@ -345,8 +345,6 @@ class Parameters
     public function initCaptcha (
         $cmdKey
     ) {
-        $captcha = '';
-
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
         $extensionKey = $this->getExtensionKey();
