@@ -35,16 +35,16 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 */
 class RegistrationProcessHooks
 {
-    protected $bHasBeenInitialised = FALSE;
+    protected $hasBeenInitialised = false;
 
     public function init (
         Data $dataObject
     ) {
-        $this->bHasBeenInitialised = TRUE;
+        $this->hasBeenInitialised = true;
     }
 
     public function needsInit () {
-        return !$this->bHasBeenInitialised;
+        return !$this->hasBeenInitialised;
     }
 
     /**
