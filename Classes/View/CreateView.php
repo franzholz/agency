@@ -972,7 +972,7 @@ class CreateView {
                 // If the recUid selects a record.... (no check here)
                 if (is_array($origArray)) {
                     $bMayEdit =
-                        $cObj->DBmayFEUserEdit(
+                        $dataObj->getCoreQuery()->DBmayFEUserEdit(
                             $theTable,
                             $origArray,
                             $GLOBALS['TSFE']->fe_user->user,
