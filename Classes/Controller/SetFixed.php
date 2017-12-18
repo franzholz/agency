@@ -45,12 +45,6 @@ namespace JambageCom\Agency\Controller;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class SetFixed {
-    public $previewLabel;
-    public $setfixedEnabled;
-    public $cObj;
-    public $buttonLabelsList;
-    public $otherLabelsList;
-
 
     /**
     * Process the front end user reply to the confirmation request
