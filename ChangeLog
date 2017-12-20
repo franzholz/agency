@@ -1,3 +1,6 @@
+2017-12-20 Franz Holzinger <franz@ttproducts.de>
+    * bugfix: no htmlspecialchars must be done with link urls because the & must remain in the form action
+
 2017-11-30 Franz Holzinger <franz@ttproducts.de>
     * bugfix: CaptchaManager for TYPO3 7 and 8
 

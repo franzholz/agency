@@ -91,7 +91,6 @@ class Url implements \TYPO3\CMS\Core\SingletonInterface {
 			$rc = $this->cObj->getTypoLink_URL($id, $piVars);
 		}
 		$rc = str_replace(array('[', ']'), array('%5B', '%5D'), $rc);
-		$rc = htmlspecialchars($rc);
 		return $rc;
 	}	// get_url
 }

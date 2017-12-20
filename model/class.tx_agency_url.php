@@ -85,8 +85,7 @@ class tx_agency_url {
 		} else {
 			$rc = $this->cObj->getTypoLink_URL($id, $piVars);
 		}
-		$rc = str_replace(array('[',']'), array('%5B', '%5D'), $rc);
-		$rc = htmlspecialchars($rc);
+		$rc = str_replace(array('[', ']'), array('%5B', '%5D'), $rc);
 		return $rc;
 	}	// get_url
 }
