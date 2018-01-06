@@ -47,7 +47,6 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 class ActionController {
     public $langObj;
-    public $marker;
     public $auth;
     public $email;
     public $tca;
@@ -62,14 +61,12 @@ class ActionController {
         \JambageCom\Agency\Api\Localization $langObj,
         $cObj,
         \JambageCom\Agency\Request\Parameters $controlData,
-        $marker,
         $email,
         $tca,
         $urlObj
     ) {
         $this->langObj = $langObj;
         $conf = $confObj->getConf();
-        $this->marker = $marker;
         $this->email = $email;
         $this->tca = $tca;
         $this->urlObj = $urlObj;
@@ -92,6 +89,7 @@ class ActionController {
             );
             $cmd = $cObj->caseshift($cmd, 'lower');
         }
+
         $controlData->setCmd($cmd);
     }
 
@@ -102,7 +100,7 @@ class ActionController {
         $staticInfoObj,
         $theTable,
         \JambageCom\Agency\Request\Parameters $controlData,
-        \JambageCom\Agency\Domain\Data $dataObj,
+        \JambageCom\Agency\Domain\Data &$dataObj,
         &$adminFieldList,
         array &$origArray
     ) {
@@ -137,6 +135,7 @@ class ActionController {
         }
 
         $dataObj->setFieldList($fieldlist);
+
         if (
             isset($dataArray) &&
             is_array($dataArray) &&
@@ -150,7 +149,6 @@ class ActionController {
                 false
             );
         }
-
         $feUserdata = $controlData->getFeUserData();
         $theUid = 0;
         $setFixedUid = false;
@@ -159,6 +157,7 @@ class ActionController {
             $theUid = $dataArray['uid'];
         } else if (is_array($feUserdata) && $feUserdata['rU']) {
             $theUid = $feUserdata['rU'];
+
             if ($cmd == 'setfixed') {
                 $setFixedUid = true;
             }
@@ -168,7 +167,11 @@ class ActionController {
 
         if ($theUid) {
             $dataObj->setRecUid($theUid);
-            $newOrigArray = $GLOBALS['TSFE']->sys_page->getRawRecord($theTable, $theUid);
+            $newOrigArray =
+                $GLOBALS['TSFE']->sys_page->getRawRecord(
+                    $theTable,
+                    $theUid
+                );
 
             if (isset($newOrigArray) && is_array($newOrigArray)) {
                 $this->tca->modifyRow(
@@ -284,6 +287,12 @@ class ActionController {
             }
 
             if (
+                $conf[$cmdKey . '.']['generateCustomerNumber']
+            ) {
+                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), array('cnum')));
+            }
+
+            if (
                 (
                     $cmdKey == 'invite' ||
                     $cmdKey == 'create'
@@ -360,6 +369,12 @@ class ActionController {
             ) {
                 unset($conf[$cmdKey . '.']['evalValues.']['username']);
             }
+
+            if (
+                $conf[$cmdKey . '.']['generateCustomerNumber']
+            ) {
+                unset($conf[$cmdKey . '.']['evalValues.']['cnum']);
+            }
         }
         $confObj->setConf($conf);
 
@@ -378,6 +393,44 @@ class ActionController {
         );
         $dataObj->setDataArray($dataArray);
         $controlData->setRequiredArray($requiredArray);
+
+        $fieldList = $dataObj->getFieldList();
+        $fieldArray = GeneralUtility::trimExplode(',', $fieldList, 1);
+        $additionalFields = $dataObj->getAdditionalIncludedFields();
+
+        if ($theTable == 'fe_users') {
+
+            if (
+                $conf[$cmdKey . '.']['useEmailAsUsername'] ||
+                $conf[$cmdKey . '.']['generateUsername']
+            ) {
+                $additionalFields = array_merge($additionalFields, array('username'));
+            }
+
+            if ($conf[$cmdKey . '.']['useEmailAsUsername']) {
+                $additionalFields = array_merge($additionalFields, array('email'));
+            }
+
+            if (
+                $conf[$cmdKey . '.']['generateCustomerNumber']
+            ) {
+                $additionalFields = array_merge($additionalFields, array('cnum'));
+            }
+
+            if (
+                $cmdKey == 'edit' &&
+                !in_array('email', $additionalFields) &&
+                !in_array('username', $additionalFields)
+            ) {
+                $additionalFields = array_merge($additionalFields, array('username'));
+            }
+        }
+
+        $dataObj->setAdditionalIncludedFields($additionalFields);
+        $fieldArray = array_merge($fieldArray, $additionalFields);
+        $fieldArray = array_unique($fieldArray);
+        $fieldList = implode(',', $fieldArray);
+        $dataObj->setFieldList($fieldList);
     } // init2
 
     /**
@@ -395,6 +448,7 @@ class ActionController {
         $displayObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         $dataObj,
+        \JambageCom\Agency\View\Marker $markerObj,
         $staticInfoObj,
         $theTable,
         $cmd,
@@ -405,6 +459,7 @@ class ActionController {
     ) {
         $dataArray = $dataObj->getDataArray();
         $conf = $confObj->getConf();
+        $fD = array();
         $extensionKey = $controlData->getExtensionKey();
         $prefixId = $controlData->getPrefixId();
         $controlData->setMode(MODE_NORMAL);
@@ -469,7 +524,7 @@ class ActionController {
             $controlData->clearSessionData();
         }
 
-        $markerArray = $this->marker->getArray();
+        $markerArray = $markerObj->getArray();
 
             // Evaluate incoming data
         if (
@@ -477,6 +532,20 @@ class ActionController {
             count($finalDataArray) &&
             !in_array($cmd, $noSaveCommands)
         ) {
+            if (
+                $conf[$cmdKey . '.']['generateCustomerNumber']
+            ) {
+                $customerNumberApi = GeneralUtility::makeInstance(\JambageCom\Agency\Api\CustomerNumber::class);
+                $customerNumber =
+                    $customerNumberApi->generate(
+                        $theTable,
+                        $conf[$cmdKey . '.']['generateCustomerNumber.']
+                    );
+                if ($customerNumber != '') {
+                    $finalDataArray['cnum'] = $customerNumber;
+                }
+            }
+
             $dataObj->setName(
                 $finalDataArray,
                 $cmdKey,
@@ -528,7 +597,7 @@ class ActionController {
                     $conf['evalFunc'] &&
                     is_array($conf['evalFunc.'])
                 ) {
-                    $this->marker->setArray($markerArray);
+                    $markerObj->setArray($markerArray);
                     $finalDataArray =
                         tx_div2007_alpha5::userProcess_fh002(
                             $this,
@@ -536,7 +605,7 @@ class ActionController {
                             'evalFunc',
                             $finalDataArray
                         );
-                    $markerArray = $this->marker->getArray();
+                    $markerArray = $markerObj->getArray();
                 }
             } else {
                 $checkFieldArray = array();
@@ -568,7 +637,7 @@ class ActionController {
                     $controlData->clearSessionData();
                 }
 
-                $this->marker->setArray($markerArray);
+                $markerObj->setArray($markerArray);
 
                 if (!$bSubmit) {
                     $controlData->setFailure('submit'); // internal error simulation without any error message needed in order not to save in the next step. This happens e.g. at the first call to the create page
@@ -653,11 +722,11 @@ class ActionController {
                 );
             }
             $controlData->setRequiredArray(array());
-            $this->marker->setArray($markerArray);
+            $markerObj->setArray($markerArray);
             $controlData->setFeUserData(0, 'preview');
         } else {
-            $this->marker->setNoError($cmdKey, $markerArray);
-            $this->marker->setArray($markerArray);
+            $markerObj->setNoError($cmdKey, $markerArray);
+            $markerObj->setArray($markerArray);
             if ($cmd != 'delete') {
                 $controlData->setFeUserData(0, 'preview'); // No preview if data is not received and deleted
             }
@@ -672,7 +741,7 @@ class ActionController {
 
             // No preview flag if a evaluation failure has occured
         if ($controlData->getFeUserData('preview')) {
-            $this->marker->setPreviewLabel('_PREVIEW');
+            $markerObj->setPreviewLabel('_PREVIEW');
             $controlData->setMode(MODE_PREVIEW);
         }
 
@@ -682,11 +751,31 @@ class ActionController {
             !$controlData->getFeUserData('preview') &&
             !$bDoNotSave
         ) {
-            // Delete record if delete command is set + the preview flag is NOT set.
-            $dataObj->deleteRecord($controlData, $theTable, $origArray, $dataArray);
+            if (
+                $controlData->getFeUserData('task') == 'cancel' // the DELETE has been cancelled
+            ) {
+                $content =
+                    $displayObj->getSimpleTemplate (
+                        $conf,
+                        $cObj,
+                        $langObj,
+                        $markerObj,
+                        $templateCode,
+                        '###TEMPLATE_DELETE_CANCEL###',
+                        $markerArray
+                    );
+            } else {
+                // Delete record if delete command is set + the preview flag is NOT set.
+                $dataObj->deleteRecord(
+                    $controlData,
+                    $theTable,
+                    $origArray,
+                    $dataArray
+                );
+            }
         }
         $errorContent = '';
-        $bDeleteRegHash = false;
+        $deleteRegHash = false;
 
             // Display forms
         if ($dataObj->getSaved()) {
@@ -736,7 +825,7 @@ class ActionController {
                     $controlData,
                     $confObj,
                     $this->tca,
-                    $this->marker,
+                    $markerObj,
                     $dataObj,
                     $setfixedObj,
                     $theTable,
@@ -755,7 +844,7 @@ class ActionController {
                 );
 
             if ($errorContent == '') {
-                $markerArray = $this->marker->getArray(); // uses its own markerArray
+                $markerArray = $markerObj->getArray(); // uses its own markerArray
                 $errorCode = '';
                 $bEmailSent = false;
 
@@ -774,7 +863,7 @@ class ActionController {
                         $controlData,
                         $confObj,
                         $this->tca,
-                        $this->marker,
+                        $markerObj,
                         $dataObj,
                         $displayObj,
                         $setfixedObj.
@@ -818,7 +907,7 @@ class ActionController {
                         $controlData,
                         $confObj,
                         $this->tca,
-                        $this->marker,
+                        $markerObj,
                         $dataObj,
                         $displayObj,
                         $setfixedObj,
@@ -850,7 +939,7 @@ class ActionController {
 
             if ($errorContent == '') {	// success case
                 $origGetFeUserData = GeneralUtility::_GET($prefixId);
-                $bDeleteRegHash = true;
+                $deleteRegHash = true;
 
                     // Link to on edit save
                     // backURL may link back to referring process
@@ -915,7 +1004,7 @@ class ActionController {
                 // If there was an error, we return the template-subpart with the error message
             $templateCode = $cObj->getSubpart($templateCode, $dataObj->getError());
 
-            $this->marker->addLabelMarkers(
+            $markerObj->addLabelMarkers(
                 $markerArray,
                 $conf,
                 $cObj,
@@ -932,14 +1021,18 @@ class ActionController {
                 '',
                 false
             );
-            $this->marker->setArray($markerArray);
+            $markerObj->setArray($markerArray);
             $content = $cObj->substituteMarkerArray($templateCode, $markerArray);
-        } else {
+        } else if ($content == '') {
                 // Finally, there has been no attempt to save.
                 // That is either preview or just displaying an empty or not correctly filled form
-            $this->marker->setArray($markerArray);
+            $markerObj->setArray($markerArray);
             $token = $controlData->readToken();
-            if ($cmd == '' && $controlData->getFeUserData('preview')) {
+
+            if (
+                $cmd == '' &&
+                $controlData->getFeUserData('preview')
+            ) {
                 $cmd = $cmdKey;
             }
 
@@ -948,7 +1041,6 @@ class ActionController {
                     if ($conf['infomail']) {
                         $controlData->setSetfixedEnabled(1);
                     }
-                    $feuData = $controlData->getFeUserData();
                     $origArray = $dataObj->parseIncomingData($origArray, false);
                     $content = $setfixedObj->process(
                         $conf,
@@ -957,7 +1049,7 @@ class ActionController {
                         $controlData,
                         $confObj,
                         $this->tca,
-                        $this->marker,
+                        $markerObj,
                         $dataObj,
                         $theTable,
                         $autoLoginKey,
@@ -972,16 +1064,17 @@ class ActionController {
                         $origArray,
                         $securedArray,
                         $this,
-                        $feuData,
                         $token,
                         $hasError
                     );
                     break;
                 case 'infomail':
-                    $this->marker->addGeneralHiddenFieldsMarkers(
+                    $markerObj->addGeneralHiddenFieldsMarkers(
                         $markerArray,
                         $cmd,
-                        $token
+                        $token,
+                        '',
+                        $fD
                     );
                     if ($conf['infomail']) {
                         $controlData->setSetfixedEnabled(1);
@@ -995,7 +1088,7 @@ class ActionController {
                         $controlData,
                         $confObj,
                         $this->tca,
-                        $this->marker,
+                        $markerObj,
                         $dataObj,
                         $displayObj,
                         $setfixedObj,
@@ -1020,10 +1113,12 @@ class ActionController {
                     }
                     break;
                 case 'delete':
-                    $this->marker->addGeneralHiddenFieldsMarkers(
+                    $markerObj->addGeneralHiddenFieldsMarkers(
                         $markerArray,
                         $cmd,
-                        $token
+                        $token,
+                        '',
+                        $fD
                     );
                     $content = $displayObj->deleteScreen(
                         $markerArray,
@@ -1035,21 +1130,25 @@ class ActionController {
                         $controlData,
                         $confObj,
                         $this->tca,
-                        $this->marker,
+                        $markerObj,
                         $dataObj,
                         $theTable,
                         $finalDataArray,
                         $origArray,
                         $securedArray,
-                        $token
+                        $token,
+                        '',
+                        $fD
                     );
                     break;
                 case 'edit':
                 case 'password':
-                    $this->marker->addGeneralHiddenFieldsMarkers(
+                    $markerObj->addGeneralHiddenFieldsMarkers(
                         $markerArray,
                         $cmd,
-                        $token
+                        $token,
+                        '',
+                        $fD
                     );
                     $content = $displayObj->editScreen(
                         $markerArray,
@@ -1059,7 +1158,7 @@ class ActionController {
                         $controlData,
                         $confObj,
                         $this->tca,
-                        $this->marker,
+                        $markerObj,
                         $dataObj,
                         $theTable,
                         $prefixId,
@@ -1075,10 +1174,12 @@ class ActionController {
                     break;
                 case 'invite':
                 case 'create':
-                    $this->marker->addGeneralHiddenFieldsMarkers(
+                    $markerObj->addGeneralHiddenFieldsMarkers(
                         $markerArray,
                         $cmd,
-                        $token
+                        $token,
+                        '',
+                        $fD
                     );
 
                     $content = $displayObj->createScreen(
@@ -1091,7 +1192,7 @@ class ActionController {
                         $controlData,
                         $confObj,
                         $this->tca,
-                        $this->marker,
+                        $markerObj,
                         $dataObj,
                         $cmd,
                         $cmdKey,
@@ -1109,10 +1210,12 @@ class ActionController {
                     // nothing. The login parameters are processed by TYPO3 Core
                     break;
                 default:
-                    $this->marker->addGeneralHiddenFieldsMarkers(
+                    $markerObj->addGeneralHiddenFieldsMarkers(
                         $markerArray,
                         $cmd,
-                        $token
+                        $token,
+                        '',
+                        $fD
                     );
                     $content = $displayObj->createScreen(
                         $markerArray,
@@ -1124,7 +1227,7 @@ class ActionController {
                         $controlData,
                         $confObj,
                         $this->tca,
-                        $this->marker,
+                        $markerObj,
                         $dataObj,
                         $cmd,
                         $cmdKey,
@@ -1143,19 +1246,18 @@ class ActionController {
             if (
                 (
                     $cmd != 'setfixed' ||
-                    $cmdKey != 'edit' ||
-                    $cmdKey != 'password'
+                    $cmdKey != 'edit'
                 ) &&
                 !$errorContent &&
                 !$hasError &&
-                !$controlData->getFeUserData('preview')
+                !$controlData->isPreview()
             ) {
-                $bDeleteRegHash = true;
+                $deleteRegHash = true;
             }
         }
 
         if (
-            $bDeleteRegHash &&
+            $deleteRegHash &&
             $controlData->getValidRegHash()
         ) {
             $regHash = $controlData->getRegHash();

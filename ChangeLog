@@ -1,3 +1,8 @@
+2018-01-06 Franz Holzinger <franz@ttproducts.de>
+    * new feature: Add a cancel option to the confirmation dialog for APPROVE and DELETE
+    * new feature: automatic generation of customer number
+    * new feature: add the marker ###XHTML### which can transform the HTML into XHTML
+
 2017-12-21 Franz Holzinger <franz@ttproducts.de>
     * bugfix: XHTML shall be used in the example HTML template file
 

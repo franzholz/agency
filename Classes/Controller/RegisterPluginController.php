@@ -55,6 +55,7 @@ class RegisterPluginController extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
 
     public function main ($content, $conf) {
+
         $this->pi_setPiVarDefaults();
         $this->conf = $conf;
 

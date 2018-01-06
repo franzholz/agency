@@ -69,6 +69,10 @@ plugin.tx_agency {
 		generateUsername = {$plugin.tx_agency.generateUsername}
 		doNotEnforceUsername = {$plugin.tx_agency.doNotEnforceUsername}
 		generatePassword = {$plugin.tx_agency.generatePassword}
+        generateCustomerNumber = {$plugin.tx_agency.generateCustomerNumber}
+        generateCustomerNumber {
+            prefix = No-
+        }
 		allowUserGroupSelection = {$plugin.tx_agency.allowUserGroupSelection}
 		allowedUserGroups = {$plugin.tx_agency.allowedUserGroups}
 		allowedSubgroups = {$plugin.tx_agency.allowedSubgroups}
@@ -97,6 +101,7 @@ plugin.tx_agency {
 			username = uniqueLocal, atLeast[{$plugin.tx_agency.usernameAtLeast}], atMost[{$plugin.tx_agency.usernameAtMost}]
 			email = email,atMost[255],uniqueLocal
 			gender =
+			cnum =
 			name = atMost[{$plugin.tx_agency.nameAtMost}]
 			first_name = atMost[50]
 			middle_name = atMost[50]
@@ -133,11 +138,13 @@ plugin.tx_agency {
 	setfixed = 0
 	setfixed.APPROVE {
 		_FIELDLIST = uid,pid,usergroup
+        _CONFIG.askAgain = {$plugin.tx_agency.askAgainBeforeApprove}
 		usergroup = {$plugin.tx_agency.userGroupAfterConfirmation}
 		disable = {$plugin.tx_agency.enableAdminReview}
 	}
 	setfixed.DELETE {
 		_FIELDLIST = uid,pid
+        _CONFIG.askAgain = {$plugin.tx_agency.askAgainBeforeDelete}
 	}
 	setfixed.ACCEPT {
 		_FIELDLIST = uid,pid,usergroup

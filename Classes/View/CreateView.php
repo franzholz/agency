@@ -76,19 +76,19 @@ class CreateView {
     ) {
         $requiredArray = $controlData->getRequiredArray();
         $includedFields = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1);
-
-        if (
-            $controlData->getFeUserData('preview') &&
-            !in_array('username', $includedFields)
-        ) {
-            $includedFields[] = 'username';
-        }
+        $additionalIncludedFields = $dataObj->getAdditionalIncludedFields();
+        $includedFields = array_merge($includedFields, $additionalIncludedFields);
+        $includedFields = array_unique($includedFields);
         $infoFields = explode(',', $dataObj->getFieldList());
+
         if (!is_array($infoFields)) {
             return false;
         }
-        $specialFields = explode(',', $dataObj->getSpecialFieldList());
-        if (is_array($specialFields) && count($specialFields)) {
+        $specialFields = array();
+        $specialFieldList = $dataObj->getSpecialFieldList();
+
+        if ($specialFieldList != '') {
+            $specialFields = explode(',', $specialFieldList);
             $infoFields = array_merge($infoFields, $specialFields);
         }
 
@@ -142,6 +142,7 @@ class CreateView {
                     );
             }
         }
+
         $infoFields = array_unique($infoFields);
 
         foreach ($infoFields as $k => $theField) {
@@ -292,7 +293,7 @@ class CreateView {
                     ''
                 );
         }
-        $failure = GeneralUtility::_GP('noWarnings') ? '': $controlData->getFailure();
+        $failure = GeneralUtility::_GP('noWarnings') ? '' : $controlData->getFailure();
 
         if (!$failure) {
             $templateCode =
@@ -495,7 +496,7 @@ class CreateView {
         &$markerArray,
         $conf,
         $prefixId,
-        $extKey,
+        $extensionKey,
         $cObj,
         \JambageCom\Agency\Api\Localization $langObj,
         \JambageCom\Agency\Request\Parameters $controlData,
@@ -534,8 +535,8 @@ class CreateView {
         if ($conf['create']) {
 
                 // Call all beforeConfirmCreate hooks before the record has been shown and confirmed
-            if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'])) {
-                foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'] as $classRef) {
+            if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['registrationProcess'])) {
+                foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['registrationProcess'] as $classRef) {
                     $hookObj = GeneralUtility::makeInstance($classRef);
 
                     if (
@@ -560,6 +561,7 @@ class CreateView {
             $currentArray = array_merge($currentArray, $dataArray);
             $key = ($cmd == 'invite') ? 'INVITE': 'CREATE';
             $bNeedUpdateJS = TRUE;
+
             if ($cmd == 'create' || $cmd == 'invite') {
                 $subpartKey = '###TEMPLATE_' . $key . $markerObj->getPreviewLabel() . '###';
             } else {
@@ -685,7 +687,7 @@ class CreateView {
             $markerObj->addHiddenFieldsMarkers(
                 $markerArray,
                 $theTable,
-                $extKey,
+                $extensionKey,
                 $prefixId,
                 $cmdKey,
                 $mode,
@@ -801,7 +803,7 @@ class CreateView {
                 $theTable != 'fe_users' &&
                 $conf['setfixed.']['EDIT.']['_FIELDLIST']
             ) {
-                $fD = GeneralUtility::_GP('fD', 1);
+                $fD = GeneralUtility::_GP('fD');
                 $fieldArr = array();
                 if (is_array($fD)) {
                     foreach($fD as $field => $value) {
@@ -817,7 +819,11 @@ class CreateView {
             }
 
             $origArray = $dataObj->parseIncomingData($origArray);
-            $aCAuth = $authObj->aCAuth($origArray, $conf['setfixed.']['EDIT.']['_FIELDLIST']);
+            $aCAuth =
+                $authObj->aCAuth(
+                    $origArray,
+                    $conf['setfixed.']['EDIT.']['_FIELDLIST']
+                );
 
             if (
                 is_array($origArray) &&
@@ -916,6 +922,76 @@ class CreateView {
         return $content;
     }	// editScreen
 
+
+    /**
+    * Shows a form where the user is asked if he really wants to confirm
+    *
+    * @param array $cObj: the cObject
+    * @param array $langObj: the language object
+    * @param array $controlData: the object of the control data
+    * @param array  $errorFieldArray: array of field with errors (former $this->data->inError[$theField])
+    * @return string  the template with substituted markers
+    */
+    public function confirmationScreen (
+        $markerArray,
+        $conf,
+        $prefixId,
+        $cObj,
+        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Request\Parameters $controlData,
+        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
+        $tcaObj,
+        $markerObj,
+        $dataObj,
+        $templateCode,
+        $theTable,
+        $dataArray,
+        array $origArray,
+        $securedArray,
+        $cmdKey,
+        $setFixedKey,
+        $fD
+    ) {
+    // Display the form, if access granted.
+
+        $markerArray['###HIDDENFIELDS###'] .=
+            '<input type="hidden" name="' .
+            $prefixId . '[rU]" value="' .
+            $dataObj->getRecUid() .
+            '" />';
+
+        $tokenParameter = $controlData->getTokenParameter();
+        $markerArray['###BACK_URL###'] =
+            (
+                $controlData->getBackURL() ?
+                    $controlData->getBackURL() :
+                    $cObj->getTypoLink_URL(
+                        $conf['loginPID'] . ',' . $GLOBALS['TSFE']->type
+                    )
+            ) . $tokenParameter;
+        $subpartMarker = '###TEMPLATE_' . $setFixedKey . '_PREVIEW###';
+        $content = $this->getPlainTemplate(
+            $conf,
+            $cObj,
+            $langObj,
+            $controlData,
+            $confObj,
+            $tcaObj,
+            $markerObj,
+            $dataObj,
+            $templateCode,
+            $subpartMarker,
+            $markerArray,
+            $dataArray,
+            $theTable,
+            $prefixId,
+            $origArray,
+            $securedArray
+        );
+
+        return $content;
+    }
+
     /**
     * This is basically the preview display of delete
     *
@@ -928,7 +1004,7 @@ class CreateView {
         $markerArray,
         $conf,
         $prefixId,
-        $extKey,
+        $extensionKey,
         $cObj,
         \JambageCom\Agency\Api\Localization $langObj,
         \JambageCom\Agency\Request\Parameters $controlData,
@@ -940,7 +1016,9 @@ class CreateView {
         $dataArray,
         array $origArray,
         $securedArray,
-        $token
+        $token,
+        $setFixedKey,
+        array $fD
     ) {
         $aCAuth = FALSE;
 
@@ -989,13 +1067,22 @@ class CreateView {
                             $prefixId . '[rU]" value="' .
                             $dataObj->getRecUid() .
                             '" />';
+                        $tokenParameter = $controlData->getTokenParameter();
                         $markerArray['###BACK_URL###'] =
                             (
                                 $controlData->getBackURL() ?
                                     $controlData->getBackURL() :
-                                    $cObj->getTypoLink_URL($conf['loginPID'] . ',' . $GLOBALS['TSFE']->type)
-                            );
-                        $markerObj->addGeneralHiddenFieldsMarkers($markerArray, 'delete', $token);
+                                    $cObj->getTypoLink_URL(
+                                        $conf['loginPID'] . ',' . $GLOBALS['TSFE']->type
+                                    )
+                            ) . $tokenParameter;
+                        $markerObj->addGeneralHiddenFieldsMarkers(
+                            $markerArray,
+                            'delete',
+                            $token,
+                            $setFixedKey,
+                            $fD
+                        );
                         $markerObj->setArray($markerArray);
                         $content = $this->getPlainTemplate(
                             $conf,
@@ -1150,6 +1237,7 @@ class CreateView {
                     $confObj,
                     ''
                 );
+
             $markerObj->addStaticInfoMarkers(
                 $markerArray,
                 $langObj,
@@ -1190,6 +1278,7 @@ class CreateView {
                 '',
                 FALSE
             );
+
             $templateCode =
                 $markerObj->removeStaticInfoSubparts(
                     $templateCode,
@@ -1213,8 +1302,57 @@ class CreateView {
             $errorText = $langObj->getLL('internal_no_subtemplate');
             $result = sprintf($errorText, $subpartMarker);
         }
+
         return $result;
     }	// getPlainTemplate
+
+    /**
+    * Initializes a template, filling values for data and labels
+    *
+    * @param array $cObj: the cObject
+    * @param array $langObj: the language object
+    * @param array $controlData: the object of the control data
+    * @param string  $subpartMarker: the template subpart marker
+    * @param array  $row: the data array or empty array
+    * @return string  the template with substituted parts and markers
+    */
+    public function getSimpleTemplate (
+        $conf,
+        $cObj,
+        \JambageCom\Agency\Api\Localization $langObj,
+        $markerObj,
+        $templateCode,
+        $subpartMarker,
+        array $markerArray,
+        $bCheckEmpty = true
+    ) {
+        $templateCode = $cObj->getSubpart($templateCode, $subpartMarker);
+
+        if ($templateCode != '') {
+            $markerObj->addOtherLabelMarkers(
+                $markerArray,
+                $cObj,
+                $langObj,
+                $conf
+            );
+
+            $deleteUnusedMarkers = true;
+
+            $result =
+                $cObj->substituteMarkerArray(
+                    $templateCode,
+                    $markerArray,
+                    '',
+                    false,
+                    $deleteUnusedMarkers
+                );
+        } else if ($bCheckEmpty) {
+            $errorText = $langObj->getLL('internal_no_subtemplate');
+            $result = sprintf($errorText, $subpartMarker);
+        }
+
+        return $result;
+    }   // getSimpleTemplate
 
     /**
     * Determine which template subpart should be used atfer the last save operation

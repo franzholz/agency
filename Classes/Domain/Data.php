@@ -64,6 +64,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     public $additionalOverrideFields = array();
     public $fieldList = ''; // List of fields from $TCA[table]['columns'] or fe_admin_fieldList (TYPO3 below 6.2)
     public $specialfieldlist = ''; // list of special fields like captcha
+    public $additionalIncludedFields = array(); // list of additional front end fields which are active only in the preview mode: username, cnum
     public $recUid = 0;
     public $missing = array(); // array of required missing fields
     public $inError = array(); // array of fields with eval errors other than absence
@@ -195,6 +196,14 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
 
     public function setAdditionalOverrideFields ($fields) {
         $this->additionalOverrideFields = $fields;
+    }
+
+    public function getAdditionalIncludedFields () {
+        return $this->additionalIncludedFields;
+    }
+
+    public function setAdditionalIncludedFields ($fields) {
+        $this->additionalIncludedFields = $fields;
     }
 
     public function setRecUid ($uid) {
@@ -622,7 +631,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                 if (
                                     !is_array($dataArray[$theField]) &&
                                     trim($dataArray[$theField]) &&
-                                    !GeneralUtility::validEmail($dataArray[$theField])
+                                    !GeneralUtility::validEmail(trim($dataArray[$theField]))
                                 ) {
                                     $failureArray[] = $theField;
                                     $this->inError[$theField] = true;
@@ -1546,6 +1555,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                 )
                             )
                         );
+
                     $newFieldList =
                         implode(
                             ',',
@@ -1559,7 +1569,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                         ',',
                                         $this->getAdminFieldList()
                                     ),
-                                    $this->getAdditionalOverrideFields()
+                                    $this->getAdditionalOverrideFields(),
+                                    $this->getAdditionalIncludedFields()
                                 )
                             )
                         );
@@ -1711,15 +1722,15 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
 
         if ($conf['delete']) {
             // If deleting is enabled
+            if (!empty($origArray)) {
 
-            $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
-            $aCAuth = $authObj->aCAuth($origArray, $conf['setfixed.']['DELETE.']['_FIELDLIST']);
+                $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
+                $aCAuth = $authObj->aCAuth($origArray, $conf['setfixed.']['DELETE.']['_FIELDLIST']);
 
-            if ($GLOBALS['TSFE']->loginUser || $aCAuth) {
-                // Must be logged in OR be authenticated by the aC code in order to delete
-                // If the recUid selects a record.... (no check here)
+                if ($GLOBALS['TSFE']->loginUser || $aCAuth) {
+                    // Must be logged in OR be authenticated by the aC code in order to delete
+                    // If the recUid selects a record.... (no check here)
 
-                if (is_array($origArray)) {
                     if (
                         $aCAuth ||
                         $this->coreQuery->DBmayFEUserEdit(
@@ -1775,7 +1786,11 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                     } else {
                         $this->setError('###TEMPLATE_NO_PERMISSIONS###');
                     }
+                } else {
+                    $this->setError('###TEMPLATE_NO_PERMISSIONS###');
                 }
+            } else {
+                $this->setError('###TEMPLATE_INTERNAL_ERROR###');
             }
         }
     }   // deleteRecord
@@ -2167,7 +2182,6 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $addressObj = $tablesObj->get('address');
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
-
         $parsedArray = $dataArray;
 
         if (is_array($conf['parseToDBValues.'])) {
@@ -2292,7 +2306,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                         }
                         $parsedArray[$colName] = $value;
                     } else {
-                        $parsedArray[$colName] = implode (',', $parsedArray[$colName]);
+                        $parsedArray[$colName] =
+                            implode (',', $parsedArray[$colName]);
                     }
                 }
             }

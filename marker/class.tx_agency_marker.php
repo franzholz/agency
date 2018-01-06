@@ -291,6 +291,20 @@ class tx_agency_marker {
 		return $result;
 	}
 
+   public function useXHTML () {
+        $result = false;
+        if (is_object($GLOBALS['TSFE'])) {
+            $config = $GLOBALS['TSFE']->config['config'];
+            if (
+                $config['xhtmlDoctype'] != '' ||
+                stripos($config['doctype'], 'xthml') !== false
+            ) {
+                $result = true;
+            }
+        }
+        return $result;
+    }
+
 	/**
 	* Adds language-dependant label markers
 	*
@@ -318,6 +332,8 @@ class tx_agency_marker {
 		$activity = '',
 		$bChangesOnly = FALSE
 	) {
+        $xhtmlFix = ($this->useXHTML() ? ' /' : '');
+        $markerArray['###XHTML###'] = $xhtmlFix;
 		$bUseMissingFields = FALSE;
 		if ($activity == 'email') {
 			$bUseMissingFields = TRUE;

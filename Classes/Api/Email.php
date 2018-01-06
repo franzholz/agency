@@ -44,13 +44,23 @@ namespace JambageCom\Agency\Api;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use \JambageCom\Div2007\Utility\MailUtility;
+
 
 class Email implements \TYPO3\CMS\Core\SingletonInterface {
 	public $infomailPrefix = 'INFOMAIL_';
 	public $emailMarkPrefix = 'EMAIL_TEMPLATE_';
 	public $emailMarkAdminSuffix = '_ADMIN';
 	public $emailMarkHTMLSuffix = '_HTML';
+    protected $extensionKey = '';
 
+    public function getExtensionKey () {
+        return $this->extensionKey;
+    }
+
+    public function setExtensionKey ($extensionKey) {
+        $this->extensionKey = $extensionKey;
+    }
 
     public function isHTMLMailEnabled ($conf) {
         $result = true;
@@ -617,6 +627,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 $autoLoginKey,
                 $conf['confirmType']
             );
+
             $markerObj->addStaticInfoMarkers(
                 $markerArray,
                 $langObj,
@@ -884,7 +895,6 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     $adminContentHTML != ''
                 )
         ) {
-
             if (isset($conf['email.']['replyTo'])) {
                 if ($conf['email.']['replyTo'] == 'user') {
                     $replyTo = $recipient;
@@ -898,7 +908,6 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 $adminContentHTML,
                 $adminContent,
                 $admin,
-                '',
                 $conf['email.']['from'],
                 $conf['email.']['fromName'],
                 $replyTo,
@@ -919,7 +928,6 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 $contentHTML,
                 $content,
                 $recipient,
-                '',
                 $conf['email.']['from'],
                 $conf['email.']['fromName'],
                 $conf['email.']['replyToAdmin'] ? $conf['email.']['replyToAdmin'] : '',
@@ -957,7 +965,6 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
     * @param string  $content['HTML']: HTML version of the message
     * @param string  $PLAINContent: plain version of the message
     * @param string  $recipient: email address
-    * @param string  $dummy: ''
     * @param string  $fromEmail: email address
     * @param string  $fromName: name
     * @param string  $replyTo: email address
@@ -968,7 +975,6 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         $HTMLContent,
         $PLAINContent,
         $recipient,
-        $dummy,
         $fromEmail,
         $fromName,
         $replyTo = '',
@@ -983,8 +989,8 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 trim($PLAINContent)
             )
         ) {
-            $defaultSubject = 'Agency Registration - TYPO3';
-            $result = \tx_div2007_email::sendMail(
+            $defaultSubject = 'Agency Registration';
+            $result = MailUtility::send(
                 $recipient,
                 $subject,
                 $PLAINContent,
@@ -996,7 +1002,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 '',
                 '',
                 $replyTo,
-                AGENCY_EXT,
+                $this->getExtensionKey(),
                 'sendMail',
                 $defaultSubject
             );

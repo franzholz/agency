@@ -52,7 +52,6 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
     public $additionalUpdateFields = '';
     public $auth; // object of type tx_agency_auth
     public $control; // object of type tx_agency_control
-    public $email; // object of type tx_agency_email
     public $langObj; // object of type tx_agency_lang
     public $tca;  // object of type tx_agency_tca
     public $marker; // object of type tx_agency_marker
@@ -85,6 +84,9 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         $otherLabelsList
     ) {
         $result = true;
+
+        \JambageCom\Div2007\Utility\HtmlUtility::generateXhtmlFix();
+
         $this->tca = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tca::class);
 
         $confObj->init($conf);
@@ -145,8 +147,9 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
             );
         $this->marker = GeneralUtility::makeInstance(\JambageCom\Agency\View\Marker::class);
         $this->setfixedObj = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\SetFixed::class);
-        $this->email = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Email::class);
+        $email = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Email::class);
         $this->control = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\ActionController::class);
+        $email->setExtensionKey($pibaseObj->extKey);
 
         $urlObj->init(
             $cObj,
@@ -181,8 +184,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
                     $this->langObj,
                     $cObj,
                     $controlData,
-                    $this->marker,
-                    $this->email,
+                    $email,
                     $this->tca,
                     $urlObj
                 );
@@ -289,6 +291,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
                 $displayObj,
                 $controlData,
                 $dataObj,
+                $this->marker,
                 $staticInfoObj,
                 $theTable,
                 $cmd,

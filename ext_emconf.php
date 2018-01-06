@@ -21,12 +21,12 @@ $EM_CONF[$_EXTKEY] = array(
     'author_company' => 'jambage.com',
     'CGLcompliance' => '',
     'CGLcompliance_note' => '',
-    'version' => '0.4.3',
+    'version' => '0.5.0',
     'constraints' => array(
         'depends' => array(
             'php' => '5.3.3-7.99.99',
             'typo3' => '4.5.0-8.99.99',
-            'div2007' => '1.7.15-0.0.0',
+            'div2007' => '1.7.16-0.0.0',
         ),
         'conflicts' => array(
             'sr_feuser_register' => '',

@@ -4,7 +4,7 @@ namespace JambageCom\Agency\Request;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
 *  (c) 2012 Stanislas Rolland (typo3(arobas)sjbr.ca)
 *  All rights reserved
 *
@@ -63,7 +63,7 @@ class Parameters
     public $pid = array();
     public $defaultPid = '';
     public $setfixedEnabled = 0;
-    public $bSubmit = false;
+    public $submit = false;
     public $bDoNotSave = false;
     public $failure = false; // is set if data did not have the required fields set.
     public $sys_language_content;
@@ -83,6 +83,9 @@ class Parameters
     protected $usePasswordAgain = false;
     protected $usePassword = false;
     protected $captcha = null;
+    protected $setFixedOptions = array('DELETE', 'EDIT', 'UNSUBSCRIBE');
+    protected $setFixedParameters = array('rU', 'aC', 'cmd', 'sFK');
+    protected $fD = array();
 
 
     public function init (
@@ -92,6 +95,7 @@ class Parameters
         $piVars,
         $theTable
     ) {
+        $fdArray = array();
         $conf = $confObj->getConf();
         if ($theTable == 'fe_users') {
             $this->initPasswordField($conf);
@@ -140,7 +144,10 @@ class Parameters
             // Get hash variable if provided and if short url feature is enabled
         $feUserData = GeneralUtility::_GP($prefixId);
         $bSecureStartCmd =
-            (count($feUserData) == 1 && in_array($feUserData['cmd'], array('create', 'edit', 'password')));
+            (
+                count($feUserData) == 1 &&
+                in_array($feUserData['cmd'], array('create', 'edit', 'password'))
+            );
         $bValidRegHash = false;
 
         if ($conf['useShortUrls']) {
@@ -167,7 +174,7 @@ class Parameters
                     count($getVars)
                 ) {
                     $bValidRegHash = true;
-                    $origDataFieldArray = array('sFK', 'cmd', 'submit', 'fetch', 'regHash', 'preview');
+                    $origDataFieldArray = array('sFK', 'cmd', 'submit', 'fetch', 'regHash', 'preview', 'token');
                     $origFeuserData = array();
                     // copy the original values which must not be overridden by the regHash stored values
                     foreach ($origDataFieldArray as $origDataField) {
@@ -192,7 +199,16 @@ class Parameters
                     }
 
                     if (isset($feUserData) && is_array($feUserData)) {
+                        $setFixedCmd = '';
+
+                        if (isset($origFeuserData['cmd'])) {
+                            $feUserData['cmdKey'] = $origFeuserData['cmd'];
+                            $setFixedCmd = $feUserData['cmd'];
+                        }
                         $feUserData = array_merge($feUserData, $origFeuserData);
+                        if ($setFixedCmd != '') {
+                            $feUserData['cmd'] = $setFixedCmd;
+                        }
                     } else {
                         $feUserData = $origFeuserData;
                     }
@@ -207,7 +223,8 @@ class Parameters
         }
 
             // Establishing compatibility with the extension Direct Mail
-        $piVarArray = array('rU', 'aC', 'cmd', 'sFK');
+        $piVarArray = $this->getSetfixedParameters();
+
         foreach ($piVarArray as $pivar) {
             $value = htmlspecialchars(GeneralUtility::_GP($pivar));
             if ($value != '') {
@@ -217,6 +234,7 @@ class Parameters
 
         $aC = $this->getFeUserData('aC');
         $authObj->setAuthCode($aC);
+
             // Query variable &prefixId[cmd] overrides query variable &cmd, if not empty
         if (
             isset($feUserData) &&
@@ -228,7 +246,9 @@ class Parameters
             $this->setFeUserData($value, 'cmd');
         }
         $cmd = $this->getFeUserData('cmd');
-        $this->setCmd($cmd);
+        if ($cmd) {
+            $this->setCmd($cmd);
+        }
 
             // Cleanup input values
         $feUserData = $this->getFeUserData();
@@ -249,18 +269,39 @@ class Parameters
             $origArray = $GLOBALS['TSFE']->sys_page->getRawRecord($theTable, $theUid);
         }
 
+        if (
+            isset($getVars) &&
+            is_array($getVars) &&
+            isset($getVars['fD']) &&
+            is_array($getVars['fD'])
+        ) {
+            $fdArray = $getVars['fD'];
+        } else if (
+            !isset($getVars)
+        ) {
+            if (isset($feUserData['fD'])) {
+                $fdArray = $feUserData['fD'];
+            } else {
+                $fdArray = GeneralUtility::_GP('fD');
+            }
+        }
+        $this->setFd($fdArray);
+
             // Get the token
         $token = '';
 
         if (
-            isset($origArray) &&
-            is_array($origArray) &&
-            $cmd == 'setfixed' &&
-            $origArray['token'] != ''
+            $cmd == 'setfixed'
         ) {
-                // Use the token from the FE user data
-            $token = $origArray['token'];
-        } else if ($cmd != 'setfixed') {
+            if (
+                isset($origArray) &&
+                is_array($origArray) &&
+                $origArray['token'] != ''
+            ) {
+                    // Use the token from the FE user data
+                $token = $origArray['token'];
+            }
+        } else {
                 // Get the latest token from the session data
             $token = $this->readToken();
         }
@@ -286,17 +327,6 @@ class Parameters
             )
         ) {
             if (
-                isset($getVars) &&
-                is_array($getVars) &&
-                isset($getVars['fD']) &&
-                is_array($getVars['fD'])
-            ) {
-                $fdArray = $getVars['fD'];
-            } else if (!isset($getVars)) {
-                $fdArray = GeneralUtility::_GP('fD', 1);
-            }
-
-            if (
                 isset($fdArray) &&
                 is_array($fdArray) &&
                 isset($origArray) &&
@@ -311,7 +341,7 @@ class Parameters
                     // Let's try with a code length of 8 in case this link is coming from direct mail
                 if (
                     $codeLength == 8 &&
-                    in_array($sFK, array('DELETE', 'EDIT', 'UNSUBSCRIBE'))
+                    in_array($sFK, $this->getSetfixedOptions())
                 ) {
                     $authCode = $authObj->setfixedHash($setFixedArray, $fieldList, $codeLength);
                 } else {
@@ -530,6 +560,7 @@ class Parameters
     *************************************/
     /**
     * Retrieves values of secured fields from FE user session data
+    * Used for the password
     *
     * @return   array   secured FE user session data
     */
@@ -581,12 +612,12 @@ class Parameters
     * @return   string  the password
     */
     public function readPassword () {
-        $password = '';
+        $result = '';
         $securedArray = $this->readSecuredArray();
         if ($securedArray['password']) {
-            $password = $securedArray['password'];
+            $result = $securedArray['password'];
         }
-        return $password;
+        return $result;
     }
 
 
@@ -631,7 +662,6 @@ class Parameters
         array &$dataArray,
         &$autoLoginKey
     ) {
-//      $this->getStorageSecurity()->initializeAutoLoginPassword($finalDataArray);
         // We generate an interim password in the case of an invitation
         if (
             $cmdConf['generatePassword']
@@ -931,16 +961,6 @@ class Parameters
     }
 
 
-    public function bFieldsAreFilled ($row) {
-        if (is_array($row)) {
-            $result = isset($row['username']);
-        } else {
-            $result = false;
-        }
-        return $result;
-    }
-
-
     // example: plugin.tx_agency_pi.conf.sys_dmail_category.ALL.sys_language_uid = 0
     public function getSysLanguageUid ($conf, $theCode, $theTable) {
 
@@ -1075,13 +1095,13 @@ class Parameters
         return $this->failure;
     }
 
-    public function setSubmit ($bSubmit) {
-        $this->bSubmit = $bSubmit;
+    public function setSubmit ($submit) {
+        $this->submit = $submit;
     }
 
 
     public function getSubmit () {
-        return $this->bSubmit;
+        return $this->submit;
     }
 
 
@@ -1172,11 +1192,40 @@ class Parameters
     }
 
 
+    public function getSetfixedOptions () {
+        return $this->setFixedOptions;
+    }
+
+    public function setSetfixedOptions ($setFixedOptions) {
+        $this->setFixedOptions = $setFixedOptions;
+    }
+
+    public function getSetfixedParameters () {
+        return $this->setFixedParameters;
+    }
+
+    public function setSetfixedParameters ($setFixedParameters) {
+        $this->setFixedParameters = $setFixedParameters;
+    }
+
+    public function getFd () {
+        return $this->fD;
+    }
+
+    public function setFd ($fD) {
+        $this->fD = $fD;
+    }
+
     public function getBackURL () {
         $result = rawurldecode($this->getFeUserData('backURL'));
         return $result;
     }
 
+    public function getTokenParameter () {
+        $tokenParam = $this->getPrefixId() . '%5Btoken%5D=' . $this->readToken();
+        $result = '&amp;'. $tokenParam;
+        return $result;
+    }
 
     /**
     * Checks if preview display is on.
@@ -1184,9 +1233,9 @@ class Parameters
     * @return boolean  true if preview display is on
     */
     public function isPreview () {
+        $result = '';
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
-        $result = '';
         $cmdKey = $this->getCmdKey();
 
         $result = ($conf[$cmdKey . '.']['preview'] && $this->getFeUserData('preview'));

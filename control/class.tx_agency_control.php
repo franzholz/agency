@@ -348,7 +348,6 @@ class tx_agency_control {
 
 			// Adjust some evaluation settings
 		if (is_array($conf[$cmdKey . '.']['evalValues.'])) {
-		// TODO: Fix scope issue: unsetting $conf entry here has no effect
 				// Do not evaluate any password when inviting
 			if ($cmdKey == 'invite') {
 				unset($conf[$cmdKey . '.']['evalValues.']['password']);

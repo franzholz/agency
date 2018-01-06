@@ -47,6 +47,9 @@ plugin.tx_agency {
       # cat=plugin.tx_agency/enable; type=int+; label= Generate the password: If non-zero, a random password is generated. The number of characters in the password is given by this parameter.
   generatePassword = 0
 
+      # cat=plugin.tx_agency/enable; type=int+; label= Generate the customer number: If non-zero, a customer number is generated. More configuration options are available in the setup.
+  generateCustomerNumber = 0
+
       # cat=plugin.tx_srfeuserregister_pi1/enable; type=boolean; label= Do not enforce username: If set, field username is not forced to be part of formFields and requiredFields.
   doNotEnforceUsername = 0
 
@@ -182,7 +185,13 @@ plugin.tx_agency {
     # cat=plugin.tx_agency/enable; type=boolean; label= Enable auto-login on confirmation after invite: If set, the user will be automatically logged in upon confirmation of his(her) invitation.
   enableAutoLoginOnInviteConfirmation = 1
 
-    # cat=plugin.tx_agency//; type=string; label= Redirect_url on login: Url to which the user may be redirected to upon login, when auto login is enabled.
+    # cat=plugin.tx_agency/enable; type=boolean; label= Ask again before delete: If set, a deletion confirmation link in an email will show a question dialog which asks again if someone really wants to delete.
+  askAgainBeforeDelete = 1
+
+    # cat=plugin.tx_agency/enable; type=boolean; label= Ask again before approve: If set, approve confirmation link in an email will show a question dialog which asks again if someone really wants to approve.
+  askAgainBeforeApprove = 1
+
+  # cat=plugin.tx_agency//; type=string; label= Redirect_url on login: Url to which the user may be redirected to upon login, when auto login is enabled.
   autoLoginRedirect_url =
 
     # cat=plugin.tx_agency//; type=boolean; label= Direct Mail checked upon registration: The checkboxes for Direct Mail categories will be checked by default if you set this.

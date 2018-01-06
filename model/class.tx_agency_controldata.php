@@ -869,15 +869,6 @@ class tx_agency_controldata {
 		}
 	}
 
-	public function bFieldsAreFilled ($row) {
-		if (is_array($row)) {
-			$result = isset($row['username']);
-		} else {
-			$result = FALSE;
-		}
-		return $result;
-	}
-
 	/*************************************
 	* CAPTCHA
 	*************************************/

@@ -68,6 +68,7 @@ class Url implements \TYPO3\CMS\Core\SingletonInterface {
 	*/
 	public function get ($tag = '', $id, $vars = array(), $unsetVars = array(), $usePiVars = true) {
 
+        $result = '';
 		$vars = (array) $vars;
 		$unsetVars = (array) $unsetVars;
 		if ($usePiVars) {
@@ -86,12 +87,12 @@ class Url implements \TYPO3\CMS\Core\SingletonInterface {
 		}
 
 		if ($tag) {
-			$rc = $this->cObj->getTypoLink($tag, $id, $piVars);
+			$result = $this->cObj->getTypoLink($tag, $id, $piVars);
 		} else {
-			$rc = $this->cObj->getTypoLink_URL($id, $piVars);
+			$result = $this->cObj->getTypoLink_URL($id, $piVars);
 		}
-		$rc = str_replace(array('[', ']'), array('%5B', '%5D'), $rc);
-		return $rc;
+		$result = str_replace(array('[', ']'), array('%5B', '%5D'), $result);
+		return $result;
 	}	// get_url
 }
 

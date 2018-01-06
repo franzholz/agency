@@ -45,6 +45,7 @@ namespace JambageCom\Agency\View;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Div2007\Captcha\CaptchaInterface;
+use JambageCom\Div2007\Utility\HtmlUtility;
 
 define('SAVED_SUFFIX', '_SAVED');
 define('SETFIXED_PREFIX', 'SETFIXED_');
@@ -62,8 +63,8 @@ class Marker {
     public $buttonLabelsList;
     public $otherLabelsList;
     public $dataArray; // temporary array of data
-    public $xhtmlFix; // add a closing XHTML slash
     private $urlMarkerArray;
+    private $thePidTitle;
 
     public function init (
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
@@ -84,6 +85,7 @@ class Marker {
         $this->tca = $tca;
         $this->controlData = $controlData;
         $this->staticInfoObj = $staticInfoObj;
+        $this->thePidTitle = $controlData->getPidTitle();
 
         $markerArray = array();
 
@@ -107,7 +109,7 @@ class Marker {
         $this->setArray($markerArray);
 
             // Button labels
-        $buttonLabelsList = 'register,confirm_register,back_to_form,update,confirm_update,enter,confirm_delete,cancel_delete,update_and_more,password_enter_new';
+        $buttonLabelsList = 'register,confirm_register,back_to_form,update,confirm_update,enter,confirm_delete,cancel_delete,confirm_approve,cancel_approve,update_and_more,password_enter_new';
 
         $this->setButtonLabelsList($buttonLabelsList);
 
@@ -115,8 +117,8 @@ class Marker {
         ',copy_paste_link,enter_account_info,enter_invitation_account_info,required_info_notice,excuse_us' .
         ',consider_terms_usage,disclaimer,signature' .
             ',tooltip_login_username,tooltip_login_password,' .
-            ',registration_problem,registration_login,registration_sorry,registration_clicked_twice,registration_help,kind_regards,kind_regards_cre,kind_regards_del,kind_regards_ini,kind_regards_inv,kind_regards_upd' .
-            ',v_dear,v_verify_before_create,v_verify_invitation_before_create,v_verify_before_update,v_really_wish_to_delete,v_edit_your_account' .
+            ',registration_problem,registration_internal,registration_login,registration_sorry,registration_clicked_twice,registration_help,kind_regards,kind_regards_cre,kind_regards_del,kind_regards_ini,kind_regards_inv,kind_regards_upd' .
+            ',v_dear,v_verify_before_create,v_verify_invitation_before_create,v_verify_before_update,v_really_wish_to_delete,v_really_wish_to_approve,v_edit_your_account' .
             ',v_infomail_lost_password,v_infomail_dear,v_infomail_lost_password_enter_new,v_infomail_lost_password_subject' .
             ',v_infomail_lost_password_message1,v_infomail_lost_password_message2' .
             ',v_now_enter_your_username,v_now_choose_password,v_notification' .
@@ -130,6 +132,7 @@ class Marker {
             ',v_registration_infomail_message1a' .
             ',v_registration_confirmed,v_registration_confirmed_subject,v_registration_confirmed_message1,v_registration_confirmed_message2,v_registration_confirmed_review1,v_registration_confirmed_review2' .
             ',v_registration_cancelled,v_registration_cancelled_subject,v_registration_cancelled_message1,v_registration_cancelled_message2' .
+            ',v_deletion_cancelled_subject,v_deletion_cancelled_message1' .
             ',v_registration_accepted,v_registration_accepted_subject,v_registration_accepted_message1,v_registration_accepted_message2' .
             ',v_registration_refused,v_registration_refused_subject,v_registration_refused_message1,v_registration_refused_message2' .
             ',v_registration_accepted_subject2,v_registration_accepted_message3,v_registration_accepted_message4' .
@@ -139,8 +142,6 @@ class Marker {
             ',v_registration_deleted,v_registration_deleted_subject,v_registration_deleted_message1,v_registration_deleted_message2' .
             ',v_registration_unsubscribed,v_registration_unsubscribed_subject,v_registration_unsubscribed_message1,v_registration_unsubscribed_message2';
         $this->setOtherLabelsList($otherLabelsList);
-
-        $this->xhtmlFix = (\JambageCom\Div2007\Utility\HtmlUtility::useXHTML() ? ' /' : '');
     }
 
     public function getButtonLabelsList () {
@@ -194,10 +195,6 @@ class Marker {
         $this->previewLabel = $label;
     }
 
-    public function getXhtmlFix () {
-        return $this->xhtmlFix;
-    }
-
     // enables the usage of {data:<field>}, {tca:<field>} and {meta:<stuff>} in the label markers
     public function replaceVariables (
         $matches
@@ -208,13 +205,13 @@ class Marker {
         $langObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Localization::class);
         $controlData = GeneralUtility::makeInstance(\JambageCom\Agency\Request\Parameters::class);
 
-        $rc = '';
+        $result = '';
 
         switch ($matches[1]) {
             case 'data':
                 $dataArray = $this->getReplaceData();
                 $row = $dataArray['row'];
-                $rc = $row[$matches[2]];
+                $result = $row[$matches[2]];
             break;
             case 'tca':
                 if (!is_array($this->tmpTcaMarkers)) {
@@ -242,18 +239,18 @@ class Marker {
                         TRUE
                     );
                 }
-                $rc = $this->tmpTcaMarkers['###TCA_INPUT_' . $matches[2] . '###'];
+                $result = $this->tmpTcaMarkers['###TCA_INPUT_' . $matches[2] . '###'];
             break;
             case 'meta':
                 if ($matches[2] == 'title') {
-                    $rc = $controlData->getPidTitle();
+                    $result = $this->thePidTitle;
                 }
             break;
         }
-        if (is_array($rc)) {
-            $rc = implode(',', $rc);
+        if (is_array($result)) {
+            $result = implode(',', $result);
         }
-        return $rc;
+        return $result;
     }
 
     public function setReplaceData ($data) {
@@ -332,6 +329,7 @@ class Marker {
         if ($activity == 'email') {
             $bUseMissingFields = TRUE;
         }
+        $markerArray['###XHTML###'] = HtmlUtility::getXhtmlFix();
 
         $urlObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Url::class);
         $formUrlMarkerArray = $this->generateFormURLMarkers($urlObj);
@@ -414,10 +412,10 @@ class Marker {
 
                     foreach ($fieldArray as $key => $value) {
                         $label = $langObj->getLLFromString($colConfig['items'][$value][0]);
-                        $markerArray['###FIELD_' . $markerkey . '_CHECKED###'] .= '- ' . $label . '<br' . $this->getXhtmlFix() . '>';
+                        $markerArray['###FIELD_' . $markerkey . '_CHECKED###'] .= '- ' . $label . '<br' . HtmlUtility::getXhtmlFix() . '>';
                         $label = $langObj->getLLFromString($colConfig['items'][$value][0]);
-                        $markerArray['###LABEL_' . $markerkey . '_CHECKED###'] .= '- ' . $label . '<br' . $this->getXhtmlFix() . '>';
-                        $markerArray['###POSTVARS_' . $markerkey.'###'] .= chr(10) . '	<input type="hidden" name="FE[fe_users][' . $theField . '][' . $key . ']" value ="' . $value . '"' . $this->getXhtmlFix() . '>';
+                        $markerArray['###LABEL_' . $markerkey . '_CHECKED###'] .= '- ' . $label . '<br' . HtmlUtility::getXhtmlFix() . '>';
+                        $markerArray['###POSTVARS_' . $markerkey.'###'] .= chr(10) . '	<input type="hidden" name="FE[fe_users][' . $theField . '][' . $key . ']" value ="' . $value . '"' . HtmlUtility::getXhtmlFix() . '>';
                     }
                 }
             } else if ($colConfig['type'] == 'check') {
@@ -512,15 +510,10 @@ class Marker {
         $name = htmlspecialchars($name);
 
         $this->tmpTcaMarkers = NULL; // reset function replaceVariables
-        $otherLabelsList = $this->getOtherLabelsList();
-
-        if (isset($conf['extraLabels']) && $conf['extraLabels'] != '') {
-            $otherLabelsList .= ',' . $conf['extraLabels'];
-        }
-        $otherLabels = GeneralUtility::trimExplode(',', $otherLabelsList, 1);
         $dataArray = array();
         $dataArray['row'] = $row;
         $this->setReplaceData($dataArray);
+
         $outputArray = array('username' => '', 'email' => '', 'password' => '');
         foreach ($outputArray as $field => $value) {
             if (
@@ -553,8 +546,44 @@ class Marker {
             }
         }
         $genderLabelArray['v_dear'] = $vDear;
+
+
+        $this->addOtherLabelMarkers(
+            $markerArray,
+            $cObj,
+            $langObj,
+            $conf,
+            $name,
+            $outputArray,
+            $genderLabelArray
+        );
+    }
+
+    public function addOtherLabelMarkers (
+        &$markerArray,
+        $cObj,
+        $langObj,
+        $conf,
+        $name = '',
+        $outputArray = '',
+        $genderLabelArray = ''
+    ) {
+        if (!is_array($outputArray)) {
+            $outputArray = array('username' => '', 'email' => '', 'password' => '');
+        }
+        $otherLabelsList = $this->getOtherLabelsList();
+
+        if (isset($conf['extraLabels']) && $conf['extraLabels'] != '') {
+            $otherLabelsList .= ',' . $conf['extraLabels'];
+        }
+        $otherLabels = GeneralUtility::trimExplode(',', $otherLabelsList, 1);
+
         foreach($otherLabels as $value) {
-            if (isset($genderLabelArray[$value])) {
+            if (
+                isset($genderLabelArray) &&
+                is_array($genderLabelArray) &&
+                isset($genderLabelArray[$value])
+            ) {
                 $labelName = $genderLabelArray[$value];
             } else {
                 $labelName = $value;
@@ -562,7 +591,7 @@ class Marker {
             $langText = $langObj->getLL($labelName);
             $label = sprintf(
                 $langText,
-                $this->controlData->getPidTitle(),
+                $this->thePidTitle,
                 $outputArray['username'],
                 $name,
                 $outputArray['email'],
@@ -572,7 +601,7 @@ class Marker {
             $markerkey = $cObj->caseshift($value, 'upper');
             $markerArray['###LABEL_' . $markerkey . '###'] = $label;
         }
-    }	// addLabelMarkers
+    }	// addOtherLabelMarkers
 
     public function setRow ($row) {
         $this->row = $row;
@@ -647,7 +676,7 @@ class Marker {
 
         $markerArray['###EDIT_URL###'] = $urlObj->get('', $this->controlData->getPid('edit') . ',' . $GLOBALS['TSFE']->type, $vars, $unsetVars);
         $markerArray['###THE_PID###'] = $this->controlData->getPid();
-        $markerArray['###THE_PID_TITLE###'] = $this->controlData->getPidTitle();
+        $markerArray['###THE_PID_TITLE###'] = $this->thePidTitle;
         $markerArray['###BACK_URL###'] = $backUrl;
         $markerArray['###SITE_NAME###'] = $this->conf['email.']['fromName'];
         $markerArray['###SITE_URL###'] = $this->controlData->getSiteUrl();
@@ -710,7 +739,9 @@ class Marker {
     public function addGeneralHiddenFieldsMarkers (
         &$markerArray,
         $cmd,
-        $token
+        $token,
+        $setFixedKey,
+        array $fD
     ) {
         $localMarkerArray = array();
         $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
@@ -720,9 +751,20 @@ class Marker {
         $extKey = $this->controlData->getExtensionKey();
         $prefixId = $this->controlData->getPrefixId();
 
-        $localMarkerArray['###HIDDENFIELDS###'] = $markerArray['###HIDDENFIELDS###'] . ($cmd ? '<input type="hidden" name="' . $prefixId . '[cmd]" value="' . $cmd . '"' . $this->getXhtmlFix() . '>' : '');
-        $localMarkerArray['###HIDDENFIELDS###'] .= chr(10) . ($authCode ? '<input type="hidden" name="' . $prefixId . '[aC]" value="' . $authCode . '"' . $this->getXhtmlFix() . '>' : '');
-        $localMarkerArray['###HIDDENFIELDS###'] .= chr(10) . ($backUrl ? '<input type="hidden" name="' . $prefixId . '[backURL]" value="' . htmlspecialchars($backUrl) . '"' . $this->getXhtmlFix() . '>' : '');
+        $localMarkerArray['###HIDDENFIELDS###'] = $markerArray['###HIDDENFIELDS###'] . ($cmd ? '<input type="hidden" name="' . $prefixId . '[cmd]" value="' . $cmd . '"' . HtmlUtility::getXhtmlFix() . '>' : '');
+        $localMarkerArray['###HIDDENFIELDS###'] .= chr(10) . ($authCode ? '<input type="hidden" name="' . $prefixId . '[aC]" value="' . $authCode . '"' . HtmlUtility::getXhtmlFix() . '>' : '');
+        $localMarkerArray['###HIDDENFIELDS###'] .= chr(10) . ($backUrl ? '<input type="hidden" name="' . $prefixId . '[backURL]" value="' . htmlspecialchars($backUrl) . '"' . HtmlUtility::getXhtmlFix() . '>' : '');
+
+        if ($setFixedKey != '') {
+            $localMarkerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="' . $prefixId . '[sFK]" value="' . htmlspecialchars($setFixedKey) . '"' . HtmlUtility::getXhtmlFix() . '>';
+        }
+
+        if (isset($fD) && is_array($fD)) {
+            foreach ($fD as $field => $value) {
+                $localMarkerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="' . $prefixId . '[fD][' . htmlspecialchars($field) . ']" value="' . htmlspecialchars($value) . '"' . HtmlUtility::getXhtmlFix() . '>';
+            }
+        }
+
         $this->addFormToken(
             $localMarkerArray,
             $token,
@@ -759,7 +801,7 @@ class Marker {
                     $this->staticInfoObj->getStaticInfoName('COUNTRIES', is_array($row) ? $row['static_info_country'] : '');
                 $markerArray['###FIELD_zone###'] = $this->staticInfoObj->getStaticInfoName('SUBDIVISIONS', is_array($row) ? $row['zone'] : '', is_array($row) ? $row['static_info_country'] : '');
                 if (!$markerArray['###FIELD_zone###'] ) {
-                    $markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="FE['.$theTable.'][zone]" value=""' . $this->getXhtmlFix() . '>';
+                    $markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="FE['.$theTable.'][zone]" value=""' . HtmlUtility::getXhtmlFix() . '>';
                 }
                 $markerArray['###FIELD_language###'] = $this->staticInfoObj->getStaticInfoName('LANGUAGES',  is_array($row) ? $row['language'] : '');
             } else {
@@ -817,7 +859,7 @@ class Marker {
                         $where
                     );
                 if (!$markerArray['###SELECTOR_ZONE###'] ) {
-                    $markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="FE[' . $theTable . '][zone]" value=""' . $this->getXhtmlFix() . '>';
+                    $markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="FE[' . $theTable . '][zone]" value=""' . HtmlUtility::getXhtmlFix() . '>';
                 }
 
                 $where = '';
@@ -890,7 +932,7 @@ class Marker {
                 $HTMLContent .= $filenameArray[$i];
                 if ($activity == 'email') {
                     if ($bHtml)	{
-                        $HTMLContent .= '<br' . $this->getXhtmlFix() . '>';
+                        $HTMLContent .= '<br' . HtmlUtility::getXhtmlFix() . '>';
                     } else {
                         $HTMLContent .= chr(13) . chr(10);
                     }
@@ -903,7 +945,7 @@ class Marker {
                     ) .
                     ' target="_blank" title="' . $langObj->getLL('file_view') . '">' .
                         $langObj->getLL('file_view') .
-                    '</a><br' . $this->getXhtmlFix() . '>';
+                    '</a><br' . HtmlUtility::getXhtmlFix() . '>';
                 }
             }
         } else {
@@ -927,12 +969,12 @@ var submitFile = function(id){
                         '',
                         $prefixId
                     ) .
-                    $this->getXhtmlFix() . '>';
+                    HtmlUtility::getXhtmlFix() . '>';
 
                 $partContent .=
                     '<input type="image" name="submit_delete" src="' .
                     $GLOBALS['TSFE']->tmpl->getFileName($this->conf['icon_delete']) . '"' .
-                    ' onclick="return submitFile(\'' . $prefixId . '-file-' . $i . '\');"' . $this->getXhtmlFix() . '>';
+                    ' onclick="return submitFile(\'' . $prefixId . '-file-' . $i . '\');"' . HtmlUtility::getXhtmlFix() . '>';
 
                 $partContent .=
                     '<a href="' . $dir . '/' . $filenameArray[$i] . '" ' .
@@ -943,9 +985,9 @@ var submitFile = function(id){
                     ) .
                     ' target="_blank" title="' . $langObj->getLL('file_view') . '">' .
                     $langObj->getLL('file_view') . '</a>' .
-                    '<br' . $this->getXhtmlFix() . '>';
+                    '<br' . HtmlUtility::getXhtmlFix() . '>';
                 $HTMLContent .= $partContent . '<input type="hidden" name="' . $tablePrefix . '[' . $theField . '][' . $i . '][name]' . '" value="' . $filenameArray[$i] .
-                '"' . $this->getXhtmlFix() . '>';
+                '"' . HtmlUtility::getXhtmlFix() . '>';
             }
 
             for ($i = sizeof($filenameArray); $i < $number + sizeof($filenameArray); $i++) {
@@ -962,7 +1004,7 @@ var submitFile = function(id){
                     '',
                     $prefixId
                 ) .
-                $this->getXhtmlFix() . '><br' . $this->getXhtmlFix() . '>';
+                HtmlUtility::getXhtmlFix() . '><br' . HtmlUtility::getXhtmlFix() . '>';
             }
         }
         return $HTMLContent;
@@ -1030,7 +1072,7 @@ var submitFile = function(id){
                     $bHtml
                 );
             $max_size = $fieldConfig['config']['max_size'] * 1024;
-            $markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="MAX_FILE_SIZE" value="' . $max_size . '"' . $this->getXhtmlFix() . '>';
+            $markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="MAX_FILE_SIZE" value="' . $max_size . '"' . HtmlUtility::getXhtmlFix() . '>';
         }
     }	// addFileUploadMarkers
 
@@ -1045,7 +1087,7 @@ var submitFile = function(id){
         $extKey,
         $prefixId
     ) {
-        $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="' . $prefixId . '[token]" value="' . $token . '"' . $this->getXhtmlFix() . '>';
+        $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="' . $prefixId . '[token]" value="' . $token . '"' . HtmlUtility::getXhtmlFix() . '>';
     }
 
     public function addHiddenFieldsMarkers (
@@ -1064,15 +1106,15 @@ var submitFile = function(id){
             $markerArray = $this->getArray();
         }
 
-        if ($this->conf[$cmdKey.'.']['preview'] && $mode != MODE_PREVIEW) {
-            $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="' . $prefixId .  '[preview]" value="1"' . $this->getXhtmlFix() . '>';
+        if ($this->conf[$cmdKey . '.']['preview'] && $mode != MODE_PREVIEW) {
+            $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="' . $prefixId .  '[preview]" value="1"' . HtmlUtility::getXhtmlFix() . '>';
             if (
                 $theTable == 'fe_users' &&
                 $cmdKey == 'edit' &&
                 $bUseEmailAsUsername
             ) {
-                $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="FE[' . $theTable . '][username]" value="' . htmlspecialchars($dataArray['username']) . '"' . $this->getXhtmlFix() . '>';
-                $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="FE[' . $theTable . '][email]" value="' . htmlspecialchars($dataArray['email']) . '"' . $this->getXhtmlFix() . '>';
+                $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="FE[' . $theTable . '][username]" value="' . htmlspecialchars($dataArray['username']) . '"' . HtmlUtility::getXhtmlFix() . '>';
+                $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="FE[' . $theTable . '][email]" value="' . htmlspecialchars($dataArray['email']) . '"' . HtmlUtility::getXhtmlFix() . '>';
             }
         }
         $fieldArray = GeneralUtility::trimExplode(',', $cmdKeyFields, 1);
@@ -1080,24 +1122,6 @@ var submitFile = function(id){
         if ($mode == MODE_PREVIEW) {
             $fieldArray = array_diff($fieldArray, array('hidden', 'disable'));
 
-            if ($theTable == 'fe_users') {
-                if (
-                    $this->conf[$cmdKey . '.']['useEmailAsUsername'] ||
-                    $this->conf[$cmdKey . '.']['generateUsername']
-                ) {
-                    $fieldArray = array_merge($fieldArray, array('username'));
-                }
-                if ($this->conf[$cmdKey . '.']['useEmailAsUsername']) {
-                    $fieldArray = array_merge($fieldArray, array('email'));
-                }
-                if (
-                    $cmdKey === 'edit' &&
-                    !in_array('email', $fieldArray) &&
-                    !in_array('username', $fieldArray)
-                ) {
-                    $fieldArray = array_merge($fieldArray, array('username'));
-                }
-            }
             $fields = implode(',', $fieldArray);
             $fields = $this->controlData->getOpenFields($fields);
             $fieldArray = explode(',', $fields);
@@ -1109,7 +1133,7 @@ var submitFile = function(id){
                 } else {
                     $value = htmlspecialchars($dataArray[$theField]);
                 }
-                $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="FE[' . $theTable . '][' . $theField . ']" value="' . $value . '"' . $this->getXhtmlFix() . '>';
+                $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="FE[' . $theTable . '][' . $theField . ']" value="' . $value . '"' . HtmlUtility::getXhtmlFix() . '>';
             }
         } else if (
                 ($theTable == 'fe_users') &&
@@ -1120,7 +1144,7 @@ var submitFile = function(id){
                 // Password change form probably contains neither email nor username
             $theField = 'username';
             $value = htmlspecialchars($dataArray[$theField]);
-            $markerArray['###HIDDENFIELDS###'] .= LF . '<input type="hidden" name="FE[' . $theTable . '][' . $theField . ']" value="' . $value . '"' . $this->getXhtmlFix() . '>';
+            $markerArray['###HIDDENFIELDS###'] .= LF . '<input type="hidden" name="FE[' . $theTable . '][' . $theField . ']" value="' . $value . '"' . HtmlUtility::getXhtmlFix() . '>';
         }
 
         $this->addFormToken(

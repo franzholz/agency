@@ -109,8 +109,7 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 		&$row
 	) {
 		if (isset($row['usergroup']) && $conf[$cmdKey . '.']['allowUserGroupSelection']) {
-
-// Todo
+// nothing
 		} else {
 			$row['usergroup'] = ''; // the setting of the usergropus has not been allowed
 		}

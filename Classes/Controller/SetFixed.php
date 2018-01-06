@@ -80,14 +80,19 @@ class SetFixed {
         array $origArray,
         $securedArray,
         $pObj,
-        $feuData,
         $token,
         &$hasError
     ) {
         $content = false;
         $row = $origArray;
         $usesPassword = false;
-        $enableAutoLoginOnConfirmation = $controlData->enableAutoLoginOnConfirmation($conf, $cmdKey);
+        $enableAutoLoginOnConfirmation =
+            $controlData->enableAutoLoginOnConfirmation($conf, $cmdKey);
+        $errorContent = '';
+        $hasError = false;
+        $sendExecutionEmail = false;
+        $cryptedPassword = '';
+        $extensionKey = $controlData->getExtensionKey();
 
         if (
             $theTable == 'fe_users' &&
@@ -103,16 +108,21 @@ class SetFixed {
             $usesPassword = true;
         }
 
-        $errorContent = '';
-        $hasError = false;
-        $cryptedPassword = '';
-
         if ($controlData->getSetfixedEnabled()) {
             $autoLoginIsRequested = false;
             $origUsergroup = $row['usergroup'];
             $setfixedUsergroup = '';
-            $setfixedSuffix = $setFixedKey = $feuData['sFK'];
-            $fD = GeneralUtility::_GP('fD', 1);
+            $setfixedSuffix = $setFixedKey = $controlData->getFeUserData('sFK');
+            $fD = $controlData->getFd();
+            $setfixedConfig = array();
+            if (
+                isset($conf['setfixed.']) &&
+                isset($conf['setfixed.'][$setfixedSuffix . '.']) &&
+                isset($conf['setfixed.'][$setfixedSuffix . '.']['_CONFIG.'])
+            ) {
+                $setfixedConfig = $conf['setfixed.'][$setfixedSuffix . '.']['_CONFIG.'];
+            }
+
             $fieldArr = array();
 
             if (is_array($fD)) {
@@ -131,7 +141,7 @@ class SetFixed {
                 $autoLoginIsRequested =
                     $controlData->getStorageSecurity()
                         ->getAutoLoginIsRequested(
-                            $feuData,
+                            $controlData->getFeUserData(),
                             $autoLoginKey
                         );
             }
@@ -145,7 +155,7 @@ class SetFixed {
                 // Let's try with a code length of 8 in case this link is coming from direct mail
             if (
                 $codeLength == 8 &&
-                in_array($setFixedKey, array('DELETE', 'EDIT', 'UNSUBSCRIBE'))
+                in_array($setFixedKey, $controlData->getSetfixedOptions())
             ) {
                 $theAuthCode = $authObj->setfixedHash($row, $fieldList, $codeLength);
             } else {
@@ -161,10 +171,13 @@ class SetFixed {
                 )
             ) {
                 if ($setFixedKey == 'EDIT') {
+                    $sendExecutionEmail = true;
                     $markerObj->addGeneralHiddenFieldsMarkers(
                         $markerArray,
-                        $cmd,
-                        $token
+                        $cmdKey,
+                        $token,
+                        $setFixedKey,
+                        $fD
                     );
                     $content = $displayObj->editScreen(
                         $markerArray,
@@ -192,25 +205,53 @@ class SetFixed {
                     $setFixedKey == 'REFUSE'
                 ) {
                     if (
-                        !$GLOBALS['TCA'][$theTable]['ctrl']['delete'] ||
-                        $conf['forceFileDelete']
-                    ) {
-                        // If the record is fully deleted... then remove the image attached.
-                        $dataObj->deleteFilesFromRecord(
+                        $setfixedConfig['askAgain'] &&
+                        !$controlData->getSubmit()
+                    ) { // ask again if the user really wants to delete
+                        $content = $displayObj->deleteScreen(
+                            $markerArray,
+                            $conf,
+                            $prefixId,
+                            $extensionKey,
+                            $cObj,
+                            $langObj,
+                            $controlData,
+                            $confObj,
+                            $tcaObj,
+                            $markerObj,
+                            $dataObj,
                             $theTable,
+                            $dataArray,
+                            $origArray,
+                            $securedArray,
+                            $token,
+                            $setFixedKey,
+                            $fD
+                        );
+                    } else {
+                        $sendExecutionEmail = true;
+                        // execute the deletion
+                        if (
+                            !$GLOBALS['TCA'][$theTable]['ctrl']['delete'] ||
+                            $conf['forceFileDelete']
+                        ) {
+                            // If the record is fully deleted... then remove the image attached.
+                            $dataObj->deleteFilesFromRecord(
+                                $theTable,
+                                $row
+                            );
+                        }
+                        $res = $dataObj->getCoreQuery()->DBgetDelete(
+                            $theTable,
+                            $uid,
+                            true
+                        );
+                        $dataObj->deleteMMRelations(
+                            $theTable,
+                            $uid,
                             $row
                         );
                     }
-                    $res = $dataObj->getCoreQuery()->DBgetDelete(
-                        $theTable,
-                        $uid,
-                        true
-                    );
-                    $dataObj->deleteMMRelations(
-                        $theTable,
-                        $uid,
-                        $row
-                    );
                 } else {
                     if ($theTable == 'fe_users') {
                         if ($conf['create.']['allowUserGroupSelection']) {
@@ -234,8 +275,8 @@ class SetFixed {
 
                         // Hook: first we initialize the hooks
                     $hookObjectsArr = array();
-                    if (is_array ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$controlData->getExtensionKey()]['confirmRegistrationClass'])) {
-                        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$controlData->getExtensionKey()]['confirmRegistrationClass'] as $classRef) {
+                    if (is_array ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['confirmRegistrationClass'])) {
+                        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['confirmRegistrationClass'] as $classRef) {
                             $hookObj = GeneralUtility::makeInstance($classRef);
                             if (
                                 method_exists($hookObj, 'needsInit') &&
@@ -341,8 +382,11 @@ class SetFixed {
                         $usesPassword ?
                             'login' :
                             'password',
-                        $token
+                        $token,
+                        $setFixedKey,
+                        $fD
                     );
+
                     if ($usesPassword) {
                         $markerObj->addPasswordTransmissionMarkers(
                             $markerArray,
@@ -354,12 +398,45 @@ class SetFixed {
                     $markerObj->addGeneralHiddenFieldsMarkers(
                         $markerArray,
                         'setfixed',
-                        $token
+                        $token,
+                        $setFixedKey,
+                        $fD
                     );
                 }
 
+
                 if ($setFixedKey != 'EDIT') {
+
                     if (
+                        $setfixedConfig['askAgain'] &&
+                        !$controlData->getSubmit()
+                    ) { // ask again if the user really wants to confirm
+                        $content =
+                            $displayObj->confirmationScreen(
+                                $markerArray,
+                                $conf,
+                                $prefixId,
+                                $cObj,
+                                $langObj,
+                                $controlData,
+                                $confObj,
+                                $tcaObj,
+                                $markerObj,
+                                $dataObj,
+                                $templateCode,
+                                $theTable,
+                                $dataArray,
+                                $origArray,
+                                $securedArray,
+                                $cmdKey,
+                                $setFixedKey,
+                                $fD,
+                                $token
+                            );
+                    }
+
+                    if (
+                        !$content &&
                         $theTable == 'fe_users' &&
                         (
                             $setFixedKey == 'ENTER' ||
@@ -382,6 +459,7 @@ class SetFixed {
                             );
 
                         if ($loginSuccess) {
+                            $sendExecutionEmail = true; // +++ neu FHO; Hier noch eine Abfrage, bevor die Confirmation beginnt
                             $content =
                                 $displayObj->editScreen(
                                     $markerArray,
@@ -458,6 +536,7 @@ class SetFixed {
                                 $securedArray,
                                 false
                             );
+                            $sendExecutionEmail = true;
                     }
 
                     if (!$content) {
@@ -481,10 +560,12 @@ class SetFixed {
                                 $row,
                                 $securedArray
                             );
+                        $sendExecutionEmail = true;
                     }
 
                     if (
                         !$hasError &&
+                        $sendExecutionEmail && // neu
                         (
                             $conf['email.']['SETFIXED_REFUSE'] ||
                             $conf['enableEmailConfirmation'] ||
@@ -708,7 +789,7 @@ class SetFixed {
                             if (is_object($userGroupObj)) {
                                 $fieldValue =
                                     $userGroupObj->getExtendedValue(
-                                        $controlData->getExtensionKey(),
+                                        $extensionKey,
                                         $fieldValue,
                                         $data['usergroup.'],
                                         $record
@@ -800,7 +881,7 @@ class SetFixed {
                 $bIsAbsoluteURL = ((strncmp($url, 'http://', 7) == 0) || (strncmp($url, 'https://', 8) == 0));
                 $markerKey = '###SETFIXED_' . $cObj->caseshift($theKey, 'upper') . '_URL###';
                 $url = ($bIsAbsoluteURL ? '' : $controlData->getSiteUrl()) . ltrim($url, '/');
-                $markerArray[$markerKey] = str_replace(array('[',']'), array('%5B', '%5D'), $url);
+                $markerArray[$markerKey] = str_replace(array('[', ']'), array('%5B', '%5D'), $url);
             }	// foreach
         }
     }	// computeUrl
@@ -842,5 +923,4 @@ class SetFixed {
         return $regHash_calc;
     }
 }
-
 
