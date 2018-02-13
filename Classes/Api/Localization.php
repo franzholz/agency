@@ -47,7 +47,13 @@ namespace JambageCom\Agency\Api;
 class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements \TYPO3\CMS\Core\SingletonInterface {
     public $allowedSuffixes = array('formal', 'informal'); // list of allowed suffixes
 
-    public function init1 ($pObj, $cObj, $conf, $scriptRelPath, $extKey) {
+    public function init1 (
+        $pObj,
+        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
+        $conf,
+        $scriptRelPath,
+        $extKey
+    ) {
 
         parent::init(
             $cObj,

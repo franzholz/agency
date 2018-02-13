@@ -224,7 +224,6 @@ class Marker {
                     $this->tca->addTcaMarkers(
                         $this->tmpTcaMarkers,
                         $conf,
-                        $cObj,
                         $langObj,
                         $controlData,
                         $row,
@@ -233,10 +232,10 @@ class Marker {
                         $cmdKey,
                         $theTable,
                         $controlData->getPrefixId(),
-                        TRUE,
+                        true,
                         '',
-                        FALSE,
-                        TRUE
+                        false,
+                        true
                     );
                 }
                 $result = $this->tmpTcaMarkers['###TCA_INPUT_' . $matches[2] . '###'];
@@ -311,7 +310,7 @@ class Marker {
     public function addLabelMarkers (
         &$markerArray,
         $conf,
-        $cObj,
+        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Api\Localization $langObj,
         $extKey,
         $theTable,
@@ -323,11 +322,11 @@ class Marker {
         $infoFields,
         $tcaColumns,
         $activity = '',
-        $bChangesOnly = FALSE
+        $bChangesOnly = false
     ) {
-        $bUseMissingFields = FALSE;
+        $bUseMissingFields = false;
         if ($activity == 'email') {
-            $bUseMissingFields = TRUE;
+            $bUseMissingFields = true;
         }
         $markerArray['###XHTML###'] = HtmlUtility::getXhtmlFix();
 
@@ -363,17 +362,17 @@ class Marker {
         $infoFieldArray = array_unique($infoFieldArray);
         foreach($infoFieldArray as $theField) {
             $markerkey = $cObj->caseshift($theField, 'upper');
-            $bValueChanged = FALSE;
+            $bValueChanged = false;
 
             if ($bChangesOnly && isset($row[$theField]) && isset($origRow[$theField])) {
                 if (is_array($row[$theField]) && is_array($origRow[$theField])) {
                     $diffArray = array_diff($row[$theField], $origRow[$theField]);
                     if (count($diffArray)) {
-                        $bValueChanged = TRUE;
+                        $bValueChanged = true;
                     }
                 } else {
                     if ($row[$theField] != $origRow[$theField]) {
-                        $bValueChanged = TRUE;
+                        $bValueChanged = true;
                     }
                 }
             }
@@ -688,7 +687,7 @@ class Marker {
         } else {
             $termsUrlParam = ($this->conf['terms.']['file'] ? $GLOBALS['TSFE']->tmpl->getFileName($this->conf['terms.']['file']) : '');
         }
-        $markerArray['###TERMS_URL###'] = $urlObj->get('', $termsUrlParam, array(), array(), FALSE);
+        $markerArray['###TERMS_URL###'] = $urlObj->get('', $termsUrlParam, array(), array(), false);
         return $markerArray;
     }	// generateURLMarkers
 
@@ -787,7 +786,7 @@ class Marker {
         \JambageCom\Agency\Api\Localization $langObj,
         $prefixId,
         $row = '',
-        $viewOnly = FALSE
+        $viewOnly = false
     ) {
         if (!$markerArray) {
             $markerArray = $this->getArray();
@@ -913,9 +912,9 @@ class Marker {
         $prefixId,
         $theTable,
         $filenameArray,
-        $viewOnly = FALSE,
+        $viewOnly = false,
         $activity = '',
-        $bHtml = TRUE
+        $bHtml = true
     ) {
         $tablePrefix = 'FE[' . $theTable . ']';
         $size = $config['maxitems'];
@@ -1028,9 +1027,9 @@ var submitFile = function(id){
         $cmdKey,
         $prefixId,
         $dataArray = array(),
-        $viewOnly = FALSE,
+        $viewOnly = false,
         $activity = '',
-        $bHtml = TRUE
+        $bHtml = true
     ) {
         if (!$markerArray)	{
             $markerArray = $this->getArray();
@@ -1052,7 +1051,7 @@ var submitFile = function(id){
                     $prefixId,
                     $theTable,
                     $filenameArray,
-                    TRUE,
+                    true,
                     $activity,
                     $bHtml
                 );
@@ -1067,7 +1066,7 @@ var submitFile = function(id){
                     $prefixId,
                     $theTable,
                     $filenameArray,
-                    FALSE,
+                    false,
                     $activity,
                     $bHtml
                 );
@@ -1165,7 +1164,7 @@ var submitFile = function(id){
     public function removeStaticInfoSubparts (
         $templateCode,
         $markerArray,
-        $viewOnly = FALSE
+        $viewOnly = false
     ) {
         $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
 
@@ -1204,9 +1203,9 @@ var submitFile = function(id){
         $dataObj,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         $fieldList = '',
-        $nl2br = TRUE,
+        $nl2br = true,
         $prefix = 'FIELD_',
-        $HSC = TRUE
+        $HSC = true
     ) {
         $conf = $confObj->getConf();
         if (is_array($securedArray)) {
@@ -1306,7 +1305,7 @@ var submitFile = function(id){
             );
             $removeMarkerMessage = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_remove_deprecated_marker');
             foreach ($removeMarkers as $marker) {
-                if (strpos($templateCode, $marker) !== FALSE) {
+                if (strpos($templateCode, $marker) !== false) {
                     $messages[] = sprintf($removeMarkerMessage, $marker, $fileName);
                 }
             }
@@ -1319,7 +1318,7 @@ var submitFile = function(id){
             );
             $replaceMarkerMessage = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_replace_deprecated_marker');
             foreach ($replaceMarkers as $replaceMarker) {
-                if (strpos($templateCode, $replaceMarker['marker']) !== FALSE) {
+                if (strpos($templateCode, $replaceMarker['marker']) !== false) {
                     $messages[] = sprintf($replaceMarkerMessage, $replaceMarker['marker'], $replaceMarker['replacement'], $fileName);
                 }
             }

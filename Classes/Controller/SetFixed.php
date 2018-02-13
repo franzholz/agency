@@ -60,7 +60,7 @@ class SetFixed {
     */
     public function process (
         $conf,
-        $cObj,
+        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Api\Localization $langObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
@@ -73,8 +73,10 @@ class SetFixed {
         $uid,
         $cmdKey,
         $markerArray,
-        $displayObj,
-        $emailObj,
+        \JambageCom\Agency\View\Template $template,        
+        \JambageCom\Agency\View\CreateView $displayObj,
+        \JambageCom\Agency\View\EditView $editView,
+        \JambageCom\Agency\View\DeleteView $deleteView,
         $templateCode,
         $dataArray,
         array $origArray,
@@ -83,6 +85,7 @@ class SetFixed {
         $token,
         &$hasError
     ) {
+        $email = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Email::class);
         $content = false;
         $row = $origArray;
         $usesPassword = false;
@@ -179,7 +182,7 @@ class SetFixed {
                         $setFixedKey,
                         $fD
                     );
-                    $content = $displayObj->editScreen(
+                    $content = $editView->render(
                         $markerArray,
                         $conf,
                         $cObj,
@@ -189,6 +192,7 @@ class SetFixed {
                         $tcaObj,
                         $markerObj,
                         $dataObj,
+                        $template,
                         $theTable,
                         $prefixId,
                         $dataArray,
@@ -208,7 +212,7 @@ class SetFixed {
                         $setfixedConfig['askAgain'] &&
                         !$controlData->getSubmit()
                     ) { // ask again if the user really wants to delete
-                        $content = $displayObj->deleteScreen(
+                        $content = $deleteView->render(
                             $markerArray,
                             $conf,
                             $prefixId,
@@ -412,7 +416,7 @@ class SetFixed {
                         !$controlData->getSubmit()
                     ) { // ask again if the user really wants to confirm
                         $content =
-                            $displayObj->confirmationScreen(
+                            $this->confirmationScreen(
                                 $markerArray,
                                 $conf,
                                 $prefixId,
@@ -423,6 +427,7 @@ class SetFixed {
                                 $tcaObj,
                                 $markerObj,
                                 $dataObj,
+                                $template,
                                 $templateCode,
                                 $theTable,
                                 $dataArray,
@@ -461,7 +466,7 @@ class SetFixed {
                         if ($loginSuccess) {
                             $sendExecutionEmail = true; // +++ neu FHO; Hier noch eine Abfrage, bevor die Confirmation beginnt
                             $content =
-                                $displayObj->editScreen(
+                                $editView->render(
                                     $markerArray,
                                     $conf,
                                     $cObj,
@@ -471,6 +476,7 @@ class SetFixed {
                                     $tcaObj,
                                     $markerObj,
                                     $dataObj,
+                                    $template,
                                     $theTable,
                                     $prefixId,
                                     $dataArray,
@@ -485,7 +491,7 @@ class SetFixed {
                         } else {
                                 // Login failed
                             $content =
-                                $displayObj->getPlainTemplate(
+                                $template->getPlainTemplate(
                                     $conf,
                                     $cObj,
                                     $langObj,
@@ -517,7 +523,7 @@ class SetFixed {
                     if (!$content) {
                         $subpartMarker = '###TEMPLATE_' . SETFIXED_PREFIX . 'OK_' . $setfixedSuffix . '###';
                         $content =
-                            $displayObj->getPlainTemplate(
+                            $template->getPlainTemplate(
                                 $conf,
                                 $cObj,
                                 $langObj,
@@ -542,7 +548,7 @@ class SetFixed {
                     if (!$content) {
                         $subpartMarker = '###TEMPLATE_' . SETFIXED_PREFIX . 'OK###';
                         $content =
-                            $displayObj->getPlainTemplate(
+                            $template->getPlainTemplate(
                                 $conf,
                                 $cObj,
                                 $langObj,
@@ -574,7 +580,7 @@ class SetFixed {
                     ) {
                         $errorCode = '';
                             // Compiling email
-                        $bEmailSent = $emailObj->compile(
+                        $bEmailSent = $email->compile(
                             SETFIXED_PREFIX . $setfixedSuffix,
                             $conf,
                             $cObj,
@@ -584,7 +590,7 @@ class SetFixed {
                             $tcaObj,
                             $markerObj,
                             $dataObj,
-                            $displayObj,
+                            $template,
                             $this,
                             $theTable,
                             $autoLoginKey,
@@ -618,7 +624,7 @@ class SetFixed {
                             $usesPassword
                         ) {
                             $errorCode = '';
-                            $bEmailSent = $emailObj->compile(
+                            $bEmailSent = $email->compile(
                                 SETFIXED_PREFIX . 'REVIEW',
                                 $conf,
                                 $cObj,
@@ -628,7 +634,7 @@ class SetFixed {
                                 $tcaObj,
                                 $markerObj,
                                 $dataObj,
-                                $displayObj,
+                                $template,
                                 $this,
                                 $theTable,
                                 $autoLoginKey,
@@ -685,7 +691,7 @@ class SetFixed {
                                 exit;
                             } else {
                                     // Login failed
-                                $content = $displayObj->getPlainTemplate(
+                                $content = $template->getPlainTemplate(
                                     $conf,
                                     $cObj,
                                     $langObj,
@@ -711,7 +717,7 @@ class SetFixed {
                     }
                 }
             } else {
-                $content = $displayObj->getPlainTemplate(
+                $content = $template->getPlainTemplate(
                     $conf,
                     $cObj,
                     $langObj,
@@ -734,6 +740,76 @@ class SetFixed {
 
         return $content;
     }	// processSetFixed
+
+    /**
+    * Shows a form where the user is asked if he really wants to confirm
+    *
+    * @param array $cObj: the cObject
+    * @param array $langObj: the language object
+    * @param array $controlData: the object of the control data
+    * @param array  $errorFieldArray: array of field with errors (former $this->data->inError[$theField])
+    * @return string  the template with substituted markers
+    */
+    public function confirmationScreen (
+        $markerArray,
+        $conf,
+        $prefixId,
+        $cObj,
+        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Request\Parameters $controlData,
+        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
+        $tcaObj,
+        $markerObj,
+        $dataObj,
+        \JambageCom\Agency\View\Template $template,
+        $templateCode,
+        $theTable,
+        $dataArray,
+        array $origArray,
+        $securedArray,
+        $cmdKey,
+        $setFixedKey,
+        $fD
+    ) {
+    // Display the form, if access granted.
+
+        $markerArray['###HIDDENFIELDS###'] .=
+            '<input type="hidden" name="' .
+            $prefixId . '[rU]" value="' .
+            $dataObj->getRecUid() .
+            '" />';
+
+        $tokenParameter = $controlData->getTokenParameter();
+        $markerArray['###BACK_URL###'] =
+            (
+                $controlData->getBackURL() ?
+                    $controlData->getBackURL() :
+                    $cObj->getTypoLink_URL(
+                        $conf['loginPID'] . ',' . $GLOBALS['TSFE']->type
+                    )
+            ) . $tokenParameter;
+        $subpartMarker = '###TEMPLATE_' . $setFixedKey . '_PREVIEW###';
+        $content = $template->getPlainTemplate(
+            $conf,
+            $cObj,
+            $langObj,
+            $controlData,
+            $confObj,
+            $tcaObj,
+            $markerObj,
+            $dataObj,
+            $templateCode,
+            $subpartMarker,
+            $markerArray,
+            $dataArray,
+            $theTable,
+            $prefixId,
+            $origArray,
+            $securedArray
+        );
+
+        return $content;
+    }
 
     /**
     * Computes the setfixed url's

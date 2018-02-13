@@ -5,7 +5,7 @@ namespace JambageCom\Agency\Api;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Stanislas Rolland (typo3(arobas)sjbr.ca)
+*  (c) 2018 Stanislas Rolland (typo3(arobas)sjbr.ca)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -96,7 +96,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         $tcaObj,
         $markerObj,
         $dataObj,
-        $displayObj,
+        \JambageCom\Agency\View\Template $template,
         $setfixedObj,
         $theTable,
         $autoLoginKey,
@@ -176,7 +176,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                         $tcaObj,
                         $markerObj,
                         $dataObj,
-                        $displayObj,
+                        $template,
                         $setfixedObj,
                         $theTable,
                         $autoLoginKey,
@@ -205,7 +205,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                         $tcaObj,
                         $markerObj,
                         $dataObj,
-                        $displayObj,
+                        $template,
                         $setfixedObj,
                         $theTable,
                         $autoLoginKey,
@@ -237,7 +237,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 } else {
                     $subpartkey = '###TEMPLATE_' . $this->infomailPrefix . 'SENT###';
                     $content =
-                        $displayObj->getPlainTemplate(
+                        $template->getPlainTemplate(
                             $conf,
                             $cObj,
                             $langObj,
@@ -265,7 +265,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 }
 
                 $content =  // lost password entry form
-                    $displayObj->getPlainTemplate(
+                    $template->getPlainTemplate(
                         $conf,
                         $cObj,
                         $langObj,
@@ -315,14 +315,14 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
     public function compile (
         $key,
         $conf,
-        $cObj,
+        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Api\Localization $langObj,
         $controlData,
         $confObj,
         $tcaObj,
         $markerObj,
         $dataObj,
-        $displayObj,
+        \JambageCom\Agency\View\Template $template,
         $setfixedObj,
         $theTable,
         $autoLoginKey,
@@ -414,7 +414,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 $missingSubpartArray[] = $subpartMarker;
             } else {
                 $content['user']['all'] =
-                    $displayObj->removeRequired(
+                    $template->removeRequired(
                         $conf,
                         $cObj,
                         $controlData,
@@ -435,7 +435,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     $missingSubpartArray[] = $subpartMarker;
                 } else {
                     $content['userhtml']['all'] =
-                        $displayObj->removeRequired(
+                        $template->removeRequired(
                             $conf,
                             $cObj,
                             $controlData,
@@ -465,7 +465,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     $missingSubpartArray[] = $subpartMarker;
             } else {
                 $content['admin']['all'] =
-                    $displayObj->removeRequired(
+                    $template->removeRequired(
                         $conf,
                         $cObj,
                         $controlData,
@@ -492,7 +492,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     $missingSubpartArray[] = $subpartMarker;
                 } else {
                     $content['adminhtml']['all'] =
-                        $displayObj->removeRequired(
+                        $template->removeRequired(
                             $conf,
                             $cObj,
                             $controlData,
@@ -697,7 +697,6 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 $tcaObj->addTcaMarkers(
                     $fieldMarkerArray,
                     $conf,
-                    $cObj,
                     $langObj,
                     $controlData,
                     $row,
@@ -742,19 +741,19 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     $content['user']['accum']
                 );
             $content['user']['final'] =
-                $displayObj->removeHTMLComments(
+                $template->removeHTMLComments(
                     $content['user']['final']
                 );
             $content['user']['final'] =
-                $displayObj->replaceHTMLBr(
+                $template->replaceHTMLBr(
                     $content['user']['final']
                 );
             $content['user']['final'] =
-                $displayObj->removeHtmlTags(
+                $template->removeHtmlTags(
                     $content['user']['final']
                 );
             $content['user']['final'] =
-                $displayObj->removeSuperfluousLineFeeds(
+                $template->removeSuperfluousLineFeeds(
                     $content['user']['final']
                 );
                 // Remove erroneous \n from locallang file
@@ -773,7 +772,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     )
                 );
                 // Remove HTML comments
-            $content['userhtml']['final'] = $displayObj->removeHTMLComments($content['userhtml']['final']);
+            $content['userhtml']['final'] = $template->removeHTMLComments($content['userhtml']['final']);
                 // Remove erroneous \n from locallang file
             $content['userhtml']['final'] = str_replace('\n', '', $content['userhtml']['final']);
         }
@@ -784,13 +783,13 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     $content['admin']['all'], '###SUB_RECORD###', $content['admin']['accum']
                 );
             $content['admin']['final'] =
-                $displayObj->removeHTMLComments($content['admin']['final']);
+                $template->removeHTMLComments($content['admin']['final']);
             $content['admin']['final'] =
-                $displayObj->replaceHTMLBr($content['admin']['final']);
+                $template->replaceHTMLBr($content['admin']['final']);
             $content['admin']['final'] =
-                $displayObj->removeHtmlTags($content['admin']['final']);
+                $template->removeHtmlTags($content['admin']['final']);
             $content['admin']['final'] =
-                $displayObj->removeSuperfluousLineFeeds($content['admin']['final']);
+                $template->removeSuperfluousLineFeeds($content['admin']['final']);
                 // Remove erroneous \n from locallang file
             $content['admin']['final'] =
                 str_replace('\n', '', $content['admin']['final']);
@@ -808,7 +807,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     )
                 );
                 // Remove HTML comments
-            $content['adminhtml']['final'] = $displayObj->removeHTMLComments($content['adminhtml']['final']);
+            $content['adminhtml']['final'] = $template->removeHTMLComments($content['adminhtml']['final']);
                 // Remove erroneous \n from locallang file
             $content['adminhtml']['final'] = str_replace('\n', '', $content['adminhtml']['final']);
         }

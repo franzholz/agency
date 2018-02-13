@@ -56,43 +56,43 @@ class Url implements \TYPO3\CMS\Core\SingletonInterface {
     }
 
 
-	/**
-	* Generates a pibase-compliant typolink
-	*
-	* @param string  $tag: string to include within <a>-tags; if empty, only the url is returned
-	* @param string  $id: page id (could of the form id,type )
-	* @param array  $vars: extension variables to add to the url ($key, $value)
-	* @param array  $unsetVars: extension variables (piVars to unset)
-	* @param boolean  $usePiVars: if set, input vars and incoming piVars arrays are merge
-	* @return string  generated link or url
-	*/
-	public function get ($tag = '', $id, $vars = array(), $unsetVars = array(), $usePiVars = true) {
+    /**
+    * Generates a pibase-compliant typolink
+    *
+    * @param string  $tag: string to include within <a>-tags; if empty, only the url is returned
+    * @param string  $id: page id (could of the form id,type )
+    * @param array  $vars: extension variables to add to the url ($key, $value)
+    * @param array  $unsetVars: extension variables (piVars to unset)
+    * @param boolean  $usePiVars: if set, input vars and incoming piVars arrays are merge
+    * @return string  generated link or url
+    */
+    public function get ($tag = '', $id, $vars = array(), $unsetVars = array(), $usePiVars = true) {
 
         $result = '';
-		$vars = (array) $vars;
-		$unsetVars = (array) $unsetVars;
-		if ($usePiVars) {
-			$vars = array_merge($this->piVars, $vars); //vars override pivars
+        $vars = (array) $vars;
+        $unsetVars = (array) $unsetVars;
+        if ($usePiVars) {
+            $vars = array_merge($this->piVars, $vars); //vars override pivars
 
-			foreach($unsetVars as $key) {
-				if (isset($vars[$key])) {
-					// unsetvars override anything
-					unset($vars[$key]);
-				}
-			}
-		}
+            foreach($unsetVars as $key) {
+                if (isset($vars[$key])) {
+                    // unsetvars override anything
+                    unset($vars[$key]);
+                }
+            }
+        }
 
-		foreach($vars as $key => $val) {
-			$piVars[$this->prefixId . '%5B' . $key . '%5D'] = $val;
-		}
+        foreach($vars as $key => $val) {
+            $piVars[$this->prefixId . '%5B' . $key . '%5D'] = $val;
+        }
 
-		if ($tag) {
-			$result = $this->cObj->getTypoLink($tag, $id, $piVars);
-		} else {
-			$result = $this->cObj->getTypoLink_URL($id, $piVars);
-		}
-		$result = str_replace(array('[', ']'), array('%5B', '%5D'), $result);
-		return $result;
-	}	// get_url
+        if ($tag) {
+            $result = $this->cObj->getTypoLink($tag, $id, $piVars);
+        } else {
+            $result = $this->cObj->getTypoLink_URL($id, $piVars);
+        }
+        $result = str_replace(array('[', ']'), array('%5B', '%5D'), $result);
+        return $result;
+    }	// get_url
 }
 

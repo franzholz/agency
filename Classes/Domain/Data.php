@@ -52,7 +52,6 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     public $controlData;
     public $dataArray = array();
     public $origArray = array();
-    public $cObj;
     protected $evalErrors = array();
     public $saved = false; // is set if data is saved
     public $theTable;
@@ -84,7 +83,6 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     }
 
     public function init (
-        $cObj,
         $lang,
         $tca,
         $control,
@@ -97,7 +95,6 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $this->tca = $tca;
         $this->control = $control;
         $this->controlData = $controlData;
-        $this->cObj = $cObj;
         $this->fileFunc = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Utility\File\BasicFileUtility::class);
 
             // Fetching the template file
@@ -702,7 +699,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             case 'inBranch':
                                 $pars = explode(';', $cmdParts[1]);
                                 if (intval($pars[0])) {
-                                    $pid_list = $this->cObj->getTreeList(
+                                    $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
+                                    $pid_list = $cObj->getTreeList(
                                         intval($pars[0]),
                                         intval($pars[1]) ? intval($pars[1]) : 999,
                                         intval($pars[2])
@@ -1095,7 +1093,6 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     */
     public function parseValues ($theTable, array &$dataArray, array $origArray, $cmdKey) {
         $result = true;
-        $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
 
@@ -1132,6 +1129,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             break;
                             case 'lower':
                             case 'upper':
+                                $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
                                 $dataValue = $cObj->caseshift($dataValue, $theCmd);
                             break;
                             case 'nospace':

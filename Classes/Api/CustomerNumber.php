@@ -5,7 +5,7 @@ namespace JambageCom\Agency\Api;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Stanislas Rolland (typo3(arobas)sjbr.ca)
+*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -32,8 +32,6 @@ namespace JambageCom\Agency\Api;
  *
  * customer number functions for the FE user field cnum
  *
- * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
- * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
  * @author	Franz Holzinger <franz@ttproducts.de>
  *
  * @package TYPO3

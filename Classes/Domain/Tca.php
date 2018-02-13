@@ -319,7 +319,6 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
     public function addTcaMarkers (
         &$markerArray,
         $conf,
-        $cObj,
         \JambageCom\Agency\Api\Localization $langObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         $row,
@@ -333,6 +332,8 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
         $bChangesOnly = false,
         $HSC = true
     ) {
+        $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
+
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
             !is_array($GLOBALS['TCA'][$theTable]['columns'])

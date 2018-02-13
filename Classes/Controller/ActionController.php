@@ -5,7 +5,7 @@ namespace JambageCom\Agency\Controller;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Stanislas Rolland (typo3(arobas)sjbr.ca)
+*  (c) 2018 Stanislas Rolland (typo3(arobas)sjbr.ca)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -59,15 +59,13 @@ class ActionController {
     public function init (
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         \JambageCom\Agency\Api\Localization $langObj,
-        $cObj,
+        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Request\Parameters $controlData,
-        $email,
         $tca,
         $urlObj
     ) {
         $this->langObj = $langObj;
         $conf = $confObj->getConf();
-        $this->email = $email;
         $this->tca = $tca;
         $this->urlObj = $urlObj;
             // Retrieve the extension key
@@ -445,7 +443,10 @@ class ActionController {
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         $setfixedObj,
         \JambageCom\Agency\Api\Localization $langObj,
-        $displayObj,
+        \JambageCom\Agency\View\Template $template,
+        \JambageCom\Agency\View\CreateView $displayObj,
+        \JambageCom\Agency\View\EditView $editView,
+        \JambageCom\Agency\View\DeleteView $deleteView,
         \JambageCom\Agency\Request\Parameters $controlData,
         $dataObj,
         \JambageCom\Agency\View\Marker $markerObj,
@@ -755,7 +756,7 @@ class ActionController {
                 $controlData->getFeUserData('task') == 'cancel' // the DELETE has been cancelled
             ) {
                 $content =
-                    $displayObj->getSimpleTemplate (
+                    $displayObj->getSimpleTemplate(
                         $conf,
                         $cObj,
                         $langObj,
@@ -828,6 +829,7 @@ class ActionController {
                     $markerObj,
                     $dataObj,
                     $setfixedObj,
+                    $template,
                     $theTable,
                     $autoLoginKey,
                     $prefixId,
@@ -853,9 +855,10 @@ class ActionController {
                     $bDefaultMode &&
                     !$bCustomerConfirmsMode
                 ) {
+                    $email = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Email::class);
                         // Send admin the confirmation email
                         // The user will not confirm in this mode
-                    $bEmailSent = $this->email->compile(
+                    $bEmailSent = $email->compile(
                         SETFIXED_PREFIX . 'REVIEW',
                         $conf,
                         $cObj,
@@ -865,7 +868,7 @@ class ActionController {
                         $this->tca,
                         $markerObj,
                         $dataObj,
-                        $displayObj,
+                        $template,
                         $setfixedObj.
                         $theTable,
                         $autoLoginKey,
@@ -897,9 +900,10 @@ class ActionController {
                         ) ?
                         $finalDataArray[$emailField] :
                         $origArray[$emailField];
+                    $email = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Email::class);
 
                     // Send email message(s)
-                    $bEmailSent = $this->email->compile(
+                    $bEmailSent = $email->compile(
                         $key,
                         $conf,
                         $cObj,
@@ -909,7 +913,7 @@ class ActionController {
                         $this->tca,
                         $markerObj,
                         $dataObj,
-                        $displayObj,
+                        $template,
                         $setfixedObj,
                         $theTable,
                         $autoLoginKey,
@@ -1057,8 +1061,10 @@ class ActionController {
                         $uid,
                         $cmdKey,
                         $markerArray,
+                        $template,
                         $displayObj,
-                        $this->email,
+                        $editView,
+                        $deleteView,
                         $templateCode,
                         $finalDataArray,
                         $origArray,
@@ -1081,7 +1087,8 @@ class ActionController {
                     }
                     $origArray = $dataObj->parseIncomingData($origArray, false);
                     $errorCode = '';
-                    $content = $this->email->sendInfo(
+                    $email = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Email::class);
+                    $content = $email->sendInfo(
                         $conf,
                         $cObj,
                         $langObj,
@@ -1090,7 +1097,7 @@ class ActionController {
                         $this->tca,
                         $markerObj,
                         $dataObj,
-                        $displayObj,
+                        $template,
                         $setfixedObj,
                         $theTable,
                         $autoLoginKey,
@@ -1120,7 +1127,7 @@ class ActionController {
                         '',
                         $fD
                     );
-                    $content = $displayObj->deleteScreen(
+                    $content = $deleteView->render(
                         $markerArray,
                         $conf,
                         $prefixId,
@@ -1132,6 +1139,7 @@ class ActionController {
                         $this->tca,
                         $markerObj,
                         $dataObj,
+                        $template,
                         $theTable,
                         $finalDataArray,
                         $origArray,
@@ -1150,7 +1158,7 @@ class ActionController {
                         '',
                         $fD
                     );
-                    $content = $displayObj->editScreen(
+                    $content = $editView->render(
                         $markerArray,
                         $conf,
                         $cObj,
@@ -1160,6 +1168,7 @@ class ActionController {
                         $this->tca,
                         $markerObj,
                         $dataObj,
+                        $template,
                         $theTable,
                         $prefixId,
                         $finalDataArray,
@@ -1182,7 +1191,7 @@ class ActionController {
                         $fD
                     );
 
-                    $content = $displayObj->createScreen(
+                    $content = $displayObj->render(
                         $markerArray,
                         $conf,
                         $prefixId,
@@ -1194,6 +1203,7 @@ class ActionController {
                         $this->tca,
                         $markerObj,
                         $dataObj,
+                        $template,
                         $cmd,
                         $cmdKey,
                         $controlData->getMode(),
@@ -1217,7 +1227,7 @@ class ActionController {
                         '',
                         $fD
                     );
-                    $content = $displayObj->createScreen(
+                    $content = $displayObj->render(
                         $markerArray,
                         $conf,
                         $prefixId,
@@ -1229,6 +1239,7 @@ class ActionController {
                         $this->tca,
                         $markerObj,
                         $dataObj,
+                        $template,
                         $cmd,
                         $cmdKey,
                         $controlData->getMode(),

@@ -5,7 +5,7 @@ namespace JambageCom\Agency\Controller;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Stanislas Rolland (typo3(arobas)sjbr.ca)
+*  (c) 2018 Stanislas Rolland (typo3(arobas)sjbr.ca)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -41,20 +41,10 @@ namespace JambageCom\Agency\Controller;
 *
 */
 
-
-
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+
 class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
-    public $config = array();
-    public $incomingData = false;
-    public $nc = ''; // "&no_cache=1" if you want that parameter sent.
-    public $additionalUpdateFields = '';
-    public $auth; // object of type tx_agency_auth
-    public $control; // object of type tx_agency_control
-    public $langObj; // object of type tx_agency_lang
-    public $tca;  // object of type tx_agency_tca
-    public $marker; // object of type tx_agency_marker
 
 
     /**
@@ -73,6 +63,9 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         array &$origArray,
         &$staticInfoObj,
         &$dataObj,
+        &$actionController,
+        &$langObj,
+        &$markerObj,
         &$errorMessage,
         \TYPO3\CMS\Frontend\Plugin\AbstractPlugin $pibaseObj,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
@@ -87,14 +80,13 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
 
         \JambageCom\Div2007\Utility\HtmlUtility::generateXhtmlFix();
 
-        $this->tca = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tca::class);
-
+        $tcaObj = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tca::class);
         $confObj->init($conf);
-        $this->tca->init($pibaseObj->extKey, $theTable);
+        $tcaObj->init($pibaseObj->extKey, $theTable);
         $tablesObj = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tables::class);
         $tablesObj->init($theTable);
         $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
-        $authObj->init($confObj); // $config is changed
+        $authObj->init($confObj); // config is changed
         $controlData = GeneralUtility::makeInstance(\JambageCom\Agency\Request\Parameters::class);
         $controlData->init(
             $confObj,
@@ -134,7 +126,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
             }
         }
 
-        $this->langObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Localization::class);
+        $langObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Localization::class);
         $urlObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Url::class);
         $coreQuery = GeneralUtility::makeInstance(
                 \JambageCom\Div2007\Database\CoreQuery::class,
@@ -145,11 +137,9 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
                 \JambageCom\Agency\Domain\Data::class,
                 $coreQuery
             );
-        $this->marker = GeneralUtility::makeInstance(\JambageCom\Agency\View\Marker::class);
+        $markerObj = GeneralUtility::makeInstance(\JambageCom\Agency\View\Marker::class);
         $this->setfixedObj = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\SetFixed::class);
-        $email = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Email::class);
-        $this->control = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\ActionController::class);
-        $email->setExtensionKey($pibaseObj->extKey);
+        $actionController = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\ActionController::class);
 
         $urlObj->init(
             $cObj,
@@ -157,14 +147,14 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
             $controlData->getPrefixId()
         );
 
-        $this->langObj->init1(
+        $langObj->init1(
             $pibaseObj,
             $cObj,
             $conf,
             'pi/class.tx_agency_pi_base.php',
             $pibaseObj->extKey
         );
-        $result = $this->langObj->loadLL();
+        $result = $langObj->loadLL();
         if ($result !== false) {
             $templateFile = $conf['templateFile'];
             $templateCode = $cObj->fileResource($templateFile);
@@ -172,35 +162,33 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
                 (!$templateFile || empty($templateCode))
             ) {
                 $errorText = \tx_div2007_alpha5::getLL_fh002(
-                        $this->langObj,
+                        $langObj,
                         'internal_no_template'
                     );
                 $errorMessage = sprintf($errorText, $templateFile, 'plugin.tx_' . $pibaseObj->extKey . '.templateFile');
             }
 
             if ($controlData->isTokenValid()) {
-                $this->control->init(
+                $actionController->init(
                     $confObj,
-                    $this->langObj,
+                    $langObj,
                     $cObj,
                     $controlData,
-                    $email,
-                    $this->tca,
+                    $tcaObj,
                     $urlObj
                 );
 
                 $dataObj->init(
-                    $cObj,
-                    $this->langObj,
-                    $this->tca,
-                    $this->control,
+                    $langObj,
+                    $tcaObj,
+                    $actionController,
                     $theTable,
                     $templateCode,
                     $controlData,
                     $staticInfoObj
                 );
 
-                $this->control->init2( // only here the $conf is changed
+                $actionController->init2( // only here the $conf is changed
                     $confObj,
                     $staticInfoObj,
                     $theTable,
@@ -212,10 +200,10 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
                 $dataObj->setOrigArray($origArray);
                 $uid = $dataObj->getRecUid();
 
-                $this->marker->init(
+                $markerObj->init(
                     $confObj,
                     $dataObj,
-                    $this->tca,
+                    $tcaObj,
                     $controlData,
                     $controlData->getBackURL(),
                     $controlData->getExtensionKey(),
@@ -228,18 +216,18 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
                 );
 
                 if ($buttonLabelsList != '') {
-                    $this->marker->setButtonLabelsList($buttonLabelsList);
+                    $markerObj->setButtonLabelsList($buttonLabelsList);
                 }
 
                 if ($otherLabelsList != '') {
-                    $this->marker->addOtherLabelsList($otherLabelsList);
+                    $markerObj->addOtherLabelsList($otherLabelsList);
                 }
             } else {
                 $result = false;
-                $errorMessage = $this->langObj->getLL('internal_invalid_token');
+                $errorMessage = $langObj->getLL('internal_invalid_token');
             }
         } else {
-            $errorMessage = $this->langObj->getLL('internal_init_language');
+            $errorMessage = $langObj->getLL('internal_init_language');
         }
 
         return $result;
@@ -259,7 +247,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         $staticInfoObj = null;
         $dataObj = null; // object of type tx_agency_data
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
-        $error_message = '';
+        $errorMessage = '';
         $origArray = array();
 
         $success = $this->init(
@@ -267,6 +255,9 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
             $origArray,
             $staticInfoObj,
             $dataObj,
+            $actionController,
+            $langObj,
+            $markerObj,
             $errorMessage,
             $pibaseObj,
             $cObj,
@@ -283,15 +274,21 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
 
         if ($success) {
             $displayObj = GeneralUtility::makeInstance(\JambageCom\Agency\View\CreateView::class);
-            $content = $this->control->doProcessing(
+            $editView = GeneralUtility::makeInstance(\JambageCom\Agency\View\EditView::class);
+            $deleteView = GeneralUtility::makeInstance(\JambageCom\Agency\View\DeleteView::class);
+            $template = GeneralUtility::makeInstance(\JambageCom\Agency\View\Template::class);
+            $content = $actionController->doProcessing(
                 $pibaseObj->cObj,
                 $confObj,
                 $this->setfixedObj,
-                $this->langObj,
+                $langObj,
+                $template,
                 $displayObj,
+                $editView,
+                $deleteView,
                 $controlData,
                 $dataObj,
-                $this->marker,
+                $markerObj,
                 $staticInfoObj,
                 $theTable,
                 $cmd,
