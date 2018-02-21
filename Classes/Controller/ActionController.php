@@ -810,7 +810,7 @@ class ActionController {
                 !$conf['enableEmailConfirmation'] &&
                 $conf['enableAdminReview'];
             $key =
-                $displayObj->getKeyAfterSave(
+                $template->getKeyAfterSave(
                     $cmd,
                     $cmdKey,
                     $bCustomerConfirmsMode,
@@ -818,8 +818,9 @@ class ActionController {
                     $bCreateReview
                 );
 
+            $afterSave = GeneralUtility::makeInstance(\JambageCom\Agency\View\AfterSaveView::class);
             $errorContent =
-                $displayObj->afterSave(
+                $afterSave->render(
                     $conf,
                     $cObj,
                     $langObj,

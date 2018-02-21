@@ -1,0 +1,205 @@
+<?php
+
+namespace JambageCom\Agency\View;
+
+/***************************************************************
+*  Copyright notice
+*
+*  (c) 2018 Stanislas Rolland (typo3(arobas)sjbr.ca)
+*  All rights reserved
+*
+*  This script is part of the Typo3 project. The Typo3 project is
+*  free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation; either version 2 of the License or
+*  (at your option) any later version.
+*
+*  The GNU General Public License can be found at
+*  http://www.gnu.org/copyleft/gpl.html.
+*  A copy is found in the textfile GPL.txt and important notices to the license
+*  from the author is found in LICENSE.txt distributed with these scripts.
+*
+*
+*  This script is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  This copyright notice MUST APPEAR in all copies of the script!
+***************************************************************/
+/**
+* Part of the agency (Agency Registration) extension.
+*
+* display functions
+*
+* @author	Kasper Skaarhoj <kasper2010@typo3.com>
+* @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
+* @author	Franz Holzinger <franz@ttproducts.de>
+*
+* @package TYPO3
+* @subpackage agency
+*
+*
+*/
+
+
+
+class AfterSaveView {
+
+    /**
+    * Displaying the page here that says, the record has been saved.
+    * You're able to include the saved values by markers.
+    *
+    * @param array $cObj: the cObject
+    * @param array $langObj: the language object
+    * @param array $controlData: the object of the control data
+    * @param string $theTable: the table in use
+    * @param array $autoLoginKey: the auto-login key
+    * @param string  $subpartMarker: the template subpart marker
+    * @param array  $row: the data array, if any
+    * @param array  $errorFieldArray: array of field with errors (former $this->data->inError[$theField])
+    * @return string  the template with substituted parts and markers
+    */
+    public function render (
+        $conf,
+        $cObj,
+        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Request\Parameters $controlData,
+        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
+        $tcaObj,
+        $markerObj,
+        $dataObj,
+        $setfixedObj,
+        \JambageCom\Agency\View\Template $template,
+        $theTable,
+        $autoLoginKey,
+        $prefixId,
+        $dataArray,
+        array $origArray,
+        $securedArray,
+        $cmd,
+        $cmdKey,
+        $key,
+        $templateCode,
+        &$markerArray,
+        $errorFieldArray,
+        &$content
+    ) {
+        $errorContent = '';
+
+            // Display confirmation message
+        $subpartMarker = '###TEMPLATE_' . $key . '###';
+        $templateCode = $cObj->getSubpart($templateCode, $subpartMarker);
+
+        if ($templateCode) {
+                // Remove non-included fields
+            $templateCode =
+                $template->removeRequired(
+                    $conf,
+                    $cObj,
+                    $controlData,
+                    $dataObj,
+                    $theTable,
+                    $cmdKey,
+                    $templateCode,
+                    $errorFieldArray
+                );
+            $markerArray =
+                $markerObj->fillInMarkerArray(
+                    $markerArray,
+                    $dataArray,
+                    $securedArray,
+                    $controlData,
+                    $dataObj,
+                    $confObj,
+                    '',
+                    true,
+                    'FIELD_',
+                    true
+                );
+            $markerObj->addStaticInfoMarkers(
+                $markerArray,
+                $langObj,
+                $prefixId,
+                $dataArray
+            );
+
+            $tcaObj->addTcaMarkers(
+                $markerArray,
+                $conf,
+                $langObj,
+                $controlData,
+                $dataArray,
+                $origArray,
+                $cmd,
+                $cmdKey,
+                $theTable,
+                $prefixId,
+                true
+            );
+
+            $markerObj->addLabelMarkers(
+                $markerArray,
+                $conf,
+                $cObj,
+                $langObj,
+                $controlData->getExtensionKey(),
+                $theTable,
+                $dataArray,
+                $origArray,
+                $securedArray,
+                array(),
+                $controlData->getRequiredArray(),
+                $dataObj->getFieldList(),
+                $GLOBALS['TCA'][$theTable]['columns'],
+                '',
+                false
+            );
+
+            if (
+                $cmdKey == 'create' &&
+                !$conf['enableEmailConfirmation'] &&
+                !$controlData->enableAutoLoginOnCreate($conf)
+            ) {
+                $markerObj->addPasswordTransmissionMarkers(
+                    $markerArray,
+                    $controlData->getUsePasswordAgain()
+                );
+            }
+
+            if (isset($conf[$cmdKey . '.']['marker.'])) {
+                if ($conf[$cmdKey . '.']['marker.']['computeUrl'] == '1') {
+                    $this->setfixedObj->computeUrl(
+                        $cmd,
+                        $prefixId,
+                        $cObj,
+                        $controlData,
+                        $markerArray,
+                        $conf['setfixed.'],
+                        $dataArray,
+                        $theTable,
+                        $conf['useShortUrls'],
+                        $conf['edit.']['setfixed'],
+                        $autoLoginKey,
+                        $conf['confirmType']
+                    );
+                }
+            }
+
+            $uppercase = false;
+            $deleteUnusedMarkers = true;
+            $content = $cObj->substituteMarkerArray(
+                $templateCode,
+                $markerArray,
+                '',
+                $uppercase,
+                $deleteUnusedMarkers
+            );
+        } else {
+            $errorText = $langObj->getLL('internal_no_subtemplate');
+            $errorContent = sprintf($errorText, $subpartMarker);
+        }
+        return $errorContent;
+    }
+}
+

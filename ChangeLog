@@ -1,3 +1,6 @@
+2018-02-21 Franz Holzinger <franz@ttproducts.de>
+    * extract methods render for class AfterSaveView and getKeyAfterSave for Template out of the CreateView methods afterSave and getKeyAfterSave
+
 2018-02-13 Franz Holzinger <franz@ttproducts.de>
     * extract classes DeleteView, EditView and Template out of CreateView
 
