@@ -322,53 +322,5 @@ class CreateView {
 
         return $content;
     } // render
-
-    /**
-    * Initializes a template, filling values for data and labels
-    *
-    * @param array $cObj: the cObject
-    * @param array $langObj: the language object
-    * @param array $controlData: the object of the control data
-    * @param string  $subpartMarker: the template subpart marker
-    * @param array  $row: the data array or empty array
-    * @return string  the template with substituted parts and markers
-    */
-    public function getSimpleTemplate (
-        $conf,
-        $cObj,
-        \JambageCom\Agency\Api\Localization $langObj,
-        $markerObj,
-        $templateCode,
-        $subpartMarker,
-        array $markerArray,
-        $bCheckEmpty = true
-    ) {
-        $templateCode = $cObj->getSubpart($templateCode, $subpartMarker);
-
-        if ($templateCode != '') {
-            $markerObj->addOtherLabelMarkers(
-                $markerArray,
-                $cObj,
-                $langObj,
-                $conf
-            );
-
-            $deleteUnusedMarkers = true;
-
-            $result =
-                $cObj->substituteMarkerArray(
-                    $templateCode,
-                    $markerArray,
-                    '',
-                    false,
-                    $deleteUnusedMarkers
-                );
-        } else if ($bCheckEmpty) {
-            $errorText = $langObj->getLL('internal_no_subtemplate');
-            $result = sprintf($errorText, $subpartMarker);
-        }
-
-        return $result;
-    }   // getSimpleTemplate
 }
 

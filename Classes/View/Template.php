@@ -415,5 +415,115 @@ class Template {
 
         return $result;
     }	// getPlainTemplate
+
+    /**
+    * Initializes a template, filling values for data and labels
+    *
+    * @param array $cObj: the cObject
+    * @param array $langObj: the language object
+    * @param array $controlData: the object of the control data
+    * @param string  $subpartMarker: the template subpart marker
+    * @param array  $row: the data array or empty array
+    * @return string  the template with substituted parts and markers
+    */
+    public function getSimpleTemplate (
+        $conf,
+        $cObj,
+        \JambageCom\Agency\Api\Localization $langObj,
+        $markerObj,
+        $templateCode,
+        $subpartMarker,
+        array $markerArray,
+        $bCheckEmpty = true
+    ) {
+        $templateCode = $cObj->getSubpart($templateCode, $subpartMarker);
+
+        if ($templateCode != '') {
+            $markerObj->addOtherLabelMarkers(
+                $markerArray,
+                $cObj,
+                $langObj,
+                $conf
+            );
+
+            $deleteUnusedMarkers = true;
+
+            $result =
+                $cObj->substituteMarkerArray(
+                    $templateCode,
+                    $markerArray,
+                    '',
+                    false,
+                    $deleteUnusedMarkers
+                );
+        } else if ($bCheckEmpty) {
+            $errorText = $langObj->getLL('internal_no_subtemplate');
+            $result = sprintf($errorText, $subpartMarker);
+        }
+
+        return $result;
+    }   // getSimpleTemplate
+
+    /**
+    * Determine which template subpart should be used atfer the last save operation
+    *
+    * @param string $cmd: the cmd that was executed
+    * @param string $cmdKey: the command key that was use
+    * @param boolean $bCustomerConfirmsMode =
+    * 			($cmd == '' || $cmd == 'create') &&
+    *			($cmdKey != 'edit') &&
+    *			$conf['enableAdminReview'] &&
+    *			($conf['enableEmailConfirmation'] || $conf['infomail'])
+    * @param boolean $bSetfixed =
+    *				This is the case where the user or admin has to confirm
+    *			$conf['enableEmailConfirmation'] ||
+    *			($this->theTable == 'fe_users' && $conf['enableAdminReview']) ||
+    *			$conf['setfixed']
+    * @param boolean $bCreateReview =
+    *				This is the case where the user does not have to confirm, but has to wait for admin review
+    *				This applies only on create ($bDefaultMode) and to fe_users
+    *				$bCreateReview implies $bSetfixed
+    *			!$conf['enableEmailConfirmation'] &&
+    *			$conf['enableAdminReview']
+    * @return boolean or string
+    */
+    public function getKeyAfterSave (
+        $cmd,
+        $cmdKey,
+        $bCustomerConfirmsMode,
+        $bSetfixed,
+        $bCreateReview
+    ) {
+        $result = false;
+        switch ($cmd) {
+            case 'delete':
+                $result = 'DELETE' . SAVED_SUFFIX;
+                break;
+            case 'edit':
+            case 'password':
+                $result = 'EDIT' . SAVED_SUFFIX;
+                break;
+            case 'invite':
+                $result = SETFIXED_PREFIX . 'INVITE';
+                break;
+            case 'create':
+            default:
+                if ($cmdKey == 'edit') {
+                    $result = 'EDIT' . SAVED_SUFFIX;
+                } else if ($bSetfixed) {
+                    $result = SETFIXED_PREFIX . 'CREATE';
+
+                    if ($bCreateReview) {
+                        $result = 'CREATE' . SAVED_SUFFIX . '_REVIEW';
+                    } else if ($bCustomerConfirmsMode) {
+                        $result .= '_REVIEW';
+                    }
+                } else {
+                    $result = 'CREATE' . SAVED_SUFFIX;
+                }
+                break;
+        }
+        return $result;
+    }
 }
 

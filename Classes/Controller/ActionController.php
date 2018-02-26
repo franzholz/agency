@@ -756,7 +756,7 @@ class ActionController {
                 $controlData->getFeUserData('task') == 'cancel' // the DELETE has been cancelled
             ) {
                 $content =
-                    $displayObj->getSimpleTemplate(
+                    $template->getSimpleTemplate(
                         $conf,
                         $cObj,
                         $langObj,
