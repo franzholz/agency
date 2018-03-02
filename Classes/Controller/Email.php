@@ -97,7 +97,6 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         $markerObj,
         $dataObj,
         \JambageCom\Agency\View\Template $template,
-        $setfixedObj,
         $theTable,
         $autoLoginKey,
         $prefixId,
@@ -177,7 +176,6 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                         $markerObj,
                         $dataObj,
                         $template,
-                        $setfixedObj,
                         $theTable,
                         $autoLoginKey,
                         $prefixId,
@@ -206,7 +204,6 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                         $markerObj,
                         $dataObj,
                         $template,
-                        $setfixedObj,
                         $theTable,
                         $autoLoginKey,
                         $prefixId,
@@ -323,7 +320,6 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         $markerObj,
         $dataObj,
         \JambageCom\Agency\View\Template $template,
-        $setfixedObj,
         $theTable,
         $autoLoginKey,
         $prefixId,
@@ -613,7 +609,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             }
 
             $markerArray['###SYS_AUTHCODE###'] = $authObj->generateAuthCode($row);
-            $setfixedObj->computeUrl(
+            \JambageCom\Agency\Setfixed\SetFixedUrls::compute(
                 $cmd,
                 $prefixId,
                 $cObj,

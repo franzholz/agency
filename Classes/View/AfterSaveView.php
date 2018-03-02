@@ -69,7 +69,6 @@ class AfterSaveView {
         $tcaObj,
         $markerObj,
         $dataObj,
-        $setfixedObj,
         \JambageCom\Agency\View\Template $template,
         $theTable,
         $autoLoginKey,
@@ -169,7 +168,7 @@ class AfterSaveView {
 
             if (isset($conf[$cmdKey . '.']['marker.'])) {
                 if ($conf[$cmdKey . '.']['marker.']['computeUrl'] == '1') {
-                    $this->setfixedObj->computeUrl(
+                    \JambageCom\Agency\Setfixed\SetFixedUrls::compute(
                         $cmd,
                         $prefixId,
                         $cObj,
