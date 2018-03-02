@@ -68,8 +68,6 @@ class Parameters
     public $failure = false; // is set if data did not have the required fields set.
     public $sys_language_content;
     public $feUserData = array();
-        // Names of secured fields
-    static protected $securedFieldArray = array('password', 'password_again', 'tx_agency_password');
     public $bValidRegHash;
     public $regHash;
     private $confObj;
@@ -252,7 +250,7 @@ class Parameters
 
             // Cleanup input values
         $feUserData = $this->getFeUserData();
-        $this->secureInput($feUserData);
+        \JambageCom\Agency\Security\SecuredData::secureInput($feUserData);
 
         if ($this->getUsePassword()) {
             // Establishing compatibility with the extension Felogin
@@ -537,23 +535,6 @@ class Parameters
     }
 
 
-    /* reduces to the field list which are allowed to be shown */
-    public function getOpenFields ($fields) {
-        $securedFieldArray = self::getSecuredFieldArray();
-        $newFieldArray = array();
-        $fieldArray = GeneralUtility::trimExplode(',', $fields);
-        array_unique($fieldArray);
-
-        foreach ($securedFieldArray as $securedField) {
-            $k = array_search($securedField, $fieldArray);
-            if ($k !== false)   {
-                unset($fieldArray[$k]);
-            }
-        }
-        $fields = implode(',', $fieldArray);
-        return $fields;
-    }
-
 
     /*************************************
     * SECURED ARRAY HANDLING
@@ -567,23 +548,13 @@ class Parameters
     public function readSecuredArray () {
         $securedArray = array();
         $sessionData = $this->readSessionData();
-        $securedFieldArray = self::getSecuredFieldArray();
-        foreach ($securedFieldArray as $securedField) {
+        $securedFields = \JambageCom\Agency\Security\SecuredData::getSecuredFields();
+        foreach ($securedFields as $securedField) {
             if (isset($sessionData[$securedField])) {
                 $securedArray[$securedField] = $sessionData[$securedField];
             }
         }
         return $securedArray;
-    }
-
-
-    /**
-    * Gets the array of names of secured fields
-    *
-    * @return   array   names of secured fields
-    */
-    static public function getSecuredFieldArray () {
-        return self::$securedFieldArray;
     }
 
 
@@ -902,64 +873,6 @@ class Parameters
         $data = array();
         $this->writeSessionData($data, true, $keepRedirectUrl);
     }
-
-
-    /**
-    * Changes potential malicious script code of the input to harmless HTML
-    *
-    * @return void
-    */
-    static public function getSecuredValue (
-        $field,
-        $value,
-        $bHtmlSpecial
-    ) {
-        $securedFieldArray = self::getSecuredFieldArray();
-
-        if (
-            $field != '' &&
-            in_array($field, $securedFieldArray)
-        ) {
-            // nothing for password and password_again
-        } else {
-            $value = htmlspecialchars_decode($value);
-            if ($bHtmlSpecial) {
-                $value = htmlspecialchars($value);
-            }
-        }
-        $result = $value;
-        return $result;
-    }
-
-
-    /**
-    * Changes potential malicious script code of the input to harmless HTML
-    *
-    * @return void
-    */
-    static public function secureInput (
-        &$dataArray,
-        $bHtmlSpecial = true
-    ) {
-        if (isset($dataArray) && is_array($dataArray)) {
-            foreach ($dataArray as $k => $value) {
-                if (is_array($value)) {
-                    foreach ($value as $k2 => $value2) {
-                        if (is_array($value2)) {
-                            foreach ($value2 as $k3 => $value3) {
-                                $dataArray[$k][$k2][$k3] = self::getSecuredValue($k3, $value3, $bHtmlSpecial);
-                            }
-                        } else {
-                            $dataArray[$k][$k2] = self::getSecuredValue($k2, $value2, $bHtmlSpecial);
-                        }
-                    }
-                } else {
-                    $dataArray[$k] = self::getSecuredValue($k, $value, $bHtmlSpecial);
-                }
-            }
-        }
-    }
-
 
     // example: plugin.tx_agency_pi.conf.sys_dmail_category.ALL.sys_language_uid = 0
     public function getSysLanguageUid ($conf, $theCode, $theTable) {

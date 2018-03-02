@@ -115,7 +115,7 @@ class ActionController {
         $modifyPassword = false;
 
         $bHtmlSpecialChars = false;
-        $controlData->secureInput($dataArray, $bHtmlSpecialChars);
+        \JambageCom\Agency\Security\SecuredData::secureInput($dataArray, $bHtmlSpecialChars);
 
         if (
             $theTable == 'fe_users' &&

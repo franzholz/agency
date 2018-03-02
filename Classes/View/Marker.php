@@ -1122,7 +1122,7 @@ var submitFile = function(id){
             $fieldArray = array_diff($fieldArray, array('hidden', 'disable'));
 
             $fields = implode(',', $fieldArray);
-            $fields = $this->controlData->getOpenFields($fields);
+            $fields = \JambageCom\Agency\Security\SecuredData::getOpenFields($fields);
             $fieldArray = explode(',', $fields);
 
             foreach ($fieldArray as $theField) {

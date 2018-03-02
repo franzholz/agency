@@ -297,7 +297,7 @@ class CreateView {
                             )
                         )
                     );
-                $fields = $controlData->getOpenFields($fields);
+                $fields = \JambageCom\Agency\Security\SecuredData::getOpenFields($fields);
                 $modData =
                     $dataObj->modifyDataArrForFormUpdate(
                         $conf,

@@ -2047,7 +2047,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
             $inputArr[$theField] = $value;
         }
 
-        $this->controlData->secureInput($inputArr, true);
+        \JambageCom\Agency\Security\SecuredData::secureInput($inputArr, true);
 
         return $inputArr;
     }   // modifyDataArrForFormUpdate

@@ -279,7 +279,7 @@ class EditView {
                 );
             $fields = $dataObj->getFieldList() . ',' . $dataObj->getAdditionalUpdateFields();
             $fields = implode(',', array_intersect(explode(',', $fields), GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)));
-            $fields = $controlData->getOpenFields($fields);
+            $fields = \JambageCom\Agency\Security\SecuredData::getOpenFields($fields);
             $updateJS =
                 FrontendUtility::getUpdateJS(
                     $modData,
