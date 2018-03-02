@@ -44,6 +44,9 @@ namespace JambageCom\Agency\Controller;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use JambageCom\Agency\Controller\Email;
+
+
 class SetFixed {
 
     /**
@@ -85,7 +88,7 @@ class SetFixed {
         $token,
         &$hasError
     ) {
-        $email = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Email::class);
+        $email = GeneralUtility::makeInstance(Email::class);
         $content = false;
         $row = $origArray;
         $usesPassword = false;

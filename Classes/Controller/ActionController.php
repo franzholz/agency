@@ -45,6 +45,9 @@ namespace JambageCom\Agency\Controller;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
+use JambageCom\Agency\Controller\Email;
+
+
 class ActionController {
     public $langObj;
     public $auth;
@@ -1088,7 +1091,7 @@ class ActionController {
                     }
                     $origArray = $dataObj->parseIncomingData($origArray, false);
                     $errorCode = '';
-                    $email = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Email::class);
+                    $email = GeneralUtility::makeInstance(Email::class);
                     $content = $email->sendInfo(
                         $conf,
                         $cObj,

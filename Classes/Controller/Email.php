@@ -1,6 +1,6 @@
 <?php
 
-namespace JambageCom\Agency\Api;
+namespace JambageCom\Agency\Controller;
 
 /***************************************************************
 *  Copyright notice
