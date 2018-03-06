@@ -113,7 +113,7 @@ class tx_agency_statusReport implements tx_reports_StatusProvider {
 	 */
 	protected function checkIfFrontEndLoginSecurityLevelIsCorrectlySet() {
 		$title = $GLOBALS['LANG']->sL('LLL:EXT:' . AGENCY_EXT . '/hooks/statusreport/locallang.xlf:Front_end_login_security_level');
-		$supportedTransmissionSecurityLevels = array('normal', 'rsa');
+		$supportedTransmissionSecurityLevels = array('', 'normal', 'rsa');
 		if (!in_array($GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'], $supportedTransmissionSecurityLevels)) {
 			$value = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
 			$message = $GLOBALS['LANG']->sL('LLL:EXT:' . AGENCY_EXT . '/hooks/statusreport/locallang.xlf:must_be_normal_or_rsa');
@@ -155,6 +155,7 @@ class tx_agency_statusReport implements tx_reports_StatusProvider {
 		);
 	}
 }
+
 if (defined('TYPO3_MODE') && isset($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/hooks/statusreport/class.tx_agency_statusReport.php'])) {
 	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/' . AGENCY_EXT . '/hooks/statusreport/class.tx_agency_statusReport.php']);
 }
