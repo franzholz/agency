@@ -1,4 +1,7 @@
 
+2018-03-07 Franz Holzinger  <franz@ttproducts.de>
+    * copy the language files into Resorces/Private/Language in XLF format and rename the root locallang.xlf into locallang_db_layout.xlf
+
 2018-03-02 Franz Holzinger <franz@ttproducts.de>
     * rename Classes/Api/Email.php => Classes/Controller/Email.php
     * extract methods computeUrl and storeFixedPiVars from class Controller/Setfixed into class Setfixed/SetfixedUrls as compute and storeFixedPiVars. Remove the not any more needed method parameter variables $setfixedObj from several classes.
