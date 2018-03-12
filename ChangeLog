@@ -1,5 +1,5 @@
 2018-03-12 Franz Holzinger  <franz@ttproducts.de>
-    * bugfix: "on" = 0 is TRUE. The Tca class method modifyRow must compare to "on" with three equation signs ===. No further support for "on" as a valid value for a check field. Use 1 instead.
+    * bugfix: "on" = 0 is TRUE. The Tca class method modifyRow must compare to "on" with three equation signs ===. The support for "on" as a valid value for a check field will continue, however it should be 1.
 
 2018-03-07 Franz Holzinger  <franz@ttproducts.de>
     * copy the language files into Resorces/Private/Language in XLF format and rename the root locallang.xlf into locallang_db_layout.xlf
