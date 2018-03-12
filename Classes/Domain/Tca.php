@@ -220,12 +220,11 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                         }
                     } else {
                         if (
-                            $dataArray[$colName] == '1' ||
-                            $dataArray[$colName] == 'on'
+                            $dataArray[$colName] == 1
                         ) {
-                            $dataArray[$colName] = '1';
+                            $dataArray[$colName] = 1;
                         } else {
-                            $dataArray[$colName] = '0';
+                            $dataArray[$colName] = 0;
                         }
                     }
                     break;

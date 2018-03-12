@@ -237,7 +237,7 @@ class tx_agency_tca {
 					} else {
 						if (
 							$dataArray[$colName] == '1' ||
-							$dataArray[$colName] == 'on'
+							$dataArray[$colName] === 'on'
 						) {
 							$dataArray[$colName] = '1';
 						} else {
