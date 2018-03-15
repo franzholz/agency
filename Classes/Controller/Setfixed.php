@@ -47,7 +47,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use JambageCom\Agency\Controller\Email;
 
 
-class SetFixed {
+class Setfixed {
 
     /**
     * Process the front end user reply to the confirmation request
