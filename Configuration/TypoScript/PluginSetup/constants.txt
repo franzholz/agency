@@ -3,7 +3,7 @@
 plugin.tx_agency {
 
     # cat=plugin.tx_agency/file; type=file[html,htm,tmpl,txt]; label= Template File: HTML-template file
-  file.templateFile = EXT:agency/template/tx_agency_css_tmpl.html
+  file.templateFile = EXT:agency/Resources/Private/Templates/AgencyRegistrationTemplate.html
 
     # cat=plugin.tx_agency/enable; type=boolean; label= Force file deletion: On record deletion, related images and files will be deleted even if the record is only marked 'deleted'
   forceFileDelete = 1

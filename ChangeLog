@@ -1,3 +1,6 @@
+2018-03-26 Franz Holzinger  <franz@ttproducts.de>
+    * copy the template file template/tx_agency_css_tmpl.html into Resorces/Private/Templates/AgencyRegistrationTemplate.html
+
 2018-03-12 Franz Holzinger  <franz@ttproducts.de>
     * bugfix: "on" = 0 is TRUE. The Tca class method modifyRow must compare to "on" with three equation signs ===. The support for "on" as a valid value for a check field will continue, however it should be 1.
 
