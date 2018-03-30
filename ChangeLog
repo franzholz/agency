@@ -1,3 +1,7 @@
+2018-03-30 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix: do not decrypt a RSA password when it is empty or has no required rsa prefix.
+    * new feature: add a javacript generator as a workaround to deal with a password again field for the RSA transmission security. This is necessary to avoid a second encryption and to come into other error cases. Encrpted passwords cannot be verified directly.
+
 2018-03-26 Franz Holzinger  <franz@ttproducts.de>
     * copy the template file template/tx_agency_css_tmpl.html into Resorces/Private/Templates/AgencyRegistrationTemplate.html
 

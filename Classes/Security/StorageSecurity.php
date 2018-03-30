@@ -49,7 +49,7 @@ use TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility;
 
 class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
         // Extension key
-    protected $extKey = AGENCY_EXT;
+    protected $extensionKey = AGENCY_EXT;
 
     /**
     * Gets the storage security level
@@ -86,7 +86,7 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                     } else {
                         $encryptedPassword = false;
                         // Could not get a salting instance from saltedpasswords
-                        // Should not happen: checked in method checkRequirements
+                        // This should not happen: It has been checked on the beginning in the method checkRequirements.
                     }
                     break;
                 case 'normal':
@@ -105,14 +105,14 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     * @param array $feuData: incoming fe_users parameters
     * @param string &$autoLoginKey: returns auto-login key
     * @return boolean true, if auto-login should be attempted
-    */
+    */  
     public function getAutoLoginIsRequested (
-        array $feuData,
+        array $feuserData,
         &$autoLoginKey
     ) {
         $autoLoginIsRequested = false;
-        if (isset($feuData['key']) && $feuData['key'] !== '') {
-            $autoLoginKey = $feuData['key'];
+        if (isset($feuserData['key']) && $feuserData['key'] !== '') {
+            $autoLoginKey = $feuserData['key'];
             $autoLoginIsRequested = true;
         }
 
@@ -183,11 +183,11 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                                 // Failed to decrypt auto login password
                             $message =
                                 $GLOBALS['TSFE']->sL(
-                                    'LLL:EXT:' . $this->extKey . '/pi/locallang.xml:internal_decrypt_auto_login_failed'
+                                    'LLL:EXT:' . $this->extensionKey . '/pi/locallang.xml:internal_decrypt_auto_login_failed'
                                 );
                             GeneralUtility::sysLog(
                                 $message,
-                                $this->extKey,
+                                $this->extensionKey,
                                 GeneralUtility::SYSLOG_SEVERITY_ERROR
                             );
                         }
