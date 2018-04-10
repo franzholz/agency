@@ -325,12 +325,17 @@
 			<label index="v_infomail_lost_password">Enter the email address under which you are registered.</label>
 			<label index="v_infomail_lost_password_confirm">The email with the lost password has been sent to &lt;b&gt;%4$s&lt;/b&gt;.</label>
 			<label index="v_infomail_lost_password_enter_new">The email to enter a new password has been sent to &lt;b&gt;%4$s&lt;/b&gt;.</label>
+			<label index="v_infomail_lost_password_email_not_found">No user has been registered for the email address for which you have requested to enter a new password: &lt;b&gt;%4$s&lt;/b&gt;.</label>
 			<label index="v_infomail_lost_password_subject">Information about your registration with &lt;b&gt;%1$s&lt;/b&gt;.</label>
 			<label index="v_infomail_lost_password_subject_informal">Information about your registration with &lt;b&gt;%1$s&lt;/b&gt;.</label>
 			<label index="v_infomail_lost_password_message1">The email message will contain a link that will allow you to enter your new password for &lt;b&gt;%1$s&lt;/b&gt;.</label>
 			<label index="v_infomail_lost_password_message1_informal">The email message will contain a link that will allow you to enter your new password for &lt;b&gt;%1$s&lt;/b&gt;.</label>
 			<label index="v_infomail_lost_password_message2">Please follow the instructions given in this email message to recreate your membership password.</label>
 			<label index="v_infomail_lost_password_message2_informal">Please follow the instructions given in this email message to recreate your membership password.</label>
+			<label index="v_infomail_lost_password_message3">Please recheck your email address.</label>
+			<label index="v_infomail_lost_password_message3_informal">Please recheck your email address.</label>
+			<label index="v_infomail_lost_password_message4">An email has been sent to your email address to inform you that no user is registered.</label>
+			<label index="v_infomail_lost_password_message4_informal">An email has been sent to your email address to inform you that no user is registered.</label>
 			<label index="v_to_the_administrator">To the administrator of memberships with %1$s</label>
 			<label index="v_now_enter_your_username">You may now enter with your username &lt;b&gt;%2$s&lt;/b&gt; and your password</label>
 			<label index="v_now_enter_your_username_informal">You may now enter with your username &lt;b&gt;%2$s&lt;/b&gt; and your password</label>

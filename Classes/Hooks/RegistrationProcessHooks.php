@@ -23,7 +23,7 @@ namespace JambageCom\Agency\Hooks;
 */
 
 use JambageCom\Agency\Configuration\ConfigurationStore;
-use JambageCom\Agency\Controller\SetFixed;
+use JambageCom\Agency\Controller\Setfixed;
 use JambageCom\Agency\Domain\Data;
 use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\View\Marker;
@@ -157,6 +157,7 @@ class RegistrationProcessHooks
         ConfigurationStore $confObj,
         Marker $markerObject
     )
-    {}
-
+    {
+        // add your global markers to the $markerArray here
+    }
 }

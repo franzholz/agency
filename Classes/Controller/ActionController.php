@@ -46,13 +46,14 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 use JambageCom\Agency\Controller\Email;
+use JambageCom\Agency\Security\SecuredData;
+use JambageCom\Agency\Utility\SessionUtility;
 
 
 class ActionController {
     public $langObj;
     public $auth;
     public $email;
-    public $tca;
     public $requiredArray; // List of required fields
     public $controlData;
         // Commands that may be processed when no user is logged in
@@ -64,12 +65,10 @@ class ActionController {
         \JambageCom\Agency\Api\Localization $langObj,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Request\Parameters $controlData,
-        $tca,
         $urlObj
     ) {
         $this->langObj = $langObj;
         $conf = $confObj->getConf();
-        $this->tca = $tca;
         $this->urlObj = $urlObj;
             // Retrieve the extension key
         $extensionKey = $controlData->getExtensionKey();
@@ -102,8 +101,10 @@ class ActionController {
         $theTable,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Domain\Data &$dataObj,
+        \JambageCom\Agency\Domain\Tca $tcaObj,
         &$adminFieldList,
-        array &$origArray
+        array &$origArray,
+        &$errorMessage
     ) {
         $conf = $confObj->getConf();
         $tablesObj = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tables::class);
@@ -115,17 +116,27 @@ class ActionController {
         $modifyPassword = false;
 
         $bHtmlSpecialChars = false;
-        \JambageCom\Agency\Security\SecuredData::secureInput($dataArray, $bHtmlSpecialChars);
+        SecuredData::secureInput($dataArray, $bHtmlSpecialChars);
 
         if (
             $theTable == 'fe_users' &&
             !empty($dataArray)
         ) {
-            $modifyPassword = $controlData->securePassword($dataArray);
+            $modifyPassword =
+                SecuredData::securePassword(
+                    $extensionKey,
+                    $dataArray,
+                    $errorMessage
+                );
+
+            if ($modifyPassword === false) {
+                return false;
+            }
         }
         $dataObj->setDataArray($dataArray);
 
-        $fieldlist = implode(',', \tx_div2007_core::getFields($theTable));
+        $fieldlist =
+            implode(',', \JambageCom\Div2007\Utility\TableUtility::getFields($theTable));
 
         // new
         if ($cmd == 'password') {
@@ -134,7 +145,6 @@ class ActionController {
                 $fieldlist .= ',password';
             }
         }
-
         $dataObj->setFieldList($fieldlist);
 
         if (
@@ -142,7 +152,7 @@ class ActionController {
             is_array($dataArray) &&
             !empty($dataArray)
         ) {
-            $this->tca->modifyRow(
+            $tcaObj->modifyRow(
                 $staticInfoObj,
                 $theTable,
                 $dataArray,
@@ -175,7 +185,7 @@ class ActionController {
                 );
 
             if (isset($newOrigArray) && is_array($newOrigArray)) {
-                $this->tca->modifyRow(
+                $tcaObj->modifyRow(
                     $staticInfoObj,
                     $theTable,
                     $newOrigArray,
@@ -304,10 +314,12 @@ class ActionController {
 
             if ($conf[$cmdKey . '.']['useEmailAsUsername']) {
                 $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), array('username')));
+
                 if ($cmdKey == 'create' || $cmdKey == 'invite') {
                     $conf[$cmdKey . '.']['fields'] = implode(',', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',email', 1));
                     $conf[$cmdKey . '.']['required'] = implode(',', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',email', 1));
                 }
+
                 if (
                     ($cmdKey == 'edit' || $cmdKey == 'password') &&
                     $controlData->getSetfixedEnabled()
@@ -379,7 +391,7 @@ class ActionController {
         }
         $confObj->setConf($conf);
 
-            // Setting requiredArr to the fields in "required" fields list intersected with the total field list in order to remove invalid fields.
+            // Setting requiredArray to the fields in "required" fields list intersected with the total field list in order to remove invalid fields.
         $requiredArray = array_intersect(
             GeneralUtility::trimExplode(
                 ',',
@@ -427,6 +439,7 @@ class ActionController {
             }
         }
 
+        $additionalFields = array_unique($additionalFields);
         $dataObj->setAdditionalIncludedFields($additionalFields);
         $fieldArray = array_merge($fieldArray, $additionalFields);
         $fieldArray = array_unique($fieldArray);
@@ -442,7 +455,7 @@ class ActionController {
     * @return string  text to display
     */
     public function doProcessing (
-        $cObj,
+        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         $setfixedObj,
         \JambageCom\Agency\Api\Localization $langObj,
@@ -451,7 +464,8 @@ class ActionController {
         \JambageCom\Agency\View\EditView $editView,
         \JambageCom\Agency\View\DeleteView $deleteView,
         \JambageCom\Agency\Request\Parameters $controlData,
-        $dataObj,
+        \JambageCom\Agency\Domain\Data $dataObj,
+        \JambageCom\Agency\Domain\Tca $tcaObj,
         \JambageCom\Agency\View\Marker $markerObj,
         $staticInfoObj,
         $theTable,
@@ -499,17 +513,16 @@ class ActionController {
             $finalDataArray = $dataArray;
         } else if ($dataObj->bNewAvailable()) {
             if ($theTable == 'fe_users') {
-                $securedArray = $controlData->readSecuredArray();
+                $securedArray = SecuredData::readSecuredArray($extensionKey);
             }
             $finalDataArray = $dataArray;
-            \tx_div2007_core::mergeRecursiveWithOverrule(
+            \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
                 $finalDataArray,
                 $securedArray
             );
         } else {
             $finalDataArray = $dataArray;
         }
-
         $hasSubmitData = (
             $controlData->getFeUserData('submit') != '' ||
             $controlData->getFeUserData('submit-security') != ''
@@ -525,7 +538,12 @@ class ActionController {
         if ($doNotSaveData != '') {
             $bDoNotSave = true;
             $controlData->setDoNotSave(true);
-            $controlData->clearSessionData();
+            SessionUtility::clearData(
+                $extensionKey,
+                true,
+                $controlData->readToken(),
+                $controlData->readRedirectUrl()
+            );
         }
 
         $markerArray = $markerObj->getArray();
@@ -594,7 +612,12 @@ class ActionController {
                     is_array($evalErrors['password']) &&
                     in_array('twice', $evalErrors['password'])
                 ) {
-                    $controlData->clearSessionData();
+                    SessionUtility::clearData(
+                        $extensionKey,
+                        true,
+                        $controlData->readToken(),
+                        $controlData->readRedirectUrl()
+                    );
                 }
 
                 if (
@@ -603,7 +626,7 @@ class ActionController {
                 ) {
                     $markerObj->setArray($markerArray);
                     $finalDataArray =
-                        tx_div2007_alpha5::userProcess_fh002(
+                        \JambageCom\Div2007\Utility\SystemUtility::userProcess(
                             $this,
                             $conf,
                             'evalFunc',
@@ -638,7 +661,12 @@ class ActionController {
                     is_array($evalErrors['password']) &&
                     in_array('twice', $evalErrors['password'])
                 ) {
-                    $controlData->clearSessionData();
+                    SessionUtility::clearData(
+                        $extensionKey,
+                        true,
+                        $controlData->readToken(),
+                        $controlData->readRedirectUrl()
+                    );
                 }
 
                 $markerObj->setArray($markerArray);
@@ -661,7 +689,8 @@ class ActionController {
                         $cmdKey == 'invite' ||
                         $cmdKey == 'create'
                     ) {
-                        $controlData->generatePassword(
+                        SecuredData::generatePassword(
+                            $extensionKey,
                             $cmdKey,
                             $conf,
                             $conf[$cmdKey . '.'],
@@ -671,7 +700,7 @@ class ActionController {
                     }
 
                     // If inviting or if auto-login will be required on confirmation, we store an encrypted version of the password
-                    $savePassword = $controlData->readPasswordForStorage();
+                    $savePassword = SecuredData::readPasswordForStorage($extensionKey);
                 }
 
                 $newDataArray = array();
@@ -704,7 +733,12 @@ class ActionController {
                         // do nothing
                         // conserve the session for the following auto login
                     } else {
-                        $controlData->clearSessionData();
+                        SessionUtility::clearData(
+                            $extensionKey,
+                            true,
+                            $controlData->readToken(),
+                            $controlData->readRedirectUrl()
+                        );
                     }
                 }
             }
@@ -769,7 +803,7 @@ class ActionController {
                         $markerArray
                     );
             } else {
-                // Delete record if delete command is set + the preview flag is NOT set.
+                // Delete record if delete command is set and if the preview flag is NOT set.
                 $dataObj->deleteRecord(
                     $controlData,
                     $theTable,
@@ -829,7 +863,7 @@ class ActionController {
                     $langObj,
                     $controlData,
                     $confObj,
-                    $this->tca,
+                    $tcaObj,
                     $markerObj,
                     $dataObj,
                     $template,
@@ -858,17 +892,16 @@ class ActionController {
                     $bDefaultMode &&
                     !$bCustomerConfirmsMode
                 ) {
-                    $email = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Email::class);
+                    $email = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\Email::class);
                         // Send admin the confirmation email
                         // The user will not confirm in this mode
                     $bEmailSent = $email->compile(
                         SETFIXED_PREFIX . 'REVIEW',
-                        $conf,
                         $cObj,
                         $langObj,
                         $controlData,
                         $confObj,
-                        $this->tca,
+                        $tcaObj,
                         $markerObj,
                         $dataObj,
                         $template,
@@ -883,7 +916,7 @@ class ActionController {
                         'setfixed',
                         $cmdKey,
                         $templateCode,
-                        $errorFieldArray,
+                        $dataObj->getInError(),
                         $conf['setfixed.'],
                         $errorCode
                     );
@@ -902,17 +935,16 @@ class ActionController {
                         ) ?
                         $finalDataArray[$emailField] :
                         $origArray[$emailField];
-                    $email = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Email::class);
+                    $email = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\Email::class);
 
                     // Send email message(s)
                     $bEmailSent = $email->compile(
                         $key,
-                        $conf,
                         $cObj,
                         $langObj,
                         $controlData,
                         $confObj,
-                        $this->tca,
+                        $tcaObj,
                         $markerObj,
                         $dataObj,
                         $template,
@@ -927,7 +959,7 @@ class ActionController {
                         $cmd,
                         $cmdKey,
                         $templateCode,
-                        $errorFieldArray,
+                        $dataObj->getInError(),
                         $conf['setfixed.'],
                         $errorCode
                     );
@@ -937,7 +969,7 @@ class ActionController {
                     !$bEmailSent &&
                     is_array($errorCode)
                 ) {
-                    $errorText = $langObj->getLL($errorCode['0'], '', false, true);
+                    $errorText = $langObj->getLL($errorCode['0'], $dummy, '', false, true);
                     $errorContent = sprintf($errorText, $errorCode['1']);
                 }
             }
@@ -981,14 +1013,17 @@ class ActionController {
                 ) {
                     $autoLoginKey = '';
                     $loginSuccess = false;
-                    $password = $controlData->readPassword();
+                    $password = SecuredData::readPassword($extensionKey);
                     $loginSuccess =
-                        $this->login(
-                            $conf,
+                        \JambageCom\Agency\Api\System::login(
+                            $cObj,
                             $langObj,
                             $controlData,
+                            $this->urlObj,
+                            $conf,
                             $dataArray['username'],
                             $password,
+                            true,
                             true
                         );
 
@@ -1046,14 +1081,16 @@ class ActionController {
                     if ($conf['infomail']) {
                         $controlData->setSetfixedEnabled(1);
                     }
+
                     $origArray = $dataObj->parseIncomingData($origArray, false);
                     $content = $setfixedObj->process(
                         $conf,
                         $cObj,
                         $langObj,
                         $controlData,
+                        $this->urlObj,
                         $confObj,
-                        $this->tca,
+                        $tcaObj,
                         $markerObj,
                         $dataObj,
                         $theTable,
@@ -1083,19 +1120,19 @@ class ActionController {
                         '',
                         $fD
                     );
+
                     if ($conf['infomail']) {
                         $controlData->setSetfixedEnabled(1);
                     }
                     $origArray = $dataObj->parseIncomingData($origArray, false);
                     $errorCode = '';
                     $email = GeneralUtility::makeInstance(Email::class);
-                    $content = $email->sendInfo(
-                        $conf,
+                    $content = $email->processInfo(
                         $cObj,
                         $langObj,
                         $controlData,
                         $confObj,
-                        $this->tca,
+                        $tcaObj,
                         $markerObj,
                         $dataObj,
                         $template,
@@ -1136,7 +1173,7 @@ class ActionController {
                         $langObj,
                         $controlData,
                         $confObj,
-                        $this->tca,
+                        $tcaObj,
                         $markerObj,
                         $dataObj,
                         $template,
@@ -1165,7 +1202,7 @@ class ActionController {
                         $langObj,
                         $controlData,
                         $confObj,
-                        $this->tca,
+                        $tcaObj,
                         $markerObj,
                         $dataObj,
                         $template,
@@ -1200,7 +1237,7 @@ class ActionController {
                         $langObj,
                         $controlData,
                         $confObj,
-                        $this->tca,
+                        $tcaObj,
                         $markerObj,
                         $dataObj,
                         $template,
@@ -1236,7 +1273,7 @@ class ActionController {
                         $langObj,
                         $controlData,
                         $confObj,
-                        $this->tca,
+                        $tcaObj,
                         $markerObj,
                         $dataObj,
                         $template,
@@ -1276,144 +1313,6 @@ class ActionController {
         }
 
         return $content;
-    }
-
-
-    /**
-    * Perform user login and redirect to configured url, if any
-    *
-    * @param boolen $redirect: whether to redirect after login or not. If true, then you must immediately call exit after this call
-    * @return boolean true, if login was successful, false otherwise
-    */
-    public function login (
-        $conf,
-        \JambageCom\Agency\Api\Localization $langObj,
-        \JambageCom\Agency\Request\Parameters $controlData,
-        $username,
-        $cryptedPassword,
-        $redirect = true
-    ) {
-        $result = true;
-        $message = '';
-
-            // Log the user in
-        $loginData = array(
-            'uname' => $username,
-            'uident' => $cryptedPassword,
-            'uident_text' => $cryptedPassword,
-            'status' => 'login',
-        );
-
-        // Check against configured pid (defaulting to current page)
-        $GLOBALS['TSFE']->fe_user->checkPid = true;
-        $GLOBALS['TSFE']->fe_user->checkPid_value = $controlData->getPid();
-
-            // Get authentication info array
-        $authInfo = $GLOBALS['TSFE']->fe_user->getAuthInfoArray();
-
-            // Get user info
-        $user =
-            $GLOBALS['TSFE']->fe_user->fetchUserRecord(
-                $authInfo['db_user'],
-                $loginData['uname']
-            );
-
-        if (is_array($user)) {
-            $serviceKeyArray = array();
-
-            if (class_exists('\\TYPO3\\CMS\\Saltedpasswords\\SaltedPasswordService')) {
-                $serviceKeyArray[] = 'TYPO3\\CMS\\Saltedpasswords\\SaltedPasswordService';
-            }
-
-            if (
-                $conf['authServiceClass'] != '' &&
-                $conf['authServiceClass'] != '{$plugin.tx_agency.authServiceClass}' &&
-                class_exists($conf['authServiceClass'])
-            ) {
-                $serviceKeyArray = array_merge($serviceKeyArray, GeneralUtility::trimExplode(',', $conf['authServiceClass']));
-            }
-
-            $serviceChain = '';
-            $ok = false;
-            $authServiceObj = false;
-
-            while (
-                is_object(
-                    $authServiceObj =
-                        GeneralUtility::makeInstanceService(
-                            'auth',
-                            'authUserFE',
-                            $serviceChain
-                        )
-                )
-            ) {
-                $serviceChain .= ',' . $authServiceObj->getServiceKey();
-                $ok = $authServiceObj->compareUident($user, $loginData);
-                if ($ok) {
-                    break;
-                }
-            }
-
-            if ($ok) {
-                    // Login successfull: create user session
-                $GLOBALS['TSFE']->fe_user->createUserSession($user);
-                $GLOBALS['TSFE']->initUserGroups();
-                $GLOBALS['TSFE']->fe_user->user = $GLOBALS['TSFE']->fe_user->fetchUserSession();
-                $GLOBALS['TSFE']->loginUser = 1;
-            } else if (
-                is_object($authServiceObj) &&
-                in_array(get_class($authServiceObj), $serviceKeyArray)
-            ) {
-                    // auto login failed...
-                $message = $langObj->getLL('internal_auto_login_failed');
-                $result = false;
-            } else {
-                    // Required authentication service not available
-                $message = $langObj->getLL('internal_required_authentication_service_not_available');
-                $result = false;
-            }
-
-                // Delete regHash
-            if (
-                $controlData->getValidRegHash()
-            ) {
-                $regHash = $controlData->getRegHash();
-                $controlData->deleteShortUrl($regHash);
-            }
-        } else {
-                // No enabled user of the given name
-            $message = sprintf($langObj->getLL('internal_no_enabled_user'), $loginData['uname']);
-            $result = false;
-        }
-
-        if ($result == false) {
-            $controlData->clearSessionData(false);
-
-            if ($message != '') {
-                GeneralUtility::sysLog($message, $controlData->getExtensionKey(), GeneralUtility::SYSLOG_SEVERITY_ERROR);
-            }
-        }
-
-        if (
-            $redirect
-        ) {
-                // Redirect to configured page, if any
-            $redirectUrl = $controlData->readRedirectUrl();
-            if (!$redirectUrl && $result == true) {
-                $redirectUrl = trim($conf['autoLoginRedirect_url']);
-            }
-
-            if (!$redirectUrl) {
-                if ($conf['loginPID']) {
-                    $redirectUrl = $this->urlObj->get('', $conf['loginPID']);
-                } else {
-                    $redirectUrl = $controlData->getSiteUrl();
-                }
-            }
-            header('Location: ' . GeneralUtility::locationHeaderUrl($redirectUrl));
-        }
-
-        return $result;
     }
 }
 

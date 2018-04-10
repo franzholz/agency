@@ -65,7 +65,7 @@ class DeleteView {
         \JambageCom\Agency\Api\Localization $langObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        $tcaObj,
+        \JambageCom\Agency\Domain\Tca $tcaObj,
         $markerObj,
         $dataObj,
         \JambageCom\Agency\View\Template $template,
@@ -78,6 +78,7 @@ class DeleteView {
         array $fD
     ) {
         $aCAuth = false;
+        $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
 
         if ($conf['delete']) {
             $templateCode = $dataObj->getTemplateCode();
@@ -123,7 +124,7 @@ class DeleteView {
                             '<input type="hidden" name="' .
                             $prefixId . '[rU]" value="' .
                             $dataObj->getRecUid() .
-                            '" />';
+                            '"' . $xhtmlFix . '>';
                         $tokenParameter = $controlData->getTokenParameter();
                         $markerArray['###BACK_URL###'] =
                             (

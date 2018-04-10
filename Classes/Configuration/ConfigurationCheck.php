@@ -5,7 +5,7 @@ namespace JambageCom\Agency\Configuration;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Stanislas Rolland (typo3(arobas)sjbr.ca)
+*  (c) 2018 Stanislas Rolland (typo3(arobas)sjbr.ca)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -46,8 +46,10 @@ use TYPO3\CMS\Rsaauth\Storage\StorageFactory;
 use TYPO3\CMS\Saltedpasswords\Salt\SaltFactory;
 use TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility;
 
+use JambageCom\Agency\Utility\LocalizationUtility;
 
 class ConfigurationCheck {
+
 
     /* Checks requirements for this plugin
     *
@@ -78,14 +80,19 @@ class ConfigurationCheck {
 
         foreach ($requiredExtensions as $extension) {
             if (!ExtensionManagementUtility::isLoaded($extension)) {
-                $message = sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_required_extension_missing'), $extension);
+                $message = sprintf(LocalizationUtility::translate('internal_required_extension_missing'), $extension);
+
                 GeneralUtility::sysLog(
                     $message,
                     $extensionKey,
                     GeneralUtility::SYSLOG_SEVERITY_ERROR
                 );
+
                 $content .=
-                    sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+                    sprintf(
+                        LocalizationUtility::translate('internal_check_requirements_frontend'),
+                        $message
+                    );
             }
         }
 
@@ -101,9 +108,9 @@ class ConfigurationCheck {
         ) {
             foreach ($conflictingExtensions as $extension) {
                 if (ExtensionManagementUtility::isLoaded($extension)) {
-                    $message = sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_conflicting_extension_installed'), $extension);
+                    $message = sprintf(LocalizationUtility::translate('internal_conflicting_extension_installed'), $extension);
                     GeneralUtility::sysLog($message, $extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
-                    $content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+                    $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
                 }
             }
         }
@@ -121,7 +128,6 @@ class ConfigurationCheck {
     {
         $content = '';
         if ($extensionKey == 'agency') {
-            $extensionName = GeneralUtility::underscoredToUpperCamelCase($extensionKey);
             $loginSecurityLevel = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
 
             // Check if front end login security level is correctly set
@@ -134,24 +140,24 @@ class ConfigurationCheck {
                     $supportedTransmissionSecurityLevels
                 )
             ) {
-                $message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_login_security_level');
+                $message = LocalizationUtility::translate('internal_login_security_level');
                 GeneralUtility::sysLog($message, $extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
-                $content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+                $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
             } else {
                     // Check if salted passwords are enabled in front end
                 if (ExtensionManagementUtility::isLoaded('saltedpasswords')) {
                     if (!SaltedPasswordsUtility::isUsageEnabled('FE')) {
-                        $message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_salted_passwords_disabled');
+                        $message = LocalizationUtility::translate('internal_salted_passwords_disabled');
                         GeneralUtility::sysLog($message, $extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
-                        $content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+                        $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
                     } else {
                             // Check if we can get a salting instance
                         $objSalt = SaltFactory::getSaltingInstance(NULL);
                         if (!is_object($objSalt)) {
                                 // Could not get a salting instance from saltedpasswords
-                            $message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_salted_passwords_no_instance');
+                            $message = LocalizationUtility::translate('internal_salted_passwords_no_instance');
                             GeneralUtility::sysLog($message, $extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
-                            $content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+                            $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
                         }
                     }
                 }
@@ -166,9 +172,9 @@ class ConfigurationCheck {
                         !is_object($storage)
                     ) {
                             // Required RSA auth backend not available
-                        $message = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_rsaauth_backend_not_available');
+                        $message = LocalizationUtility::translate('internal_rsaauth_backend_not_available');
                         GeneralUtility::sysLog($message, $extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
-                        $content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+                        $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
                     }
                 }
             }
@@ -188,7 +194,6 @@ class ConfigurationCheck {
     ) {
         $content = '';
         $templateCode = $cObj->fileResource($conf['templateFile']);
-
         $messages =
             \JambageCom\Agency\View\Marker::checkDeprecatedMarkers(
                 $templateCode,
@@ -198,11 +203,10 @@ class ConfigurationCheck {
 
         foreach ($messages as $message) {
             GeneralUtility::sysLog($message, $extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
-            $content .= sprintf($GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . '/pi/locallang.xml:internal_check_requirements_frontend'), $message);
+            $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
         }
 
         return $content;
     }
-
 }
 

@@ -64,6 +64,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         &$staticInfoObj,
         &$dataObj,
         &$actionController,
+        &$tcaObj,
         &$langObj,
         &$markerObj,
         &$errorMessage,
@@ -77,6 +78,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         $otherLabelsList
     ) {
         $result = true;
+        $filename = \JambageCom\Agency\Utility\LocalizationUtility::getFilename();
 
         \JambageCom\Div2007\Utility\HtmlUtility::generateXhtmlFix();
 
@@ -95,15 +97,6 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
             $pibaseObj->piVars,
             $theTable
         );
-
-        if ($pibaseObj->extKey != AGENCY_EXT) {
-                    // Static Methods for Extensions for fetching the texts of agency
-                \tx_div2007_alpha5::loadLL_fh002(
-                    $pibaseObj,
-                    'EXT:' . AGENCY_EXT . '/pi/locallang.xml',
-                    false
-                );
-        } // otherwise the labels from agency need not be included, because this has been done in TYPO3 pibase
 
         if (
             \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded(
@@ -138,7 +131,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
                 $coreQuery
             );
         $markerObj = GeneralUtility::makeInstance(\JambageCom\Agency\View\Marker::class);
-        $this->setfixedObj = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\SetFixed::class);
+        $this->setfixedObj = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\Setfixed::class);
         $actionController = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\ActionController::class);
 
         $urlObj->init(
@@ -152,17 +145,27 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
             $cObj,
             $conf,
             'pi/class.tx_agency_pi_base.php',
-            $pibaseObj->extKey
+            $pibaseObj->extKey,
+            $filename
         );
+
         $result = $langObj->loadLL();
+
         if ($result !== false) {
+            if ($pibaseObj->extKey != AGENCY_EXT) {
+                    // Static Methods for Extensions for fetching the texts of agency
+                $langObj->loadLL(
+                    $filename,
+                    false
+                );
+            } // otherwise the labels from agency need not be included, because this has been done in TYPO3 pibase
+
             $templateFile = $conf['templateFile'];
             $templateCode = $cObj->fileResource($templateFile);
             if (
                 (!$templateFile || empty($templateCode))
             ) {
-                $errorText = \tx_div2007_alpha5::getLL_fh002(
-                        $langObj,
+                $errorText = $langObj->getLL(
                         'internal_no_template'
                     );
                 $errorMessage = sprintf($errorText, $templateFile, 'plugin.tx_' . $pibaseObj->extKey . '.templateFile');
@@ -174,7 +177,6 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
                     $langObj,
                     $cObj,
                     $controlData,
-                    $tcaObj,
                     $urlObj
                 );
 
@@ -188,15 +190,21 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
                     $staticInfoObj
                 );
 
-                $actionController->init2( // only here the $conf is changed
+                $resultInit = $actionController->init2( // only here the $conf is changed
                     $confObj,
                     $staticInfoObj,
                     $theTable,
                     $controlData,
                     $dataObj,
+                    $tcaObj,
                     $adminFieldList,
-                    $origArray
+                    $origArray,
+                    $errorMessage
                 );
+
+                if ($resultInit === false) {
+                    return false;
+                }
                 $dataObj->setOrigArray($origArray);
                 $uid = $dataObj->getRecUid();
 
@@ -256,6 +264,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
             $staticInfoObj,
             $dataObj,
             $actionController,
+            $tcaObj,
             $langObj,
             $markerObj,
             $errorMessage,
@@ -288,6 +297,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
                 $deleteView,
                 $controlData,
                 $dataObj,
+                $tcaObj,
                 $markerObj,
                 $staticInfoObj,
                 $theTable,
@@ -302,7 +312,8 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         if ($errorMessage) {
             $content = $errorMessage;
         } else if ($success === false) {
-            $content = '<em>Internal error in ' . $pibaseObj->extKey . '!</em><br /> Maybe you forgot to include the basic template file under "include statics from extensions".';
+            $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
+            $content = '<em>Internal error in ' . $pibaseObj->extKey . '!</em><br ' . $xhtmlFix . '> Maybe you forgot to include the basic template file under "include statics from extensions".';
         }
 
         $content =

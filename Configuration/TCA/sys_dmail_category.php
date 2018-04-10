@@ -49,12 +49,7 @@ if ($tableExists) {
             'enablecolumns' => array (
                 'disabled' => 'hidden',
             ),
-            'iconfile' =>
-                call_user_func(
-                    $emClass . '::extRelPath',
-                    AGENCY_EXT
-                ) .
-                'icon_tx_directmail_category.gif',
+            'iconfile' => 'EXT:' . AGENCY_EXT . '/icon_tx_directmail_category.gif',
         ),
         'interface' => array (
                 'showRecordFieldList' => 'hidden,category'

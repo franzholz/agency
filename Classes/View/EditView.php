@@ -66,7 +66,7 @@ class EditView {
         \JambageCom\Agency\Api\Localization $langObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        $tcaObj,
+        \JambageCom\Agency\Domain\Tca $tcaObj,
         $markerObj,
         $dataObj,
         \JambageCom\Agency\View\Template $template,
@@ -80,6 +80,7 @@ class EditView {
         $errorFieldArray,
         $token
     ) {
+        $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
         if (isset($dataArray) && is_array($dataArray)) {
             $currentArray = array_merge($origArray, $dataArray);
         } else {
@@ -116,10 +117,15 @@ class EditView {
                     ''
                 );
         }
-        $markerObj->addPasswordTransmissionMarkers(
-            $markerArray,
-            $controlData->getUsePasswordAgain()
-        );
+
+        if ($controlData->getTable() == 'fe_users') {
+            \JambageCom\Agency\Security\SecuredData::getTransmissionSecurity()
+                ->getMarkers(
+                    $markerArray,
+                    $controlData->getExtensionKey(),
+                    $controlData->getUsePasswordAgain()
+                );
+        }
         $templateCode =
             $template->removeRequired(
                 $conf,
@@ -129,9 +135,11 @@ class EditView {
                 $theTable,
                 $cmdKey,
                 $templateCode,
+                ($mode == MODE_PREVIEW),
                 $errorFieldArray,
                 $failure
             );
+
         $markerArray =
             $markerObj->fillInMarkerArray(
                 $markerArray,
@@ -143,6 +151,7 @@ class EditView {
                 '',
                 true
             );
+
         $markerObj->addStaticInfoMarkers(
             $markerArray,
             $langObj,
@@ -150,7 +159,7 @@ class EditView {
             $currentArray
         );
 
-        $tcaObj->addTcaMarkers(
+        $tcaObj->addMarkers(
             $markerArray,
             $conf,
             $langObj,
@@ -164,7 +173,7 @@ class EditView {
             true
         );
 
-        $tcaObj->addTcaMarkers(
+        $tcaObj->addMarkers(
             $markerArray,
             $conf,
             $langObj,
@@ -177,6 +186,7 @@ class EditView {
             $prefixId,
             false
         );
+
         $markerObj->addLabelMarkers(
             $markerArray,
             $conf,
@@ -223,7 +233,7 @@ class EditView {
                 $markerArray
             );
         $markerArray['###HIDDENFIELDS###'] .=
-            chr(10) . '<input type="hidden" name="FE[' . $theTable . '][uid]" value="' . $currentArray['uid'] . '" />';
+            chr(10) . '<input type="hidden" name="FE[' . $theTable . '][uid]" value="' . $currentArray['uid'] . '"' . $xhtmlFix . '>';
 
         if ($theTable != 'fe_users') {
             $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
@@ -233,9 +243,9 @@ class EditView {
                         $origArray,
                         $conf['setfixed.']['EDIT.']['_FIELDLIST']
                     ) .
-                '" />';
+                '"' . $xhtmlFix . '>';
             $markerArray['###HIDDENFIELDS###']
-                .= chr(10) . '<input type="hidden" name="' . $prefixId . '[cmd]" value="edit" />';
+                .= chr(10) . '<input type="hidden" name="' . $prefixId . '[cmd]" value="edit"' . $xhtmlFix . '>';
         }
 
         $markerObj->addHiddenFieldsMarkers(
@@ -247,6 +257,7 @@ class EditView {
             $mode,
             $token,
             $conf[$cmdKey . '.']['useEmailAsUsername'],
+            $conf['enableEmailConfirmation'],
             $conf[$cmdKey . '.']['fields'],
             $currentArray
         );
@@ -266,11 +277,6 @@ class EditView {
             );
 
         if ($mode != MODE_PREVIEW) {
-            $form =
-                \tx_div2007_alpha5::getClassName_fh002(
-                    $theTable . '_form',
-                    $prefixId
-                );
             $modData =
                 $dataObj->modifyDataArrForFormUpdate(
                     $conf,
@@ -280,6 +286,7 @@ class EditView {
             $fields = $dataObj->getFieldList() . ',' . $dataObj->getAdditionalUpdateFields();
             $fields = implode(',', array_intersect(explode(',', $fields), GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)));
             $fields = \JambageCom\Agency\Security\SecuredData::getOpenFields($fields);
+            $form = $controlData->determineFormId();
             $updateJS =
                 FrontendUtility::getUpdateJS(
                     $modData,
@@ -287,12 +294,21 @@ class EditView {
                     'FE[' . $theTable . ']',
                     $fields
                 );
-
             $content .= $updateJS;
+            $finalJavaScript = '';
+            \JambageCom\Agency\Security\SecuredData::getTransmissionSecurity()->
+                getJavaScript(
+                    $finalJavaScript,
+                    $controlData->getExtensionKey(),
+                    $form,
+                    $controlData->getUsePasswordAgain()
+                );
+            \JambageCom\Agency\Api\Javascript::getOnSubmitHooks($finalJavaScript, $this);
+            $content .= $finalJavaScript;
         }
+
         return $content;
     }	// renderForm
-
 
     /**
     * Checks if the edit form may be displayed; if not, a link to login

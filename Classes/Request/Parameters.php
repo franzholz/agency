@@ -45,6 +45,9 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 
 use JambageCom\Div2007\Captcha\CaptchaInterface;
 
+use JambageCom\Agency\Security\SecuredData;
+use JambageCom\Agency\Utility\SessionUtility;
+
 
 /**
  * Request parameters
@@ -73,10 +76,6 @@ class Parameters
     private $confObj;
         // Whether the token was found valid
     protected $isTokenValid = false;
-        // Transmission security object
-    protected $transmissionSecurity;
-        // Storage security object
-    protected $storageSecurity;
         // support for repeated password (password_again internal field)
     protected $usePasswordAgain = false;
     protected $usePassword = false;
@@ -216,6 +215,7 @@ class Parameters
             }
         }
 
+
         if (isset($feUserData) && is_array($feUserData)) {
             $this->setFeUserData($feUserData);
         }
@@ -250,13 +250,19 @@ class Parameters
 
             // Cleanup input values
         $feUserData = $this->getFeUserData();
-        \JambageCom\Agency\Security\SecuredData::secureInput($feUserData);
+        SecuredData::secureInput($feUserData);
 
         if ($this->getUsePassword()) {
             // Establishing compatibility with the extension Felogin
             $value = $this->getFormPassword();
-            if ($value != '') {
-                $this->writePassword($value, '');
+            if ($value !== null) {
+                SecuredData::writePassword(
+                    $extensionKey,
+                    $value,
+                    '',
+                    $this->readToken(),
+                    $this->readRedirectUrl()
+                );
             }
         }
 
@@ -362,7 +368,10 @@ class Parameters
                 // Erase all FE user data when the token is not valid
             $this->setFeUserData(array());
                 // Erase any stored password
-            $this->writePassword('', '');
+            SecuredData::writePassword(
+                $extensionKey,
+                ''
+            );
         }
 
             // Generate a new token for the next created forms
@@ -378,14 +387,14 @@ class Parameters
         $extensionKey = $this->getExtensionKey();
 
         $usesCaptcha =
-            GeneralUtility::inList($conf[$cmdKey . '.']['fields'], 'captcha_response') &&
+            GeneralUtility::inList($conf[$cmdKey . '.']['fields'], \JambageCom\Agency\Constants\Field::CAPTCHA) &&
             is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha']) &&
             is_array($conf[$cmdKey . '.']) &&
             is_array($conf[$cmdKey . '.']['evalValues.']) &&
             is_object(
                 $captcha = \JambageCom\Div2007\Captcha\CaptchaManager::getCaptcha(
                     $extensionKey,
-                    $conf[$cmdKey . '.']['evalValues.']['captcha_response']
+                    $conf[$cmdKey . '.']['evalValues.'][\JambageCom\Agency\Constants\Field::CAPTCHA]
                 )
             );
 
@@ -407,12 +416,10 @@ class Parameters
         $this->thePidTitle = trim($conf['pidTitleOverride']) ?: $row['title'];
     }
 
-
     public function getConf () {
         $result = $this->confObj->getConf();
         return $result;
     }
-
 
     public function initPasswordField ($conf) {
         $this->usePassword = false;
@@ -425,22 +432,18 @@ class Parameters
         }
     }
 
-
     public function getFormPassword () {
         $result = GeneralUtility::_POST('pass');
         return $result;
     }
 
-
     public function getUsePassword () {
         return $this->usePassword;
     }
 
-
     public function getUsePasswordAgain () {
         return $this->usePasswordAgain;
     }
-
 
     public function setDefaultPid ($conf) {
 
@@ -448,31 +451,25 @@ class Parameters
         $this->defaultPid = ($bPidIsInt ? intval($conf['pid']) : $GLOBALS['TSFE']->id);
     }
 
-
     public function getDefaultPid () {
         return $this->defaultPid;
     }
-
 
     public function setRegHash ($regHash) {
         $this->regHash = $regHash;
     }
 
-
     public function getRegHash () {
         return $this->regHash;
     }
-
 
     public function setValidRegHash ($bValidRegHash) {
         $this->bValidRegHash = $bValidRegHash;
     }
 
-
     public function getValidRegHash () {
         return $this->bValidRegHash;
     }
-
 
     static public function enableAutoLoginOnCreate (
         array $conf
@@ -483,7 +480,6 @@ class Parameters
 
         return $result;
     }
-
 
     static public function enableAutoLoginOnConfirmation (
         array $conf,
@@ -507,193 +503,6 @@ class Parameters
     }
 
 
-    /**
-     * Gets the transmission security object
-     *
-     * @return tx_agency_transmission_security the transmission security object
-     */
-    public function getTransmissionSecurity () {
-        if (!is_object($this->transmissionSecurity)) {
-            /* tx_agency_transmission_security */
-            $this->transmissionSecurity = GeneralUtility::makeInstance(\JambageCom\Agency\Security\TransmissionSecurity::class);
-        }
-        return $this->transmissionSecurity;
-    }
-
-
-    /**
-     * Gets the storage security object
-     *
-     * @return tx_agency_transmission_security the storage security object
-     */
-    public function getStorageSecurity () {
-        if (!is_object($this->storageSecurity)) {
-            /* tx_agency_storage_security */
-            $this->storageSecurity = GeneralUtility::makeInstance(\JambageCom\Agency\Security\StorageSecurity::class);
-        }
-        return $this->storageSecurity;
-    }
-
-
-
-    /*************************************
-    * SECURED ARRAY HANDLING
-    *************************************/
-    /**
-    * Retrieves values of secured fields from FE user session data
-    * Used for the password
-    *
-    * @return   array   secured FE user session data
-    */
-    public function readSecuredArray () {
-        $securedArray = array();
-        $sessionData = $this->readSessionData();
-        $securedFields = \JambageCom\Agency\Security\SecuredData::getSecuredFields();
-        foreach ($securedFields as $securedField) {
-            if (isset($sessionData[$securedField])) {
-                $securedArray[$securedField] = $sessionData[$securedField];
-            }
-        }
-        return $securedArray;
-    }
-
-
-    /*************************************
-    * PASSWORD HANDLING
-    *************************************/
-    /**
-    * Retrieves the password from session data and encrypt it for storage
-    *
-    * @return   string  the encrypted password
-    *           boolean false in case of an error
-    */
-    public function readPasswordForStorage () {
-        $result = false;
-        $password = $this->readPassword();
-        if ($password) {
-            $result = $this->getStorageSecurity()->encryptPasswordForStorage($password);
-        }
-        return $result;
-    }
-
-
-    /**
-    * Retrieves the password from session data
-    *
-    * @return   string  the password
-    */
-    public function readPassword () {
-        $result = '';
-        $securedArray = $this->readSecuredArray();
-        if ($securedArray['password']) {
-            $result = $securedArray['password'];
-        }
-        return $result;
-    }
-
-
-    /**
-    * Writes the password to FE user session data
-    *
-    * @param    array   $row: data array that may contain password values
-    *
-    * @return void
-    */
-    public function securePassword (array &$row) {
-        $result = true;
-
-        $data = array();
-            // Decrypt incoming password (and eventually other encrypted fields)
-        $passwordRow = array('password' => $this->readPassword());
-        $message = '';
-        $passwordDecrypted = $this->getTransmissionSecurity()->decryptIncomingFields($passwordRow, $message);
-            // Collect secured fields
-
-        if ($passwordDecrypted) {
-            $this->writePassword($passwordRow['password'], $passwordRow['password']);
-        } else if ($message == '') {
-            $this->writePassword($passwordRow['password'], $row['password_again']);
-        } else {
-            $result = false;
-        }
-        return $result;
-    }
-
-
-    /**
-    * Generates a value for the password and stores it the FE user session data
-    *
-    * @param    array   $dataArray: incoming array
-    * @return   void
-    */
-    public function generatePassword (
-        $cmdKey,
-        array $conf,
-        array $cmdConf,
-        array &$dataArray,
-        &$autoLoginKey
-    ) {
-        // We generate an interim password in the case of an invitation
-        if (
-            $cmdConf['generatePassword']
-        ) {
-            $genLength = intval($cmdConf['generatePassword']);
-
-            if ($genLength) {
-                $generatedPassword =
-                    substr(
-                        md5(uniqid(microtime(), 1)),
-                        0,
-                        $genLength
-                    );
-                $dataArray['password'] = $generatedPassword;
-                $dataArray['password_again'] = $generatedPassword;
-                $this->writePassword($generatedPassword, $generatedPassword);
-            }
-        }
-
-        if (
-            self::enableAutoLoginOnConfirmation($conf, $cmdKey)
-        ) {
-            $password = $this->readPassword();
-            $cryptedPassword = '';
-            $autoLoginKey = '';
-            $isEncrypted =
-                $this->getStorageSecurity()
-                    ->encryptPasswordForAutoLogin(
-                        $password,
-                        $cryptedPassword,
-                        $autoLoginKey
-                    );
-            if ($isEncrypted) {
-                $dataArray['tx_agency_password'] = base64_encode($cryptedPassword);
-            }
-        }
-    }
-
-
-    /**
-    * Writes the password to session data
-    *
-    * @param    string  $password: the password
-    * @return   void
-    */
-    protected function writePassword (
-        $password,
-        $passwordAgain = ''
-    ) {
-        $sessionData = $this->readSessionData();
-        if ($password == '') {
-            $sessionData['password'] = '__UNSET';
-            $sessionData['password_again'] = '__UNSET';
-        } else {
-            $sessionData['password'] = $password;
-            if ($passwordAgain != '') {
-                $sessionData['password_again'] = $passwordAgain;
-            }
-        }
-        $this->writeSessionData($sessionData);
-    }
 
     /*************************************
     * TOKEN HANDLING
@@ -707,7 +516,6 @@ class Parameters
         return $this->isTokenValid;
     }
 
-
     /**
     * Sets whether the token was found valid
     *
@@ -718,7 +526,6 @@ class Parameters
         $this->isTokenValid = $valid;
     }
 
-
     /**
     * Retrieves the token from FE user session data
     *
@@ -726,15 +533,14 @@ class Parameters
     */
     public function readToken () {
         $token = '';
-        $sessionData = $this->readSessionData();
+        $extensionKey = $this->getExtensionKey();
+        $sessionData = SessionUtility::readData($extensionKey);
 
         if (isset($sessionData['token'])) {
             $token = $sessionData['token'];
         }
-
         return $token;
     }
-
 
     /**
     * Writes the token to FE user session data
@@ -743,15 +549,22 @@ class Parameters
     * @return void
     */
     protected function writeToken ($token) {
-        $sessionData = $this->readSessionData();
+        $extensionKey = $this->getExtensionKey();
+        $sessionData = SessionUtility::readData($extensionKey);
         if ($token == '') {
             $sessionData['token'] = '__UNSET';
         } else {
             $sessionData['token'] = $token;
         }
-        $this->writeSessionData($sessionData, false);
+        SessionUtility::writeData(
+            $extensionKey,
+            $sessionData,
+            false,
+            true,
+            '',
+            $this->readRedirectUrl()
+        );
     }
-
 
     /**
     * Retrieves the redirectUrl from FE user session data
@@ -760,13 +573,13 @@ class Parameters
     */
     public function readRedirectUrl () {
         $redirectUrl = '';
-        $sessionData = $this->readSessionData();
+        $extensionKey = $this->getExtensionKey();
+        $sessionData = SessionUtility::readData($extensionKey);
         if (isset($sessionData['redirect_url'])) {
             $redirectUrl = $sessionData['redirect_url'];
         }
         return $redirectUrl;
     }
-
 
     /**
     * Writes the redirectUrl to FE user session data
@@ -778,100 +591,16 @@ class Parameters
         if ($redirectUrl != '') {
             $data = array();
             $data['redirect_url'] = $redirectUrl;
-            $this->writeSessionData($data);
+            $extensionKey = $this->getExtensionKey();
+            SessionUtility::writeData(
+                $extensionKey,
+                $data,
+                true,
+                true,
+                $this->readToken(),
+                $this->readRedirectUrl()
+            );
         }
-    }
-
-
-    /*************************************
-    * FE USER SESSION DATA HANDLING
-    *************************************/
-    /**
-    * Retrieves session data
-    *
-    * @param    boolean $readAll: whether to retrieve all session data or only data for this extension key
-    * @return   array   session data
-    */
-    public function readSessionData ($readAll = false) {
-        $sessionData = array();
-        $extensionKey = $this->getExtensionKey();
-        $allSessionData = $GLOBALS['TSFE']->fe_user->getKey('ses', 'feuser');
-
-        if (
-            isset($allSessionData) &&
-            is_array($allSessionData)
-        ) {
-            if ($readAll) {
-                $sessionData = $allSessionData;
-            } else if (isset($allSessionData[$extensionKey])) {
-                $sessionData = $allSessionData[$extensionKey];
-            }
-        }
-        return $sessionData;
-    }
-
-
-    /**
-    * Writes data to FE user session data
-    *
-    * @param    array   $data: the data to be written to FE user session data
-    * @param    boolean $keepToken: whether to keep any token
-    * @param    boolean $keepRedirectUrl: whether to keep any redirectUrl
-    * @return   array   session data
-    */
-    public function writeSessionData (
-        array $data,
-        $keepToken = true,
-        $keepRedirectUrl = true
-    ) {
-        $clearSession = empty($data);
-        if ($keepToken && !isset($data['token'])) {
-            $token = $this->readToken();
-            if ($token != '') {
-                $data['token'] = $token;
-            }
-        }
-
-        if ($keepRedirectUrl && !isset($data['redirect_url'])) {
-            $redirect_url = $this->readRedirectUrl();
-            if ($redirect_url != '') {
-                $data['redirect_url'] = $redirect_url;
-            }
-        }
-        $extensionKey = $this->getExtensionKey();
-            // Read all session data
-        $allSessionData = $this->readSessionData(true);
-
-        if (
-            isset($allSessionData[$extensionKey]) &&
-            is_array($allSessionData[$extensionKey])
-        ) {
-            $keys = array_keys($allSessionData[$extensionKey]);
-            if ($clearSession) {
-                foreach ($keys as $key) {
-                    unset($allSessionData[$extensionKey][$key]);
-                }
-            }
-            \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($allSessionData[$extensionKey], $data);
-        } else {
-            $allSessionData[$extensionKey] = $data;
-        }
-
-        $GLOBALS['TSFE']->fe_user->setKey('ses', 'feuser', $allSessionData);
-            // The feuser session data shall not get lost when coming back from external scripts
-        $GLOBALS['TSFE']->fe_user->storeSessionData();
-    }
-
-
-    /**
-    * Deletes all session data except the token and possibly the redirectUrl
-    *
-    * @param    boolean $keepRedirectUrl: whether to keep any redirectUrl
-    * @return   void
-    */
-    public function clearSessionData ($keepRedirectUrl = true) {
-        $data = array();
-        $this->writeSessionData($data, true, $keepRedirectUrl);
     }
 
     // example: plugin.tx_agency_pi.conf.sys_dmail_category.ALL.sys_language_uid = 0
@@ -894,66 +623,53 @@ class Parameters
         return $result;
     }
 
-
     public function getPidTitle () {
         return $this->thePidTitle;
     }
-
 
     public function getSiteUrl () {
         return $this->site_url;
     }
 
-
     public function getPrefixId () {
         return $this->prefixId;
     }
-
 
     public function setPrefixId ($prefixId) {
         $this->prefixId = $prefixId;
     }
 
-
     public function getExtensionKey () {
         return $this->extensionKey;
     }
-
 
     public function setExtensionKey ($extensionKey) {
         $this->extensionKey = $extensionKey;
     }
 
-
     public function getPiVars () {
         return $this->piVars;
     }
-
 
     public function setPiVars ($piVars) {
         $this->piVars = $piVars;
     }
 
-
     public function getCmd () {
         return $this->cmd;
     }
-
 
     public function setCmd ($cmd) {
         $this->cmd = $cmd;
     }
 
-
     public function getCmdKey () {
         return $this->cmdKey;
     }
 
-
     public function setCmdKey ($cmdKey) {
         $this->cmdKey = $cmdKey;
     }
-
 
     /**
      * Gets the feUserData array or an index of the array
@@ -975,7 +691,6 @@ class Parameters
         }
         return $result;
     }
-
 
     /**
      * Sets the feUserData array or an index of the array
@@ -1012,21 +727,17 @@ class Parameters
         $this->submit = $submit;
     }
 
-
     public function getSubmit () {
         return $this->submit;
     }
-
 
     public function setDoNotSave ($bParam) {
         $this->bDoNotSave = $bParam;
     }
 
-
     public function getDoNotSave () {
         return $this->bDoNotSave;
     }
-
 
     public function getPid ($type = '') {
 
@@ -1041,7 +752,6 @@ class Parameters
         }
         return $result;
     }
-
 
     public function setPid ($type, $pid) {
         if (!intval($pid)) {
@@ -1064,46 +774,37 @@ class Parameters
         $this->pid[$type] = $pid;
     }
 
-
     public function getMode () {
         return $this->mode;
     }
-
 
     public function setMode ($mode) {
         $this->mode = $mode;
     }
 
-
     public function getTable () {
         return $this->theTable;
     }
-
 
     public function setTable ($theTable) {
         $this->theTable = $theTable;
     }
 
-
     public function getRequiredArray () {
         return $this->requiredArray;
     }
-
 
     public function setRequiredArray ($requiredArray) {
         $this->requiredArray = $requiredArray;
     }
 
-
     public function getSetfixedEnabled () {
         return $this->setfixedEnabled;
     }
 
-
     public function setSetfixedEnabled ($setfixedEnabled) {
         $this->setfixedEnabled = $setfixedEnabled;
     }
-
 
     public function getSetfixedOptions () {
         return $this->setFixedOptions;
@@ -1127,6 +828,14 @@ class Parameters
 
     public function setFd ($fD) {
         $this->fD = $fD;
+    }
+    
+    public function determineFormId ($suffix = '_form') {
+        $result = \JambageCom\Div2007\Utility\FrontendUtility::getClassName(
+            $this->getTable() . $suffix,
+            $this->getPrefixId()
+        );
+        return $result;
     }
 
     public function getBackURL () {
@@ -1154,7 +863,6 @@ class Parameters
         $result = ($conf[$cmdKey . '.']['preview'] && $this->getFeUserData('preview'));
         return $result;
     }   // isPreview
-
 
     /*************************************
     * SHORT URL HANDLING
@@ -1195,7 +903,6 @@ class Parameters
         return $retArray;
     }   // getShortUrl
 
-
     /**
     *  Get the stored variables using the hash value to access the database
     */
@@ -1208,7 +915,6 @@ class Parameters
             );
         }
     }
-
 
     /**
     *  Clears obsolete hashes used for short url's

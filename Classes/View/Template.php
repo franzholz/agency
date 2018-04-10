@@ -71,13 +71,17 @@ class Template {
         $theTable,
         $cmdKey,
         $templateCode,
-        $errorFieldArray,
+        $useAdditionalFields = true,
+        $errorFieldArray = array(),
         $failure = ''
     ) {
         $requiredArray = $controlData->getRequiredArray();
         $includedFields = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1);
-        $additionalIncludedFields = $dataObj->getAdditionalIncludedFields();
-        $includedFields = array_merge($includedFields, $additionalIncludedFields);
+        if ($useAdditionalFields) {
+            $additionalIncludedFields = $dataObj->getAdditionalIncludedFields();
+            $includedFields = array_merge($includedFields, $additionalIncludedFields);
+        }
+
         $includedFields = array_unique($includedFields);
         $infoFields = explode(',', $dataObj->getFieldList());
 
@@ -118,7 +122,7 @@ class Template {
             $templateCode =
                 $cObj->substituteSubpart(
                     $templateCode,
-                    '###SUB_INCLUDED_FIELD_captcha_response###',
+                    '###SUB_INCLUDED_FIELD_' . \JambageCom\Agency\Constants\Field::CAPTCHA . '###',
                     ''
                 );
         }
@@ -146,14 +150,15 @@ class Template {
         $infoFields = array_unique($infoFields);
 
         foreach ($infoFields as $k => $theField) {
+            $theField = trim($theField);
             if ($theField == '') {
                 continue;
             }
 
                 // Remove field required subpart, if field is not required
             if (
-                in_array(trim($theField), $requiredArray) ||
-                in_array(trim($theField), $specialFields)
+                in_array($theField, $requiredArray) ||
+                in_array($theField, $specialFields)
             ) {
                 if (!GeneralUtility::inList($failure, $theField)) {
                     $templateCode =
@@ -178,8 +183,9 @@ class Template {
                 }
             } else {
                     // Remove field included subpart, if field is not included and is not in failure list
+
                 if (
-                    !in_array(trim($theField), $includedFields) &&
+                    !in_array($theField, $includedFields) &&
                     !GeneralUtility::inList($failure, $theField)
                 ) {
                     $templateCode =
@@ -299,7 +305,7 @@ class Template {
         \JambageCom\Agency\Api\Localization $langObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        $tcaObj,
+        \JambageCom\Agency\Domain\Tca $tcaObj,
         $markerObj,
         $dataObj,
         $templateCode,
@@ -313,6 +319,7 @@ class Template {
         $bCheckEmpty = true,
         $failure = ''
     ) {
+        $useAdditionalFields = false;
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
             !is_array($GLOBALS['TCA'][$theTable]['columns'])
@@ -334,6 +341,7 @@ class Template {
                     $theTable,
                     $cmdKey,
                     $templateCode,
+                    $useAdditionalFields,
                     explode(',', $failure),
                     $failure
                 );
@@ -358,7 +366,7 @@ class Template {
 
             $cmd = $controlData->getCmd();
             $theTable = $controlData->getTable();
-            $tcaObj->addTcaMarkers(
+            $tcaObj->addMarkers(
                 $markerArray,
                 $conf,
                 $langObj,
@@ -447,7 +455,6 @@ class Template {
             );
 
             $deleteUnusedMarkers = true;
-
             $result =
                 $cObj->substituteMarkerArray(
                     $templateCode,

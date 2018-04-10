@@ -69,7 +69,7 @@ class Marker {
     public function init (
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         $data,
-        $tca,
+        \JambageCom\Agency\Domain\Tca $tcaObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         $backUrl,
         $extKey,
@@ -82,7 +82,7 @@ class Marker {
     ) {
         $this->conf = $confObj->getConf();
         $this->data = $data;
-        $this->tca = $tca;
+        $this->tca = $tcaObj;
         $this->controlData = $controlData;
         $this->staticInfoObj = $staticInfoObj;
         $this->thePidTitle = $controlData->getPidTitle();
@@ -92,6 +92,7 @@ class Marker {
         $charset = $GLOBALS['TSFE']->metaCharset ? $GLOBALS['TSFE']->metaCharset : 'utf-8';
         $markerArray['###CHARSET###'] = $charset;
         $markerArray['###PREFIXID###'] = $prefixId;
+        $markerArray['###FORM_NAME###'] = $controlData->determineFormId();
 
             // Setting URL, HIDDENFIELDS and signature markers
         $urlMarkerArray =
@@ -104,6 +105,7 @@ class Marker {
                 $extKey,
                 $prefixId
             );
+
         $this->setUrlMarkerArray($urlMarkerArray);
         $markerArray = array_merge($markerArray, $urlMarkerArray);
         $this->setArray($markerArray);
@@ -119,8 +121,8 @@ class Marker {
             ',tooltip_login_username,tooltip_login_password,' .
             ',registration_problem,registration_internal,registration_login,registration_sorry,registration_clicked_twice,registration_help,kind_regards,kind_regards_cre,kind_regards_del,kind_regards_ini,kind_regards_inv,kind_regards_upd' .
             ',v_dear,v_verify_before_create,v_verify_invitation_before_create,v_verify_before_update,v_really_wish_to_delete,v_really_wish_to_approve,v_edit_your_account' .
-            ',v_infomail_lost_password,v_infomail_dear,v_infomail_lost_password_enter_new,v_infomail_lost_password_subject' .
-            ',v_infomail_lost_password_message1,v_infomail_lost_password_message2' .
+            ',v_infomail_lost_password,v_infomail_dear,v_infomail_lost_password_enter_new,v_infomail_lost_password_email_not_found,v_infomail_lost_password_subject' .
+            ',v_infomail_lost_password_message1,v_infomail_lost_password_message2,v_infomail_lost_password_message3' .
             ',v_now_enter_your_username,v_now_choose_password,v_notification' .
             ',v_registration_created,v_registration_created_subject,v_registration_created_message1,v_registration_created_message2,v_registration_created_message3' .
             ',v_to_the_administrator'.
@@ -221,7 +223,7 @@ class Marker {
                     $cmd = $controlData->getCmd();
                     $cmdKey = $controlData->getCmdKey();
                     $theTable = $controlData->getTable();
-                    $this->tca->addTcaMarkers(
+                    $this->tca->addMarkers(
                         $this->tmpTcaMarkers,
                         $conf,
                         $langObj,
@@ -340,10 +342,10 @@ class Marker {
                 $row[$field] = $securedArray[$field];
             }
         }
-
+/*
         if (!$markerArray) {
             $markerArray = $this->getArray();
-        }
+        }*/
 
         // Data field labels
         $infoFieldArray = GeneralUtility::trimExplode(',', $infoFields, 1);
@@ -636,12 +638,6 @@ class Marker {
 
         unset($unsetVars['cmd']);
         $markerArray['###FORM_URL###'] = $formUrl;
-        $form = \tx_div2007_alpha5::getClassName_fh002(
-            $theTable . '_form',
-            $prefixId
-        );
-
-        $markerArray['###FORM_NAME###'] = $form; // $this->conf['formName'];
 
         $ac = $this->controlData->getFeUserData('aC');
         if ($ac) {
@@ -673,7 +669,13 @@ class Marker {
 
         $vars['cmd'] = 'edit';
 
-        $markerArray['###EDIT_URL###'] = $urlObj->get('', $this->controlData->getPid('edit') . ',' . $GLOBALS['TSFE']->type, $vars, $unsetVars);
+        $markerArray['###EDIT_URL###'] =
+            $urlObj->get(
+                '',
+                $this->controlData->getPid('edit') . ',' . $GLOBALS['TSFE']->type,
+                $vars,
+                $unsetVars
+            );
         $markerArray['###THE_PID###'] = $this->controlData->getPid();
         $markerArray['###THE_PID_TITLE###'] = $this->thePidTitle;
         $markerArray['###BACK_URL###'] = $backUrl;
@@ -788,9 +790,9 @@ class Marker {
         $row = '',
         $viewOnly = false
     ) {
-        if (!$markerArray) {
-            $markerArray = $this->getArray();
-        }
+//         if (!$markerArray) {
+//             $markerArray = $this->getArray();
+//         }
 
         if (is_object($this->staticInfoObj)) {
             $cmd = $this->controlData->getCmd();
@@ -881,18 +883,6 @@ class Marker {
             }
         }
     }	// addStaticInfoMarkers
-
-    /**
-    * Adds password transmission markers
-    *
-    * @param array  $markerArray: the input marker array
-    * @return void
-    */
-    public function addPasswordTransmissionMarkers (array &$markerArray, $checkPasswordAgain) {
-        if ($this->controlData->getTable() == 'fe_users') {
-            $this->controlData->getTransmissionSecurity()->getMarkers($markerArray, $checkPasswordAgain);
-        }
-    }
 
     /**
     * Builds a file uploader
@@ -1031,9 +1021,6 @@ var submitFile = function(id){
         $activity = '',
         $bHtml = true
     ) {
-        if (!$markerArray)	{
-            $markerArray = $this->getArray();
-        }
         $filenameArray = array();
 
         if ($dataArray[$theField]) {
@@ -1097,23 +1084,22 @@ var submitFile = function(id){
         $cmdKey,
         $mode,
         $token,
-        $bUseEmailAsUsername,
+        $useEmailAsUsername,
+        $enableEmailConfirmation,
         $cmdKeyFields,
         $dataArray = array()
     ) {
-        if (!$markerArray) {
-            $markerArray = $this->getArray();
-        }
-
         if ($this->conf[$cmdKey . '.']['preview'] && $mode != MODE_PREVIEW) {
             $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="' . $prefixId .  '[preview]" value="1"' . HtmlUtility::getXhtmlFix() . '>';
             if (
                 $theTable == 'fe_users' &&
                 $cmdKey == 'edit' &&
-                $bUseEmailAsUsername
+                $useEmailAsUsername
             ) {
                 $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="FE[' . $theTable . '][username]" value="' . htmlspecialchars($dataArray['username']) . '"' . HtmlUtility::getXhtmlFix() . '>';
-                $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="FE[' . $theTable . '][email]" value="' . htmlspecialchars($dataArray['email']) . '"' . HtmlUtility::getXhtmlFix() . '>';
+                if ($enableEmailConfirmation) {
+                    $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="FE[' . $theTable . '][email]" value="' . htmlspecialchars($dataArray['email']) . '"' . HtmlUtility::getXhtmlFix() . '>';
+                }
             }
         }
         $fieldArray = GeneralUtility::trimExplode(',', $cmdKeyFields, 1);
@@ -1168,9 +1154,9 @@ var submitFile = function(id){
     ) {
         $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
 
-        if (!$markerArray) {
-            $markerArray = $this->getArray();
-        }
+//         if (!$markerArray) {
+//             $markerArray = $this->getArray();
+//         }
 
         if ($this->controlData->getMode() == MODE_PREVIEW || $viewOnly) {
             if (!$markerArray['###FIELD_zone###']) {

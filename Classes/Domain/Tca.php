@@ -5,7 +5,7 @@ namespace JambageCom\Agency\Domain;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -156,6 +156,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
             return false;
         }
 
+        
         $dataFieldList = array_keys($dataArray);
         foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
             $colConfig = $colSettings['config'];
@@ -300,7 +301,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
     /**
     * Adds form element markers from the Table Configuration Array to a marker array
     *
-    * @param array $markerArray: the input marker array
+    * @param array $markerArray: the input and output marker array
     * @param array $cObj: the cObject
     * @param array $langObj: the language object
     * @param array $controlData: the object of the control data
@@ -314,9 +315,9 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
     * @param string $activity: 'preview', 'input' or 'email': parameter of stdWrap configuration
     * @param boolean $bChangesOnly: whether only updated fields should be presented
     * @param boolean $HSC: whether content should be htmlspecialchar'ed or not
-    * @return void
+    * @return void . $markerArray is filled with new markers
     */
-    public function addTcaMarkers (
+    public function addMarkers (
         &$markerArray,
         $conf,
         \JambageCom\Agency\Api\Localization $langObj,
@@ -333,6 +334,8 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
         $HSC = true
     ) {
         $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
+        $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
+        $useXHTML = \JambageCom\Div2007\Utility\HtmlUtility::useXHTML();
 
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
@@ -340,11 +343,10 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
         ) {
             return false;
         }
-        $bUseMissingFields = false;
-        $useXHTML = $GLOBALS['TSFE']->config['config']['xhtmlDoctype'] != '';
+        $useMissingFields = false;
 
         if ($activity == 'email') {
-            $bUseMissingFields = true;
+            $useMissingFields = true;
         }
 
         $charset = $GLOBALS['TSFE']->renderCharset ? $GLOBALS['TSFE']->renderCharset : 'utf-8';
@@ -381,7 +383,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
             if (
                 GeneralUtility::inList($fields, $colName) ||
-                $bUseMissingFields
+                $jseMissingFields
             ) {
                 $colConfig = $colSettings['config'];
                 $colContent = '';
@@ -457,7 +459,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                     $bCheckedArray = array();
                                     if (
                                         isset($mrow[$colName]) &&
-                                        $mrow[$colName] != ''
+                                        (string) $mrow[$colName] != ''
                                     ) {
                                         if (is_array($mrow[$colName])) {
                                             foreach($mrow[$colName] as $key => $value) {
@@ -499,8 +501,8 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                 } else {
                                     if (
                                         isset($mrow[$colName]) &&
-                                        $mrow[$colName] != '' &&
-                                        $mrow[$colName] != '0'
+                                        (string) $mrow[$colName] != '' &&
+                                        (string) $mrow[$colName] != '0'
                                     ) {
                                         $label = $langObj->getLL('yes');
                                     } else {
@@ -517,7 +519,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                             case 'radio':
                                 if (
                                     isset($mrow[$colName]) &&
-                                    $mrow[$colName] != ''
+                                    (string) $mrow[$colName] != ''
                                 ) {
                                     $valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', $mrow[$colName]);
                                     $textSchema = $theTable . '.' . $colName . '.I.';
@@ -551,7 +553,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                             case 'select':
                                 if (
                                     isset($mrow[$colName]) &&
-                                    $mrow[$colName] != ''
+                                    (string) $mrow[$colName] != ''
                                 ) {
                                     $valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', $mrow[$colName]);
                                     $textSchema = $theTable . '.' . $colName . '.I.';
@@ -564,7 +566,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                         $itemArray = $colConfig['items'];
                                     }
                                     if (!$bStdWrap) {
-                                        $stdWrap['wrap'] = '|<br />';
+                                        $stdWrap['wrap'] = '|<br' . $xhtmlFix . '>';
                                     }
 
                                     if (is_array($itemArray)) {
@@ -620,6 +622,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                                     if ($HSC) {
                                                         $text = htmlspecialchars($text, ENT_QUOTES, $charset);
                                                     }
+
                                                     $colContent .=
                                                         (($bNotLast || $i < count($foreignRows) - 1 ) ?
                                                             $cObj->stdWrap($text, $stdWrap) :
@@ -686,7 +689,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                     $label = htmlspecialchars($label, ENT_QUOTES, $charset);
                                     $colContent .= ' value="' . $label . '"';
                                 }
-                                $colContent .= ($useXHTML ? ' /' : ' ' ) . '>';
+                                $colContent .= $xhtmlFix . '>';
                                 break;
 
                             case 'text':
@@ -738,7 +741,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                         if (is_array($startVal)) {
                                             $checked = in_array($key, $startVal);
                                         } else {
-                                            $checked = ($startVal & (1 << $key)) ? ' checked="checked"' : '';
+                                            $checked = ($startVal & (1 << $key)) ? true : false;
                                         }
                                         $checkedHtml = '';
                                         if ($checked) {
@@ -755,13 +758,14 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                             ) .
                                             ' id="' . $uidText . '-' . $key .
                                             '" name="FE[' . $theTable . '][' . $colName . '][]" value="' . $key . '"' .
-                                            $checkedHtml . ($useXHTML ? ' /' : ' ' ) . '><label for="' . $uidText . '-' . $key . '">' .
+                                            $checkedHtml . $xhtmlFix . '><label for="' . $uidText . '-' . $key . '">' .
                                             $label .
                                             '</label></li>';
                                         $colContent .= $newContent;
                                     }
                                     $colContent .= '</ul>';
                                 } else {
+                                    $checkedHtml = ($useXHTML ? ' checked="checked"' : ' checked');
                                     $colContent =
                                         '<input type="checkbox"' .
                                         \tx_div2007_alpha5::classParam_fh002(
@@ -775,9 +779,8 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                             $prefixId
                                         ) .
                                         '" name="FE[' . $theTable . '][' . $colName . ']" title="' .
-                                        $label . '"' . (isset($mrow[$colName]) && $mrow[$colName] != '' ? ' value="on" checked="checked"' : '') .
-                                        ($useXHTML ? ' /' : ' ' ) .
-                                        '>';
+                                        $label . '"' . (isset($mrow[$colName]) && $mrow[$colName] != '' ? ' value="on"' . $checkedHtml : '') .
+                                        $xhtmlFix . '>';
                                 }
                                 break;
 
@@ -806,6 +809,8 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
                                 if (isset($itemArray) && is_array($itemArray)) {
                                     $i = 0;
+                                    $checkedHtml = ($useXHTML ? ' checked="checked"' : ' checked');
+
                                     foreach($itemArray as $key => $confArray) {
                                         $value = $confArray[1];
                                         $label = $langObj->getLLFromString($confArray[0]);
@@ -822,7 +827,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                             $prefixId
                                         ) .
                                         '-' . $i . '" name="FE[' . $theTable . '][' . $colName . ']"' .
-                                            ' value="' . $value . '" ' . ($value == $startVal ? ' checked="checked"' : '') . ($useXHTML ? ' /' : ' ' ) . '>' .
+                                            ' value="' . $value . '" ' . ($value == $startVal ? $checkedHtml : '') . $xhtmlFix . '>' .
                                             '<label for="' .
                                             \tx_div2007_alpha5::getClassName_fh002(
                                                 $colName,
@@ -842,6 +847,8 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                 $colContent ='';
                                 $attributeMultiple = '';
                                 $attributeClass = '';
+                                $checkedHtml =  ($useXHTML ? ' checked="checked"' : ' checked');
+                                $selectedHtml = ($useXHTML ? ' selected="selected"' : ' selected');
 
                                 if (
                                     $colConfig['maxitems'] > 1 &&
@@ -881,7 +888,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
                                 if ($colConfig['renderMode'] == 'checkbox') {
                                     $colContent .= '
-                                        <input' . $attributeIdName . ' value="" type="hidden" />';
+                                        <input' . $attributeIdName . ' value="" type="hidden"' . $xhtmlFix . '>';
                                         $colContent .= '
                                             <dl ';
                                         if ($attributeClass != '') {
@@ -889,7 +896,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                         }
                                         $colContent .=
                                             $attributeTitle .
-                                            ($useXHTML ? ' /' : ' ' ) . '>';
+                                            $xhtmlFix . '>';
                                 } else {
                                     $colContent .= '<select' . $attributeIdName;
                                     if ($attributeClass != '') {
@@ -922,7 +929,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                                 $prefixId
                                             ) .
                                             '-' . $i . '" name="FE[' . $theTable . '][' . $colName . '][' . $k . ']" value="' . $k .
-                                            '" type="checkbox"  ' . (in_array($k, $valuesArray) ? ' checked="checked"' : '') . ($useXHTML ? ' /' : ' ' ) . '></dt>
+                                            '" type="checkbox"  ' . (in_array($k, $valuesArray) ? $checkedHtml : '') . $xhtmlFix . '></dt>
                                                 <dd><label for="' .
                                                 \tx_div2007_alpha5::getClassName_fh002(
                                                     $colName,
@@ -930,7 +937,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                                 ) .
                                                 '-' . $i . '">' . $label . '</label></dd>';
                                         } else {
-                                            $colContent .= '<option value="' . $k . '" ' . (in_array($k, $valuesArray) ? 'selected="selected"' : '') . '>' . $label . '</option>';
+                                            $colContent .= '<option value="' . $k . '" ' . (in_array($k, $valuesArray) ? $selectedHtml : '') . '>' . $label . '</option>';
                                         }
                                         $i++;
                                     }
@@ -998,23 +1005,39 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                     $whereClause = $this->replaceForeignWhereMarker($whereClause,  $colConfig);
                                     $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $colConfig['foreign_table'], $whereClause, '', $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['sortby']);
 
-                                    if (!in_array($colName, $controlData->getRequiredArray())) {
-                                        if ($colConfig['renderMode'] == 'checkbox' || $colContent) {
+                                    if (
+                                        !in_array(
+                                            $colName,
+                                            $controlData->getRequiredArray()
+                                        )
+                                    ) {
+                                        if (
+                                            $colConfig['renderMode'] == 'checkbox' ||
+                                            $colContent
+                                        ) {
                                             // nothing
                                         } else {
-                                            $colContent .= '<option value="" ' . ($valuesArray[0] ? '' : 'selected="selected"') . '></option>';
+                                            $colContent .= '<option value=""' . ($valuesArray[0] ? '' : $selectedHtml) . '></option>';
                                         }
                                     }
 
                                     $selectedValue = false;
+
                                     while ($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
                                             // Handle usergroup case
-                                        if ($colName == 'usergroup' && isset($userGroupObj) && is_object($userGroupObj)) {
+                                        if (
+                                            $colName == 'usergroup' &&
+                                            isset($userGroupObj) &&
+                                            is_object($userGroupObj)
+                                        ) {
                                             if (!in_array($row2['uid'], $reservedValues)) {
                                                 $row2 = $this->getUsergroupOverlay($conf, $controlData, $row2);
                                                 $titleText = htmlspecialchars($row2[$titleField], ENT_QUOTES, $charset);
-                                                $selected = (in_array($row2['uid'], $valuesArray) ? ' selected="selected"' : '');
-                                                if (!$conf['allowMultipleUserGroupSelection'] && $selectedValue) {
+                                                $selected = (in_array($row2['uid'], $valuesArray) ? $selectedHtml : '');
+                                                if (
+                                                    !$conf['allowMultipleUserGroupSelection'] &&
+                                                    $selectedValue
+                                                ) {
                                                     $selected = '';
                                                 }
                                                 $selectedValue = ($selected ? true: $selectedValue);
@@ -1030,7 +1053,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                                         $prefixId
                                                     ) .
                                                     '-' . $row2['uid'] . '" name="FE[' . $theTable . '][' . $colName . '][' . $row2['uid'] . ']" value="'.$row2['uid'] .
-                                                    '" type="checkbox"' . ($selected ? ' checked="checked"':'') . ($useXHTML ? ' /' : ' ' ) . '></dt>
+                                                    '" type="checkbox"' . ($selected ? $checkedHtml : '') . $xhtmlFix . '></dt>
                                                     <dd><label for="' .
                                                     \tx_div2007_alpha5::getClassName_fh002(
                                                         $colName,
@@ -1068,14 +1091,14 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                                     $colName,
                                                     $prefixId
                                                 ) .
-                                                '-' . $row2['uid'] . '" name="FE[' . $theTable . '][' . $colName . '][' . $row2['uid'] . ']" value="' . $row2['uid'] . '" type="checkbox"' . (in_array($row2['uid'],  $valuesArray) ? ' checked="checked"' : '') . ($useXHTML ? ' /' : ' ' ) . '></dt>
+                                                '-' . $row2['uid'] . '" name="FE[' . $theTable . '][' . $colName . '][' . $row2['uid'] . ']" value="' . $row2['uid'] . '" type="checkbox"' . (in_array($row2['uid'],  $valuesArray) ? $checkedHtml : '') . $xhtmlFix . '></dt>
                                                 <dd><label for="' .
                                                 \tx_div2007_alpha5::getClassName_fh002(
                                                     $colName,
                                                     $prefixId
                                                 ) . '-' . $row2['uid'] . '">' . $titleText . '</label></dd>';
                                             } else {
-                                                $colContent .= '<option value="' . $row2['uid'] . '"' . (in_array($row2['uid'], $valuesArray) ? 'selected="selected"' : '') . '>' . $titleText . '</option>';
+                                                $colContent .= '<option value="' . $row2['uid'] . '"' . (in_array($row2['uid'], $valuesArray) ? $selectedHtml : '') . '>' . $titleText . '</option>';
                                             }
                                         }
                                     }

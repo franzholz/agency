@@ -43,6 +43,10 @@ namespace JambageCom\Agency\Security;
 *
 */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use JambageCom\Agency\Utility\SessionUtility;
+
 
 /**
 * Secured data handling
@@ -54,14 +58,38 @@ class SecuredData
     *
     * @var array
     */
-    protected static $securedFields = array('password', 'password_again', 'tx_agency_password');
+    static protected $securedFields = array('password', 'password_again', 'tx_agency_password');
+
+    /**
+     * Gets the transmission security object
+     *
+     * @return tx_agency_transmission_security the transmission security object
+     */
+    static public function getTransmissionSecurity () {
+        $result = GeneralUtility::makeInstance(
+            \JambageCom\Div2007\Security\TransmissionSecurity::class
+        );
+        return $result;
+    }
+
+    /**
+     * Gets the storage security object
+     *
+     * @return tx_agency_transmission_security the storage security object
+     */
+    static public function getStorageSecurity () {
+        $result = GeneralUtility::makeInstance(
+            \JambageCom\Div2007\Security\StorageSecurity::class
+        );
+        return $result;
+    }
 
     /**
     * Gets the array of names of secured fields
     *
     * @return array names of secured fields
     */
-    public static function getSecuredFields ()
+    static public function getSecuredFields ()
     {
         return self::$securedFields;
     }
@@ -72,7 +100,7 @@ class SecuredData
     * @param array $fields: initial list of field names
     * @return array new list of field names
     */
-    public static function getOpenFields ($fields)
+    static public function getOpenFields ($fields)
     {
         $securedFieldArray = self::getSecuredFields();
         $fieldArray = array_unique(GeneralUtility::trimExplode(',', $fields));
@@ -93,7 +121,7 @@ class SecuredData
     * @param bool $htmlSpecial: whether to apply htmlspecialchars to the values
     * @return void
     */
-    public static function secureInput (
+    static public function secureInput (
         &$dataArray,
         $bHtmlSpecial = true
     )
@@ -138,4 +166,197 @@ class SecuredData
         }
         return $securedValue;
     }
-}
+
+    /**
+    * Writes the password to FE user session data
+    *
+    * @param    array   $row: data array that may contain password values
+    *
+    * @return void
+    */
+    static public function securePassword (
+        $extensionKey,
+        array &$row,
+        &$errorMessage
+    ) {
+        $result = true;
+
+        $data = array();
+            // Decrypt incoming password (and eventually other encrypted fields)
+        $passwordRow = array('password' => self::readPassword($extensionKey));
+        $errorMessage = '';
+        $passwordDecrypted =
+            self::getTransmissionSecurity()->decryptIncomingFields(
+                $passwordRow,
+                $errorMessage
+            );
+            // Collect secured fields
+
+        if ($passwordDecrypted !== false) {
+            self::writePassword(
+                $extensionKey,
+                $passwordRow['password'],
+                $passwordRow['password']
+            );
+        } else if ($errorMessage == '') {
+            self::writePassword(
+                $extensionKey,
+                $passwordRow['password'],
+                $row['password_again']
+            );
+        } else {
+            $result = false;
+        }
+        return $result;
+    }
+
+    /**
+    * Writes the password to session data
+    *
+    * @param    string  $password: the password
+    * @return   void
+    */
+    static public function writePassword (
+        $extensionKey,
+        $password,
+        $passwordAgain = '',
+        $token = '',
+        $redirectUrl = ''
+    ) {
+        $sessionData = SessionUtility::readData($extensionKey);
+        if ($password == '') {
+            $sessionData['password'] = '__UNSET';
+            $sessionData['password_again'] = '__UNSET';
+        } else {
+            $sessionData['password'] = $password;
+            if ($passwordAgain != '') {
+                $sessionData['password_again'] = $passwordAgain;
+            }
+        }
+        SessionUtility::writeData(
+            $extensionKey,
+            $sessionData,
+            true,
+            true,
+            $token,
+            $redirectUrl
+        );
+    }
+
+
+    /*************************************
+    * PASSWORD HANDLING
+    *************************************/
+    /**
+    * Retrieves the password from session data and encrypt it for storage
+    *
+    * @return   string  the encrypted password
+    *           boolean false in case of an error
+    */
+    static public function readPasswordForStorage ($extensionKey) {
+        $result = false;
+        $password = self::readPassword($extensionKey);
+        if ($password != '') {
+            $result =
+                self::getStorageSecurity()->encryptPasswordForStorage($password);
+        }
+        return $result;
+    }
+
+    /**
+    * Retrieves the password from session data
+    *
+    * @return   string  the password
+    */
+    static public function readPassword ($extensionKey) {
+        $result = '';
+        $securedArray = self::readSecuredArray($extensionKey);
+        if ($securedArray['password']) {
+            $result = $securedArray['password'];
+        }
+        return $result;
+    }
+
+
+    /**
+    * Generates a value for the password and stores it the FE user session data
+    *
+    * @param    array   $dataArray: incoming array
+    * @return   void
+    */
+    static public function generatePassword (
+        $extensionKey,
+        $cmdKey,
+        array $conf,
+        array $cmdConf,
+        array &$dataArray,
+        &$autoLoginKey
+    ) {
+        // We generate an interim password in the case of an invitation
+        if (
+            $cmdConf['generatePassword']
+        ) {
+            $genLength = intval($cmdConf['generatePassword']);
+
+            if ($genLength) {
+                $generatedPassword =
+                    substr(
+                        md5(uniqid(microtime(), 1)),
+                        0,
+                        $genLength
+                    );
+                $dataArray['password'] = $generatedPassword;
+                $dataArray['password_again'] = $generatedPassword;
+                self::writePassword(
+                    $extensionKey,
+                    $generatedPassword,
+                    $generatedPassword
+                );
+            }
+        }
+
+        if (
+            \JambageCom\Agency\Request\Parameters::enableAutoLoginOnConfirmation(
+                $conf,
+                $cmdKey
+            )
+        ) {
+            $password = self::readPassword($extensionKey);
+            $cryptedPassword = '';
+            $autoLoginKey = '';
+            $isEncrypted =
+                self::getStorageSecurity()
+                    ->encryptPasswordForAutoLogin(
+                        $password,
+                        $cryptedPassword,
+                        $autoLoginKey
+                    );
+            if ($isEncrypted) {
+                $dataArray['tx_agency_password'] = base64_encode($cryptedPassword);
+            }
+        }
+    }
+
+    /*************************************
+    * SECURED ARRAY HANDLING
+    *************************************/
+    /**
+    * Retrieves values of secured fields from FE user session data
+    * Used for the password
+    *
+    * @return   array   secured FE user session data
+    */
+    static public function readSecuredArray (
+        $extensionKey
+    ) {
+        $securedArray = array();
+        $sessionData = SessionUtility::readData($extensionKey);
+        $securedFields = self::getSecuredFields();
+        foreach ($securedFields as $securedField) {
+            if (isset($sessionData[$securedField])) {
+                $securedArray[$securedField] = $sessionData[$securedField];
+            }
+        }
+        return $securedArray;
+    }
+} 

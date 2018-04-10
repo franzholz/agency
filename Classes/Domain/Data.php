@@ -5,7 +5,7 @@ namespace JambageCom\Agency\Domain;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -44,6 +44,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use JambageCom\Div2007\Database\CoreQuery;
 
 use JambageCom\Div2007\Captcha\CaptchaInterface;
+use JambageCom\Div2007\Utility\SystemUtility;
 
 class Data implements \TYPO3\CMS\Core\SingletonInterface {
     public $lang;
@@ -105,7 +106,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 $controlData->getExtensionKey()
             )
         ) {
-            $this->setSpecialFieldList('captcha_response');
+            $this->setSpecialFieldList(\JambageCom\Agency\Constants\Field::CAPTCHA);
         }
 
             // Get POST parameters
@@ -405,7 +406,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $conf = $confObj->getConf();
 
         if (
-            $orderNo != '' &&
+            (string) $orderNo != '' &&
             $theRule &&
             isset($conf['evalErrors.'][$theField . '.'][$theRule . '.'])
         ) {
@@ -483,7 +484,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         if (
             $captcha instanceof CaptchaInterface
         ) {
-            $displayFieldArray[] = 'captcha_response';
+            $displayFieldArray[] = \JambageCom\Agency\Constants\Field::CAPTCHA;
         }
 
         // Check required, set failure if not ok.
@@ -593,7 +594,10 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                     isset($DBrows[0]) &&
                                     is_array($DBrows[0])
                                 ) {
-                                    if (!$bRecordExists || $DBrows[0]['uid'] != $dataArray['uid']) {
+                                    if (
+                                        !$bRecordExists ||
+                                        $DBrows[0]['uid'] != $dataArray['uid']
+                                    ) {
                                         // Only issue an error if the record is not existing (if new...) and if the record with the false value selected was not our self.
                                         $failureArray[] = $theField;
                                         $this->inError[$theField] = true;
@@ -643,7 +647,10 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                 }
                             break;
                             case 'required':
-                                if (empty($dataArray[$theField]) && $dataArray[$theField] !== '0') {
+                                if (
+                                    empty($dataArray[$theField]) &&
+                                    trim($dataArray[$theField]) !== '0'
+                                ) {
                                     $failureArray[] = $theField;
                                     $this->inError[$theField] = true;
                                     $this->evalErrors[$theField][] = $theCmd;
@@ -739,7 +746,10 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                         $fileNameArray = $dataArray[$theField];
                                         $newFileNameArray = array();
 
-                                        if (is_array($fileNameArray) && $fileNameArray[0] != '') {
+                                        if (
+                                            is_array($fileNameArray) &&
+                                            $fileNameArray[0] != ''
+                                        ) {
                                             foreach ($fileNameArray as $k => $filename) {
                                                 if (is_array($filename)) {
                                                     $filename = $filename['name'];
@@ -874,9 +884,11 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             break;
                             case 'preg':
                                 if (
-                                    !is_array($dataArray[$theField])
-                                    && !(empty($dataArray[$theField]) &&
-                                    $dataArray[$theField] !== '0')
+                                    !is_array($dataArray[$theField]) &&
+                                    !(
+                                        empty($dataArray[$theField]) &&
+                                        trim($dataArray[$theField]) !== '0'
+                                    )
                                 ) {
                                     if (isset($countArray['preg'][$theCmd])) {
                                         $countArray['preg'][$theCmd]++;
@@ -993,11 +1005,13 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                 }
 
                                 if (
+                                    $theField == \JambageCom\Agency\Constants\Field::CAPTCHA &&
                                     $captcha instanceof CaptchaInterface
                                 ) {
                                     $errorField = '';
 
                                     if (
+                                        $dataArray[$theField] == '' ||
                                         !$captcha->evalValues(
                                             $dataArray[$theField],
                                             $cmdParts[0]
@@ -1045,10 +1059,11 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             !empty($failureMsg[$theField]['0'])
                         )
                     ) {
+                        $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
                         if ($markContentArray['###EVAL_ERROR_saved###']) {
-                            $markContentArray['###EVAL_ERROR_saved###'] .= '<br />';
+                            $markContentArray['###EVAL_ERROR_saved###'] .= '<br' . $xhtmlFix . '>';
                         }
-                        $errorMsg = implode($failureMsg[$theField], '<br />');
+                        $errorMsg = implode($failureMsg[$theField], '<br' . $xhtmlFix . '>');
                         $markContentArray['###EVAL_ERROR_saved###'] .= $errorMsg;
                     } else {
                         $errorMsg = '';
@@ -1393,7 +1408,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $cmdKey,
         $pid,
         $password,
-        &$hookClassArray
+        $hookClassArray
     ) {
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
@@ -1494,7 +1509,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             true
                         );
                         $newRow = array_merge($origArray, $newRow);
-                        \tx_div2007_alpha5::userProcess_fh002(
+                        SystemUtility::userProcess(
                             $this->control,
                             $conf['edit.'],
                             'userFunc_afterSave',
@@ -1656,7 +1671,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             true
                         );
 
-                        \tx_div2007_alpha5::userProcess_fh002(
+                        SystemUtility::userProcess(
                             $this->control,
                             $conf['create.'],
                             'userFunc_afterSave',
@@ -2032,7 +2047,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         }
 
         $inputArr =
-            \tx_div2007_alpha5::userProcess_fh002(
+            SystemUtility::userProcess(
                 $this->control,
                 $conf,
                 'userFunc_updateArray',
@@ -2157,6 +2172,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 }
             }
         }
+
         return $parsedArray;
     }   // parseIncomingData
 

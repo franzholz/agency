@@ -74,7 +74,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
     }
 
     /**
-    * Sends info mail to subscriber or displays a screen to update or delete the membership
+    * This method sends info mail to subscriber or it displays a screen to update or delete the membership or to send a login link to reenter a forgotten password.
     *
     * @param array $cObj: the cObject
     * @param array $langObj: the language object
@@ -87,15 +87,14 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
     * @return	string		HTML content message
     * @see init(),compile(), send()
     */
-    public function sendInfo (
-        $conf,
-        $cObj,
+    public function processInfo (
+        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Api\Localization $langObj,
-        $controlData,
-        $confObj,
-        $tcaObj,
-        $markerObj,
-        $dataObj,
+        \JambageCom\Agency\Request\Parameters $controlData,
+        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
+        \JambageCom\Agency\Domain\Tca $tcaObj,
+        \JambageCom\Agency\View\Marker $markerObj,
+        \JambageCom\Agency\Domain\Data $dataObj,
         \JambageCom\Agency\View\Template $template,
         $theTable,
         $autoLoginKey,
@@ -110,6 +109,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         &$errorCode
     ) {
         $content = false;
+        $conf = $confObj->getConf();
 
         if ($conf['infomail'] && $conf['email.']['field']) {
             $fetch = $controlData->getFeUserData('fetch');
@@ -129,7 +129,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     '100'
                 );
                 $errorContent = '';
-                $bEmailSent = false;
+                $emailHasBeenSent = false;
 
                     // Processing records
                 if (is_array($DBrows)) {
@@ -139,20 +139,10 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     if ($theTable == 'fe_users') {
                         $key = 'SETFIXED_PASSWORD';
                         $outGoingData = array();
+                        // add a r
                         $outGoingData['lost_password'] = '1';
 
-                        $controlData->generatePassword(
-                            $cmdKey,
-                            $conf,
-                            $conf[$cmdKey . '.'],
-                            $outGoingData,
-                            $autoLoginKey
-                        );
-
-                        // if auto-login will be required on confirmation, we store an encrypted version of the password
-                        $savePassword = $controlData->readPasswordForStorage();
-                        $outGoingData['password'] = $savePassword;
-                        $extraList = 'lost_password,password,tx_agency_password';
+                        $extraList = 'lost_password';
                         $result =
                             $dataObj->getCoreQuery()->DBgetUpdate(
                                 $theTable,
@@ -165,9 +155,8 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
 
                     $recipient = $DBrows[0][$conf['email.']['field']];
                     $dataObj->setDataArray($DBrows[0]);
-                    $bEmailSent = $this->compile(
+                    $emailHasBeenSent = $this->compile(
                         $key,
-                        $conf,
                         $cObj,
                         $langObj,
                         $controlData,
@@ -192,10 +181,10 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                         $errorCode
                     );
                 } elseif (GeneralUtility::validEmail($fetch)) {
+                    $key = 'INFOMAIL_NORECORD';
                     $fetchArray = array( '0' => array('email' => $fetch));
-                    $bEmailSent = $this->compile(
-                        'INFOMAIL_NORECORD',
-                        $conf,
+                    $emailHasBeenSent = $this->compile(
+                        $key,
                         $cObj,
                         $langObj,
                         $controlData,
@@ -222,10 +211,10 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 }
 
                 if (
-                    !$bEmailSent &&
+                    !$emailHasBeenSent &&
                     is_array($errorCode)
                 ){
-                    $errorText = $langObj->getLL($errorCode['0'], '', false, true);
+                    $errorText = $langObj->getLL($errorCode['0'], $dummy, '', false, true);
                     $errorContent = sprintf($errorText, $errorCode['1']);
                 }
 
@@ -233,6 +222,9 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     $content = $errorContent;
                 } else {
                     $subpartkey = '###TEMPLATE_' . $this->infomailPrefix . 'SENT###';
+                    if ($key == 'INFOMAIL_NORECORD') {
+                        $subpartkey = '###TEMPLATE_' . $this->infomailPrefix . 'NORECORD_SENT###';                        
+                    }
                     $content =
                         $template->getPlainTemplate(
                             $conf,
@@ -303,7 +295,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
     * @param string $prefixId: the extension prefix id
     * @param array  $DBrows: invoked with just one row of fe_users
     * @param string  $recipient: an email or the id of a front user
-    * @param array  Array with key/values being marker-strings/substitution values.
+    * @param array  key/values being marker-strings/substitution values.
     * @param array  $errorFieldArray: array of field with errors (former $dataObj->inError[$theField])
     * @param array  $setFixedConfig: a setfixed TS config array
     * @param array  $errorCode: array of error indices
@@ -311,14 +303,13 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
     */
     public function compile (
         $key,
-        $conf,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Api\Localization $langObj,
-        $controlData,
-        $confObj,
-        $tcaObj,
-        $markerObj,
-        $dataObj,
+        \JambageCom\Agency\Request\Parameters $controlData,
+        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
+        \JambageCom\Agency\Domain\Tca $tcaObj,
+        \JambageCom\Agency\View\Marker $markerObj,
+        \JambageCom\Agency\Domain\Data $dataObj,
         \JambageCom\Agency\View\Template $template,
         $theTable,
         $autoLoginKey,
@@ -331,36 +322,45 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         $cmd,
         $cmdKey,
         $templateCode,
-        $errorFieldArray,
+        array $errorFieldArray,
         array $setFixedConfig,
         &$errorCode
     ) {
+        $errorCode = '';
+        $conf = $confObj->getConf();
+        $useAdditionalFields = true;
         $extKey = $controlData->getExtensionKey();
         $result = true;
-        $bHTMLallowed = true;
         $missingSubpartArray = array();
         $userSubpartsFound = 0;
         $adminSubpartsFound = 0;
-        $bHTMLMailEnabled = $this->isHTMLMailEnabled($conf);
+        $checkEmailSent = false;
 
         if (!isset($DBrows[0]) || !is_array($DBrows[0])) {
             $DBrows = $origRows;
         }
-
         $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
 
         if (
-            (
-                \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('direct_mail') ||
-                $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['enableDirectMail']
-            ) &&
-            isset($DBrows[0]['module_sys_dmail_html'])
+            $this->isHTMLMailEnabled($conf)
         ) {
-            $bHTMLallowed = $DBrows[0]['module_sys_dmail_html'];
+            if (
+                (
+                    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('direct_mail') ||
+                    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['enableDirectMail']
+                ) &&
+                isset($DBrows[0]['module_sys_dmail_html'])
+            ) {
+                $useHtml = $DBrows[0]['module_sys_dmail_html'];
+            } else {
+                $useHtml = true;
+            }
+        } else {
+            $useHtml = false;
         }
 
             // Setting CSS style markers if required
-        if ($bHTMLMailEnabled) {
+        if ($useHtml) {
             $this->addCSSStyleMarkers($markerArray, $conf, $cObj);
         }
 
@@ -388,15 +388,16 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         $infomailArray = array('INFOMAIL', 'INFOMAIL_NORECORD');
 
         if (
-            (isset($conf['email.'][$key]) && $conf['email.'][$key] != '0') ||
             ($conf['enableEmailConfirmation'] && in_array($key, $setfixedArray)) ||
+            (isset($conf['email.'][$key]) && intval($conf['email.'][$key]) == 1) ||
             (
                 $conf['infomail'] &&
                 in_array($key, $infomailArray) &&
                     // Silently refuse to not send infomail to non-subscriber, if so requested
-                !($key == 'INFOMAIL_NORECORD' && $conf['email.'][$key] == '0')
+                !($key == 'INFOMAIL_NORECORD' && intval($conf['email.'][$key]) == '0')
             )
         ) {
+            $checkEmailSent = true;
             $subpartMarker = '###' . $this->emailMarkPrefix . $key . '###';
             $content['user']['all'] =
                 trim(
@@ -418,12 +419,13 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                         $theTable,
                         $cmdKey,
                         $content['user']['all'],
+                        $useAdditionalFields,
                         $errorFieldArray
                     );
                 $userSubpartsFound++;
             }
 
-            if ($bHTMLMailEnabled && $bHTMLallowed) {
+            if ($useHtml) {
                 $subpartMarker = '###' . $this->emailMarkPrefix . $key . $this->emailMarkHTMLSuffix . '###';
                 $content['userhtml']['all'] = trim($cObj->getSubpart($templateCode,  $subpartMarker));
 
@@ -439,6 +441,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                             $theTable,
                             $cmdKey,
                             $content['userhtml']['all'],
+                            $useAdditionalFields,
                             $errorFieldArray
                         );
                     $userSubpartsFound++;
@@ -446,8 +449,11 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             }
         }
 
-        if (!isset($conf['notify.'][$key]) || $conf['notify.'][$key]) {
-
+        if (
+            !isset($conf['notify.'][$key]) ||
+            $conf['notify.'][$key]
+        ) {
+            $checkEmailSent = true;
             $subpartMarker = '###' . $this->emailMarkPrefix . $key . $this->emailMarkAdminSuffix . '###';
             $content['admin']['all'] =
                 trim(
@@ -469,12 +475,13 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                         $theTable,
                         $cmdKey,
                         $content['admin']['all'],
+                        $useAdditionalFields,
                         $errorFieldArray
                     );
                 $adminSubpartsFound++;
             }
 
-            if ($bHTMLMailEnabled) {
+            if ($useHtml) {
                 $subpartMarker =  '###' . $this->emailMarkPrefix . $key . $this->emailMarkAdminSuffix . $this->emailMarkHTMLSuffix . '###';
                 $content['adminhtml']['all'] =
                     trim(
@@ -496,6 +503,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                             $theTable,
                             $cmdKey,
                             $content['adminhtml']['all'],
+                            $useAdditionalFields,
                             $errorFieldArray
                         );
                     $adminSubpartsFound++;
@@ -591,6 +599,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             } else {
                 $currentRow = $row;
             }
+
             if ($bChangesOnly) {
                 $mrow = array();
                 foreach ($row as $field => $v) {
@@ -609,7 +618,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             }
 
             $markerArray['###SYS_AUTHCODE###'] = $authObj->generateAuthCode($row);
-            \JambageCom\Agency\Setfixed\SetFixedUrls::compute(
+            \JambageCom\Agency\Setfixed\SetfixedUrls::compute(
                 $cmd,
                 $prefixId,
                 $cObj,
@@ -635,9 +644,14 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             foreach ($GLOBALS['TCA'][$theTable]['columns'] as $theField => $fieldConfig) {
 
                 if (
-                    $fieldConfig['config']['internal_type'] == 'file' &&
-                    $fieldConfig['config']['allowed'] != '' &&
-                    $fieldConfig['config']['uploadfolder'] != ''
+                    (
+                        $fieldConfig['config']['internal_type'] == 'file' &&
+                        $fieldConfig['config']['allowed'] != '' &&
+                        $fieldConfig['config']['uploadfolder'] != ''
+                    ) ||
+                    (
+                        $fieldConfig['config']['foreign_table'] == 'sys_file_reference'
+                    )
                 ) {
                     $markerObj->addFileUploadMarkers(
                         $langObj,
@@ -655,7 +669,6 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     );
                 }
             }
-
             $markerObj->addLabelMarkers(
                 $markerArray,
                 $conf,
@@ -690,7 +703,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                         ($emailType == 'html')
                     );
 
-                $tcaObj->addTcaMarkers(
+                $tcaObj->addMarkers(
                     $fieldMarkerArray,
                     $conf,
                     $langObj,
@@ -808,8 +821,9 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             $content['adminhtml']['final'] = str_replace('\n', '', $content['adminhtml']['final']);
         }
 
-        $bRecipientIsInt = \tx_div2007_core::testInt($recipient);
-        if ($bRecipientIsInt) {
+        if (
+            \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($recipient)
+        ) {
             $fe_userRec = $GLOBALS['TSFE']->sys_page->getRawRecord('fe_users', $recipient);
             $recipient = $fe_userRec['email'];
         }
@@ -823,7 +837,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             $file = ($conf['addAttachment.']['file'] ? $GLOBALS['TSFE']->tmpl->getFileName($conf['addAttachment.']['file']) : '');
         }
 
-            // SETFIXED_REVIEW will be sent to user only id the admin part is present
+            // SETFIXED_REVIEW will be sent to user only if the admin part is present
         if (
             ($userSubpartsFound + $adminSubpartsFound >= 1) &&
             (
@@ -841,18 +855,23 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 $content['adminhtml']['final'],
                 $file
             );
-
-            if ($result !== true) {
-                $errorCode = array();
-                $errorCode['0'] = 'internal_email_not_sent';
-                $errorCode['1'] = $recipient;
-            }
-        } else if ($conf['notify.'][$key]) {
-            $errorCode = array();
-            $errorCode['0'] = 'internal_no_subtemplate';
-            $errorCode['1'] = $missingSubpartArray['0'];
-
+        } else {
             $result = false;
+            if (!empty($missingSubpartArray)) { // $conf['notify.'][$key]
+                $errorCode = array();
+                $errorCode['0'] = 'internal_no_subtemplate';
+                $errorCode['1'] = $missingSubpartArray['0'];
+            }
+        }
+
+        if (
+            $checkEmailSent &&
+            $result === false &&
+            empty($errorCode)
+        ) {
+            $errorCode = array();
+            $errorCode['0'] = 'internal_email_not_sent';
+            $errorCode['1'] = $recipient;
         }
 
         return $result;
@@ -862,7 +881,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
     * Dispatches the email messsage
     *
     * @param string  $recipient: email address
-    * @param string  $admin: email address
+    * @param string  $admi+n: email address
     * @param string  $content: plain content for the recipient
     * @param string  $HTMLcontent: HTML content for the recipient
     * @param string  $adminContent: plain content for admin
@@ -942,7 +961,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
     public function addCSSStyleMarkers (
         array &$markerArray,
         $conf,
-        $cObj
+        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj
     ) {
         $markerArray['###CSS_STYLES###'] = '	/*<![CDATA[*/
 ';

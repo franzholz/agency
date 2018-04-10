@@ -43,7 +43,10 @@ namespace JambageCom\Agency\Controller;
 */
 
 use JambageCom\Agency\Configuration\ConfigurationCheck;
+use JambageCom\Agency\Utility\LocalizationUtility;
+
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 
 
 class RegisterPluginController extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
@@ -58,6 +61,7 @@ class RegisterPluginController extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
         $this->pi_setPiVarDefaults();
         $this->conf = $conf;
+        LocalizationUtility::init();
 
             // Check installation requirements
         $content =
@@ -96,7 +100,7 @@ class RegisterPluginController extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             !is_array($GLOBALS['TCA'][$theTable]) ||
             !is_array($GLOBALS['TCA'][$theTable]['columns'])
         ) {
-            $errorText = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_table_without_TCA');
+            $errorText = LocalizationUtility::translate('internal_table_without_TCA');
             $content = sprintf($errorText, $theTable);
         }
 

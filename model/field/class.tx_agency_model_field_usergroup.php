@@ -233,7 +233,12 @@ class tx_agency_model_field_usergroup  extends tx_agency_model_field_base {
 				} else {
 					$keepValues = $this->getReservedValues($conf);
 				}
-				$valuesArray = array_intersect($valuesArray, $keepValues);
+				if (
+                    isset($keepValues) &&
+                    is_array($keepValues)
+                ) {
+                    $valuesArray = array_intersect($valuesArray, $keepValues);
+				}
 			}
 
 			$dataArray[$fieldname] = array_unique(array_merge($dataArray[$fieldname], $valuesArray));

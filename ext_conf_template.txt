@@ -16,3 +16,7 @@ forceGender = 0
 
   # cat=basic/enable; type=integer; label=endtime year: Enter the year for the endtime field. Some Microsoft Windows systems are limited to 2038 for the PHP function mktime.
 endtimeYear = 2021
+
+  # cat=basic; type=boolean; label=Enable new language texts: This will activate the language translations from the Resources folder.
+languageResource = 0
+

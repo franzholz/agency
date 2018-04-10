@@ -123,6 +123,7 @@ class SetFixedUrls {
                         $bSetfixedHash = true;
                     } else {
                         $bSetfixedHash = false;
+                        // calculate the 'aC' parameter used as authentication code
                         $setfixedpiVars[$prefixId . '%5BaC%5D'] =
                             $authObj->generateAuthCode(
                                 $record,
@@ -200,7 +201,7 @@ class SetFixedUrls {
     /**
     *  Store the setfixed vars and return a replacement hash
     */
-    public function storeFixedPiVars (array $params) {
+    static public function storeFixedPiVars (array $params) {
 
         $regHash_calc = \tx_div2007_core::generateHash($params, 20);
 

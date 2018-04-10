@@ -66,7 +66,7 @@ class AfterSaveView {
         \JambageCom\Agency\Api\Localization $langObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        $tcaObj,
+        \JambageCom\Agency\Domain\Tca $tcaObj,
         $markerObj,
         $dataObj,
         \JambageCom\Agency\View\Template $template,
@@ -84,6 +84,7 @@ class AfterSaveView {
         $errorFieldArray,
         &$content
     ) {
+        $useAdditionalFields = true;
         $errorContent = '';
 
             // Display confirmation message
@@ -101,6 +102,7 @@ class AfterSaveView {
                     $theTable,
                     $cmdKey,
                     $templateCode,
+                    $useAdditionalFields,
                     $errorFieldArray
                 );
             $markerArray =
@@ -123,7 +125,7 @@ class AfterSaveView {
                 $dataArray
             );
 
-            $tcaObj->addTcaMarkers(
+            $tcaObj->addMarkers(
                 $markerArray,
                 $conf,
                 $langObj,
@@ -157,18 +159,21 @@ class AfterSaveView {
 
             if (
                 $cmdKey == 'create' &&
+                $controlData->getTable() == 'fe_users' &&
                 !$conf['enableEmailConfirmation'] &&
                 !$controlData->enableAutoLoginOnCreate($conf)
             ) {
-                $markerObj->addPasswordTransmissionMarkers(
-                    $markerArray,
-                    $controlData->getUsePasswordAgain()
-                );
+                \JambageCom\Agency\Security\SecuredData::getTransmissionSecurity()
+                    ->getMarkers(
+                        $markerArray,
+                        $controlData->getExtensionKey(),
+                        $controlData->getUsePasswordAgain()
+                    );
             }
 
             if (isset($conf[$cmdKey . '.']['marker.'])) {
                 if ($conf[$cmdKey . '.']['marker.']['computeUrl'] == '1') {
-                    \JambageCom\Agency\Setfixed\SetFixedUrls::compute(
+                    \JambageCom\Agency\Setfixed\SetfixedUrls::compute(
                         $cmd,
                         $prefixId,
                         $cObj,

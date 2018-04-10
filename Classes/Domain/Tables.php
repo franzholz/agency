@@ -5,7 +5,7 @@ namespace JambageCom\Agency\Domain;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is

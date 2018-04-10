@@ -55,7 +55,6 @@ class Url implements \TYPO3\CMS\Core\SingletonInterface {
         $this->prefixId = $prefixId;
     }
 
-
     /**
     * Generates a pibase-compliant typolink
     *

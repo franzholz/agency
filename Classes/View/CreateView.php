@@ -68,7 +68,7 @@ class CreateView {
         \JambageCom\Agency\Api\Localization $langObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        $tcaObj,
+        \JambageCom\Agency\Domain\Tca $tcaObj,
         $markerObj,
         $dataObj,
         \JambageCom\Agency\View\Template $template,
@@ -141,11 +141,16 @@ class CreateView {
                 }
             }
 
-            if ($bNeedUpdateJS) {
-                $markerObj->addPasswordTransmissionMarkers(
-                    $markerArray,
-                    $controlData->getUsePasswordAgain()
-                );
+            if (
+                $bNeedUpdateJS &&
+                $controlData->getTable() == 'fe_users'
+            ) {
+                \JambageCom\Agency\Security\SecuredData::getTransmissionSecurity()
+                    ->getMarkers(
+                        $markerArray,
+                        $controlData->getExtensionKey(),
+                        $controlData->getUsePasswordAgain()
+                    );
             }
 
             $templateCode = $cObj->getSubpart($templateCode, $subpartKey);
@@ -168,6 +173,7 @@ class CreateView {
                     $theTable,
                     $cmdKey,
                     $templateCode,
+                    $mode == MODE_PREVIEW,
                     $errorFieldArray,
                     $failure
                 );
@@ -193,7 +199,7 @@ class CreateView {
                 $prefixId,
                 $dataArray
             );
-            $tcaObj->addTcaMarkers(
+            $tcaObj->addMarkers(
                 $markerArray,
                 $conf,
                 $langObj,
@@ -260,6 +266,7 @@ class CreateView {
                 $mode,
                 $token,
                 $conf[$cmdKey . '.']['useEmailAsUsername'],
+                $conf['enableEmailConfirmation'],
                 $conf[$cmdKey . '.']['fields'],
                 $dataArray
             );
@@ -304,11 +311,7 @@ class CreateView {
                         $dataArray,
                         $cmdKey
                     );
-                $form =
-                    \tx_div2007_alpha5::getClassName_fh002(
-                        $theTable . '_form',
-                        $controlData->getPrefixId()
-                    );
+                $form = $controlData->determineFormId();
                 $updateJS =
                     FrontendUtility::getUpdateJS(
                         $modData,
@@ -317,6 +320,16 @@ class CreateView {
                         $fields
                     );
                 $content .= $updateJS;
+                $finalJavaScript = '';
+                \JambageCom\Agency\Security\SecuredData::getTransmissionSecurity()->
+                    getJavaScript(
+                        $finalJavaScript,
+                        $extensionKey,
+                        $form,
+                        $controlData->getUsePasswordAgain()
+                    );
+                \JambageCom\Agency\Api\Javascript::getOnSubmitHooks($finalJavaScript, $this);
+                $content .= $finalJavaScript;
             }
         }
 

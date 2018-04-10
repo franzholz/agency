@@ -1,3 +1,17 @@
+2018-04-10 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix: The database must not be updated immediately when the confirmation link has been clicked and when the ask again screen is activated.
+    * bugfix: the FE user group has been lost after editing a record
+    * rename sendInfo into processInfo because also the display screen for the sending of the password is rendered here
+    * bugfix for the sending of the lost password. The configuration $conf has not been initialized. No internal temporary password is generated any more. The user can log in for one time without a password. This is the same feature as before when he the temporary password has been stored internally in the fe_users record.
+    * add the constant \JambageCom\Agency\Constants\Field::CAPTCHA for captcha_response
+    * restructuring: move \JambageCom\Agency\Request::securePassword into \JambageCom\Agency\Security\SecuredData::securePassword
+    * restructuring: move \JambageCom\Agency\Request::getTransmissionSecurity into \JambageCom\Agency\Security\SecuredData::getTransmissionSecurity
+    * restructuring: move \JambageCom\Agency\Request::getStorageSecurity into \JambageCom\Agency\Security\SecuredData::getStorageSecurity
+    * extract methods writePassword, readPasswordForStorage, readPassword, generatePassword and readSecuredArray from class Request/Parameters into class Security\SecuredData under the same names
+    * extract methods readSessionData, writeSessionData and clearSessionData from class Request/Parameters into class Utility/SessionUtility as readData, writeData and clearData
+    * restructuring: move \JambageCom\Agency\Security\StorageSecurity into extension div2007 \JambageCom\Div2007\Security\StorageSecurity
+    * restructuring: move \JambageCom\Agency\Security\TransmissionSecurity into extension div2007 \JambageCom\Div2007\Security\TransmissionSecurity
+    
 2018-03-30 Franz Holzinger  <franz@ttproducts.de>
     * bugfix: do not decrypt a RSA password when it is empty or has no required rsa prefix.
     * new feature: add a javacript generator as a workaround to deal with a password again field for the RSA transmission security. This is necessary to avoid a second encryption and to come into other error cases. Encrpted passwords cannot be verified directly.
@@ -10,6 +24,7 @@
 
 2018-03-07 Franz Holzinger  <franz@ttproducts.de>
     * copy the language files into Resorces/Private/Language in XLF format and rename the root locallang.xlf into locallang_db_layout.xlf
+    * move ActionController::login into System::login
 
 2018-03-02 Franz Holzinger <franz@ttproducts.de>
     * rename Classes/Api/Email.php => Classes/Controller/Email.php

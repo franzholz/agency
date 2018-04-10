@@ -277,6 +277,7 @@ plugin.tx_agency {
 	email.SETFIXED_APPROVE = {$plugin.tx_agency.enableEmailOnApprove}
 	email.SETFIXED_APPROVE_REVIEW = {$plugin.tx_agency.enableEmailOnApprove}
 	email.SETFIXED_DELETE = {$plugin.tx_agency.enableEmailOnRefuse}
+	email.SETFIXED_ENTER = 0
 	email.SETFIXED_ACCEPT = 1
 	email.SETFIXED_PASSWORD = 1
 	email.SETFIXED_REFUSE = {$plugin.tx_agency.enableEmailOnAdminRefuse}

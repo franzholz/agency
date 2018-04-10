@@ -470,7 +470,7 @@ if (
 			'iconfile' => 'gfx/i/fe_groups.gif',
 		)
 	);
-}
+} // if (version_compare(TYPO3_version, '6.2.0', '<') ... )
 
 
 call_user_func($emClass . '::allowTableOnStandardPages', 'fe_groups_language_overlay');

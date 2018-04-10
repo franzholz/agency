@@ -19,7 +19,7 @@ $result = array(
             'starttime' => 'starttime',
             'endtime' => 'endtime',
         ),
-        'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath(AGENCY_EXT) . 'ext_icon.gif',
+        'iconfile' => 'EXT:' . AGENCY_EXT . '/ext_icon.gif',
     ),
     'interface' => array (
         'showRecordFieldList' => 'hidden,starttime,endtime,codes,status'

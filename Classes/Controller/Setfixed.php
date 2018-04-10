@@ -5,7 +5,7 @@ namespace JambageCom\Agency\Controller;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Stanislas Rolland (typo3(arobas)sjbr.ca)
+*  (c) 2018 Stanislas Rolland (typo3(arobas)sjbr.ca)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -46,6 +46,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Agency\Controller\Email;
 
+use JambageCom\Div2007\Utility\HtmlUtility;
+use JambageCom\Agency\Api\System;
 
 class Setfixed {
 
@@ -62,28 +64,29 @@ class Setfixed {
     * @return string  the template with substituted markers
     */
     public function process (
-        $conf,
+        array $conf,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Api\Localization $langObj,
         \JambageCom\Agency\Request\Parameters $controlData,
+        \JambageCom\Agency\Api\Url $url,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        $tcaObj,
-        $markerObj,
-        $dataObj,
+        \JambageCom\Agency\Domain\Tca $tcaObj,
+        \JambageCom\Agency\View\Marker $markerObj,
+        \JambageCom\Agency\Domain\Data $dataObj,
         $theTable,
         $autoLoginKey,
         $prefixId,
         $uid,
         $cmdKey,
-        $markerArray,
+        array $markerArray,
         \JambageCom\Agency\View\Template $template,        
         \JambageCom\Agency\View\CreateView $displayObj,
         \JambageCom\Agency\View\EditView $editView,
         \JambageCom\Agency\View\DeleteView $deleteView,
         $templateCode,
-        $dataArray,
+        array $dataArray,
         array $origArray,
-        $securedArray,
+        array $securedArray,
         $pObj,
         $token,
         &$hasError
@@ -93,11 +96,13 @@ class Setfixed {
         $row = $origArray;
         $usesPassword = false;
         $enableAutoLoginOnConfirmation =
-            $controlData->enableAutoLoginOnConfirmation($conf, $cmdKey);
+            \JambageCom\Agency\Request\Parameters::enableAutoLoginOnConfirmation($conf, $cmdKey);
+        $systemObj = GeneralUtility::makeInstance(System::class);
         $errorContent = '';
         $hasError = false;
         $sendExecutionEmail = false;
         $cryptedPassword = '';
+        $loginSuccess = false;
         $extensionKey = $controlData->getExtensionKey();
 
         if (
@@ -129,7 +134,7 @@ class Setfixed {
                 $setfixedConfig = $conf['setfixed.'][$setfixedSuffix . '.']['_CONFIG.'];
             }
 
-            $fieldArr = array();
+            $fieldArray = array();
 
             if (is_array($fD)) {
                 foreach ($fD as $field => $value) {
@@ -137,7 +142,7 @@ class Setfixed {
                     if ($field == 'usergroup') {
                         $setfixedUsergroup = $row[$field];
                     }
-                    $fieldArr[] = $field;
+                    $fieldArray[] = $field;
                 }
             }
 
@@ -145,11 +150,10 @@ class Setfixed {
             if ($theTable == 'fe_users') {
                     // Determine if auto-login is requested
                 $autoLoginIsRequested =
-                    $controlData->getStorageSecurity()
-                        ->getAutoLoginIsRequested(
-                            $controlData->getFeUserData(),
-                            $autoLoginKey
-                        );
+                    $this->getAutoLoginIsRequested(
+                        $controlData->getFeUserData(),
+                        $autoLoginKey
+                    );
             }
 
             $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
@@ -259,129 +263,138 @@ class Setfixed {
                             $row
                         );
                     }
-                } else {
-                    if ($theTable == 'fe_users') {
-                        if ($conf['create.']['allowUserGroupSelection']) {
-                            $originalGroups = is_array($origUsergroup)
-                                ? $origUsergroup
-                                : GeneralUtility::trimExplode(',', $origUsergroup, true);
-                            $overwriteGroups = GeneralUtility::trimExplode(
-                                ',',
-                                $conf['create.']['overrideValues.']['usergroup'],
-                                true
-                            );
+                } else { // APPROVE, CREATE
+                    // neu: If 
+                    $newFieldList = '';
+                    if (
+                        !$setfixedConfig['askAgain'] ||
+                        $controlData->getSubmit()
+                    ) { // ask again if the user really wants to confirm
+                        if ($theTable == 'fe_users') {
+                            if ($conf['create.']['allowUserGroupSelection']) {
+                                $originalGroups = is_array($origUsergroup)
+                                    ? $origUsergroup
+                                    : GeneralUtility::trimExplode(',', $origUsergroup, true);
+                                $overwriteGroups = GeneralUtility::trimExplode(
+                                    ',',
+                                    $conf['create.']['overrideValues.']['usergroup'],
+                                    true
+                                );
 
-                            $remainingGroups = array_diff($originalGroups, $overwriteGroups);
-                            $groupsToAdd = GeneralUtility::trimExplode(',', $setfixedUsergroup, true);
-                            $finalGroups = array_merge(
-                                $remainingGroups, $groupsToAdd
-                            );
-                            $row['usergroup'] = implode(',', array_unique($finalGroups));
-                        }
-                    }
-
-                        // Hook: first we initialize the hooks
-                    $hookObjectsArr = array();
-                    if (is_array ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['confirmRegistrationClass'])) {
-                        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['confirmRegistrationClass'] as $classRef) {
-                            $hookObj = GeneralUtility::makeInstance($classRef);
-                            if (
-                                method_exists($hookObj, 'needsInit') &&
-                                method_exists($hookObj, 'init') &&
-                                $hookObj->needsInit()
-                            ) {
-                                $hookObj->init($dataObj);
+                                $remainingGroups = array_diff($originalGroups, $overwriteGroups);
+                                $groupsToAdd = GeneralUtility::trimExplode(',', $setfixedUsergroup, true);
+                                $finalGroups = array_merge(
+                                    $remainingGroups, $groupsToAdd
+                                );
+                                $row['usergroup'] = implode(',', array_unique($finalGroups));
                             }
-
-                            $hookObjectsArr[] = $hookObj;
                         }
-                    }
-                    $newFieldList = implode(',', array_intersect(
-                        GeneralUtility::trimExplode(',', $dataObj->getFieldList(), 1),
-                        GeneralUtility::trimExplode(',', implode($fieldArr, ','), 1)
-                    ));
-                    $errorCode = '';
 
-                        // Hook: confirmRegistrationClass_preProcess
-                    foreach($hookObjectsArr as $hookObj) {
-                        if (method_exists($hookObj, 'confirmRegistrationClass_preProcess')) {
-                            $hookObj->confirmRegistrationClass_preProcess(
-                                $controlData,
+                            // Hook: first we initialize the hooks
+                        $hookObjectsArray = array();
+                        if (is_array ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['confirmRegistrationClass'])) {
+                            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['confirmRegistrationClass'] as $classRef) {
+                                $hookObj = GeneralUtility::makeInstance($classRef);
+                                if (
+                                    method_exists($hookObj, 'needsInit') &&
+                                    method_exists($hookObj, 'init') &&
+                                    $hookObj->needsInit()
+                                ) {
+                                    $hookObj->init($dataObj);
+                                }
+
+                                $hookObjectsArray[] = $hookObj;
+                            }
+                        }
+                        $newFieldList = implode(',', array_intersect(
+                            GeneralUtility::trimExplode(',', $dataObj->getFieldList(), 1),
+                            GeneralUtility::trimExplode(',', implode($fieldArray, ','), 1)
+                        ));
+                        $errorCode = '';
+
+                            // Hook: confirmRegistrationClass_preProcess
+                        foreach($hookObjectsArray as $hookObj) {
+                            if (method_exists($hookObj, 'confirmRegistrationClass_preProcess')) {
+                                $hookObj->confirmRegistrationClass_preProcess(
+                                    $controlData,
+                                    $theTable,
+                                    $row,
+                                    $newFieldList,
+                                    $this,
+                                    $errorCode
+                                );
+                                if ($errorCode) {
+                                    break;
+                                }
+                            }
+                        }
+
+                        if ($setFixedKey == 'UNSUBSCRIBE') {
+                            $newFieldList = implode(',', array_intersect(
+                                GeneralUtility::trimExplode(',', $newFieldList),
+                                GeneralUtility::trimExplode(',', $conf['unsubscribeAllowedFields'], 1)
+                            ));
+                        }
+
+                        if (
+                            $setFixedKey != 'ENTER' &&
+                            $newFieldList != ''
+                        ) {
+                            $res = $dataObj->getCoreQuery()->DBgetUpdate(
                                 $theTable,
+                                $uid,
                                 $row,
                                 $newFieldList,
-                                $this,
-                                $errorCode
+                                true
                             );
-                            if ($errorCode) {
-                                break;
+                        }
+                        $currentArray = $origArray;
+
+                        if ($autoLoginIsRequested) {
+                            $cryptedPassword = $currentArray['tx_agency_password'];
+                            \JambageCom\Agency\Security\SecuredData::getStorageSecurity()
+                                ->decryptPasswordForAutoLogin(
+                                    $cryptedPassword,
+                                    $autoLoginKey
+                                );
+                        }
+                        $modArray = array();
+                        $currentArray =
+                            $tcaObj->modifyTcaMMfields(
+                                $theTable,
+                                $currentArray,
+                                $modArray
+                            );
+                        $row = array_merge($row, $modArray);
+                        \JambageCom\Div2007\Utility\SystemUtility::userProcess(
+                            $pObj,
+                            $conf['setfixed.'],
+                            'userFunc_afterSave',
+                            array(
+                                'rec' => $currentArray,
+                                'origRec' => $origArray
+                            )
+                        );
+
+                            // Hook: confirmRegistrationClass_postProcess
+                        foreach($hookObjectsArray as $hookObj) {
+                            if (method_exists($hookObj, 'confirmRegistrationClass_postProcess')) {
+                                $hookObj->confirmRegistrationClass_postProcess(
+                                    $controlData,
+                                    $theTable,
+                                    $row,
+                                    $currentArray,
+                                    $origArray,
+                                    $this
+                                );
                             }
                         }
                     }
-
-                    if ($setFixedKey == 'UNSUBSCRIBE') {
-                        $newFieldList = implode(',', array_intersect(
-                            GeneralUtility::trimExplode(',', $newFieldList),
-                            GeneralUtility::trimExplode(',', $conf['unsubscribeAllowedFields'], 1)
-                        ));
-                    }
-
-                    if (
-                        $setFixedKey != 'ENTER' &&
-                        $newFieldList != ''
-                    ) {
-                        $res = $dataObj->getCoreQuery()->DBgetUpdate(
-                            $theTable,
-                            $uid,
-                            $row,
-                            $newFieldList,
-                            true
-                        );
-                    }
-                    $currenArray = $origArray;
-
-                    if ($autoLoginIsRequested) {
-                        $cryptedPassword = $currenArray['tx_agency_password'];
-                        $controlData->getStorageSecurity()
-                            ->decryptPasswordForAutoLogin(
-                                $cryptedPassword,
-                                $autoLoginKey
-                            );
-                    }
-                    $modArray = array();
-                    $currenArray =
-                        $tcaObj->modifyTcaMMfields(
-                            $theTable,
-                            $currenArray,
-                            $modArray
-                        );
-                    $row = array_merge($row, $modArray);
-                    \tx_div2007_alpha5::userProcess_fh002(
-                        $pObj,
-                        $conf['setfixed.'],
-                        'userFunc_afterSave',
-                        array('rec' => $currenArray, 'origRec' => $origArray)
-                    );
-
-                        // Hook: confirmRegistrationClass_postProcess
-                    foreach($hookObjectsArr as $hookObj) {
-                        if (method_exists($hookObj, 'confirmRegistrationClass_postProcess')) {
-                            $hookObj->confirmRegistrationClass_postProcess(
-                                $controlData,
-                                $theTable,
-                                $row,
-                                $currenArray,
-                                $origArray,
-                                $this
-                            );
-                        }
-                    }
-                }
+                } // neu Ende
 
                     // Outputting template
                 if (
                     $theTable == 'fe_users' &&
-                        // LOGIN is here only for an error case  ???
                     in_array($setFixedKey, array('APPROVE', 'ENTER', 'LOGIN'))
                 ) {
                     $markerObj->addGeneralHiddenFieldsMarkers(
@@ -395,11 +408,13 @@ class Setfixed {
                     );
 
                     if ($usesPassword) {
-                        $markerObj->addPasswordTransmissionMarkers(
-                            $markerArray,
-                            $controlData->getUsePasswordAgain()
-                        );
-                        $markerObj->setArray($markerArray);
+                        \JambageCom\Agency\Security\SecuredData::getTransmissionSecurity()
+                            ->getMarkers(
+                                $markerArray,
+                                $extensionKey, 
+                                $controlData->getUsePasswordAgain(),
+                                true
+                            );
                     }
                 } else {
                     $markerObj->addGeneralHiddenFieldsMarkers(
@@ -410,7 +425,6 @@ class Setfixed {
                         $fD
                     );
                 }
-
 
                 if ($setFixedKey != 'EDIT') {
 
@@ -426,6 +440,7 @@ class Setfixed {
                                 $cObj,
                                 $langObj,
                                 $controlData,
+                                $url,
                                 $confObj,
                                 $tcaObj,
                                 $markerObj,
@@ -450,24 +465,30 @@ class Setfixed {
                             $setFixedKey == 'ENTER' ||
                             (
                                 $setFixedKey == 'APPROVE' &&
-                                $enableAutoLoginOnConfirmation
+                                $enableAutoLoginOnConfirmation &&
+                                !$conf['enableAdminReview']
                             )
                         ) &&
                         !$usesPassword
                     ) {
                             // Auto-login
                         $loginSuccess =
-                            $pObj->login(
-                                $conf,
+                            $systemObj->login(
+                                $cObj,
                                 $langObj,
                                 $controlData,
-                                $currenArray['username'],
+                                $url,
+                                $conf,
+                                $currentArray['username'],
                                 $cryptedPassword,
+                                false,
                                 false
                             );
 
                         if ($loginSuccess) {
-                            $sendExecutionEmail = true; // +++ neu FHO; Hier noch eine Abfrage, bevor die Confirmation beginnt
+                            if ($setFixedKey != 'ENTER') {
+                                $sendExecutionEmail = true;
+                            }
                             $content =
                                 $editView->render(
                                     $markerArray,
@@ -572,6 +593,7 @@ class Setfixed {
                         $sendExecutionEmail = true;
                     }
 
+                    $emailResult = true;
                     if (
                         !$hasError &&
                         $sendExecutionEmail && // neu
@@ -583,9 +605,8 @@ class Setfixed {
                     ) {
                         $errorCode = '';
                             // Compiling email
-                        $bEmailSent = $email->compile(
+                        $emailResult = $email->compile(
                             SETFIXED_PREFIX . $setfixedSuffix,
-                            $conf,
                             $cObj,
                             $langObj,
                             $controlData,
@@ -612,23 +633,24 @@ class Setfixed {
                     }
 
                     if (
-                        !$bEmailSent &&
+                        !$emailResult &&
                         is_array($errorCode)
                     ) {
-                        $errorText = $langObj->getLL($errorCode['0'], '', false, true);
+                        $errorText = $langObj->getLL($errorCode['0'], $dummy, '', false, true);
                         $errorContent = sprintf($errorText, $errorCode['1']);
                         $content = $errorContent;
                     } else if ($theTable == 'fe_users') {
+
                             // If applicable, send admin a request to review the registration request
                         if (
                             $conf['enableAdminReview'] &&
                             $setFixedKey == 'APPROVE' &&
-                            $usesPassword
+                            $usesPassword &&
+                            $sendExecutionEmail // neu
                         ) {
                             $errorCode = '';
-                            $bEmailSent = $email->compile(
+                            $emailResult = $email->compile(
                                 SETFIXED_PREFIX . 'REVIEW',
-                                $conf,
                                 $cObj,
                                 $langObj,
                                 $controlData,
@@ -654,10 +676,10 @@ class Setfixed {
                             );
 
                             if (
-                                !$bEmailSent &&
+                                !$emailResult &&
                                 is_array($errorCode)
                             ){
-                                $errorText = $langObj->getLL($errorCode['0'], '', false, true);
+                                $errorText = $langObj->getLL($errorCode['0'], $dummy, '', false, true);
                                 $errorContent = sprintf($errorText, $errorCode['1']);
                             }
                         }
@@ -678,14 +700,25 @@ class Setfixed {
                             $autoLoginIsRequested
                         ) {
                             $loginSuccess =
-                                $pObj->login(
-                                    $conf,
+                                $systemObj->login(
+                                    $cObj,
                                     $langObj,
                                     $controlData,
-                                    $currenArray['username'],
+                                    $url,
+                                    $conf,
+                                    $currentArray['username'],
                                     $cryptedPassword,
-                                    $currenArray
+                                    true,
+                                    true
                                 );
+
+                            // delete password helper fields
+                            $systemObj->removePasswordAdditions(
+                                $dataObj,
+                                $theTable,
+                                $uid,
+                                $row
+                            );
 
                             if ($loginSuccess) {
                                     // Login was successful
@@ -743,6 +776,29 @@ class Setfixed {
     }	// processSetFixed
 
     /**
+    * Determines if auto login should be attempted
+    *
+    * @param array $feuData: incoming fe_users parameters
+    * @param string &$autoLoginKey: returns auto-login key
+    * @return boolean true, if auto-login should be attempted
+    */  
+    public function getAutoLoginIsRequested (
+        array $feuserData,
+        &$autoLoginKey
+    ) {
+        $autoLoginIsRequested = false;
+        if (
+            isset($feuserData['key']) &&
+            $feuserData['key'] !== ''
+        ) {
+            $autoLoginKey = $feuserData['key'];
+            $autoLoginIsRequested = true;
+        }
+
+        return $autoLoginIsRequested;
+    }
+
+    /**
     * Shows a form where the user is asked if he really wants to confirm
     *
     * @param array $cObj: the cObject
@@ -758,6 +814,7 @@ class Setfixed {
         $cObj,
         \JambageCom\Agency\Api\Localization $langObj,
         \JambageCom\Agency\Request\Parameters $controlData,
+        \JambageCom\Agency\Api\Url $url,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         $tcaObj,
         $markerObj,
@@ -774,11 +831,12 @@ class Setfixed {
     ) {
     // Display the form, if access granted.
 
+        $xhtmlFix = HtmlUtility::getXhtmlFix();
         $markerArray['###HIDDENFIELDS###'] .=
             '<input type="hidden" name="' .
             $prefixId . '[rU]" value="' .
             $dataObj->getRecUid() .
-            '" />';
+            '" ' . $xhtmlFix . '>';
 
         $tokenParameter = $controlData->getTokenParameter();
         $markerArray['###BACK_URL###'] =

@@ -5,7 +5,7 @@ namespace JambageCom\Agency\Api;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Stanislas Rolland (typo3(arobas)sjbr.ca)
+*  (c) 2018 Stanislas Rolland (typo3(arobas)sjbr.ca)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -34,14 +34,12 @@ namespace JambageCom\Agency\Api;
 *
 * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
 * @author	Franz Holzinger <franz@ttproducts.de>
-* @author	Oliver Klee <typo-coding@oliverklee.de>
 *
 * @package TYPO3
 * @subpackage agency
 *
 *
 */
-
 
 
 class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements \TYPO3\CMS\Core\SingletonInterface {
@@ -52,14 +50,15 @@ class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements 
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         $conf,
         $scriptRelPath,
-        $extKey
+        $extensionKey,
+        $filename
     ) {
-
         parent::init(
             $cObj,
-            $extKey,
+            $extensionKey,
             $conf,
-            $scriptRelPath
+            $scriptRelPath,
+            $filename
         );
 
         // keep previsous language settings if available
@@ -74,7 +73,10 @@ class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements 
         }
     }
 
-    public function getLLFromString ($string, $force = true) {
+    public function getLLFromString (
+        $string,
+        $force = true
+    ) {
         $result = '';
         $arr = explode(':', $string);
 
@@ -97,7 +99,12 @@ class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements 
     * @param string  name of the field
     * @return array array of selectable items
     */
-    public function getItemsLL ($textSchema, $bAll = true, $valuesArray = array()) {
+    public function getItemsLL (
+        $textSchema,
+        $bAll = true,
+        $valuesArray = array()
+    )
+    {
         $result = array();
         if ($bAll) {
             for ($i = 0; $i < 999; ++$i) {
@@ -129,13 +136,20 @@ class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements 
     * Notice that for debugging purposes prefixes for the output values can be set with the internal vars ->LLtestPrefixAlt and ->LLtestPrefix
     *
     * @param string The key from the LOCAL_LANG array for which to return the value.
+    * @param   string      input: if set then this language is used if possible. output: the used language
     * @param string Alternative string to return IF no value is found set for the key, neither for the local language nor the default.
     * @param boolean If true, the output label is passed through htmlspecialchars()
     * @param boolean If true then an error text will be generated with the information that no text for the key could be found..
-    * @return string The value from LOCAL_LANG.
+    * @return  string      The value from LOCAL_LANG. false in error case
     */
-    public function getLL ($key, $alt = '', $hsc = false, $showError = false) {
-
+    public function getLL (
+        $key,
+        &$usedLang = '',
+        $alternativeLabel = '',
+        $hsc = false,
+        $showError = false
+    )
+    {
             // If the suffix is allowed and we have a localized string for the desired salutation, we'll take that.
         $localizedLabel = '';
         $usedLang = '';
@@ -147,26 +161,24 @@ class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements 
         ) {
             $expandedKey = $key . '_' . $conf['salutation'];
             $localizedLabel =
-                \tx_div2007_alpha5::getLL_fh002(
-                    $this,
+                parent::getLL(
                     $expandedKey,
                     $usedLang,
-                    $alt,
+                    $alternativeLabel,
                     $hsc
                 );
         }
             // No allowed salutation suffix and fall back
         if (
             $localizedLabel == '' ||
-            $localizedLabel == $alt ||
+            $localizedLabel == $alternativeLabel ||
             $usedLang != $this->getLLkey()
         ) {
             $localizedLabel =
-                \tx_div2007_alpha5::getLL_fh002(
-                    $this,
+                parent::getLL(
                     $key,
                     $usedLang,
-                    $alt,
+                    $alternativeLabel,
                     $hsc
                 );
 
@@ -179,49 +191,18 @@ class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements 
         return $localizedLabel;
     }
 
-    public function loadLL () {
-        $result = true;
-        $conf = $this->getConf();
-
-            // flatten the structure of labels overrides
-        if (is_array($conf['_LOCAL_LANG.'])) {
-            $done = false;
-            $i = 0;
-            while(!$done && $i < 10000) {
-                $done = true;
-                foreach($conf['_LOCAL_LANG.'] as $k => $lA) {
-                    if (is_array($lA)) {
-                        foreach($lA as $llK => $llV) {
-                            if (is_array($llV)) {
-                                foreach ($llV as $llK2 => $llV2) {
-                                    if (is_array($llK2)) {
-                                        foreach ($llV2 as $llK3 => $llV3) {
-                                            if (is_array($llV3)) {
-                                                foreach ($llV3 as $llK4 => $llV4) {
-                                                    $conf['_LOCAL_LANG.'][$k][$llK . $llK2 . $llK3 . $llK4] = $llV4;
-                                                }
-                                            } else {
-                                                $conf['_LOCAL_LANG.'][$k][$llK . $llK2 . $llK3] = $llV3;
-                                            }
-                                        }
-                                    } else {
-                                        $conf['_LOCAL_LANG.'][$k][$llK . $llK2] = $llV2;
-                                    }
-                                }
-                                unset($conf['_LOCAL_LANG.'][$k][$llK]);
-                                $done = false;
-                                ++$i;
-                            }
-                        }
-                    }
-                }
-            }
-            $this->setConf($conf);
-        }
-        \tx_div2007_alpha5::loadLL_fh002($this);
+    public function loadLL (
+        $langFileParam = '',
+        $overwrite = true
+    )
+    {
+        $result = parent::loadLL(
+            $langFileParam,
+            $overwrite
+        );
 
         // do a check if the language file works
-        $tmpText = $this->getLL('unsupported');
+        $tmpText = parent::loadLL('unsupported');
 
         if ($tmpText == '') {
             $result = false;
@@ -230,5 +211,4 @@ class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements 
         return $result;
     } // loadLL
 }
-
 

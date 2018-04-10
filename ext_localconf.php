@@ -34,9 +34,6 @@ if (!defined(STATIC_INFO_TABLES_EXT)) {
     define('STATIC_INFO_TABLES_EXT', 'static_info_tables');
 }
 
-    // Add Status Report
-require_once(PATH_BE_AGENCY . 'hooks/statusreport/ext_localconf.php');
-
 call_user_func($emClass . '::addPItoST43', $_EXTKEY, 'class.tx_agency.php', '', 'list_type', 0);
 
 $_EXTCONF = unserialize($_EXTCONF);    // unserializing the configuration so we can use it here:
@@ -57,7 +54,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['forceGender'] = $_EXTCONF['for
 
     /* Example of configuration of hooks */
 if (
-    version_compare(TYPO3_version, '7.6.0', '>')
+    version_compare(TYPO3_version, '6.2.0', '>=')
 ) {
     // $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['agency']['confirmRegistrationClass'][] = 'JambageCom\\Agency\\Hooks\\Handler';
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['agency']['registrationProcess'][] = 'JambageCom\\Agency\\Hooks\\RegistrationProcessHooks';
@@ -68,6 +65,7 @@ if (
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['agency']['registrationProcess'][] = 'EXT:' . $_EXTKEY . '/hooks/class.tx_agency_hooksHandler.php:&tx_agency_hooksHandler';
 }
 
+    // Take note of conflicting extensions
     // Save extension version and constraints
 require_once(call_user_func($emClass . '::extPath', $_EXTKEY) . 'ext_emconf.php');
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['version'] = $EM_CONF[$_EXTKEY]['version'];
@@ -79,14 +77,14 @@ if (!isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['loginSecurityLevels
 }
 
 if (
-    version_compare(TYPO3_version, '7.6.0', '>')
+    version_compare(TYPO3_version, '6.2.0', '>=')
 ) {
     // Configure captcha hooks
     if (!is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['captcha'])) {
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['captcha'] = array();
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['captcha'][] = 'JambageCom\\Div2007\\Captcha\\Captcha';
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['captcha'][] = 'JambageCom\\Div2007\\Captcha\\Freecap';
     }
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['captcha'][] = 'JambageCom\\Div2007\\Captcha\\Captcha';
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['captcha'][] = 'JambageCom\\Div2007\\Captcha\\Freecap';
 } else {
         // Captcha marker hook
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['registrationProcess'][] = 'EXT:' . $_EXTKEY . '/hooks/captcha/class.tx_agency_captcha.php:&tx_agency_captcha';
@@ -96,12 +94,22 @@ if (
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['registrationProcess'][] = 'EXT:' . $_EXTKEY . '/hooks/freecap/class.tx_agency_freecap.php:&tx_agency_freecap';
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['model'][] = 'EXT:' . $_EXTKEY . '/hooks/freecap/class.tx_agency_freecap.php:&tx_agency_freecap';
 
-        // Scheduler hook
-    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_agency_feusergroup_scheduler'] = array(
-        'extension' => $_EXTKEY,
-        'title' => 'LLL:EXT:' . $_EXTKEY . '/locallang.xml:feUserGroupScheduler.name',
-        'description' => 'LLL:EXT:' . $_EXTKEY . '/locallang.xml:feUserGroupScheduler.description',
-    );
+
+    if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['languageResource']) {
+            // Scheduler hook
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_agency_feusergroup_scheduler'] = array(
+            'extension' => $_EXTKEY,
+            'title' => 'LLL:EXT:' . $_EXTKEY . DIV2007_LANGUAGE_SUBPATH . 'locallang_db_layout.xlf:feUserGroupScheduler.name',
+            'description' => 'LLL:EXT:' . $_EXTKEY . DIV2007_LANGUAGE_SUBPATH . 'locallang_db_layout.xlf:feUserGroupScheduler.description',
+        );
+    } else {
+            // Scheduler hook
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_agency_feusergroup_scheduler'] = array(
+            'extension' => $_EXTKEY,
+            'title' => 'LLL:EXT:' . $_EXTKEY . '/locallang.xml:feUserGroupScheduler.name',
+            'description' => 'LLL:EXT:' . $_EXTKEY . '/locallang.xml:feUserGroupScheduler.description',
+        );
+    }
 }
 
 
@@ -114,10 +122,14 @@ if (TYPO3_MODE == 'BE') {
             // replace the output of the former CODE field with the flexform
             $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info'][$_EXTKEY . '_pi'][] =
                 'JambageCom\\Agency\\Hooks\\CmsBackend->pmDrawItem';
+            // Register Status Report Hook
+            $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers']['Agency Registration'][] = \JambageCom\Agency\Hooks\StatusProvider::class;
         } else {
             // replace the output of the former CODE field with the flexform
             $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info'][$_EXTKEY][] =
                 'EXT:' . $_EXTKEY . '/hooks/class.tx_agency_hooks_cms.php:&tx_agency_hooks_cms->pmDrawItem';
+                // Add Status Report
+            require_once(PATH_BE_AGENCY . 'hooks/statusreport/ext_localconf.php');
         }
     }
 
