@@ -57,7 +57,7 @@ class DeleteView {
     * @return string  the template with substituted markers
     */
     public function render (
-        $markerArray,
+        array $markerArray,
         $conf,
         $prefixId,
         $extensionKey,
@@ -66,13 +66,13 @@ class DeleteView {
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         \JambageCom\Agency\Domain\Tca $tcaObj,
-        $markerObj,
-        $dataObj,
+        \JambageCom\Agency\View\Marker $markerObj,
+        \JambageCom\Agency\Domain\Data $dataObj,
         \JambageCom\Agency\View\Template $template,
         $theTable,
-        $dataArray,
+        array $dataArray,
         array $origArray,
-        $securedArray,
+        array $securedArray,
         $token,
         $setFixedKey,
         array $fD

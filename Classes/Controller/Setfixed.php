@@ -231,6 +231,7 @@ class Setfixed {
                             $tcaObj,
                             $markerObj,
                             $dataObj,
+                            $template,
                             $theTable,
                             $dataArray,
                             $origArray,
