@@ -383,7 +383,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
             if (
                 GeneralUtility::inList($fields, $colName) ||
-                $jseMissingFields
+                $useMissingFields
             ) {
                 $colConfig = $colSettings['config'];
                 $colContent = '';
