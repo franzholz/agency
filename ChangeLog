@@ -1,3 +1,6 @@
+2018-04-26 Franz Holzinger  <franz@ttproducts.de>
+    * Remove the markers ###XHTML###. If you want to use XHTML then you should use a tool like tidy to convert the HTML into a XHTML.
+
 2018-04-10 Franz Holzinger  <franz@ttproducts.de>
     * bugfix: The database must not be updated immediately when the confirmation link has been clicked and when the ask again screen is activated.
     * bugfix: the FE user group has been lost after editing a record
