@@ -44,7 +44,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
-    public function init ($extKey, $theTable) {
+    public function init ($extKey, $theTable)
+    {
         // nothing
     }
 
@@ -54,7 +55,8 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
      *
      * @return void
      */
-    protected function fixAddressFeAdminFieldList ($theTable) {
+    protected function fixAddressFeAdminFieldList ($theTable)
+    {
         if (
             $theTable == 'tt_address' &&
             \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tt_address') &&
@@ -96,7 +98,8 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
         $theTable,
         $dataArray,
         &$modArray
-    ) {
+    )
+    {
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
             !is_array($GLOBALS['TCA'][$theTable]['columns'])
@@ -147,7 +150,8 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
         &$dataArray,
         $fieldList,
         $bColumnIsCount = true
-    ) {
+    )
+    {
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
             !is_array($GLOBALS['TCA'][$theTable]['columns']) ||
@@ -264,8 +268,11 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
     * @param array  $colConfig: $TCA column configuration
     * @return string    foreign table where clause with replaced markers
     */
-    public function replaceForeignWhereMarker ($whereClause, $colConfig) {
-
+    public function replaceForeignWhereMarker (
+        $whereClause,
+        $colConfig
+    )
+    {
         $foreignWhere = $colConfig['foreign_table_where'];
 
         if ($foreignWhere) {
@@ -332,7 +339,8 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
         $activity = '',
         $bChangesOnly = false,
         $HSC = true
-    ) {
+    )
+    {
         $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
         $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
         $useXHTML = \JambageCom\Div2007\Utility\HtmlUtility::useXHTML();
@@ -1139,7 +1147,8 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
     * @param    array   array of selectable items like found in TCA
     * @ return  array   array of selectable items with correct key
     */
-    public function getItemKeyArray ($itemArray) {
+    public function getItemKeyArray ($itemArray)
+    {
         $rc = array();
 
         if (is_array($itemArray)) {
@@ -1165,7 +1174,8 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
         \JambageCom\Agency\Request\Parameters $controlData,
         $usergroup,
         $languageUid = ''
-    ) {
+    )
+    {
         // Initialize:
         if ($languageUid == '') {
             $languageUid =

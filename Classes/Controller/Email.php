@@ -54,15 +54,18 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
 	public $emailMarkHTMLSuffix = '_HTML';
     protected $extensionKey = '';
 
-    public function getExtensionKey () {
+    public function getExtensionKey ()
+    {
         return $this->extensionKey;
     }
 
-    public function setExtensionKey ($extensionKey) {
+    public function setExtensionKey ($extensionKey)
+    {
         $this->extensionKey = $extensionKey;
     }
 
-    public function isHTMLMailEnabled ($conf) {
+    public function isHTMLMailEnabled ($conf)
+    {
         $result = true;
         if (
             isset($conf['email.']) &&
@@ -107,7 +110,8 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         $templateCode,
         $failure,
         &$errorCode
-    ) {
+    )
+    {
         $content = false;
         $conf = $confObj->getConf();
 
@@ -325,7 +329,8 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         array $errorFieldArray,
         array $setFixedConfig,
         &$errorCode
-    ) {
+    )
+    {
         $errorCode = '';
         $conf = $confObj->getConf();
         $useAdditionalFields = true;
@@ -412,7 +417,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             } else {
                 $content['user']['all'] =
                     $template->removeRequired(
-                        $conf,
+                        $confObj,
                         $cObj,
                         $controlData,
                         $dataObj,
@@ -434,7 +439,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 } else {
                     $content['userhtml']['all'] =
                         $template->removeRequired(
-                            $conf,
+                            $confObj,
                             $cObj,
                             $controlData,
                             $dataObj,
@@ -468,7 +473,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             } else {
                 $content['admin']['all'] =
                     $template->removeRequired(
-                        $conf,
+                        $confObj,
                         $cObj,
                         $controlData,
                         $dataObj,
@@ -496,7 +501,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 } else {
                     $content['adminhtml']['all'] =
                         $template->removeRequired(
-                            $conf,
+                            $confObj,
                             $cObj,
                             $controlData,
                             $dataObj,
@@ -898,7 +903,8 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         $adminContent = '',
         $adminContentHTML = '',
         $fileAttachment = ''
-    ) {
+    )
+    {
         $result = false;
 
         // Send mail to admin
@@ -962,7 +968,8 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         array &$markerArray,
         $conf,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj
-    ) {
+    )
+    {
         $markerArray['###CSS_STYLES###'] = '	/*<![CDATA[*/
 ';
         $fileResource = $cObj->fileResource($conf['email.']['HTMLMailCSS']);
@@ -993,7 +1000,8 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         $fromName,
         $replyTo = '',
         $fileAttachment = ''
-    ) {
+    )
+    {
         $result = false;
 
         if (

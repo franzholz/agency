@@ -44,6 +44,7 @@ namespace JambageCom\Agency\Controller;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use JambageCom\Div2007\Utility\SystemUtility;
 
 use JambageCom\Agency\Controller\Email;
 use JambageCom\Agency\Security\SecuredData;
@@ -66,7 +67,8 @@ class ActionController {
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         $urlObj
-    ) {
+    )
+    {
         $this->langObj = $langObj;
         $conf = $confObj->getConf();
         $this->urlObj = $urlObj;
@@ -105,7 +107,8 @@ class ActionController {
         &$adminFieldList,
         array &$origArray,
         &$errorMessage
-    ) {
+    )
+    {
         $conf = $confObj->getConf();
         $tablesObj = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tables::class);
         $addressObj = $tablesObj->get('address');
@@ -474,7 +477,8 @@ class ActionController {
         array $origArray,
         $templateCode,
         &$errorMessage
-    ) {
+    )
+    {
         $dataArray = $dataObj->getDataArray();
         $conf = $confObj->getConf();
         $fD = array();
@@ -523,6 +527,7 @@ class ActionController {
         } else {
             $finalDataArray = $dataArray;
         }
+
         $hasSubmitData = (
             $controlData->getFeUserData('submit') != '' ||
             $controlData->getFeUserData('submit-security') != ''
@@ -626,7 +631,7 @@ class ActionController {
                 ) {
                     $markerObj->setArray($markerArray);
                     $finalDataArray =
-                        \JambageCom\Div2007\Utility\SystemUtility::userProcess(
+                        SystemUtility::userProcess(
                             $this,
                             $conf,
                             'evalFunc',
@@ -702,6 +707,15 @@ class ActionController {
                     // If inviting or if auto-login will be required on confirmation, we store an encrypted version of the password
                     $savePassword = SecuredData::readPasswordForStorage($extensionKey);
                 }
+                $extraFields = '';
+                if (
+                    $cmdKey == 'create' &&
+                    isset($finalDataArray['privacy_policy_acknowledged']) &&
+                    $finalDataArray['privacy_policy_acknowledged']
+                ) {
+                    $finalDataArray['privacy_policy_date'] = SystemUtility::createTime();
+                    $extraFields = 'privacy_policy_date';
+                }
 
                 $newDataArray = array();
                 $theUid = $dataObj->save(
@@ -715,6 +729,7 @@ class ActionController {
                     $cmdKey,
                     $controlData->getPid(),
                     $savePassword,
+                    $extraFields,
                     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['registrationProcess']
                 );
 

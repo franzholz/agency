@@ -421,22 +421,6 @@
 	</dd>
 	<!-- ###SUB_INCLUDED_FIELD_module_sys_dmail_html### -->
 
-	<!-- ###SUB_INCLUDED_FIELD_terms_acknowledged### -->
-	<dt>
-		<label for="agency-terms_acknowledged">###LABEL_TERMS_ACKNOWLEDGED### ###REQUIRED_TERMS_ACKNOWLEDGED###</label>
-	</dt>
-	<dd>
-		<p class="agency-terms"><a href="###TERMS_URL###" title="###LABEL_TOOLTIP_CLICK_HERE_TO_SEE_TERMS###">###LABEL_CLICK_HERE_TO_SEE_TERMS###</a></p>
-		<!-- ###SUB_ERROR_FIELD_terms_acknowledged### -->
-		<p class="agency-error">###EVAL_ERROR_FIELD_terms_acknowledged###</p>
-		<!-- ###SUB_ERROR_FIELD_terms_acknowledged### -->
-		<!-- ###SUB_REQUIRED_FIELD_terms_acknowledged### -->
-		<p class="agency-error">###MISSING_TERMS_ACKNOWLEDGED###</p>
-		<!-- ###SUB_REQUIRED_FIELD_terms_acknowledged### -->
-		###TCA_INPUT_terms_acknowledged###
-	</dd>
-	<!-- ###SUB_INCLUDED_FIELD_terms_acknowledged### -->
-
 	<!-- ###SUB_INCLUDED_FIELD_language### -->
 	<dt>
 		<label for="agency-language" onclick="document.getElementById(this.htmlFor).focus(); return false;">###LABEL_LANGUAGE### ###REQUIRED_LANGUAGE###</label>
@@ -509,10 +493,41 @@
 	</dd>
 	<!--###SUB_INCLUDED_FIELD_captcha_response###-->
 
+	<!-- ###SUB_INCLUDED_FIELD_terms_acknowledged### -->
+	<dt>
+		<label for="agency-terms_acknowledged">###LABEL_TERMS_ACKNOWLEDGED### ###REQUIRED_TERMS_ACKNOWLEDGED###</label>
+	</dt>
+	<dd>
+		<p class="agency-terms"><a href="###TERMS_URL###" title="###LABEL_TOOLTIP_CLICK_HERE_TO_SEE_TERMS###">###LABEL_CLICK_HERE_TO_SEE_TERMS###</a></p>
+		<!-- ###SUB_ERROR_FIELD_terms_acknowledged### -->
+		<p class="agency-error">###EVAL_ERROR_FIELD_terms_acknowledged###</p>
+		<!-- ###SUB_ERROR_FIELD_terms_acknowledged### -->
+		<!-- ###SUB_REQUIRED_FIELD_terms_acknowledged### -->
+		<p class="agency-error">###MISSING_TERMS_ACKNOWLEDGED###</p>
+		<!-- ###SUB_REQUIRED_FIELD_terms_acknowledged### -->
+		###TCA_INPUT_terms_acknowledged###
+	</dd>
+	<!-- ###SUB_INCLUDED_FIELD_terms_acknowledged### -->
+
+	<!-- ###SUB_INCLUDED_FIELD_privacy_policy_acknowledged### -->
+	<dt>
+		<label for="agency-privacy_policy_acknowledged">###LABEL_PRIVACY_POLICY_ACKNOWLEDGED### ###REQUIRED_PRIVACY_POLICY_ACKNOWLEDGED###</label>
+	</dt>
+	<dd>
+		<p class="agency-privacy-policy"><a href="###PRIVACY_POLICY_URL###" title="###LABEL_TOOLTIP_CLICK_HERE_TO_SEE_PRIVACY_POLICY###">###LABEL_CLICK_HERE_TO_SEE_PRIVACY_POLICY###</a></p>
+		<p class="agency-privacy-policy">###LABEL_PRIVACY_POLICY_ACKNOWLEDGED_2###</p>
+		<p class="agency-privacy-policy-hint-header">###LABEL_PRIVACY_POLICY_HINT###:</p>
+		<p class="agency-privacy-policy-hint">###LABEL_PRIVACY_POLICY_HINT_1###</p>
+		<p class="agency-privacy-policy-hint">###LABEL_PRIVACY_POLICY_HINT_2###</p>
+
+		###EXTRA_INPUT_privacy_policy_acknowledged###
+	</dd>
+	<!-- ###SUB_INCLUDED_FIELD_privacy_policy_acknowledged### -->
+
 	<dt>&nbsp;</dt>
 	<dd>
 		###HIDDENFIELDS###
-		<input type="submit" class="agency-submit" name="agency[submit]" value="###LABEL_BUTTON_REGISTER###">
+		<input type="submit" class="agency-submit" ###BUTTON_DISABLED### name="agency[submit]" value="###LABEL_BUTTON_REGISTER###">
 	</dd>
 </dl>
 </fieldset>

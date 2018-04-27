@@ -44,7 +44,8 @@ namespace JambageCom\Agency\Utility;
 class LocalizationUtility {
     static protected $filename = '';
 
-    static public function init () {
+    static public function init ()
+    {
         $filename = '';
         $extensionKey = AGENCY_EXT;
         if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['languageResource']) {
@@ -55,11 +56,13 @@ class LocalizationUtility {
         self::setFilename($filename);
     }
     
-    static public function setFilename ($filename) {
+    static public function setFilename ($filename)
+    {
         self::$filename = $filename;
     }
 
-    static public function getFilename () {
+    static public function getFilename ()
+    {
         return self::$filename;
     }
 

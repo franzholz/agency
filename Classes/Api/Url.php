@@ -49,7 +49,12 @@ class Url implements \TYPO3\CMS\Core\SingletonInterface {
     private $prefixId;
 
 
-    public function init ($cObj, $piVars, $prefixId) {
+    public function init (
+        $cObj,
+        $piVars,
+        $prefixId
+    )
+    {
         $this->cObj = $cObj;
         $this->piVars = $piVars;
         $this->prefixId = $prefixId;
@@ -65,8 +70,14 @@ class Url implements \TYPO3\CMS\Core\SingletonInterface {
     * @param boolean  $usePiVars: if set, input vars and incoming piVars arrays are merge
     * @return string  generated link or url
     */
-    public function get ($tag = '', $id, $vars = array(), $unsetVars = array(), $usePiVars = true) {
-
+    public function get (
+        $tag = '',
+        $id,
+        $vars = array(),
+        $unsetVars = array(),
+        $usePiVars = true
+    )
+    {
         $result = '';
         $vars = (array) $vars;
         $unsetVars = (array) $unsetVars;

@@ -1,0 +1,14 @@
+Agency Registration
+
+Typo3 Extension agency
+
+This is just a sample privacy policy file
+
+The privacy policy declares
+
+1.) foo
+
+2.) bar
+
+3.) ...
+

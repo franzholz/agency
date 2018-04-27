@@ -111,6 +111,12 @@
 			<trans-unit id="fe_users.terms_acknowledged" xml:space="preserve">
 				<source>The terms have been acknowledged:</source>
 			</trans-unit>
+			<trans-unit id="fe_users.privacy_policy_acknowledged" xml:space="preserve">
+				<source>The privacy policy has been acknowledged:</source>
+			</trans-unit>
+			<trans-unit id="fe_users.privacy_policy_date" xml:space="preserve">
+				<source>Date of agreement to the privacy policy:</source>
+			</trans-unit>
 			<trans-unit id="fe_users.token" xml:space="preserve">
 				<source>Security Token</source>
 			</trans-unit>

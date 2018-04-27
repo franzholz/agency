@@ -54,6 +54,9 @@ plugin.tx_agency {
 	terms.file = {$plugin.tx_agency.file.termsFile}
 	terms.url = {$plugin.tx_agency.termsUrl}
 
+	privacy.file = {$plugin.tx_agency.file.privacyPolicyFile}
+	privacy.url = {$plugin.tx_agency.privacyPolicyUrl}
+
 	displayRequired = TEXT
 	displayRequired {
 		value = *

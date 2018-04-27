@@ -40,17 +40,25 @@ namespace JambageCom\Agency\Configuration;
  *
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+
 class ConfigurationStore implements \TYPO3\CMS\Core\SingletonInterface {
 
     protected $conf = array();
     protected $config = array();
 
-    public function init ($conf) {
+    public function init ($conf)
+    {
         $this->conf = $conf;
         $this->config = array();
     }
 
-    public function setConf (array $dataArray, $k = '') {
+    public function setConf (
+        array $dataArray,
+        $k = ''
+    )
+    {
         if ($k) {
             $this->conf[$k] = $dataArray;
         } else {
@@ -58,11 +66,23 @@ class ConfigurationStore implements \TYPO3\CMS\Core\SingletonInterface {
         }
     }
 
-    public function getConf () {
-        return $this->conf;
+    public function getConf ($key = '')
+    {
+        if ($key != '') {
+            if (isset($this->conf[$key])) {
+                $result = $this->conf[$key];
+            }
+        } else {
+            $result = $this->conf;
+        }
+        return $result;
     }
 
-    public function setConfig (array $dataArray, $k = '') {
+    public function setConfig (
+        array $dataArray,
+        $k = ''
+    )
+    {
         if ($k) {
             $this->config[$k] = $dataArray;
         } else {
@@ -70,8 +90,27 @@ class ConfigurationStore implements \TYPO3\CMS\Core\SingletonInterface {
         }
     }
 
-    public function getConfig () {
+    public function getConfig ()
+    {
         return $this->config;
+    }
+    
+
+    public function getIncludedFields (
+        $cmdKey
+    ) {
+        $result = false;
+
+        $configuration = $this->getConf($cmdKey . '.');
+        if (
+            isset($configuration) &&
+            is_array($configuration) &&
+            isset($configuration['fields'])
+        ) {
+            $result =
+                GeneralUtility::trimExplode(',', $configuration['fields'], 1);
+        }
+        return $result;
     }
 }
 

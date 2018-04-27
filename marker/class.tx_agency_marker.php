@@ -306,7 +306,7 @@ class tx_agency_marker {
     }
 
 	/**
-	* Adds language-dependant label markers
+	* Adds language-dependent label markers
 	*
 	* @param array  $markerArray: the input marker array
 	* @param array  $row: the record array

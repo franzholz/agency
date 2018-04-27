@@ -45,6 +45,8 @@
             <label index="fe_users.comments">Comments:</label>
             <label index="fe_users.by_invitation">Was invited:</label>
             <label index="fe_users.terms_acknowledged">The terms have been acknowledged:</label>
+            <label index="fe_users.privacy_policy_acknowledged">The privacy policy has been acknowledged:</label>
+            <label index="fe_users.privacy_policy_date">Date of agreement to the privacy policy:</label>
             <label index="fe_users.token">Security Token</label>
 			<label index="fe_users.tx_agency_password">Encrypted auto-login password</label>
 			<label index="fe_users.lost_password">Password is lost</label>

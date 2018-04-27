@@ -76,7 +76,8 @@ class DeleteView {
         $token,
         $setFixedKey,
         array $fD
-    ) {
+    )
+    {
         $aCAuth = false;
         $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
 

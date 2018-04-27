@@ -45,7 +45,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CustomerNumber implements \TYPO3\CMS\Core\SingletonInterface {
 
-    static public function generate ($theTable, $config) {
+    static public function generate (
+        $theTable,
+        $config
+    )
+    {
         $prefix = $config['prefix'];
         $result = $prefix . '1';
 

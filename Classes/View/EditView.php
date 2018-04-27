@@ -67,19 +67,20 @@ class EditView {
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         \JambageCom\Agency\Domain\Tca $tcaObj,
-        $markerObj,
-        $dataObj,
+        \JambageCom\Agency\View\Marker $markerObj,
+        \JambageCom\Agency\Domain\Data $dataObj,
         \JambageCom\Agency\View\Template $template,
         $theTable,
-        $dataArray,
+        array $dataArray,
         array $origArray,
-        $securedArray,
+        array $securedArray,
         $cmd,
         $cmdKey,
         $mode,
         $errorFieldArray,
         $token
-    ) {
+    )
+    {
         $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
         if (isset($dataArray) && is_array($dataArray)) {
             $currentArray = array_merge($origArray, $dataArray);
@@ -128,7 +129,7 @@ class EditView {
         }
         $templateCode =
             $template->removeRequired(
-                $conf,
+                $confObj,
                 $cObj,
                 $controlData,
                 $dataObj,
@@ -340,7 +341,8 @@ class EditView {
         $mode,
         $errorFieldArray,
         $token
-    ) {
+    )
+    {
         $theAuthCode = '';
 
         if (

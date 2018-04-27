@@ -64,7 +64,7 @@ class Template {
     * @return string  the template with susbstituted parts
     */
     public function removeRequired (
-        $conf,
+        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         $dataObj,
@@ -74,9 +74,11 @@ class Template {
         $useAdditionalFields = true,
         $errorFieldArray = array(),
         $failure = ''
-    ) {
+    )
+    {
+        $conf = $confObj->getConf();
         $requiredArray = $controlData->getRequiredArray();
-        $includedFields = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1);
+        $includedFields = $confObj->getIncludedFields($cmdKey);
         if ($useAdditionalFields) {
             $additionalIncludedFields = $dataObj->getAdditionalIncludedFields();
             $includedFields = array_merge($includedFields, $additionalIncludedFields);
@@ -201,6 +203,7 @@ class Template {
                             '###SUB_REQUIRED_FIELD_' . $theField . '###',
                             ''
                         );
+
                     if (!GeneralUtility::inList($failure, $theField)) {
                         $templateCode =
                             $cObj->substituteSubpart(
@@ -248,7 +251,8 @@ class Template {
     * @param string $content: the input content
     * @return string the input content with HTML comment removed
     */
-    public function removeHTMLComments ($content) {
+    public function removeHTMLComments ($content)
+    {
         $result = preg_replace('/<!(?:--[\s\S]*?--\s*)?>[\t\v\n\r\f]*/', '', $content);
         return $result;
     }
@@ -259,7 +263,8 @@ class Template {
     * @param string $content: the input content
     * @return string the input content with HTML br tags replaced
     */
-    public function replaceHTMLBr ($content) {
+    public function replaceHTMLBr ($content)
+    {
         $result = preg_replace('/<br\s?\/?>/', LF, $content);
         return $result;
     }
@@ -270,7 +275,8 @@ class Template {
     * @param string $content: the input content
     * @return string the input content with HTML tags removed
     */
-    public function removeHtmlTags ($content) {
+    public function removeHtmlTags ($content)
+    {
             // Preserve <http://...> constructs
         $result = str_replace('<http', '###http', $content);
         $result = strip_tags($result);
@@ -284,7 +290,8 @@ class Template {
     * @param string $content: the input content
     * @return string the input content with superfluous fine feeds removed
     */
-    public function removeSuperfluousLineFeeds ($content) {
+    public function removeSuperfluousLineFeeds ($content)
+    {
         $result = preg_replace('/[' . preg_quote(LF) . ']{3,}/', LF . LF, $content);
         return $result;
     }
@@ -318,7 +325,8 @@ class Template {
         $securedArray,
         $bCheckEmpty = true,
         $failure = ''
-    ) {
+    )
+    {
         $useAdditionalFields = false;
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
@@ -334,7 +342,7 @@ class Template {
                 // Remove non-included fields
             $templateCode =
                 $this->removeRequired(
-                    $conf,
+                    $confObj,
                     $cObj,
                     $controlData,
                     $dataObj,
@@ -443,7 +451,8 @@ class Template {
         $subpartMarker,
         array $markerArray,
         $bCheckEmpty = true
-    ) {
+    )
+    {
         $templateCode = $cObj->getSubpart($templateCode, $subpartMarker);
 
         if ($templateCode != '') {
@@ -500,7 +509,8 @@ class Template {
         $bCustomerConfirmsMode,
         $bSetfixed,
         $bCreateReview
-    ) {
+    )
+    {
         $result = false;
         switch ($cmd) {
             case 'delete':

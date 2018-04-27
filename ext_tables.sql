@@ -28,6 +28,8 @@ CREATE TABLE fe_users (
 	terms_acknowledged tinyint(4) unsigned DEFAULT '0' NOT NULL,
 	has_privileges tinyint(4) unsigned DEFAULT '0' NOT NULL,
 	token varchar(32) DEFAULT '' NOT NULL,
+	privacy_policy_acknowledged tinyint(4) unsigned DEFAULT '0' NOT NULL,
+	privacy_policy_date int(11) DEFAULT '0' NOT NULL,
 	tx_agency_password blob,
 	lost_password tinyint(4) unsigned DEFAULT '0' NOT NULL,
 );

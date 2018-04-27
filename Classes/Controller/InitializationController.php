@@ -76,7 +76,8 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         $adminFieldList,
         $buttonLabelsList,
         $otherLabelsList
-    ) {
+    )
+    {
         $result = true;
         $filename = \JambageCom\Agency\Utility\LocalizationUtility::getFilename();
 
@@ -251,7 +252,8 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         $adminFieldList = 'username,password,name,disable,usergroup,by_invitation,tx_agency_password,lost_password',
         $buttonLabelsList = '',
         $otherLabelsList = ''
-    ) {
+    )
+    {
         $staticInfoObj = null;
         $dataObj = null; // object of type tx_agency_data
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);

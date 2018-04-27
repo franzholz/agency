@@ -24,7 +24,7 @@
   ],
   "require": {
     "typo3/cms-core": ">=4.5.0,<8.99.99",
-    "jambagecom/div2007": ">=1.7.10"
+    "jambagecom/div2007": ">=1.9.1"
   },
   "autoload": {
     "psr-4": {

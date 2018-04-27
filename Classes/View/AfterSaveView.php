@@ -62,13 +62,13 @@ class AfterSaveView {
     */
     public function render (
         $conf,
-        $cObj,
+        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Api\Localization $langObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         \JambageCom\Agency\Domain\Tca $tcaObj,
-        $markerObj,
-        $dataObj,
+        \JambageCom\Agency\View\Marker $markerObj,
+        \JambageCom\Agency\Domain\Data $dataObj,
         \JambageCom\Agency\View\Template $template,
         $theTable,
         $autoLoginKey,
@@ -83,7 +83,8 @@ class AfterSaveView {
         &$markerArray,
         $errorFieldArray,
         &$content
-    ) {
+    )
+    {
         $useAdditionalFields = true;
         $errorContent = '';
 
@@ -95,7 +96,7 @@ class AfterSaveView {
                 // Remove non-included fields
             $templateCode =
                 $template->removeRequired(
-                    $conf,
+                    $confObj,
                     $cObj,
                     $controlData,
                     $dataObj,

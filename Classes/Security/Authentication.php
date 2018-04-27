@@ -51,8 +51,8 @@ class Authentication implements \TYPO3\CMS\Core\SingletonInterface {
     public $config = array();
     protected $authCode;
 
-
-    public function init (\JambageCom\Agency\Configuration\ConfigurationStore $confObj) {
+    public function init (\JambageCom\Agency\Configuration\ConfigurationStore $confObj)
+    {
         $this->conf = $confObj->getConf();
         $this->config = $confObj->getConfig();
         $this->config['addKey'] = '';
@@ -75,16 +75,15 @@ class Authentication implements \TYPO3\CMS\Core\SingletonInterface {
         }
     }
 
-
-    public function setAuthCode ($code) {
+    public function setAuthCode ($code)
+    {
         $this->authCode = $code;
     }
 
-
-    public function getAuthCode () {
+    public function getAuthCode ()
+    {
         return $this->authCode;
     }
-
 
     /**
     * Computes the authentication code
@@ -103,7 +102,8 @@ class Authentication implements \TYPO3\CMS\Core\SingletonInterface {
         $extra = '',
         $rawUrlDecode = false,
         $codeLength = 0
-    ) {
+    )
+    {
         if ($codeLength == 0) {
             $codeLength = intval($this->config['codeLength']) ? intval($this->config['codeLength']) : 8;
         }
@@ -156,7 +156,6 @@ class Authentication implements \TYPO3\CMS\Core\SingletonInterface {
         return $authCode;
     }
 
-
     /**
     * Authenticates a record
     *
@@ -166,7 +165,8 @@ class Authentication implements \TYPO3\CMS\Core\SingletonInterface {
     public function aCAuth (
         array $record,
         $fields
-    ) {
+    )
+    {
         $result = false;
 
         if ($this->getAuthCode()) {
@@ -178,7 +178,6 @@ class Authentication implements \TYPO3\CMS\Core\SingletonInterface {
         }
         return $result;
     }
-
 
     /**
     * Computes the setfixed hash
@@ -193,7 +192,8 @@ class Authentication implements \TYPO3\CMS\Core\SingletonInterface {
         array $record,
         $fields = '',
         $codeLength = 0
-    ) {
+    )
+    {
         $rawUrlDecode = true;
         $result = $this->generateAuthCode(
             $record,
@@ -205,14 +205,14 @@ class Authentication implements \TYPO3\CMS\Core\SingletonInterface {
         return $result;
     }
 
-
     /**
     * Generates a token for the form to secure agains Cross Site Request Forgery (CSRF)
     *
     * @param void
     * @return string  the token value
     */
-    public function generateToken () {
+    public function generateToken ()
+    {
         $time = time();
         $result = md5($time . getmypid() . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
 

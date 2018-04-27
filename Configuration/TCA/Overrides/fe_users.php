@@ -163,6 +163,28 @@ $temporaryColumns = array(
             'default' => '0'
         )
     ),
+    'privacy_policy_acknowledged' => array(
+        'exclude' => 0,
+        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.privacy_policy_acknowledged',
+        'config' => array(
+            'type' => 'check',
+            'default' => '0',
+            'readOnly' => '1',
+        )
+    ),
+    'privacy_policy_date' => array(
+        'exclude' => 0,
+        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.privacy_policy_date',
+        'config' => array(
+            'type' => 'input',
+            'size' => '10',
+            'max' => '20',
+            'eval' => 'date',
+            'checkbox' => '0',
+            'default' => '',
+            'readOnly' => '1'
+        )
+    ),
 );
 
 if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['forceGender']) {
@@ -171,7 +193,6 @@ if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['forceGender']) {
         array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_users.gender.I.1', '1')
     );
 }
-
 
 if ( // Direct Mail tables exist but Direct Mail shall not be used
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['enableDirectMail'] &&
@@ -219,7 +240,7 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, $temporaryColumns);
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
     $table,
-    'comments, by_invitation, has_privileges, terms_acknowledged, lost_password',
+    'comments, by_invitation, has_privileges, terms_acknowledged, privacy_policy_acknowledged, privacy_policy_date, lost_password',
     '',
     'after:www,'
 );
@@ -233,7 +254,7 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
         '--div--;Direct mail, module_sys_dmail_newsletter;;;;1-1-1, module_sys_dmail_category, module_sys_dmail_html'
     );
 }
-
++
 $GLOBALS['TCA'][$table]['columns']['username']['config']['eval'] = 'nospace,uniqueInPid,required';
 $GLOBALS['TCA'][$table]['columns']['name']['config']['max'] = '100';
 $GLOBALS['TCA'][$table]['columns']['company']['config']['max'] = '50';
@@ -282,5 +303,4 @@ $GLOBALS['TCA'][$table]['ctrl']['thumbnail'] = 'image';
 $searchFields = explode(',', $GLOBALS['TCA'][$table]['ctrl']['searchFields'] . ',cnum,comments');
 $searchFields = array_unique($searchFields);
 $GLOBALS['TCA'][$table]['ctrl']['searchFields'] = implode(',', $searchFields);
-
 

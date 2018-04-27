@@ -55,7 +55,11 @@ class ConfigurationCheck {
     *
     * @return string Error message, if error found, empty string otherwise
     */
-    static public function checkRequirements ($conf, $extensionKey) {
+    static public function checkRequirements (
+        $conf,
+        $extensionKey
+    )
+    {
         $content = '';
         $requiredExtensions = array();
         $loginSecurityLevel = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
@@ -191,7 +195,8 @@ class ConfigurationCheck {
         $cObj,
         array $conf,
         $extensionKey
-    ) {
+    )
+    {
         $content = '';
         $templateCode = $cObj->fileResource($conf['templateFile']);
         $messages =

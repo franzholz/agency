@@ -48,8 +48,8 @@ class Tables implements \TYPO3\CMS\Core\SingletonInterface {
     public $tableClassArray = array();
     public $tablename;
 
-    public function init ($tablename) {
-
+    public function init ($tablename)
+    {
         $this->tablename = $tablename;
         if ($tablename == 'fe_users') {
             $this->tableClassArray['address'] = 'tx_agency_model_feusers';
@@ -58,15 +58,20 @@ class Tables implements \TYPO3\CMS\Core\SingletonInterface {
         }
     }   // init
 
-    public function getTableClassArray () {
+    public function getTableClassArray ()
+    {
         return $this->tableClassArray;
     }
 
-    public function setTableClassArray ($tableClassArray) {
+    public function setTableClassArray ($tableClassArray)
+    {
         $this->tableClassArray = $tableClassArray;
     }
 
-    public function getTableClass ($functablename, $bView = false) {
+    public function getTableClass (
+        $functablename,
+        $bView = false)
+    {
         $result = '';
         if ($functablename) {
             $result = $this->tableClassArray[$functablename] . ($bView ? '_view' : '');
@@ -74,7 +79,11 @@ class Tables implements \TYPO3\CMS\Core\SingletonInterface {
         return $result;
     }
 
-    public function get ($functablename, $bView = false) {
+    public function get (
+        $functablename,
+        $bView = false
+    )
+    {
         $classNameArray = array();
         $tableObjArray = array();
 

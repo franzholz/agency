@@ -57,7 +57,11 @@ class RegisterPluginController extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
     public $extKey = AGENCY_EXT;		// Extension key.
 
 
-    public function main ($content, $conf) {
+    public function main (
+        $content,
+        $conf
+    )
+    {
 
         $this->pi_setPiVarDefaults();
         $this->conf = $conf;

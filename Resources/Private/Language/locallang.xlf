@@ -604,10 +604,34 @@
 				<source>Please enter a title!</source>
 			</trans-unit>
 			<trans-unit id="terms_acknowledged" xml:space="preserve">
-				<source>I acknowledge and agree to terms</source>
+				<source>I acknowledge and agree to the terms.</source>
 			</trans-unit>
 			<trans-unit id="terms_acknowledged_informal" xml:space="preserve">
-				<source>I acknowledge and agree to terms</source>
+				<source>I acknowledge and agree to the terms.</source>
+			</trans-unit>
+			<trans-unit id="privacy_policy_acknowledged" xml:space="preserve">
+				<source>I acknowledge and agree to the privacy policy.</source>
+			</trans-unit>
+			<trans-unit id="privacy_policy_acknowledged_informal" xml:space="preserve">
+				<source>I acknowledge and agree to the privacy policy.</source>
+			</trans-unit>
+			<trans-unit id="privacy_policy_acknowledged_2" xml:space="preserve">
+				<source>I agree for any data I transmit through this site, that you can use them in accordance with the Privacy Policy.</source>
+			</trans-unit>
+			<trans-unit id="privacy_policy_acknowledged_2_informal" xml:space="preserve">
+				<source>I agree for any data I transmit through this site, that you can use them in accordance with the Privacy Policy.</source>
+			</trans-unit>
+			<trans-unit id="company" xml:space="preserve">
+				<source>Company</source>
+			</trans-unit>
+			<trans-unit id="privacy_policy_hint" xml:space="preserve">
+				<source>Hint</source>
+			</trans-unit>
+			<trans-unit id="privacy_policy_hint_1" xml:space="preserve">
+				<source>You have the right to renounce the agreement to the usage of your personal data at any time via email.</source>
+			</trans-unit>
+			<trans-unit id="privacy_policy_hint_2_informal" xml:space="preserve">
+				<source>You have the right to renounce the agreement to the usage of your personal data at any time via email.</source>
 			</trans-unit>
 			<trans-unit id="company" xml:space="preserve">
 				<source>Company</source>
@@ -779,6 +803,19 @@
 			</trans-unit>
 			<trans-unit id="tooltip_click_here_to_see_terms_informal" xml:space="preserve">
 				<source>Opens a page or file which shows the terms.</source>
+			</trans-unit>
+
+			<trans-unit id="click_here_to_see_privacy_policy" xml:space="preserve">
+				<source>Click here to see the privacy policy.</source>
+			</trans-unit>
+			<trans-unit id="click_here_to_see_privacy_policy_informal" xml:space="preserve">
+				<source>Click here to see the privacy policy.</source>
+			</trans-unit>
+			<trans-unit id="tooltip_click_here_to_see_privacy_policy" xml:space="preserve">
+				<source>Opens a page or file which shows the privacy policy.</source>
+			</trans-unit>
+			<trans-unit id="tooltip_click_here_to_see_privacy_policy_informal" xml:space="preserve">
+				<source>Opens a page or file which shows the privacy policy.</source>
 			</trans-unit>
 			<trans-unit id="click_here_to_see_information" xml:space="preserve">
 				<source>If you require additional information, please click on the link</source>

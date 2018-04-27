@@ -91,7 +91,8 @@ class Parameters
         $extensionKey,
         $piVars,
         $theTable
-    ) {
+    )
+    {
         $fdArray = array();
         $conf = $confObj->getConf();
         if ($theTable == 'fe_users') {
@@ -214,7 +215,6 @@ class Parameters
                 }
             }
         }
-
 
         if (isset($feUserData) && is_array($feUserData)) {
             $this->setFeUserData($feUserData);
@@ -381,7 +381,8 @@ class Parameters
 
     public function initCaptcha (
         $cmdKey
-    ) {
+    )
+    {
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
         $extensionKey = $this->getExtensionKey();
@@ -408,7 +409,8 @@ class Parameters
      *
      * @return void
      */
-    protected function setPidTitle ($conf, $sys_language_uid) {
+    protected function setPidTitle ($conf, $sys_language_uid)
+    {
         $pidRecord = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Page\PageRepository::class);
         $pidRecord->init(0);
         $pidRecord->sys_language_uid = (int) $sys_language_uid;
@@ -416,12 +418,14 @@ class Parameters
         $this->thePidTitle = trim($conf['pidTitleOverride']) ?: $row['title'];
     }
 
-    public function getConf () {
+    public function getConf ()
+    {
         $result = $this->confObj->getConf();
         return $result;
     }
 
-    public function initPasswordField ($conf) {
+    public function initPasswordField ($conf)
+    {
         $this->usePassword = false;
         $this->usePasswordAgain = false;
         if (isset($conf['create.']['evalValues.']['password'])) {
@@ -432,48 +436,58 @@ class Parameters
         }
     }
 
-    public function getFormPassword () {
+    public function getFormPassword ()
+    {
         $result = GeneralUtility::_POST('pass');
         return $result;
     }
 
-    public function getUsePassword () {
+    public function getUsePassword ()
+    {
         return $this->usePassword;
     }
 
-    public function getUsePasswordAgain () {
+    public function getUsePasswordAgain ()
+    {
         return $this->usePasswordAgain;
     }
 
-    public function setDefaultPid ($conf) {
+    public function setDefaultPid ($conf)
+    {
 
         $bPidIsInt = MathUtility::canBeInterpretedAsInteger($conf['pid']);
         $this->defaultPid = ($bPidIsInt ? intval($conf['pid']) : $GLOBALS['TSFE']->id);
     }
 
-    public function getDefaultPid () {
+    public function getDefaultPid ()
+    {
         return $this->defaultPid;
     }
 
-    public function setRegHash ($regHash) {
+    public function setRegHash ($regHash)
+    {
         $this->regHash = $regHash;
     }
 
-    public function getRegHash () {
+    public function getRegHash ()
+    {
         return $this->regHash;
     }
 
-    public function setValidRegHash ($bValidRegHash) {
+    public function setValidRegHash ($bValidRegHash)
+    {
         $this->bValidRegHash = $bValidRegHash;
     }
 
-    public function getValidRegHash () {
+    public function getValidRegHash ()
+    {
         return $this->bValidRegHash;
     }
 
     static public function enableAutoLoginOnCreate (
         array $conf
-    ) {
+    )
+    {
         $result = (
             $conf['enableAutoLoginOnCreate']
         );
@@ -484,7 +498,8 @@ class Parameters
     static public function enableAutoLoginOnConfirmation (
         array $conf,
         $cmdKey = ''
-    ) {
+    )
+    {
         $result = false;
 
         if ($conf['enableAutoLoginOnConfirmation']) {
@@ -502,8 +517,6 @@ class Parameters
         return $result;
     }
 
-
-
     /*************************************
     * TOKEN HANDLING
     *************************************/
@@ -512,7 +525,8 @@ class Parameters
     *
     * @return   boolean whether the token was found valid
     */
-    public function isTokenValid () {
+    public function isTokenValid ()
+    {
         return $this->isTokenValid;
     }
 
@@ -522,7 +536,8 @@ class Parameters
     * @return   boolean $valid: whether the token was found valid
     * @return   void
     */
-    protected function setTokenValid ($valid) {
+    protected function setTokenValid ($valid)
+    {
         $this->isTokenValid = $valid;
     }
 
@@ -531,7 +546,8 @@ class Parameters
     *
     * @return   string  token
     */
-    public function readToken () {
+    public function readToken ()
+    {
         $token = '';
         $extensionKey = $this->getExtensionKey();
         $sessionData = SessionUtility::readData($extensionKey);
@@ -548,7 +564,8 @@ class Parameters
     * @param    string  token
     * @return void
     */
-    protected function writeToken ($token) {
+    protected function writeToken ($token)
+    {
         $extensionKey = $this->getExtensionKey();
         $sessionData = SessionUtility::readData($extensionKey);
         if ($token == '') {
@@ -571,7 +588,8 @@ class Parameters
     *
     * @return   string  redirectUrl
     */
-    public function readRedirectUrl () {
+    public function readRedirectUrl ()
+    {
         $redirectUrl = '';
         $extensionKey = $this->getExtensionKey();
         $sessionData = SessionUtility::readData($extensionKey);
@@ -586,7 +604,8 @@ class Parameters
     *
     * @return void
     */
-    protected function writeRedirectUrl () {
+    protected function writeRedirectUrl ()
+    {
         $redirectUrl = GeneralUtility::_GET('redirect_url');
         if ($redirectUrl != '') {
             $data = array();
@@ -604,7 +623,8 @@ class Parameters
     }
 
     // example: plugin.tx_agency_pi.conf.sys_dmail_category.ALL.sys_language_uid = 0
-    public function getSysLanguageUid ($conf, $theCode, $theTable) {
+    public function getSysLanguageUid ($conf, $theCode, $theTable)
+    {
 
         if (
             is_array($conf) &&
@@ -627,47 +647,58 @@ class Parameters
         return $this->thePidTitle;
     }
 
-    public function getSiteUrl () {
+    public function getSiteUrl ()
+    {
         return $this->site_url;
     }
 
-    public function getPrefixId () {
+    public function getPrefixId ()
+    {
         return $this->prefixId;
     }
 
-    public function setPrefixId ($prefixId) {
+    public function setPrefixId ($prefixId)
+    {
         $this->prefixId = $prefixId;
     }
 
-    public function getExtensionKey () {
+    public function getExtensionKey ()
+    {
         return $this->extensionKey;
     }
 
-    public function setExtensionKey ($extensionKey) {
+    public function setExtensionKey ($extensionKey)
+    {
         $this->extensionKey = $extensionKey;
     }
 
-    public function getPiVars () {
+    public function getPiVars ()
+    {
         return $this->piVars;
     }
 
-    public function setPiVars ($piVars) {
+    public function setPiVars ($piVars)
+    {
         $this->piVars = $piVars;
     }
 
-    public function getCmd () {
+    public function getCmd ()
+    {
         return $this->cmd;
     }
 
-    public function setCmd ($cmd) {
+    public function setCmd ($cmd)
+    {
         $this->cmd = $cmd;
     }
 
-    public function getCmdKey () {
+    public function getCmdKey ()
+    {
         return $this->cmdKey;
     }
 
-    public function setCmdKey ($cmdKey) {
+    public function setCmdKey ($cmdKey)
+    {
         $this->cmdKey = $cmdKey;
     }
 
@@ -677,7 +708,8 @@ class Parameters
      * @param string $key: the key for which the value should be returned
      * @return mixed the value of the specified key or the full array
      */
-    public function getFeUserData ($key = '') {
+    public function getFeUserData ($key = '')
+    {
         $result = false;
 
         if (
@@ -699,7 +731,8 @@ class Parameters
      * @param string $key: the key for which the value should be set
      * @return void
      */
-    public function setFeUserData ($value, $key = '') {
+    public function setFeUserData ($value, $key = '')
+    {
         if ($key != '') {
             $this->feUserData[$key] = $value;
         } else {
@@ -707,39 +740,48 @@ class Parameters
         }
     }
 
-    public function setCaptcha (CaptchaInterface $captcha) {
+    public function setCaptcha (CaptchaInterface $captcha)
+    {
         $this->captcha = $captcha;
     }
 
-    public function getCaptcha () {
+    public function getCaptcha ()
+    {
         return $this->captcha;
     }
 
-    public function setFailure ($failure) {
+    public function setFailure ($failure)
+    {
         $this->failure = $failure;
     }
 
-    public function getFailure () {
+    public function getFailure ()
+    {
         return $this->failure;
     }
 
-    public function setSubmit ($submit) {
+    public function setSubmit ($submit)
+    {
         $this->submit = $submit;
     }
 
-    public function getSubmit () {
+    public function getSubmit ()
+    {
         return $this->submit;
     }
 
-    public function setDoNotSave ($bParam) {
+    public function setDoNotSave ($bParam)
+    {
         $this->bDoNotSave = $bParam;
     }
 
-    public function getDoNotSave () {
+    public function getDoNotSave ()
+    {
         return $this->bDoNotSave;
     }
 
-    public function getPid ($type = '') {
+    public function getPid ($type = '')
+    {
 
         if ($type) {
             if (isset($this->pid[$type])) {
@@ -753,7 +795,8 @@ class Parameters
         return $result;
     }
 
-    public function setPid ($type, $pid) {
+    public function setPid ($type, $pid)
+    {
         if (!intval($pid)) {
             switch ($type) {
                 case 'infomail':
@@ -774,63 +817,78 @@ class Parameters
         $this->pid[$type] = $pid;
     }
 
-    public function getMode () {
+    public function getMode ()
+    {
         return $this->mode;
     }
 
-    public function setMode ($mode) {
+    public function setMode ($mode)
+    {
         $this->mode = $mode;
     }
 
-    public function getTable () {
+    public function getTable ()
+    {
         return $this->theTable;
     }
 
-    public function setTable ($theTable) {
+    public function setTable ($theTable)
+    {
         $this->theTable = $theTable;
     }
 
-    public function getRequiredArray () {
+    public function getRequiredArray ()
+    {
         return $this->requiredArray;
     }
 
-    public function setRequiredArray ($requiredArray) {
+    public function setRequiredArray ($requiredArray)
+    {
         $this->requiredArray = $requiredArray;
     }
 
-    public function getSetfixedEnabled () {
+    public function getSetfixedEnabled ()
+    {
         return $this->setfixedEnabled;
     }
 
-    public function setSetfixedEnabled ($setfixedEnabled) {
+    public function setSetfixedEnabled ($setfixedEnabled)
+    {
         $this->setfixedEnabled = $setfixedEnabled;
     }
 
-    public function getSetfixedOptions () {
+    public function getSetfixedOptions ()
+    {
         return $this->setFixedOptions;
     }
 
-    public function setSetfixedOptions ($setFixedOptions) {
+    public function setSetfixedOptions ($setFixedOptions)
+    {
         $this->setFixedOptions = $setFixedOptions;
     }
 
-    public function getSetfixedParameters () {
+    public function getSetfixedParameters ()
+    {
         return $this->setFixedParameters;
     }
 
-    public function setSetfixedParameters ($setFixedParameters) {
+    public function setSetfixedParameters ($setFixedParameters)
+    {
         $this->setFixedParameters = $setFixedParameters;
     }
 
-    public function getFd () {
+    public function getFd ()
+    {
         return $this->fD;
     }
 
-    public function setFd ($fD) {
+    public function setFd ($fD)
+    {
         $this->fD = $fD;
     }
     
-    public function determineFormId ($suffix = '_form') {
+    public function determineFormId ($suffix = '_form')
+    {
         $result = \JambageCom\Div2007\Utility\FrontendUtility::getClassName(
             $this->getTable() . $suffix,
             $this->getPrefixId()
@@ -838,12 +896,14 @@ class Parameters
         return $result;
     }
 
-    public function getBackURL () {
+    public function getBackURL ()
+    {
         $result = rawurldecode($this->getFeUserData('backURL'));
         return $result;
     }
 
-    public function getTokenParameter () {
+    public function getTokenParameter ()
+    {
         $tokenParam = $this->getPrefixId() . '%5Btoken%5D=' . $this->readToken();
         $result = '&amp;'. $tokenParam;
         return $result;
@@ -854,7 +914,8 @@ class Parameters
     *
     * @return boolean  true if preview display is on
     */
-    public function isPreview () {
+    public function isPreview ()
+    {
         $result = '';
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
@@ -870,7 +931,8 @@ class Parameters
     /**
     *  Get the stored variables using the hash value to access the database
     */
-    public function getShortUrl ($regHash) {
+    public function getShortUrl ($regHash)
+    {
             // get the serialised array from the DB based on the passed hash value
         $varArray = array();
         $res =
@@ -906,7 +968,8 @@ class Parameters
     /**
     *  Get the stored variables using the hash value to access the database
     */
-    public function deleteShortUrl ($regHash) {
+    public function deleteShortUrl ($regHash)
+    {
         if ($regHash != '') {
             // get the serialised array from the DB based on the passed hash value
             $GLOBALS['TYPO3_DB']->exec_DELETEquery(
@@ -919,7 +982,8 @@ class Parameters
     /**
     *  Clears obsolete hashes used for short url's
     */
-    public function cleanShortUrlCache () {
+    public function cleanShortUrlCache ()
+    {
 
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();

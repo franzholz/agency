@@ -63,7 +63,8 @@ class System {
         $cryptedPassword,
         $requiresAuthorization = true,
         $redirect = true
-    ) {
+    )
+    {
         $result = true;
         $message = '';
 
@@ -202,7 +203,8 @@ class System {
         $theTable,
         $uid,
         $row
-    ) {
+    )
+    {
         $deleteFields = array(
             'lost_password',
             'tx_agency_password'

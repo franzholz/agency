@@ -69,8 +69,8 @@ class CreateView {
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         \JambageCom\Agency\Domain\Tca $tcaObj,
-        $markerObj,
-        $dataObj,
+        \JambageCom\Agency\View\Marker $markerObj,
+        \JambageCom\Agency\Domain\Data $dataObj,
         \JambageCom\Agency\View\Template $template,
         $cmd,
         $cmdKey,
@@ -78,11 +78,12 @@ class CreateView {
         $theTable,
         array $dataArray,
         array $origArray,
-        $securedArray,
+        array $securedArray,
         $infoFields,
         $errorFieldArray,
         $token
-    ) {
+    )
+    {
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
             !is_array($GLOBALS['TCA'][$theTable]['columns'])
@@ -166,7 +167,7 @@ class CreateView {
 
             $templateCode =
                 $template->removeRequired(
-                    $conf,
+                    $confObj,
                     $cObj,
                     $controlData,
                     $dataObj,
@@ -270,6 +271,15 @@ class CreateView {
                 $conf[$cmdKey . '.']['fields'],
                 $dataArray
             );
+            $includedFields = $confObj->getIncludedFields($cmdKey);
+            $markerObj->addPrivacyPolicy(
+                $markerArray,
+                $prefixId,
+                $theTable,
+                $dataArray,
+                $mode != MODE_PREVIEW &&
+                    in_array('privacy_policy_acknowledged', $includedFields)
+            );
 
                 // Avoid cleartext password in HTML source
             $markerArray['###FIELD_password###'] = '';
@@ -320,15 +330,21 @@ class CreateView {
                         $fields
                     );
                 $content .= $updateJS;
-                $finalJavaScript = '';
+                $securityJavaScript = '';
                 \JambageCom\Agency\Security\SecuredData::getTransmissionSecurity()->
                     getJavaScript(
-                        $finalJavaScript,
+                        $securityJavaScript,
                         $extensionKey,
                         $form,
                         $controlData->getUsePasswordAgain()
                     );
-                \JambageCom\Agency\Api\Javascript::getOnSubmitHooks($finalJavaScript, $this);
+                $GLOBALS['TSFE']->setJS('agency-security', $securityJavaScript);
+
+                $finalJavaScript = '';
+                \JambageCom\Agency\Api\Javascript::getOnSubmitHooks(
+                    $finalJavaScript,
+                    $this
+                );
                 $content .= $finalJavaScript;
             }
         }

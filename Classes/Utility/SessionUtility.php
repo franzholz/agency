@@ -51,7 +51,8 @@ class SessionUtility {
     * @param    boolean $readAll: whether to retrieve all session data or only data for this extension key
     * @return   array   session data
     */
-    public function readData ($extensionKey, $readAll = false) {
+    public function readData ($extensionKey, $readAll = false)
+    {
         $sessionData = array();
         $allSessionData = $GLOBALS['TSFE']->fe_user->getKey('ses', 'feuser');
 
@@ -83,7 +84,8 @@ class SessionUtility {
         $keepRedirectUrl = true,
         $token = '', // $this->readToken();
         $redirectUrl = '' // $this->readRedirectUrl()
-    ) {
+    )
+    {
         $clearSession = empty($data);
         if (
             $keepToken &&
@@ -138,7 +140,8 @@ class SessionUtility {
         $keepRedirectUrl = true,
         $token = '',
         $redirectUrl = '' 
-    ) {
+    )
+    {
         $data = array();
         self::writeData(
             $extensionKey,

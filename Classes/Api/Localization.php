@@ -52,7 +52,8 @@ class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements 
         $scriptRelPath,
         $extensionKey,
         $filename
-    ) {
+    )
+    {
         parent::init(
             $cObj,
             $extensionKey,
@@ -76,7 +77,8 @@ class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements 
     public function getLLFromString (
         $string,
         $force = true
-    ) {
+    )
+    {
         $result = '';
         $arr = explode(':', $string);
 

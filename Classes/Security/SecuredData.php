@@ -180,18 +180,19 @@ class SecuredData
         &$errorMessage
     ) {
         $result = true;
-
         $data = array();
             // Decrypt incoming password (and eventually other encrypted fields)
         $passwordRow = array('password' => self::readPassword($extensionKey));
+        $errorCode = '';
         $errorMessage = '';
         $passwordDecrypted =
             self::getTransmissionSecurity()->decryptIncomingFields(
                 $passwordRow,
+                $errorCode,
                 $errorMessage
             );
-            // Collect secured fields
 
+            // Collect secured fields
         if ($passwordDecrypted !== false) {
             self::writePassword(
                 $extensionKey,

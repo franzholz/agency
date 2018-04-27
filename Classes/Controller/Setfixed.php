@@ -90,7 +90,8 @@ class Setfixed {
         $pObj,
         $token,
         &$hasError
-    ) {
+    )
+    {
         $email = GeneralUtility::makeInstance(Email::class);
         $content = false;
         $row = $origArray;
@@ -353,9 +354,13 @@ class Setfixed {
 
                         if ($autoLoginIsRequested) {
                             $cryptedPassword = $currentArray['tx_agency_password'];
+                            $errorCode = '';
+                            $errorMessage = '';
                             \JambageCom\Agency\Security\SecuredData::getStorageSecurity()
                                 ->decryptPasswordForAutoLogin(
                                     $cryptedPassword,
+                                    $errorCode,
+                                    $errorMessage,
                                     $autoLoginKey
                                 );
                         }
@@ -637,7 +642,8 @@ class Setfixed {
                         !$emailResult &&
                         is_array($errorCode)
                     ) {
-                        $errorText = $langObj->getLL($errorCode['0'], $dummy, '', false, true);
+                        $errorText =
+                            $langObj->getLL($errorCode['0'], $dummy, '', false, true);
                         $errorContent = sprintf($errorText, $errorCode['1']);
                         $content = $errorContent;
                     } else if ($theTable == 'fe_users') {
@@ -680,7 +686,8 @@ class Setfixed {
                                 !$emailResult &&
                                 is_array($errorCode)
                             ){
-                                $errorText = $langObj->getLL($errorCode['0'], $dummy, '', false, true);
+                                $errorText =
+                                    $langObj->getLL($errorCode['0'], $dummy, '', false, true);
                                 $errorContent = sprintf($errorText, $errorCode['1']);
                             }
                         }
@@ -786,7 +793,8 @@ class Setfixed {
     public function getAutoLoginIsRequested (
         array $feuserData,
         &$autoLoginKey
-    ) {
+    )
+    {
         $autoLoginIsRequested = false;
         if (
             isset($feuserData['key']) &&
@@ -829,7 +837,8 @@ class Setfixed {
         $cmdKey,
         $setFixedKey,
         $fD
-    ) {
+    )
+    {
     // Display the form, if access granted.
 
         $xhtmlFix = HtmlUtility::getXhtmlFix();

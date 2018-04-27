@@ -209,9 +209,16 @@
 			<label index="missing_title_informal">Please enter your title!</label>
 			<label index="missing_invitation_title">Please enter a title!</label>
 			<label index="missing_invitation_title_informal">Please enter a title!</label>
-			<label index="terms_acknowledged">I acknowledge and agree to terms</label>
-			<label index="terms_acknowledged_informal">I acknowledge and agree to terms</label>
+			<label index="terms_acknowledged">I acknowledge and agree to the terms.</label>
+			<label index="terms_acknowledged_informal">I acknowledge and agree to the terms.</label>
+			<label index="privacy_policy_acknowledged">I acknowledge and agree to the privacy policy.</label>
+			<label index="privacy_policy_acknowledged_informal">I acknowledge and agree to the privacy policy.</label>
+			<label index="privacy_policy_acknowledged_2">I agree for any data I transmit through this site, that you can use them in accordance with the Privacy Policy.</label>
+			<label index="privacy_policy_acknowledged_2_informal">I agree for any data I transmit through this site, that you can use them in accordance with the Privacy Policy.</label>
 			<label index="company">Company</label>
+			<label index="privacy_policy_hint">Hint</label>
+			<label index="privacy_policy_hint_1">You have the right to renounce the agreement to the usage of your personal data at any time via email.</label>
+			<label index="privacy_policy_hint_2_informal">You have the right to renounce the agreement to the usage of your personal data at any time via email.</label>
 			<label index="tooltip_company">Enter the name of your company or organization.</label>
 			<label index="tooltip_company_informal">Enter the name of your company or organization.</label>
 			<label index="tooltip_invitation_company">Enter the name of the company or organization of the invited person.</label>
@@ -273,6 +280,13 @@
 			<label index="tooltip_click_here_to_see_information">Opens a page or file which shows additional information</label>
 			<label index="disclaimer">Disclaimer</label>
 			<label index="consider_terms_usage">Please take into consideration the general terms of usage</label>
+            
+			<label index="click_here_to_see_privacy_policy">Click here to see the privacy policy.</label>
+			<label index="click_here_to_see_privacy_policy_informal">Click here to see the privacy policy.</label>
+			<label index="tooltip_click_here_to_see_privacy_policy">Opens a page or file which shows the privacy policy.</label>
+			<label index="tooltip_click_here_to_see_privacy_policy_informal">Opens a page or file which shows the privacy policy.</label>
+
+            
 			<label index="signature">Name&lt;br /&gt;Address&lt;br /&gt;Telefon&lt;br /&gt;</label>
 			<label index="enter_account_info">Please complete the information for your membership.</label>
 			<label index="enter_account_info_informal">Please complete the information for your membership.</label>
@@ -348,7 +362,7 @@
 			<label index="v_registration_created_message2_informal">Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list of members.</label>
 			<label index="v_registration_created_message3">Welcome as our new member.</label>
 			<label index="v_registration_created_message3_informal">Welcome as our new member.</label>
-			<label index="v_registration_created">%3$s created a new membership with %1$s.</label>
+			<label index="v_registration_created">%3$s has created a new membership with %1$s.</label>
 			<label index="v_registration_updated_subject">Your membership details with &lt;b&gt;%1$s&lt;/b&gt; have been updated.</label>
 			<label index="v_registration_updated_subject_informal">Your membership details with &lt;b&gt;%1$s&lt;/b&gt; have been updated.</label>
 			<label index="v_registration_updated_message1">Thank you for keeping your profile up-to-date.</label>

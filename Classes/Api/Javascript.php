@@ -48,7 +48,8 @@ class Javascript {
     static public function getOnSubmitHooks (
         &$javaScript,
         $pObj
-    ) {
+    )
+    {
         if (
             is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs'])
         ) {

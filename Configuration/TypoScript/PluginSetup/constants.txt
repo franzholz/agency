@@ -11,11 +11,18 @@ plugin.tx_agency {
     # cat=plugin.tx_agency/file; type=file[pdf,doc,sxw,txt]; label= Attachment file: File to be attached to the confirmation email.
   file.attachmentFile = EXT:agency/template/tx_agency_sample.txt
 
-    # cat=plugin.tx_agency/file; type=file[pdf,doc,sxw,txt]; label= Terms file: File to be shown as the terms of usage.
+    # cat=plugin.tx_agency/file; type=file[pdf,doc,sxw,txt]; label= Terms file: File to be shown as the terms and conditions of usage.
   file.termsFile = EXT:agency/template/tx_agency_terms.txt
 
-    # cat=plugin.tx_agency//; type=string; label= Terms url: Page (id or id,type) or url where the terms of usage are shown. If set, overrides terms file.
+    # cat=plugin.tx_agency//; type=string; label= Terms url: Page (id or id,type) or url where the terms and conditions of usage are shown. If set, it overrides the terms file.
   termsUrl =
+
+    # cat=plugin.tx_agency/file; type=file[pdf,doc,sxw,txt]; label= Privacy Policy file: File to be shown as the privacy policy.
+  file.privacyPolicyFile = EXT:agency/Resources/Private/Templates/AgencyPrivacyPolicy.txt
+
+    # cat=plugin.tx_agency//; type=string; label= Privacy Policy url: Page (id or id,type) or url where the privacy policy is shown. If set, it overrides the privacy policy file.
+  privacyPolicyUrl =
+
 
   # cat=plugin.tx_agency/file; type=file[gif]; label= Icon used for deletion of uploaded files.
   file.icon_delete = EXT:agency/res/icons/fe/icon_delete.gif
@@ -30,7 +37,7 @@ plugin.tx_agency {
   siteName = My TYPO3 Site
 
     # cat=plugin.tx_agency//; type=string; label= Registration form fields: List of fields to be included on the front end user registration form.
-  formFields = username, password, gender, first_name, last_name, status, date_of_birth, email, address, city, zone, static_info_country, zip, telephone, fax, language, title, company, www, module_sys_dmail_html, module_sys_dmail_newsletter, module_sys_dmail_category, image, comments, terms_acknowledged, disable
+  formFields = username, password, gender, first_name, last_name, status, date_of_birth, email, address, city, zone, static_info_country, zip, telephone, fax, language, title, company, www, module_sys_dmail_html, module_sys_dmail_newsletter, module_sys_dmail_category, image, comments, terms_acknowledged, privacy_policy_acknowledged, disable
 
     # cat=plugin.tx_agency//; type=string; label= Required fields: List of fields that must be filled in on the front end user registration form.
   requiredFields = username, password, first_name, last_name,email

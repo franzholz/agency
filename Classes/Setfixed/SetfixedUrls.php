@@ -70,7 +70,8 @@ class SetFixedUrls {
         $editSetfixed,
         $autoLoginKey,
         $confirmType
-    ) {
+    )
+    {
         if ($controlData->getSetfixedEnabled() && is_array($setfixed)) {
             $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
 
@@ -201,8 +202,8 @@ class SetFixedUrls {
     /**
     *  Store the setfixed vars and return a replacement hash
     */
-    static public function storeFixedPiVars (array $params) {
-
+    static public function storeFixedPiVars (array $params)
+    {
         $regHash_calc = \tx_div2007_core::generateHash($params, 20);
 
             // and store it with a serialized version of the array in the DB

@@ -91,7 +91,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $templateCode,
         \JambageCom\Agency\Request\Parameters $controlData,
         $staticInfoObj
-    ) {
+    )
+    {
         $this->lang = $lang;
         $this->tca = $tca;
         $this->control = $control;
@@ -122,27 +123,33 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         }
     }
 
-    public function getCoreQuery () {
+    public function getCoreQuery ()
+    {
         return $this->coreQuery;
     }
 
-    public function setError ($error) {
+    public function setError ($error)
+    {
         $this->error = $error;
     }
 
-    public function getError () {
+    public function getError ()
+    {
         return $this->error;
     }
 
-    public function setSaved ($value) {
+    public function setSaved ($value)
+    {
         $this->saved = $value;
     }
 
-    public function getSaved () {
+    public function getSaved ()
+    {
         return $this->saved;
     }
 
-    public function getTemplateCode () {
+    public function getTemplateCode ()
+    {
         return $this->templateCode;
     }
 
@@ -152,77 +159,95 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
      * @param string $templateCode: the source code
      * @return void
      */
-    public function setTemplateCode ($templateCode) {
+    public function setTemplateCode ($templateCode)
+    {
         $this->templateCode = $templateCode;
     }
 
-    public function getFieldList () {
+    public function getFieldList ()
+    {
         return $this->fieldList;
     }
 
-    public function setFieldList ($fieldList) {
+    public function setFieldList ($fieldList)
+    {
         $this->fieldList = $fieldList;
     }
 
-    public function setSpecialFieldList ($specialfieldlist) {
+    public function setSpecialFieldList ($specialfieldlist)
+    {
         $this->specialfieldlist = $specialfieldlist;
     }
 
-    public function getSpecialFieldList () {
+    public function getSpecialFieldList ()
+    {
         return $this->specialfieldlist;
     }
 
-    public function getAdminFieldList () {
+    public function getAdminFieldList ()
+    {
         return $this->adminFieldList;
     }
 
-    public function setAdminFieldList ($adminFieldList) {
+    public function setAdminFieldList ($adminFieldList)
+    {
         $this->adminFieldList = $adminFieldList;
     }
 
-    public function getAdditionalUpdateFields () {
+    public function getAdditionalUpdateFields ()
+    {
         return $this->additionalUpdateFields;
     }
 
-    public function setAdditionalUpdateFields ($additionalUpdateFields) {
+    public function setAdditionalUpdateFields ($additionalUpdateFields)
+    {
         $this->additionalUpdateFields = $additionalUpdateFields;
     }
 
-    public function getAdditionalOverrideFields () {
+    public function getAdditionalOverrideFields ()
+    {
         return $this->additionalOverrideFields;
     }
 
-    public function setAdditionalOverrideFields ($fields) {
+    public function setAdditionalOverrideFields ($fields)
+    {
         $this->additionalOverrideFields = $fields;
     }
 
-    public function getAdditionalIncludedFields () {
+    public function getAdditionalIncludedFields ()
+    {
         return $this->additionalIncludedFields;
     }
 
-    public function setAdditionalIncludedFields ($fields) {
+    public function setAdditionalIncludedFields ($fields)
+    {
         $this->additionalIncludedFields = $fields;
     }
 
-    public function setRecUid ($uid) {
+    public function setRecUid ($uid)
+    {
         $this->recUid = intval($uid);
     }
 
-    public function getRecUid () {
+    public function getRecUid ()
+    {
         return $this->recUid;
     }
 
-    public function getAddTableArray () {
+    public function getAddTableArray ()
+    {
         return $this->addTableArray;
     }
 
-    public function addTableArray ($table) {
+    public function addTableArray ($table)
+    {
         if (!in_array($table, $this->addTableArray)) {
             $this->addTableArray[] = $table;
         }
     }
 
-    public function setDataArray (
+    public function setDataArray
+    (
         array $dataArray
     ) {
         $this->dataArray = $dataArray;
@@ -231,7 +256,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         }
     }
 
-    public function getDataArray ($k = 0) {
+    public function getDataArray ($k = 0)
+    {
         if ($k) {
             $result = $this->dataArray[$k];
         } else {
@@ -241,19 +267,23 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         return $result;
     }
 
-    public function resetDataArray () {
+    public function resetDataArray ()
+    {
         $this->dataArray = array();
     }
 
-    public function setOrigArray (array $origArray) {
+    public function setOrigArray (array $origArray)
+    {
         $this->origArray = $origArray;
     }
 
-    public function getOrigArray () {
+    public function getOrigArray ()
+    {
         return $this->origArray;
     }
 
-    public function bNewAvailable () {
+    public function bNewAvailable ()
+    {
         $dataArray = $this->getDataArray();
         $result = ($dataArray['username'] != '' || $dataArray['email'] != '');
         return $result;
@@ -264,8 +294,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     *
     * @return void  all overriding done directly on array $this->dataArray
     */
-    public function overrideValues (array &$dataArray, $overrideConf) {
-
+    public function overrideValues (array &$dataArray, $overrideConf)
+    {
         $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
         $overrideFieldArray = array();
 
@@ -368,7 +398,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     * @param array  Array with key/values being marker-strings/substitution values.
     * @return array the data row with key/value pairs
     */
-    public function readDefaultValues ($cmdKey) {
+    public function readDefaultValues ($cmdKey)
+    {
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
         $dataArray = array();
@@ -401,7 +432,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $orderNo = '',
         $param = '',
         $bInternal = false
-    ) {
+    )
+    {
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
 
@@ -477,7 +509,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         array $requiredArray,
         array $checkFieldArray,
         $captcha
-    ) {
+    )
+    {
         $conf = $confObj->getConf();
         $failureMsg = array();
         $displayFieldArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1);
@@ -1106,7 +1139,13 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     *
     * @return boolean  all parsing done directly on input and output array $dataArray
     */
-    public function parseValues ($theTable, array &$dataArray, array $origArray, $cmdKey) {
+    public function parseValues (
+        $theTable,
+        array &$dataArray,
+        array $origArray,
+        $cmdKey
+    )
+    {
         $result = true;
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
@@ -1309,7 +1348,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     * @param string  $filename: the name of the file
     * @return void
     */
-    public function checkFilename ($filename) {
+    public function checkFilename ($filename)
+    {
         $result = true;
 
         $fI = pathinfo($filename);
@@ -1334,7 +1374,13 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     * @param string  $theField: the name of the field
     * @return array file names
     */
-    public function processFiles ($theTable, $theField, array $fieldDataArray, $cmdKey, &$deleted) {
+    public function processFiles (
+        $theTable,
+        $theField,
+        array $fieldDataArray,
+        $cmdKey,
+        &$deleted
+    ) {
         $deleted = false;
 
         if (is_array($GLOBALS['TCA'][$theTable]['columns'][$theField])) {
@@ -1408,8 +1454,10 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $cmdKey,
         $pid,
         $password,
+        $extraFields,
         $hookClassArray
-    ) {
+    )
+    {
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
         $result = 0;
@@ -1583,7 +1631,11 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                         $this->getAdminFieldList()
                                     ),
                                     $this->getAdditionalOverrideFields(),
-                                    $this->getAdditionalIncludedFields()
+                                    $this->getAdditionalIncludedFields(),
+                                    explode(
+                                        ',',
+                                        $extraFields
+                                    )
                                 )
                             )
                         );
@@ -1729,7 +1781,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $theTable,
         array $origArray,
         array &$dataArray
-    ) {
+    )
+    {
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
 
@@ -1814,7 +1867,11 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
      * @param string  $uid: record id
      * @return void
      */
-    public function deleteFilesFromRecord ($theTable, $row) {
+    public function deleteFilesFromRecord (
+        $theTable,
+        $row
+    )
+    {
         $updateFields = array();
         foreach($GLOBALS['TCA'][$theTable]['columns'] as $field => $conf) {
             if (
@@ -1852,8 +1909,11 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     *
     *  Check if the value is a correct date in format yyyy-mm-dd
     */
-    public function fetchDate ($value, $dateFormat) {
-
+    public function fetchDate (
+        $value,
+        $dateFormat
+    )
+    {
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
 
@@ -1913,7 +1973,11 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
      *
      *  Check if the value is a correct date in format yyyy-mm-dd
      */
-    public function evalDate ($value, $dateFormat) {
+    public function evalDate (
+        $value,
+        $dateFormat
+    )
+    {
         if( !$value) {
             return false;
         }
@@ -1932,8 +1996,10 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     *
     * @return void
     */
-    public function updateMMRelations ($theTable, array $row) {
-
+    public function updateMMRelations (
+        $theTable,
+        array $row
+    ) {
             // update the MM relation
         $fieldsList = array_keys($row);
         foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
@@ -1973,7 +2039,12 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     *
     * @return void
     */
-    public function deleteMMRelations ($theTable, $uid, array $row = array()) {
+    public function deleteMMRelations (
+        $theTable,
+        $uid,
+        array $row = array()
+    )
+    {
             // update the MM relation
         $fieldsList = array_keys($row);
         foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
@@ -1997,7 +2068,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         array $conf,
         array $inputArr,
         $cmdKey
-    ) {
+    )
+    {
         if (is_array($conf[$cmdKey.'.']['evalValues.'])) {
             foreach($conf[$cmdKey.'.']['evalValues.'] as $theField => $theValue) {
                 $listOfCommands = GeneralUtility::trimExplode(',', $theValue, 1);
@@ -2075,7 +2147,12 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     * @param string $theTable: the table in use
     * @return void  done directly on $dataArray passed by reference
     */
-    public function setName (array &$dataArray, $cmdKey, $theTable) {
+    public function setName (
+        array &$dataArray,
+        $cmdKey,
+        $theTable
+    )
+    {
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
 
@@ -2118,7 +2195,12 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     *
     * @return void  done directly on array $this->dataArray
     */
-    public function setUsername ($theTable, array &$dataArray, $cmdKey) {
+    public function setUsername (
+        $theTable,
+        array &$dataArray,
+        $cmdKey
+    )
+    {
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
 
@@ -2136,8 +2218,11 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     *
     * @return parsedArray
     */
-    public function parseIncomingData (array $origArray, $bUnsetZero = true) {
-
+    public function parseIncomingData (
+        array $origArray,
+        $bUnsetZero = true
+    )
+    {
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
 
@@ -2191,7 +2276,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $conf,
         array $dataArray,
         array $origArray
-    ) {
+    )
+    {
         $tablesObj = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tables::class);
         $addressObj = $tablesObj->get('address');
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
@@ -2336,7 +2422,10 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     * @param string  $error_code: the error code
     * @return boolean  true if ok
     */
-    public function evalFileError ($error_code) {
+    public function evalFileError (
+        $error_code
+    )
+    {
         $result = false;
         if ($error_code == '0') {
             $result = true;
@@ -2355,7 +2444,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         return $result;
     }   // evalFileError
 
-    public function getInError () {
+    public function getInError ()
+    {
         return $this->inError;
     }
 
@@ -2368,7 +2458,12 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
      * @param array $dataArray: the incoming data array
      * @return void
      */
-    protected function setEmptyIfAbsent ($theTable, $theField, array &$dataArray) {
+    protected function setEmptyIfAbsent (
+        $theTable,
+        $theField,
+        array &$dataArray
+    )
+    {
         if (!isset($dataArray[$theField])) {
             $fieldConfig = $GLOBALS['TCA'][$theTable]['columns'][$theField]['config'];
             if (is_array($fieldConfig)) {
