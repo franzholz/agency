@@ -621,9 +621,6 @@
 			<trans-unit id="privacy_policy_acknowledged_2_informal" xml:space="preserve">
 				<source>I agree for any data I transmit through this site, that you can use them in accordance with the Privacy Policy.</source>
 			</trans-unit>
-			<trans-unit id="company" xml:space="preserve">
-				<source>Company</source>
-			</trans-unit>
 			<trans-unit id="privacy_policy_hint" xml:space="preserve">
 				<source>Hint</source>
 			</trans-unit>
@@ -804,7 +801,6 @@
 			<trans-unit id="tooltip_click_here_to_see_terms_informal" xml:space="preserve">
 				<source>Opens a page or file which shows the terms.</source>
 			</trans-unit>
-
 			<trans-unit id="click_here_to_see_privacy_policy" xml:space="preserve">
 				<source>Click here to see the privacy policy.</source>
 			</trans-unit>
