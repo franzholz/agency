@@ -79,6 +79,7 @@ class Url implements \TYPO3\CMS\Core\SingletonInterface {
     )
     {
         $result = '';
+        $piVars = array();
         $vars = (array) $vars;
         $unsetVars = (array) $unsetVars;
         if ($usePiVars) {

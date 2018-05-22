@@ -1,6 +1,10 @@
+2018-05-22 Franz Holzinger  <franz@ttproducts.de>
+    * replace tx_div2007 calls by calls to the JambageCom\Div2007 namespace classes or to direct TYPO3 8 calls
+    * hint: Only add privacy_policy_acknowledged to create.fields for activation of the privacy policy checkbox.
+
 2018-04-27 Franz Holzinger  <franz@ttproducts.de>
     * new feature: According to DSGVO / GDPR a new checkbox for the privacy policy agreement must be checked before the user can continue and before his data is allowed to be stored on the server. Therefore the submit button is disabled until this checkbox is checked.
-    * new feature: PIDprivacy for the privacy policy agreement page.
+    * new feature: constants file.privacyPolicyFile and privacyPolicyUrl for the privacy policy agreement file or page.
     * new feature: Update the template ###TEMPLATE_CREATE### with subpart ###SUB_INCLUDED_FIELD_privacy_policy_acknowledged### and markers ###PRIVACY_POLICY_URL### for the link to the privacy policy agreement page defined by PIDprivacy.
     * add markers ###LABEL_TOOLTIP_CLICK_HERE_TO_SEE_PRIVACY_POLICY###, ###LABEL_CLICK_HERE_TO_SEE_PRIVACY_POLICY###, ###LABEL_PRIVACY_POLICY_ACKNOWLEDGED_2###, ###LABEL_PRIVACY_POLICY_HINT###, ###LABEL_PRIVACY_POLICY_HINT_1###, ###LABEL_PRIVACY_POLICY_HINT_2###
     * add new fields to fe_users: privacy_policy_acknowledged and privacy_policy_date

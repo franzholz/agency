@@ -81,7 +81,7 @@ class ActionController {
         if ($cmd == '') {
                 // Check the flexform
             $cObj->data['pi_flexform'] = GeneralUtility::xml2array($cObj->data['pi_flexform']);
-            $cmd = \tx_div2007_alpha5::getSetupOrFFvalue_fh004(
+            $cmd = \JambageCom\Div2007\Utility\ConfigUtility::getSetupOrFFvalue(
                 $langObj,
                 '',
                 '',

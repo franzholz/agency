@@ -20,9 +20,8 @@ plugin.tx_agency {
     # cat=plugin.tx_agency/file; type=file[pdf,doc,sxw,txt]; label= Privacy Policy file: File to be shown as the privacy policy.
   file.privacyPolicyFile = EXT:agency/Resources/Private/Templates/AgencyPrivacyPolicy.txt
 
-    # cat=plugin.tx_agency//; type=string; label= Privacy Policy url: Page (id or id,type) or url where the privacy policy is shown. If set, it overrides the privacy policy file.
+    # cat=plugin.tx_agency//; type=string; label= Privacy Policy url: Page (id or id,type) or url where the privacy policy is shown. If set, it overrides the privacy policy file. This is needed for compliance with DSGVO / GDPR .
   privacyPolicyUrl =
-
 
   # cat=plugin.tx_agency/file; type=file[gif]; label= Icon used for deletion of uploaded files.
   file.icon_delete = EXT:agency/res/icons/fe/icon_delete.gif

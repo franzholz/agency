@@ -52,9 +52,9 @@ class Tables implements \TYPO3\CMS\Core\SingletonInterface {
     {
         $this->tablename = $tablename;
         if ($tablename == 'fe_users') {
-            $this->tableClassArray['address'] = 'tx_agency_model_feusers';
+            $this->tableClassArray['address'] = \JambageCom\Agency\Domain\Table\FeUsers::class;
         } else {
-            $this->tableClassArray['address'] = 'tx_agency_model_setfixed';
+            $this->tableClassArray['address'] = \JambageCom\Agency\Domain\Table\Setfixed::class;
         }
     }   // init
 

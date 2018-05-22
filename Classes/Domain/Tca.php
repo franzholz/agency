@@ -42,6 +42,8 @@ namespace JambageCom\Agency\Domain;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use JambageCom\Div2007\Utility\FrontendUtility;
+
 class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
     public function init ($extKey, $theTable)
@@ -704,7 +706,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                 $label = $langObj->getLLFromString($colConfig['default']);
                                 $label = htmlspecialchars($label, ENT_QUOTES, $charset);
                                 $colContent = '<textarea id="' .
-                                    \tx_div2007_alpha5::getClassName_fh002(
+                                    FrontendUtility::getClassName(
                                         $colName,
                                         $prefixId
                                     ) .
@@ -721,7 +723,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
                                 if (isset($itemArray) && is_array($itemArray)) {
                                     $uidText =
-                                        \tx_div2007_alpha5::getClassName_fh002(
+                                        FrontendUtility::getClassName(
                                             $colName,
                                             $prefixId
                                         );
@@ -759,7 +761,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                         $label = $langObj->getLLFromString($itemArray[$key][0]);
                                         $label = htmlspecialchars($label, ENT_QUOTES, $charset);
                                         $newContent = '<li><input type="checkbox"' .
-                                            \tx_div2007_alpha5::classParam_fh002(
+                                            FrontendUtility::classParam(
                                                 'checkbox',
                                                 '',
                                                 $prefixId
@@ -776,13 +778,13 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                     $checkedHtml = ($useXHTML ? ' checked="checked"' : ' checked');
                                     $colContent =
                                         '<input type="checkbox"' .
-                                        \tx_div2007_alpha5::classParam_fh002(
+                                        FrontendUtility::classParam(
                                             'checkbox',
                                             '',
                                             $prefixId
                                         ) .
                                         ' id="' .
-                                        \tx_div2007_alpha5::getClassName_fh002(
+                                        FrontendUtility::getClassName(
                                             $colName,
                                             $prefixId
                                         ) .
@@ -824,20 +826,20 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                         $label = $langObj->getLLFromString($confArray[0]);
                                         $label = htmlspecialchars($label, ENT_QUOTES, $charset);
                                         $itemOut = '<input type="radio"' .
-                                        \tx_div2007_alpha5::classParam_fh002(
+                                        FrontendUtility::classParam(
                                             'radio',
                                             '',
                                             $prefixId
                                         ) .
                                         ' id="'.
-                                        \tx_div2007_alpha5::getClassName_fh002(
+                                        FrontendUtility::getClassName(
                                             $colName,
                                             $prefixId
                                         ) .
                                         '-' . $i . '" name="FE[' . $theTable . '][' . $colName . ']"' .
                                             ' value="' . $value . '" ' . ($value == $startVal ? $checkedHtml : '') . $xhtmlFix . '>' .
                                             '<label for="' .
-                                            \tx_div2007_alpha5::getClassName_fh002(
+                                            FrontendUtility::getClassName(
                                                 $colName,
                                                 $prefixId
                                             ) .
@@ -874,7 +876,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                 }
 
                                 $attributeIdName = ' id="' .
-                                    \tx_div2007_alpha5::getClassName_fh002(
+                                    FrontendUtility::getClassName(
                                         $colName,
                                         $prefixId
                                     ) .
@@ -888,7 +890,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                 $attributeTitle = ' title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($colName, 'upper') . '###"';
 
                                 if ($attributeMultiple != '') {
-                                    $attributeClass = ' class="' . \tx_div2007_alpha5::getClassName_fh002(
+                                    $attributeClass = ' class="' . FrontendUtility::getClassName(
                                         'multiple-checkboxes',
                                         $prefixId
                                     ) . '"';
@@ -927,19 +929,19 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                         if ($colConfig['renderMode'] == 'checkbox') {
 
                                             $colContent .= '<dt><input class="' .
-                                            \tx_div2007_alpha5::getClassName_fh002(
+                                            FrontendUtility::getClassName(
                                                 'checkbox-checkboxes',
                                                 $prefixId
                                             ) .
                                              '" id="' .
-                                            \tx_div2007_alpha5::getClassName_fh002(
+                                            FrontendUtility::getClassName(
                                                 $colName,
                                                 $prefixId
                                             ) .
                                             '-' . $i . '" name="FE[' . $theTable . '][' . $colName . '][' . $k . ']" value="' . $k .
                                             '" type="checkbox"  ' . (in_array($k, $valuesArray) ? $checkedHtml : '') . $xhtmlFix . '></dt>
                                                 <dd><label for="' .
-                                                \tx_div2007_alpha5::getClassName_fh002(
+                                                FrontendUtility::getClassName(
                                                     $colName,
                                                     $prefixId
                                                 ) .
@@ -1051,19 +1053,19 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                                 $selectedValue = ($selected ? true: $selectedValue);
                                                 if ($colConfig['renderMode'] == 'checkbox') {
                                                     $colContent .= '<dt><input  class="' .
-                                                    \tx_div2007_alpha5::getClassName_fh002(
+                                                    FrontendUtility::getClassName(
                                                         'checkbox',
                                                         $prefixId
                                                     ) .
                                                     '" id="'.
-                                                    \tx_div2007_alpha5::getClassName_fh002(
+                                                    FrontendUtility::getClassName(
                                                         $colName,
                                                         $prefixId
                                                     ) .
                                                     '-' . $row2['uid'] . '" name="FE[' . $theTable . '][' . $colName . '][' . $row2['uid'] . ']" value="'.$row2['uid'] .
                                                     '" type="checkbox"' . ($selected ? $checkedHtml : '') . $xhtmlFix . '></dt>
                                                     <dd><label for="' .
-                                                    \tx_div2007_alpha5::getClassName_fh002(
+                                                    FrontendUtility::getClassName(
                                                         $colName,
                                                         $prefixId
                                                     ) . '-' . $row2['uid'] . '">' . $titleText . '</label></dd>';
@@ -1090,18 +1092,18 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
                                             if ($colConfig['renderMode'] == 'checkbox') {
                                                 $colContent .= '<dt><input class="' .
-                                                \tx_div2007_alpha5::getClassName_fh002(
+                                                FrontendUtility::getClassName(
                                                     'checkbox',
                                                     $prefixId
                                                 ) .
                                                 '" id="'.
-                                                \tx_div2007_alpha5::getClassName_fh002(
+                                                FrontendUtility::getClassName(
                                                     $colName,
                                                     $prefixId
                                                 ) .
                                                 '-' . $row2['uid'] . '" name="FE[' . $theTable . '][' . $colName . '][' . $row2['uid'] . ']" value="' . $row2['uid'] . '" type="checkbox"' . (in_array($row2['uid'],  $valuesArray) ? $checkedHtml : '') . $xhtmlFix . '></dt>
                                                 <dd><label for="' .
-                                                \tx_div2007_alpha5::getClassName_fh002(
+                                                FrontendUtility::getClassName(
                                                     $colName,
                                                     $prefixId
                                                 ) . '-' . $row2['uid'] . '">' . $titleText . '</label></dd>';

@@ -43,6 +43,9 @@ namespace JambageCom\Agency\Setfixed;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
+
+use JambageCom\Div2007\Utility\FrontendUtility;
 
 
 class SetFixedUrls {
@@ -183,7 +186,7 @@ class SetFixedUrls {
                 $urlConf['disableGroupAccessCheck'] = true;
                 $confirmType = (MathUtility::canBeInterpretedAsInteger($confirmType) ? intval($confirmType) : $GLOBALS['TSFE']->type);
                 $url =
-                    \tx_div2007_alpha5::getTypoLink_URL_fh003(
+                    FrontendUtility::getTypoLink_URL(
                         $cObj,
                         $linkPID . ',' . $confirmType,
                         $setfixedpiVars,
@@ -204,7 +207,8 @@ class SetFixedUrls {
     */
     static public function storeFixedPiVars (array $params)
     {
-        $regHash_calc = \tx_div2007_core::generateHash($params, 20);
+        $calc = CacheHashCalculator::calculateCacheHash($params); 
+        $regHash_calc = substr($calc, 0, 20);
 
             // and store it with a serialized version of the array in the DB
         $res =

@@ -44,7 +44,8 @@ namespace JambageCom\Agency\Controller;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-use \JambageCom\Div2007\Utility\MailUtility;
+use JambageCom\Div2007\Utility\FrontendUtility;
+use JambageCom\Div2007\Utility\MailUtility;
 
 
 class Email implements \TYPO3\CMS\Core\SingletonInterface {
@@ -779,7 +780,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 $cObj->substituteSubpart(
                     $content['userhtml']['all'],
                     '###SUB_RECORD###',
-                    \tx_div2007_alpha5::wrapInBaseClass_fh002(
+                    FrontendUtility::wrapInBaseClass(
                         $content['userhtml']['accum'],
                         $controlData->getPrefixId(),
                         $extKey
@@ -814,7 +815,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 $cObj->substituteSubpart(
                     $content['adminhtml']['all'],
                     '###SUB_RECORD###',
-                    \tx_div2007_alpha5::wrapInBaseClass_fh002(
+                    FrontendUtility::wrapInBaseClass(
                         $content['adminhtml']['accum'],
                         $controlData->getPrefixId(),
                         $extKey

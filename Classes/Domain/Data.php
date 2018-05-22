@@ -41,8 +41,9 @@ namespace JambageCom\Agency\Domain;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use JambageCom\Div2007\Database\CoreQuery;
+use TYPO3\CMS\Core\Utility\MathUtility;
 
+use JambageCom\Div2007\Database\CoreQuery;
 use JambageCom\Div2007\Captcha\CaptchaInterface;
 use JambageCom\Div2007\Utility\SystemUtility;
 
@@ -445,7 +446,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
             $count = 0;
 
             foreach ($conf['evalErrors.'][$theField . '.'][$theRule . '.'] as $k => $v) {
-                $bKIsInt = \tx_div2007_core::testInt($k);
+                $bKIsInt = MathUtility::canBeInterpretedAsInteger($k);
 
                 if ($bInternal) {
                     if ($k == 'internal') {
@@ -560,7 +561,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 $bRecordExists = ($recordTestPid != 0);
             } else {
                 $thePid = $this->controlData->getPid();
-                $recordTestPid = ($thePid ? $thePid : \tx_div2007_core::intval_positive($pid));
+                $recordTestPid = ($thePid ? $thePid : MathUtility::convertToPositiveInteger($pid));
             }
             $countArray = array();
             $countArray['hook'] = array();

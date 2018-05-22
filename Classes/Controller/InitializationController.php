@@ -43,6 +43,8 @@ namespace JambageCom\Agency\Controller;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use JambageCom\Div2007\Utility\FrontendUtility;
+
 
 class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
 
@@ -319,7 +321,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         }
 
         $content =
-            \tx_div2007_alpha5::wrapInBaseClass_fh002(
+            FrontendUtility::wrapInBaseClass(
                 $content,
                 $pibaseObj->prefixId,
                 $pibaseObj->extKey

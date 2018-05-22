@@ -1,17 +1,17 @@
 <?php
 
-namespace JambageCom\Agency\Hooks;
+namespace JambageCom\Agency\Domain\Table;
 
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2018 Franz Holzinger <franz@ttproducts.de>
+*  (c) 2008-2018 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
 *  free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License, or
+*  the Free Software Foundation; either version 2 of the License or
 *  (at your option) any later version.
 *
 *  The GNU General Public License can be found at
@@ -30,19 +30,18 @@ namespace JambageCom\Agency\Hooks;
 /**
  * Part of the agency (Agency Registration) extension.
  *
- * hook functions for the TYPO3 cms
+ * base class for all database table classes
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
  * @package TYPO3
  * @subpackage agency
  *
- *
  */
 
-
-class CmsBackend extends \JambageCom\Div2007\Base\CmsHookBase {
-    public $extensionKey = AGENCY_EXT;
-
+class FeUsers extends Base {
+    public $fieldClassArray = array (
+        'usergroup' => \JambageCom\Agency\Domain\Field\UserGroup::class
+    );
 }
 

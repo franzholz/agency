@@ -5,7 +5,7 @@ namespace JambageCom\Agency\View;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Stanislas Rolland (typo3(arobas)sjbr.ca)
+*  (c) 2018 Stanislas Rolland (typo3(arobas)sjbr.ca)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -43,8 +43,10 @@ namespace JambageCom\Agency\View;
 */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
 
 use JambageCom\Div2007\Captcha\CaptchaInterface;
+use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\HtmlUtility;
 
 define('SAVED_SUFFIX', '_SAVED');
@@ -845,19 +847,19 @@ class Marker {
                 $markerArray['###FIELD_language###'] = $this->staticInfoObj->getStaticInfoName('LANGUAGES',  is_array($row) ? $row['language'] : '');
             } else {
                 $idCountry =
-                    \tx_div2007_alpha5::getClassName_fh002(
+                    FrontendUtility::getClassName(
                         'static_info_country',
                         $prefixId
                     );
                 $titleCountry = $langObj->getLL('tooltip_' . (($cmd == 'invite') ? 'invitation_' : '')  . 'static_info_country');
                 $idZone =
-                    \tx_div2007_alpha5::getClassName_fh002(
+                    FrontendUtility::getClassName(
                         'zone',
                         $prefixId
                     );
                 $titleZone = $langObj->getLL('tooltip_' . (($cmd == 'invite') ? 'invitation_' : '')  . 'zone');
                 $idLanguage =
-                    \tx_div2007_alpha5::getClassName_fh002(
+                    FrontendUtility::getClassName(
                         'language',
                         $prefixId
                     );
@@ -966,7 +968,7 @@ class Marker {
                     }
                 } else if ($bHtml) {
                     $HTMLContent .= '<a href="' . $dir . '/' . $filenameArray[$i] . '"' .
-                    \tx_div2007_alpha5::classParam_fh002(
+                    FrontendUtility::classParam(
                         'file-view',
                         '',
                         $prefixId
@@ -992,7 +994,7 @@ var submitFile = function(id){
                     ' title="' .
                     $langObj->getLL('icon_delete') .
                     '" alt="' . $langObj->getLL('icon_delete') . '"' .
-                    \tx_div2007_alpha5::classParam_fh002(
+                    FrontendUtility::classParam(
                         'delete-view',
                         '',
                         $prefixId
@@ -1006,7 +1008,7 @@ var submitFile = function(id){
 
                 $partContent .=
                     '<a href="' . $dir . '/' . $filenameArray[$i] . '" ' .
-                    \tx_div2007_alpha5::classParam_fh002(
+                    FrontendUtility::classParam(
                         'file-view',
                         '',
                         $prefixId
@@ -1020,14 +1022,14 @@ var submitFile = function(id){
 
             for ($i = sizeof($filenameArray); $i < $number + sizeof($filenameArray); $i++) {
                 $HTMLContent .= '<input id="' .
-                \tx_div2007_alpha5::getClassName_fh002(
+                FrontendUtility::getClassName(
                     $theField,
                     $prefixId
                 ) .
                 '-' . ($i - sizeof($filenameArray)) .
                 '" name="' . $tablePrefix . '[' . $theField . '][' . $i . ']" title="' .
                 $langObj->getLL('tooltip_' . (($cmd == 'invite') ? 'invitation_' : '')  . 'image') . '" size="40" type="file" ' .
-                \tx_div2007_alpha5::classParam_fh002(
+                FrontendUtility::classParam(
                     'uploader-view',
                     '',
                     $prefixId
@@ -1290,7 +1292,7 @@ var submitFile = function(id){
         } else {
             if (is_array($row)) {
                 foreach($row as $field => $value) {
-                    $bFieldIsInt = \tx_div2007_core::testInt($field);
+                    $bFieldIsInt = MathUtility::canBeInterpretedAsInteger($field);
                     if (!$bFieldIsInt) {
                         if (is_array($value)) {
                             $value = implode(',', $value);
