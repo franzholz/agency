@@ -1,3 +1,6 @@
+2018-06-13 Franz Holzinger  <franz@ttproducts.de>
+    * fix PHP Runtime Deprecation Notice: Non-static method JambageCom\Agency\Utility\SessionUtility::readData() should not be called statically in Classes/Request/Parameters.php line 553
+
 2018-05-22 Franz Holzinger  <franz@ttproducts.de>
     * replace tx_div2007 calls by calls to the JambageCom\Div2007 namespace classes or to direct TYPO3 8 calls
     * hint: Only add privacy_policy_acknowledged to create.fields for activation of the privacy policy checkbox.
