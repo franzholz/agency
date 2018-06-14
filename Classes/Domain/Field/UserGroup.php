@@ -285,7 +285,7 @@ class UserGroup extends Base {
                         $fileExtension = substr($basename, $posFileExtension + 1);
 
                         if ($fileExtension == 'xml') {
-                            $objDom = new domDocument();
+                            $objDom = new \domDocument();
                             $objDom->encoding = 'utf-8';
                             $resultLoad = $objDom->load($absFilename, LIBXML_COMPACT);
 

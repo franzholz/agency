@@ -43,7 +43,6 @@ namespace JambageCom\Agency\Setfixed;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 
 use JambageCom\Div2007\Utility\FrontendUtility;
 
@@ -207,7 +206,8 @@ class SetFixedUrls {
     */
     static public function storeFixedPiVars (array $params)
     {
-        $calc = CacheHashCalculator::calculateCacheHash($params); 
+        $hashCalculator = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Page\CacheHashCalculator::class);
+        $calc = $hashCalculator->calculateCacheHash($params); 
         $regHash_calc = substr($calc, 0, 20);
 
             // and store it with a serialized version of the array in the DB

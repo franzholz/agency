@@ -1,3 +1,6 @@
+2018-06-14 Franz Holzinger  <franz@ttproducts.de>
+    * fix PHP warning: Do not call non static method CacheHashCalculator::calculateCacheHash statically.
+
 2018-06-13 Franz Holzinger  <franz@ttproducts.de>
     * fix PHP Runtime Deprecation Notice: Non-static method JambageCom\Agency\Utility\SessionUtility::readData() should not be called statically in Classes/Request/Parameters.php line 553
 
