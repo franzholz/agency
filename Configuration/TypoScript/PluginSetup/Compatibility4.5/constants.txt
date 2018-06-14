@@ -1,7 +1,0 @@
-plugin.tx_agency {
-
-    # cat=plugin.tx_agency/file; type=file[html,htm,tmpl,txt]; label= Template File: HTML-template file
-  file.templateFile = EXT:agency/template/tx_agency_css_tmpl.html
-
-}
-
