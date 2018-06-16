@@ -29,16 +29,7 @@
   "autoload": {
     "psr-4": {
       "JambageCom\\Agency\\": "Classes"
-    },
-    "classmap": [
-      "/",
-      "hooks/",
-      "lib/",
-      "marker/",
-      "model/",
-      "pi/",
-      "view/"
-    ]
+    }
   },
   "replace": {
     "agency": "self.version",
