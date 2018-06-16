@@ -1180,6 +1180,7 @@ class ActionController {
                         $fD
                     );
                     $content = $deleteView->render(
+                        $errorCode,
                         $markerArray,
                         $conf,
                         $prefixId,
@@ -1211,6 +1212,7 @@ class ActionController {
                         $fD
                     );
                     $content = $editView->render(
+                        $errorCode,
                         $markerArray,
                         $conf,
                         $cObj,
@@ -1304,6 +1306,17 @@ class ActionController {
                         $token
                     );
                     break;
+            }
+
+            if (
+                is_array($errorCode)
+            ) {
+                $errorText = $langObj->getLL($errorCode['0']);
+                if (isset($errorCode['1'])) {
+                    $errorContent = sprintf($errorText, $errorCode['1']);
+                } else {
+                    $errorContent = $errorText;
+                }
             }
 
             if (

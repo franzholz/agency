@@ -57,6 +57,7 @@ class DeleteView {
     * @return string  the template with substituted markers
     */
     public function render (
+        &$errorCode,
         array $markerArray,
         $conf,
         $prefixId,
@@ -144,6 +145,7 @@ class DeleteView {
                         );
                         $markerObj->setArray($markerArray);
                         $content = $template->getPlainTemplate(
+                            $errorCode,
                             $conf,
                             $cObj,
                             $langObj,
@@ -164,6 +166,7 @@ class DeleteView {
                     } else {
                         // Else display error, that you could not edit that particular record...
                         $content = $template->getPlainTemplate(
+                            $errorCode,
                             $conf,
                             $cObj,
                             $langObj,
@@ -187,6 +190,7 @@ class DeleteView {
                 // Finally this is if there is no login user. This must tell that you must login. Perhaps link to a page with create-user or login information.
                 if ( $theTable == 'fe_users' ) {
                     $content = $template->getPlainTemplate(
+                        $errorCode,
                         $conf,
                         $cObj,
                         $langObj,
@@ -206,6 +210,7 @@ class DeleteView {
                     );
                 } else {
                     $content = $template->getPlainTemplate(
+                        $errorCode,
                         $conf,
                         $cObj,
                         $langObj,

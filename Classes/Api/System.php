@@ -66,6 +66,7 @@ class System {
     )
     {
         $result = true;
+        $ok = true;
         $message = '';
 
             // Log the user in
@@ -174,9 +175,11 @@ class System {
             if ($message != '') {
                 GeneralUtility::sysLog($message, $extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
             }
+            $ok = false;
         }
 
         if (
+            $ok &&
             $redirect
         ) {
                 // Redirect to configured page, if any
@@ -192,6 +195,7 @@ class System {
                     $redirectUrl = $controlData->getSiteUrl();
                 }
             }
+
             header('Location: ' . GeneralUtility::locationHeaderUrl($redirectUrl));
         }
 

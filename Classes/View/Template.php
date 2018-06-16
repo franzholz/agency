@@ -307,6 +307,7 @@ class Template {
     * @return string  the template with substituted parts and markers
     */
     public function getPlainTemplate (
+        &$errorCode,
         $conf,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Api\Localization $langObj,
@@ -425,8 +426,11 @@ class Template {
                     $deleteUnusedMarkers
                 );
         } else if ($bCheckEmpty) {
-            $errorText = $langObj->getLL('internal_no_subtemplate');
-            $result = sprintf($errorText, $subpartMarker);
+            $errorCode['0'] = 'internal_no_subtemplate';
+            $errorCode['1'] = $subpartMarker;
+            $result = false;
+//             $errorText = $langObj->getLL('internal_no_subtemplate');
+//             $result = sprintf($errorText, $subpartMarker);
         }
 
         return $result;

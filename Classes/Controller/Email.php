@@ -232,6 +232,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     }
                     $content =
                         $template->getPlainTemplate(
+                            $errorCode,
                             $conf,
                             $cObj,
                             $langObj,
@@ -260,6 +261,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
 
                 $content =  // lost password entry form
                     $template->getPlainTemplate(
+                        $errorCode,
                         $conf,
                         $cObj,
                         $langObj,

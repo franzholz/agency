@@ -321,6 +321,7 @@ class EditView {
     * @return string  the template with substituted markers
     */
     public function render (
+        &$errorCode,
         array &$markerArray,
         $conf,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
@@ -434,6 +435,7 @@ class EditView {
                 } else {
                     // Else display error, that you could not edit that particular record...
                     $content = $template->getPlainTemplate(
+                        $errorCode,
                         $conf,
                         $cObj,
                         $langObj,
@@ -455,6 +457,7 @@ class EditView {
             } else {
                 // This is if there is no login user. This must tell that you must login. Perhaps link to a page with create-user or login information.
                 $content = $template->getPlainTemplate(
+                    $errorCode,
                     $conf,
                     $cObj,
                     $langObj,
