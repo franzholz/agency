@@ -826,7 +826,7 @@
 				<source>Please take into consideration the general terms of usage</source>
 			</trans-unit>
 			<trans-unit id="signature" xml:space="preserve">
-				<source>Name&lt;br /&gt;Address&lt;br /&gt;Telefon&lt;br /&gt;</source>
+				<source>Name&lt;br&gt;Address&lt;br&gt;Telefon&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="enter_account_info" xml:space="preserve">
 				<source>Please complete the information for your membership.</source>
@@ -844,16 +844,16 @@
 				<source>Please complete all required fields *</source>
 			</trans-unit>
 			<trans-unit id="copy_paste_link" xml:space="preserve">
-				<source>Or copy and paste it into your browser.&lt;br /&gt;</source>
+				<source>Or copy and paste it into your browser.&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="copy_paste_link_informal" xml:space="preserve">
-				<source>Or copy and paste it into your browser.&lt;br /&gt;</source>
+				<source>Or copy and paste it into your browser.&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="excuse_us" xml:space="preserve">
-				<source>Please forgive us for any inconvenience we may have caused you.&lt;br /&gt;&lt;br /&gt;</source>
+				<source>Please forgive us for any inconvenience we may have caused you.&lt;br&gt;&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="excuse_us_informal" xml:space="preserve">
-				<source>Please forgive us for any inconvenience we may have caused you.&lt;br /&gt;&lt;br /&gt;</source>
+				<source>Please forgive us for any inconvenience we may have caused you.&lt;br&gt;&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="registration_problem" xml:space="preserve">
 				<source>There seems to be a problem.</source>
@@ -931,10 +931,10 @@
 				<source>Do you really wish to approve your membership &lt;b&gt;%2$s&lt;/b&gt;?</source>
 			</trans-unit>
 			<trans-unit id="v_verify_before_create" xml:space="preserve">
-				<source>Please verify that all the information is correct before your membership with the name &lt;b&gt;%2$s&lt;/b&gt; will be created&lt;br /&gt;</source>
+				<source>Please verify that all the information is correct before your membership with the name &lt;b&gt;%2$s&lt;/b&gt; will be created&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_verify_before_create_informal" xml:space="preserve">
-				<source>Please verify that all the information is correct before your membership with the name &lt;b&gt;%2$s&lt;/b&gt; will be created&lt;br /&gt;</source>
+				<source>Please verify that all the information is correct before your membership with the name &lt;b&gt;%2$s&lt;/b&gt; will be created&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_verify_invitation_before_create" xml:space="preserve">
 				<source>Please verify that all the data of &lt;b&gt;%3$s&lt;/b&gt; is correct before the membership with the name &lt;b&gt;%2$s&lt;/b&gt; will be created</source>
@@ -1063,7 +1063,7 @@
 				<source>The membership &lt;b&gt;%2$s&lt;/b&gt; has been created. An invitation to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt; was sent to &lt;b&gt;%3$s&lt;/b&gt; at the e-mail address &lt;b&gt;%4$s&lt;/b&gt;.</source>
 			</trans-unit>
 			<trans-unit id="v_invitation_instructions1" xml:space="preserve">
-				<source>You will have access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website only after you will have confirmed your registration.&lt;br /&gt;Please follow the instructions given in the confirmation message in order to complete the registration procedure.</source>
+				<source>You will have access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website only after you will have confirmed your registration.&lt;br&gt;Please follow the instructions given in the confirmation message in order to complete the registration procedure.</source>
 			</trans-unit>
 			<trans-unit id="v_please_confirm" xml:space="preserve">
 				<source>Please confirm your registration.</source>
@@ -1108,10 +1108,10 @@
 				<source>Please confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;.</source>
 			</trans-unit>
 			<trans-unit id="v_registration_initiated_message1" xml:space="preserve">
-				<source>Thank you for your application to become a member of &lt;b&gt;%1$s&lt;/b&gt;. &lt;br /&gt;Everyone is welcome to browse around our website but you will need to confirm your membership to have unrestricted access to all areas.&lt;br /&gt;&lt;br /&gt;To confirm your membership please click on this link</source>
+				<source>Thank you for your application to become a member of &lt;b&gt;%1$s&lt;/b&gt;. &lt;br&gt;Everyone is welcome to browse around our website but you will need to confirm your membership to have unrestricted access to all areas.&lt;br&gt;&lt;br&gt;To confirm your membership please click on this link</source>
 			</trans-unit>
 			<trans-unit id="v_registration_initiated_message1_informal" xml:space="preserve">
-				<source>Thank you for your application to become a member of &lt;b&gt;%1$s&lt;/b&gt;. &lt;br /&gt;Everyone is welcome to browse around our website but you will need to confirm your membership to have unrestricted access to all areas.&lt;br /&gt;&lt;br /&gt;To confirm your membership please click on this link</source>
+				<source>Thank you for your application to become a member of &lt;b&gt;%1$s&lt;/b&gt;. &lt;br&gt;Everyone is welcome to browse around our website but you will need to confirm your membership to have unrestricted access to all areas.&lt;br&gt;&lt;br&gt;To confirm your membership please click on this link</source>
 			</trans-unit>
 			<trans-unit id="v_registration_initiated_message2" xml:space="preserve">
 				<source>If, for any reason, you do not wish to continue the registration process, or you have received this message in error, please click on this link</source>
@@ -1126,10 +1126,10 @@
 				<source>Please feel free to ask us any questions, or  tell us anything about the registration process, or make any other constructive comments by sending an e-mail to</source>
 			</trans-unit>
 			<trans-unit id="v_registration_initiated_review1" xml:space="preserve">
-				<source>Thank you for your application to become a member of &lt;b&gt;%1$s&lt;/b&gt;. &lt;br /&gt;Everyone is welcome to browse around our website but you will need to confirm your membership to have unrestricted access to all areas.&lt;br /&gt;&lt;br /&gt;To confirm your membership please click on this link</source>
+				<source>Thank you for your application to become a member of &lt;b&gt;%1$s&lt;/b&gt;. &lt;br&gt;Everyone is welcome to browse around our website but you will need to confirm your membership to have unrestricted access to all areas.&lt;br&gt;&lt;br&gt;To confirm your membership please click on this link</source>
 			</trans-unit>
 			<trans-unit id="v_registration_initiated_review1_informal" xml:space="preserve">
-				<source>Thank you for your application to become a member of &lt;b&gt;%1$s&lt;/b&gt;. &lt;br /&gt;Everyone is welcome to browse around our website but you will need to confirm your membership to have unrestricted access to all areas.&lt;br /&gt;&lt;br /&gt;To confirm your membership please click on this link</source>
+				<source>Thank you for your application to become a member of &lt;b&gt;%1$s&lt;/b&gt;. &lt;br&gt;Everyone is welcome to browse around our website but you will need to confirm your membership to have unrestricted access to all areas.&lt;br&gt;&lt;br&gt;To confirm your membership please click on this link</source>
 			</trans-unit>
 			<trans-unit id="v_registration_initiated_review2" xml:space="preserve">
 				<source>Please be aware that after you confirm your registration, it will need to be reviewed by the administrator before you gain access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website.</source>
@@ -1168,38 +1168,38 @@
 				<source>Invitation to register with &lt;b&gt;%1$s&lt;/b&gt;.</source>
 			</trans-unit>
 			<trans-unit id="v_registration_invited_message1" xml:space="preserve">
-				<source>We thought you might be interested in registering with &lt;b&gt;%1$s&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;
+				<source>We thought you might be interested in registering with &lt;b&gt;%1$s&lt;/b&gt;&lt;br&gt;&lt;br&gt;
 
-We have created an account for you with username &lt;b&gt;%2$s&lt;/b&gt; and password &lt;b&gt;%5$s&lt;/b&gt;.&lt;br /&gt;&lt;br /&gt;
+We have created an account for you with username &lt;b&gt;%2$s&lt;/b&gt; and password &lt;b&gt;%5$s&lt;/b&gt;.&lt;br&gt;&lt;br&gt;
 
-We are sending you this message so that you may confirm that you wish to register with &lt;b&gt;%1$s&lt;/b&gt;. You will be able to access the section reserved to &lt;b&gt;%1$s&lt;/b&gt; only after confirming your registration. You will also be able to change your password and account profile.&lt;br /&gt;&lt;br /&gt;
+We are sending you this message so that you may confirm that you wish to register with &lt;b&gt;%1$s&lt;/b&gt;. You will be able to access the section reserved to &lt;b&gt;%1$s&lt;/b&gt; only after confirming your registration. You will also be able to change your password and account profile.&lt;br&gt;&lt;br&gt;
 
 If you wish to accept our invitation and confirm your registration in &lt;b&gt;%1$s&lt;/b&gt;, please follow this link</source>
 			</trans-unit>
 			<trans-unit id="v_registration_invited_message1_informal" xml:space="preserve">
-				<source>We thought you might be interested in registering with &lt;b&gt;%1$s&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;
+				<source>We thought you might be interested in registering with &lt;b&gt;%1$s&lt;/b&gt;&lt;br&gt;&lt;br&gt;
 
-We have created an account for you with username &lt;b&gt;%2$s&lt;/b&gt; and password &lt;b&gt;%5$s&lt;/b&gt;.&lt;br /&gt;&lt;br /&gt;
+We have created an account for you with username &lt;b&gt;%2$s&lt;/b&gt; and password &lt;b&gt;%5$s&lt;/b&gt;.&lt;br&gt;&lt;br&gt;
 
-We are sending you this message so that you may confirm that you wish to register with &lt;b&gt;%1$s&lt;/b&gt;. You will be able to access the section reserved to &lt;b&gt;%1$s&lt;/b&gt; only after confirming your registration. You will also be able to change your password and account profile.&lt;br /&gt;&lt;br /&gt;
+We are sending you this message so that you may confirm that you wish to register with &lt;b&gt;%1$s&lt;/b&gt;. You will be able to access the section reserved to &lt;b&gt;%1$s&lt;/b&gt; only after confirming your registration. You will also be able to change your password and account profile.&lt;br&gt;&lt;br&gt;
 
 If you wish to accept our invitation and confirm your registration in &lt;b&gt;%1$s&lt;/b&gt;, please follow this link</source>
 			</trans-unit>
 			<trans-unit id="v_registration_invited_message1a" xml:space="preserve">
-				<source>We thought you might be interested in registering with &lt;b&gt;%1$s&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;
+				<source>We thought you might be interested in registering with &lt;b&gt;%1$s&lt;/b&gt;&lt;br&gt;&lt;br&gt;
 
-We have created an account for you with username &lt;b&gt;%2$s&lt;/b&gt;.&lt;br /&gt;&lt;br /&gt;
+We have created an account for you with username &lt;b&gt;%2$s&lt;/b&gt;.&lt;br&gt;&lt;br&gt;
 
-We are sending you this message so that you may confirm that you wish to register with &lt;b&gt;%1$s&lt;/b&gt;. You will be able to access the section reserved to &lt;b&gt;%1$s&lt;/b&gt; only after confirming your registration. You will also be able to change your password and account profile.&lt;br /&gt;&lt;br /&gt;
+We are sending you this message so that you may confirm that you wish to register with &lt;b&gt;%1$s&lt;/b&gt;. You will be able to access the section reserved to &lt;b&gt;%1$s&lt;/b&gt; only after confirming your registration. You will also be able to change your password and account profile.&lt;br&gt;&lt;br&gt;
 
 If you wish to accept our invitation and confirm your registration in &lt;b&gt;%1$s&lt;/b&gt;, please follow this link</source>
 			</trans-unit>
 			<trans-unit id="v_registration_invited_message1a_informal" xml:space="preserve">
-				<source>We thought you might be interested in registering with &lt;b&gt;%1$s&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;
+				<source>We thought you might be interested in registering with &lt;b&gt;%1$s&lt;/b&gt;&lt;br&gt;&lt;br&gt;
 
-We have created an account for you with username &lt;b&gt;%2$s&lt;/b&gt;.&lt;br /&gt;&lt;br /&gt;
+We have created an account for you with username &lt;b&gt;%2$s&lt;/b&gt;.&lt;br&gt;&lt;br&gt;
 
-We are sending you this message so that you may confirm that you wish to register with &lt;b&gt;%1$s&lt;/b&gt;. You will be able to access the section reserved to &lt;b&gt;%1$s&lt;/b&gt; only after confirming your registration. You will also be able to change your password and account profile.&lt;br /&gt;&lt;br /&gt;
+We are sending you this message so that you may confirm that you wish to register with &lt;b&gt;%1$s&lt;/b&gt;. You will be able to access the section reserved to &lt;b&gt;%1$s&lt;/b&gt; only after confirming your registration. You will also be able to change your password and account profile.&lt;br&gt;&lt;br&gt;
 
 If you wish to accept our invitation and confirm your registration in &lt;b&gt;%1$s&lt;/b&gt;, please follow this link</source>
 			</trans-unit>
@@ -1219,16 +1219,16 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
 				<source>An invitation to register in %1$s was sent to %3$s.</source>
 			</trans-unit>
 			<trans-unit id="v_registration_infomail_message1" xml:space="preserve">
-				<source>Your account data are username &lt;b&gt;%2$s&lt;/b&gt; and password &lt;b&gt;%5$s&lt;/b&gt;.&lt;br /&gt;&lt;br /&gt;</source>
+				<source>Your account data are username &lt;b&gt;%2$s&lt;/b&gt; and password &lt;b&gt;%5$s&lt;/b&gt;.&lt;br&gt;&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_registration_infomail_message1_informal" xml:space="preserve">
-				<source>Your account data are username &lt;b&gt;%2$s&lt;/b&gt; and password &lt;b&gt;%5$s&lt;/b&gt;.&lt;br /&gt;&lt;br /&gt;</source>
+				<source>Your account data are username &lt;b&gt;%2$s&lt;/b&gt; and password &lt;b&gt;%5$s&lt;/b&gt;.&lt;br&gt;&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_registration_infomail_message1a" xml:space="preserve">
-				<source>Your account username is &lt;b&gt;%2$s&lt;/b&gt;.&lt;br /&gt;</source>
+				<source>Your account username is &lt;b&gt;%2$s&lt;/b&gt;.&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_registration_infomail_message1a_informal" xml:space="preserve">
-				<source>Your account username is &lt;b&gt;%2$s&lt;/b&gt;.&lt;br /&gt;</source>
+				<source>Your account username is &lt;b&gt;%2$s&lt;/b&gt;.&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_registration_confirmed_subject" xml:space="preserve">
 				<source>Thank you for registering with &lt;b&gt;%1$s&lt;/b&gt;.</source>
@@ -1270,16 +1270,16 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
 				<source>Your registration has been cancelled.</source>
 			</trans-unit>
 			<trans-unit id="v_registration_cancelled_message1" xml:space="preserve">
-				<source>As requested, we have cancelled your membership &lt;b&gt;%2$s&lt;/b&gt; and your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been deleted from our list.&lt;br /&gt;</source>
+				<source>As requested, we have cancelled your membership &lt;b&gt;%2$s&lt;/b&gt; and your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been deleted from our list.&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_registration_cancelled_message1_informal" xml:space="preserve">
-				<source>As requested, we have cancelled your membership &lt;b&gt;%2$s&lt;/b&gt; and your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been deleted from our list.&lt;br /&gt;</source>
+				<source>As requested, we have cancelled your membership &lt;b&gt;%2$s&lt;/b&gt; and your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been deleted from our list.&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_registration_cancelled_message2" xml:space="preserve">
-				<source>You will still be able to browse the pages of &lt;b&gt;%1$s&lt;/b&gt; for which membership is not necessary, if you wish.&lt;br /&gt;&lt;br /&gt;If you ever change your mind, you may re-join us and we will be pleased to welcome you again.&lt;br /&gt;</source>
+				<source>You will still be able to browse the pages of &lt;b&gt;%1$s&lt;/b&gt; for which membership is not necessary, if you wish.&lt;br&gt;&lt;br&gt;If you ever change your mind, you may re-join us and we will be pleased to welcome you again.&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_registration_cancelled_message2_informal" xml:space="preserve">
-				<source>You will still be able to browse the pages of &lt;b&gt;%1$s&lt;/b&gt; for which membership is not necessary, if you wish.&lt;br /&gt;&lt;br /&gt;If you ever change your mind, you may re-join us and we will be pleased to welcome you again.&lt;br /&gt;</source>
+				<source>You will still be able to browse the pages of &lt;b&gt;%1$s&lt;/b&gt; for which membership is not necessary, if you wish.&lt;br&gt;&lt;br&gt;If you ever change your mind, you may re-join us and we will be pleased to welcome you again.&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_registration_cancelled" xml:space="preserve">
 				<source>%3$s cancelled his(her) registration with %1$s.</source>
@@ -1378,16 +1378,16 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
 				<source>Your membership with &lt;b&gt;%1$s&lt;/b&gt; has been ended.</source>
 			</trans-unit>
 			<trans-unit id="v_registration_deleted_message1" xml:space="preserve">
-				<source>As requested, we have ended your membership &lt;b&gt;%2$s&lt;/b&gt; and your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been deleted from our list.&lt;br /&gt;</source>
+				<source>As requested, we have ended your membership &lt;b&gt;%2$s&lt;/b&gt; and your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been deleted from our list.&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_registration_deleted_message1_informal" xml:space="preserve">
-				<source>As requested, we have ended your membership &lt;b&gt;%2$s&lt;/b&gt; and your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been deleted from our list.&lt;br /&gt;</source>
+				<source>As requested, we have ended your membership &lt;b&gt;%2$s&lt;/b&gt; and your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been deleted from our list.&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_registration_deleted_message2" xml:space="preserve">
-				<source>You will still be able to browse the pages of &lt;b&gt;%1$s&lt;/b&gt; for which membership is not necessary, if you wish.&lt;br /&gt;&lt;br /&gt;If you ever change your mind, you may re-join us and we will be pleased to welcome you again.&lt;br /&gt;</source>
+				<source>You will still be able to browse the pages of &lt;b&gt;%1$s&lt;/b&gt; for which membership is not necessary, if you wish.&lt;br&gt;&lt;br&gt;If you ever change your mind, you may re-join us and we will be pleased to welcome you again.&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_registration_deleted_message2_informal" xml:space="preserve">
-				<source>You will still be able to browse the pages of &lt;b&gt;%1$s&lt;/b&gt; for which membership is not necessary, if you wish.&lt;br /&gt;&lt;br /&gt;If you ever change your mind, you may re-join us and we will be pleased to welcome you again.&lt;br /&gt;</source>
+				<source>You will still be able to browse the pages of &lt;b&gt;%1$s&lt;/b&gt; for which membership is not necessary, if you wish.&lt;br&gt;&lt;br&gt;If you ever change your mind, you may re-join us and we will be pleased to welcome you again.&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_registration_deleted" xml:space="preserve">
 				<source>%3$s deleted his(her) account from %1$s.</source>
@@ -1399,16 +1399,16 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
 				<source>Your subscription to the newsletter of &lt;b&gt;%1$s&lt;/b&gt; has been ended.</source>
 			</trans-unit>
 			<trans-unit id="v_registration_unsubscribed_message1" xml:space="preserve">
-				<source>As requested, we have ended the subscription of user &lt;b&gt;%2$s&lt;/b&gt; to the newsletter of &lt;b&gt;%1$s&lt;/b&gt;.&lt;br /&gt;</source>
+				<source>As requested, we have ended the subscription of user &lt;b&gt;%2$s&lt;/b&gt; to the newsletter of &lt;b&gt;%1$s&lt;/b&gt;.&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_registration_unsubscribed_message1_informal" xml:space="preserve">
-				<source>As requested, we have ended the subscription of user &lt;b&gt;%2$s&lt;/b&gt; to the newsletter of &lt;b&gt;%1$s&lt;/b&gt;.&lt;br /&gt;</source>
+				<source>As requested, we have ended the subscription of user &lt;b&gt;%2$s&lt;/b&gt; to the newsletter of &lt;b&gt;%1$s&lt;/b&gt;.&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_registration_unsubscribed_message2" xml:space="preserve">
-				<source>However, your account remains active and you may login into the site. You may also resume your subscription at your convenience.&lt;br /&gt;</source>
+				<source>However, your account remains active and you may login into the site. You may also resume your subscription at your convenience.&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_registration_unsubscribed_message2_informal" xml:space="preserve">
-				<source>However, your account remains active and you may login into the site. You may also resume your subscription at your convenience.&lt;br /&gt;</source>
+				<source>However, your account remains active and you may login into the site. You may also resume your subscription at your convenience.&lt;br&gt;</source>
 			</trans-unit>
 			<trans-unit id="v_registration_unsubscribed" xml:space="preserve">
 				<source>%3$s has ended his(her) subscription to the newsletter of %1$s.</source>

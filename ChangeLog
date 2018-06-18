@@ -1,3 +1,6 @@
+2018-06-18 Franz Holzinger  <franz@ttproducts.de>
+    * change the language labels from XTHML to HTML format. <br /> will become <br>.
+
 2018-06-16 Franz Holzinger  <franz@ttproducts.de>
     * change in compatibility: TYPO3 6.2 is the minimum requirement.
     * better error handling for Setfixed
