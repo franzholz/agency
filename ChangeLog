@@ -1,6 +1,9 @@
 2018---- Franz Holzinger  <franz@ttproducts.de>
     * Please help to fix the wrong translation at: https://translation.typo3.org/de/TYPO3.ext.agency/translate/pi/locallang.xlf#filter=all&unit=4571234 .
 
+2018-07-18 Franz Holzinger  <franz@ttproducts.de>
+    * remove the old template file template/tx_agency_css_tmpl.html. Use the new template file at Resources/Private/Templates/AgencyRegistrationTemplate.html instead of it.
+
 2018-07-12 Franz Holzinger  <franz@ttproducts.de>
     * remove the files:
         ext_autoload.php, hooks/captcha/class.tx_agency_captcha.php, hooks/class.tx_agency_feusergroup_scheduler.php, hooks/class.tx_agency_hooksHandler.php,
