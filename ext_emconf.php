@@ -1,6 +1,5 @@
 <?php
 
-
 $EM_CONF[$_EXTKEY] = array(
     'title' => 'Agency Registration',
     'description' => 'An improved variant of Kasper Skårhøj\'s Front End User Admin extension.',
@@ -21,12 +20,12 @@ $EM_CONF[$_EXTKEY] = array(
     'author_company' => 'jambage.com',
     'CGLcompliance' => '',
     'CGLcompliance_note' => '',
-    'version' => '0.7.0',
+    'version' => '0.8.0',
     'constraints' => array(
         'depends' => array(
             'php' => '5.5.0-7.99.99',
             'typo3' => '6.2.0-8.99.99',
-            'div2007' => '1.10.5-0.0.0',
+            'div2007' => '1.10.8-0.0.0',
         ),
         'conflicts' => array(
             'sr_feuser_register' => '',
