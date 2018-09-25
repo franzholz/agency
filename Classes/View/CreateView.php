@@ -251,7 +251,6 @@ class CreateView {
                 '',
                 false
             );
-
             $templateCode =
                 $markerObj->removeStaticInfoSubparts(
                     $templateCode,

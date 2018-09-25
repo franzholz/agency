@@ -237,6 +237,14 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
     $temporaryColumns = array_merge($temporaryColumns, $directMailTemporaryColumns);
 }
 
+$columns = array_keys($temporaryColumns);
+
+foreach ($columns as $column) {
+    if (isset($GLOBALS['TCA'][$table]['column'][$column])) {
+        unset($temporaryColumns[$column]);
+    }
+}
+
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, $temporaryColumns);
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
     $table,

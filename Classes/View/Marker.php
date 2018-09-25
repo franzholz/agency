@@ -835,6 +835,7 @@ class Marker {
     )
     {
         if (is_object($this->staticInfoObj)) {
+            $css = GeneralUtility::makeInstance(\JambageCom\Div2007\Api\Css::class);
             $cmd = $this->controlData->getCmd();
             $theTable = $this->controlData->getTable();
             if ($this->controlData->getMode() == MODE_PREVIEW || $viewOnly) {
@@ -864,15 +865,16 @@ class Marker {
                         $prefixId
                     );
                 $titleLanguage = $langObj->getLL('tooltip_' . (($cmd == 'invite') ? 'invitation_' : '')  . 'language');
-                $selected = (is_array($row) && isset($row['static_info_country']) ? $row['static_info_country'] : array());
+                $fieldNameCountry = 'static_info_country';
+                $selected = (is_array($row) && isset($row[$fieldNameCountry]) ? $row[$fieldNameCountry] : array());
                 $where = '';
                 if (isset($this->conf['where.']) && is_array($this->conf['where.'])) {
                     $where = $this->conf['where.']['static_countries'];
                 }
                 $markerArray['###SELECTOR_STATIC_INFO_COUNTRY###'] = $this->staticInfoObj->buildStaticInfoSelector(
                     'COUNTRIES',
-                    'FE[' . $theTable . ']' . '[static_info_country]',
-                    '',
+                    'FE[' . $theTable . ']' . '[' . $fieldNameCountry . ']',
+                    $css->getClassName($fieldNameCountry, 'select'),
                     $selected,
                     '',
                     $this->conf['onChangeCountryAttribute'],
@@ -883,6 +885,7 @@ class Marker {
                     $this->conf['useLocalCountry']
                 );
 
+                $fieldNameZone = 'zone';
                 $where = '';
                 if (isset($this->conf['where.']) && is_array($this->conf['where.'])) {
                     $where = $this->conf['where.']['static_country_zones'];
@@ -890,19 +893,20 @@ class Marker {
                 $markerArray['###SELECTOR_ZONE###'] =
                     $this->staticInfoObj->buildStaticInfoSelector(
                         'SUBDIVISIONS',
-                        'FE[' . $theTable . ']' . '[zone]',
-                        '',
-                        is_array($row) ? $row['zone'] : '',
-                        is_array($row) ? $row['static_info_country'] : '',
+                        'FE[' . $theTable . ']' . '[' . $fieldNameZone . ']',
+                        $css->getClassName($fieldNameZone, 'select'),
+                        is_array($row) ? $row[$fieldNameZone] : '',
+                        is_array($row) ? $row[$fieldNameCountry] : '',
                         '',
                         $idZone,
                         $titleZone,
                         $where
                     );
                 if (!$markerArray['###SELECTOR_ZONE###'] ) {
-                    $markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="FE[' . $theTable . '][zone]" value=""' . HtmlUtility::getXhtmlFix() . '>';
+                    $markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="FE[' . $theTable . '][' . $fieldNameZone . ']" value=""' . HtmlUtility::getXhtmlFix() . '>';
                 }
 
+                $fieldNameLanguage = 'language';
                 $where = '';
                 if (isset($this->conf['where.']) && is_array($this->conf['where.'])) {
                     $where = $this->conf['where.']['static_languages'];
@@ -911,9 +915,9 @@ class Marker {
                 $markerArray['###SELECTOR_LANGUAGE###'] =
                     $this->staticInfoObj->buildStaticInfoSelector(
                         'LANGUAGES',
-                        'FE[' . $theTable . ']' . '[language]',
-                        '',
-                        is_array($row) ? $row['language'] : '',
+                        'FE[' . $theTable . ']' . '[' . $fieldNameLanguage . ']',
+                        $css->getClassName($fieldNameLanguage, 'select'),
+                        is_array($row) ? $row[$fieldNameLanguage] : '',
                         '',
                         '',
                         $idLanguage,

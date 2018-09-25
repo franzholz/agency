@@ -80,14 +80,6 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
     /**
     * This method sends info mail to subscriber or it displays a screen to update or delete the membership or to send a login link to reenter a forgotten password.
     *
-    * @param array $cObj: the cObject
-    * @param array $langObj: the language object
-    * @param array $controlData: the object of the control data
-    * @param array $controlData: the object of the control data
-    * @param string $theTable: the table in use
-    * @param array $autoLoginKey: the auto-login key
-    * @param string $prefixId: the extension prefix id
-    * @param array  Array with key/values being marker-strings/substitution values.
     * @return	string		HTML content message
     * @see init(),compile(), send()
     */
@@ -108,6 +100,8 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         $markerArray,
         $cmd,
         $cmdKey,
+        $fetch,
+        $pidLock,
         $templateCode,
         $failure,
         &$errorCode
@@ -117,14 +111,12 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         $conf = $confObj->getConf();
 
         if ($conf['infomail'] && $conf['email.']['field']) {
-            $fetch = $controlData->getFeUserData('fetch');
 
-            if (isset($fetch) && !empty($fetch) && !$failure) {
-                $pidLock = 'AND pid IN (' . ($cObj->data['pages'] ? $cObj->data['pages'] . ',' : '') . $controlData->getPid() . ')';
+            if (!empty($pidLock) && !$failure) {
                 $enable = $GLOBALS['TSFE']->sys_page->enableFields($theTable);
                     // Getting records
                     // $conf['email.']['field'] must be a valid field in the table!
-                $DBrows = $GLOBALS['TSFE']->sys_page->getRecordsByField(
+                $DBrows = \TYPO3\CMS\Frontend\Page\PageRepository::getRecordsByField(
                     $theTable,
                     $conf['email.']['field'],
                     $fetch,
@@ -133,6 +125,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     '',
                     '100'
                 );
+
                 $errorContent = '';
                 $emailHasBeenSent = false;
 

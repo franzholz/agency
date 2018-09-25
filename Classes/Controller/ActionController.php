@@ -1142,6 +1142,15 @@ class ActionController {
                     $origArray = $dataObj->parseIncomingData($origArray, false);
                     $errorCode = '';
                     $email = GeneralUtility::makeInstance(Email::class);
+                    $fetch = $controlData->getFeUserData('fetch');
+                    $pidLock = '';
+
+                    if (isset($fetch) && !empty($fetch)) {
+                        $pages = ($cObj->data['pages'] ? $cObj->data['pages'] . ',' : '') . $controlData->getPid();                        
+                        $allPages = \JambageCom\Div2007\Utility\TableUtility::getAllSubPages($pages);
+                        $pidLock = 'AND pid IN (' . implode(',', $allPages) . ')';
+                    }
+
                     $content = $email->processInfo(
                         $cObj,
                         $langObj,
@@ -1159,6 +1168,8 @@ class ActionController {
                         $markerArray,
                         $cmd,
                         $cmdKey,
+                        $fetch,
+                        $pidLock,
                         $templateCode,
                         $controlData->getFailure(),
                         $errorCode
