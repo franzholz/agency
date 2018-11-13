@@ -1,3 +1,6 @@
+2018-11-13 Franz Holzinger  <franz@ttproducts.de>
+    * Fix PHP syntax error
+
 2018-09-25 Franz Holzinger  <franz@ttproducts.de>
     * Please help to fix the wrong translation at: https://translation.typo3.org/de/TYPO3.ext.agency/translate/pi/locallang.xlf#filter=all&unit=4571234 .
     * bugfix for notification emails: The storage page of the plugin has not been considered.

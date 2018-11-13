@@ -4,22 +4,13 @@ $EM_CONF[$_EXTKEY] = array(
     'title' => 'Agency Registration',
     'description' => 'An improved variant of Kasper Skårhøj\'s Front End User Admin extension.',
     'category' => 'plugin',
-    'shy' => 0,
-    'priority' => '',
-    'loadOrder' => '',
-    'module' => '',
     'state' => 'stable',
-    'internal' => 0,
     'uploadfolder' => 1,
     'createDirs' => '',
-    'modify_tables' => 'fe_users',
     'clearcacheonload' => 1,
-    'lockType' => '',
     'author' => 'Franz Holzinger',
     'author_email' => 'franz@ttproducts.de',
     'author_company' => 'jambage.com',
-    'CGLcompliance' => '',
-    'CGLcompliance_note' => '',
     'version' => '0.8.1',
     'constraints' => array(
         'depends' => array(
@@ -37,7 +28,5 @@ $EM_CONF[$_EXTKEY] = array(
             'static_info_tables' => '',
         ),
     ),
-    'dependencies' => 'div2007',
-    'conflicts' => 'sr_feuser_register',
 );
 

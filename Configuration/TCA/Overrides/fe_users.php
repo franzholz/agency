@@ -262,7 +262,7 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
         '--div--;Direct mail, module_sys_dmail_newsletter;;;;1-1-1, module_sys_dmail_category, module_sys_dmail_html'
     );
 }
-+
+
 $GLOBALS['TCA'][$table]['columns']['username']['config']['eval'] = 'nospace,uniqueInPid,required';
 $GLOBALS['TCA'][$table]['columns']['name']['config']['max'] = '100';
 $GLOBALS['TCA'][$table]['columns']['company']['config']['max'] = '50';
