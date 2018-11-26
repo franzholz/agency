@@ -1,4 +1,6 @@
 
+2018-11-26 Franz Holzinger  <franz@ttproducts.de>
+    * Extract file tt_content.php from ext_tables.php
 
 2018-11-24 Franz Holzinger  <franz@ttproducts.de>
     * Readd file class.tx_agency.php which is needed until TYPO3 7.6 for addPItoST43.
