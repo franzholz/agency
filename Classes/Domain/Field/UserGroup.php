@@ -277,7 +277,7 @@ class UserGroup extends Base {
                     $absFilename = GeneralUtility::getFileAbsFileName($dataFilename);
                     $handle = fopen($absFilename, 'rt');
                     if ($handle === false) {
-                        throw new Exception($extKey . ': File not found ("' . $absFilename . '")');
+                        throw new \Exception($extKey . ': File not found ("' . $absFilename . '")');
                     } else {
                         // Dateityp bestimmen
                         $basename = basename($dataFilename);
