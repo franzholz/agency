@@ -353,10 +353,10 @@ class UserGroup extends Base {
                                     break;
                                 }
                             } else {
-                                throw new Exception($extKey . ': The file "' . $absFilename . '" is not XML valid.');
+                                throw new \Exception($extKey . ': The file "' . $absFilename . '" is not XML valid.');
                             }
                         } else {
-                            throw new Exception($extKey . ': The file "' . $absFilename . '" has an invalid extension.');
+                            throw new \Exception($extKey . ': The file "' . $absFilename . '" has an invalid extension.');
                         }
                     }
                 }
