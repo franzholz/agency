@@ -47,8 +47,7 @@ class LocalizationUtility {
     static public function init ()
     {
         $filename = '';
-        $extensionKey = AGENCY_EXT;
-        if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['languageResource']) {
+        if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['languageResource']) {
             $filename = DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf';
         } else {
             $filename = '/pi/locallang.xlf';
@@ -72,7 +71,7 @@ class LocalizationUtility {
 
         $result =
             \JambageCom\Div2007\Utility\FrontendUtility::translate(
-                $extensionKey,
+                AGENCY_EXT,
                 $filename,
                 $key
             );

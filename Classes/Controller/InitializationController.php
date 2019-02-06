@@ -81,8 +81,6 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
     )
     {
         $result = true;
-        $filename = \JambageCom\Agency\Utility\LocalizationUtility::getFilename();
-
         \JambageCom\Div2007\Utility\HtmlUtility::generateXhtmlFix();
 
         $tcaObj = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tca::class);
@@ -122,8 +120,6 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
             }
         }
 
-        $languageObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Localization::class);
-
         $urlObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Url::class);
         $coreQuery = GeneralUtility::makeInstance(
                 \JambageCom\Div2007\Database\CoreQuery::class,
@@ -138,22 +134,33 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         $this->setfixedObj = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\Setfixed::class);
         $actionController = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\ActionController::class);
 
+        $languageObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Localization::class);
         $languageObj->init(
             AGENCY_EXT,
             $conf['_LOCAL_LANG.']
         );
-        $languageObj->setSalutation($conf['salutation']);
+        $languageObj->loadLocalLang(
+            'locallang.xlf',
+            false
+        );
+        $tmpText = $languageObj->getLabel('unsupported');
+        if ($tmpText == '') {
+            $result = false;
+        }
 
+        $languageObj->setSalutation($conf['salutation']);
+        
         $urlObj->init(
             $cObj,
             $controlData->getPiVars(),
             $controlData->getPrefixId()
         );
 
-        $result = $languageObj->loadLocalLang();
-
         if ($result !== false) {
             if ($pibaseObj->extKey != AGENCY_EXT) {
+                $filename = \JambageCom\Agency\Utility\LocalizationUtility::getFilename();
+                $filename = 'EXT:' . $pibaseObj->extKey . $filename;
+
                     // Static Methods for Extensions for fetching the texts of agency
                 $languageObj->loadLocalLang(
                     $filename,

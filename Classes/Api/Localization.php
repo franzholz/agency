@@ -23,15 +23,13 @@ class Localization extends \JambageCom\Div2007\Base\TranslationBase implements \
         $extensionKey = '',
         $confLocalLang = array(), // you must pass only the $conf['_LOCAL_LANG.'] part of the setup of the caller
         $scriptRelPath = '',
-        $lookupFilename = '',
+        $lookupFilename = 'locallang.xlf',
         $useDiv2007Language = true
     ) {
         if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['languageResource']) {
             $scriptRelPath = DIV2007_LANGUAGE_SUBPATH;
         } else {
-            $scriptRelPath = 'pi';
-            $lookupFilename = 'locallang.xlf';
-            $useDiv2007Language = false;
+            $scriptRelPath = 'pi/';
         }
         parent::init(
             $extensionKey,
@@ -40,13 +38,6 @@ class Localization extends \JambageCom\Div2007\Base\TranslationBase implements \
             $lookupFilename,
             $useDiv2007Language
         );
-        
-        if (!$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['languageResource']) {
-            $this->loadLocalLang(
-                'EXT:' . DIV2007_EXT . '/' . $scriptRelPath . '/' . 'locallang.xlf'
-            );
-        }
-
     }
 
     public function setSalutation ($salutation) {
@@ -180,25 +171,5 @@ class Localization extends \JambageCom\Div2007\Base\TranslationBase implements \
         }
         return $localizedLabel;
     }
-
-    public function loadLocalLang (
-        $langFileParam = '',
-        $overwrite = true
-    )
-    {
-        $result = parent::loadLocalLang(
-            $langFileParam,
-            $overwrite
-        );
-
-        // do a check if the language file works
-        $tmpText = parent::getLabel('unsupported');
-
-        if ($tmpText == '') {
-            $result = false;
-        }
-
-        return $result;
-    } // loadLocalLang
 }
 

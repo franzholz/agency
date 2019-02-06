@@ -592,9 +592,6 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                     }
 
                                     if ($colConfig['foreign_table']) {
-                                        if (version_compare(TYPO3_version, '6.2.0', '<')) {
-                                            GeneralUtility::loadTCA($colConfig['foreign_table']);
-                                        }
                                         $reservedValues = array();
                                         if (isset($userGroupObj) && is_object($userGroupObj)) {
                                             $reservedValues = $userGroupObj->getReservedValues($conf);

@@ -1,4 +1,7 @@
 2019-02-06 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix to Localization
+
+2019-02-06 Franz Holzinger  <franz@ttproducts.de>
     * new base class: change the Localization class from \JambageCom\Div2007\Base\LocalisationBase to TranslationBase. Change the methods of the $languageObj object accordingly: loadLL => loadLocalLang, getLLkey => getLocalLangKey, getLL => getLabel
 
 2018-11-26 Franz Holzinger  <franz@ttproducts.de>
