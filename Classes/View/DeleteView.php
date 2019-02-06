@@ -52,7 +52,7 @@ class DeleteView {
     * This is basically the preview display of delete
     *
     * @param array $cObj: the cObject
-    * @param array $langObj: the language object
+    * @param array $languageObj: the language object
     * @param array $controlData: the object of the control data
     * @return string  the template with substituted markers
     */
@@ -63,7 +63,7 @@ class DeleteView {
         $prefixId,
         $extensionKey,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         \JambageCom\Agency\Domain\Tca $tcaObj,
@@ -148,7 +148,7 @@ class DeleteView {
                             $errorCode,
                             $conf,
                             $cObj,
-                            $langObj,
+                            $languageObj,
                             $controlData,
                             $confObj,
                             $tcaObj,
@@ -169,7 +169,7 @@ class DeleteView {
                             $errorCode,
                             $conf,
                             $cObj,
-                            $langObj,
+                            $languageObj,
                             $controlData,
                             $confObj,
                             $tcaObj,
@@ -193,7 +193,7 @@ class DeleteView {
                         $errorCode,
                         $conf,
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -213,7 +213,7 @@ class DeleteView {
                         $errorCode,
                         $conf,
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,

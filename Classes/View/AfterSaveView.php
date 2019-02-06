@@ -51,7 +51,7 @@ class AfterSaveView {
     * You're able to include the saved values by markers.
     *
     * @param array $cObj: the cObject
-    * @param array $langObj: the language object
+    * @param array $languageObj: the language object
     * @param array $controlData: the object of the control data
     * @param string $theTable: the table in use
     * @param array $autoLoginKey: the auto-login key
@@ -63,7 +63,7 @@ class AfterSaveView {
     public function render (
         $conf,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         \JambageCom\Agency\Domain\Tca $tcaObj,
@@ -121,7 +121,7 @@ class AfterSaveView {
                 );
             $markerObj->addStaticInfoMarkers(
                 $markerArray,
-                $langObj,
+                $languageObj,
                 $prefixId,
                 $dataArray
             );
@@ -129,7 +129,7 @@ class AfterSaveView {
             $tcaObj->addMarkers(
                 $markerArray,
                 $conf,
-                $langObj,
+                $languageObj,
                 $controlData,
                 $dataArray,
                 $origArray,
@@ -144,7 +144,7 @@ class AfterSaveView {
                 $markerArray,
                 $conf,
                 $cObj,
-                $langObj,
+                $languageObj,
                 $controlData->getExtensionKey(),
                 $theTable,
                 $dataArray,
@@ -201,7 +201,7 @@ class AfterSaveView {
                 $deleteUnusedMarkers
             );
         } else {
-            $errorText = $langObj->getLL('internal_no_subtemplate');
+            $errorText = $languageObj->getLabel('internal_no_subtemplate');
             $errorContent = sprintf($errorText, $subpartMarker);
         }
         return $errorContent;

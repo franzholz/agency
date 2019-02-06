@@ -67,7 +67,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         &$dataObj,
         &$actionController,
         &$tcaObj,
-        &$langObj,
+        &$languageObj,
         &$markerObj,
         &$errorMessage,
         \TYPO3\CMS\Frontend\Plugin\AbstractPlugin $pibaseObj,
@@ -122,7 +122,8 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
             }
         }
 
-        $langObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Localization::class);
+        $languageObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Localization::class);
+
         $urlObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Url::class);
         $coreQuery = GeneralUtility::makeInstance(
                 \JambageCom\Div2007\Database\CoreQuery::class,
@@ -137,27 +138,24 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         $this->setfixedObj = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\Setfixed::class);
         $actionController = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\ActionController::class);
 
+        $languageObj->init(
+            AGENCY_EXT,
+            $conf['_LOCAL_LANG.']
+        );
+        $languageObj->setSalutation($conf['salutation']);
+
         $urlObj->init(
             $cObj,
             $controlData->getPiVars(),
             $controlData->getPrefixId()
         );
 
-        $langObj->init1(
-            $pibaseObj,
-            $cObj,
-            $conf,
-            'pi/class.tx_agency_pi_base.php',
-            $pibaseObj->extKey,
-            $filename
-        );
-
-        $result = $langObj->loadLL();
+        $result = $languageObj->loadLocalLang();
 
         if ($result !== false) {
             if ($pibaseObj->extKey != AGENCY_EXT) {
                     // Static Methods for Extensions for fetching the texts of agency
-                $langObj->loadLL(
+                $languageObj->loadLocalLang(
                     $filename,
                     false
                 );
@@ -168,7 +166,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
             if (
                 (!$templateFile || empty($templateCode))
             ) {
-                $errorText = $langObj->getLL(
+                $errorText = $languageObj->getLabel(
                         'internal_no_template'
                     );
                 $errorMessage = sprintf($errorText, $templateFile, 'plugin.tx_' . $pibaseObj->extKey . '.templateFile');
@@ -177,14 +175,14 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
             if ($controlData->isTokenValid()) {
                 $actionController->init(
                     $confObj,
-                    $langObj,
+                    $languageObj,
                     $cObj,
                     $controlData,
                     $urlObj
                 );
 
                 $dataObj->init(
-                    $langObj,
+                    $languageObj,
                     $tcaObj,
                     $actionController,
                     $theTable,
@@ -235,10 +233,10 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
                 }
             } else {
                 $result = false;
-                $errorMessage = $langObj->getLL('internal_invalid_token');
+                $errorMessage = $languageObj->getLabel('internal_invalid_token');
             }
         } else {
-            $errorMessage = $langObj->getLL('internal_init_language');
+            $errorMessage = $languageObj->getLabel('internal_init_language');
         }
 
         return $result;
@@ -269,7 +267,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
             $dataObj,
             $actionController,
             $tcaObj,
-            $langObj,
+            $languageObj,
             $markerObj,
             $errorMessage,
             $pibaseObj,
@@ -294,7 +292,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
                 $pibaseObj->cObj,
                 $confObj,
                 $this->setfixedObj,
-                $langObj,
+                $languageObj,
                 $template,
                 $displayObj,
                 $editView,

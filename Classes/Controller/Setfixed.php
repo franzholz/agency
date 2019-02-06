@@ -55,7 +55,7 @@ class Setfixed {
     * Process the front end user reply to the confirmation request
     *
     * @param array $cObj: the cObject
-    * @param array $langObj: the language object
+    * @param array $languageObj: the language object
     * @param array $controlData: the object of the control data
     * @param string $theTable: the table in use
     * @param array $autoLoginKey: the auto-login key
@@ -66,7 +66,7 @@ class Setfixed {
     public function process (
         array $conf,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Api\Url $url,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
@@ -197,7 +197,7 @@ class Setfixed {
                     $markerArray,
                     $conf,
                     $cObj,
-                    $langObj,
+                    $languageObj,
                     $controlData,
                     $confObj,
                     $tcaObj,
@@ -229,7 +229,7 @@ class Setfixed {
                         $prefixId,
                         $extensionKey,
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -449,7 +449,7 @@ class Setfixed {
                             $conf,
                             $prefixId,
                             $cObj,
-                            $langObj,
+                            $languageObj,
                             $controlData,
                             $url,
                             $confObj,
@@ -491,7 +491,7 @@ class Setfixed {
                     $loginSuccess =
                         $systemObj->login(
                             $cObj,
-                            $langObj,
+                            $languageObj,
                             $controlData,
                             $url,
                             $conf,
@@ -510,7 +510,7 @@ class Setfixed {
                                 $markerArray,
                                 $conf,
                                 $cObj,
-                                $langObj,
+                                $languageObj,
                                 $controlData,
                                 $confObj,
                                 $tcaObj,
@@ -535,7 +535,7 @@ class Setfixed {
                                 $errorCode,
                                 $conf,
                                 $cObj,
-                                $langObj,
+                                $languageObj,
                                 $controlData,
                                 $confObj,
                                 $tcaObj,
@@ -571,7 +571,7 @@ class Setfixed {
                             $errorCode,
                             $conf,
                             $cObj,
-                            $langObj,
+                            $languageObj,
                             $controlData,
                             $confObj,
                             $tcaObj,
@@ -600,7 +600,7 @@ class Setfixed {
                             $errorCode,
                             $conf,
                             $cObj,
-                            $langObj,
+                            $languageObj,
                             $controlData,
                             $confObj,
                             $tcaObj,
@@ -633,7 +633,7 @@ class Setfixed {
                     $emailResult = $email->compile(
                         SETFIXED_PREFIX . $setfixedSuffix,
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -661,7 +661,7 @@ class Setfixed {
                     is_array($errorCode)
                 ) {
                     $errorText =
-                        $langObj->getLL($errorCode['0'], $dummy, '', false, true);
+                        $languageObj->getLabel($errorCode['0'], $dummy, '', false, true);
                     $errorContent = sprintf($errorText, $errorCode['1']);
                     $content = $errorContent;
                 } else if (
@@ -678,7 +678,7 @@ class Setfixed {
                         $emailResult = $email->compile(
                             SETFIXED_PREFIX . 'REVIEW',
                             $cObj,
-                            $langObj,
+                            $languageObj,
                             $controlData,
                             $confObj,
                             $tcaObj,
@@ -705,7 +705,7 @@ class Setfixed {
                             is_array($errorCode)
                         ){
                             $errorText =
-                                $langObj->getLL($errorCode['0'], $dummy, '', false, true);
+                                $languageObj->getLabel($errorCode['0'], $dummy, '', false, true);
                             if (isset($errorCode['1'])) {
                                 $errorContent = sprintf($errorText, $errorCode['1']);
                             } else {
@@ -734,7 +734,7 @@ class Setfixed {
                         $loginSuccess =
                             $systemObj->login(
                                 $cObj,
-                                $langObj,
+                                $languageObj,
                                 $controlData,
                                 $url,
                                 $conf,
@@ -761,7 +761,7 @@ class Setfixed {
                                 $errorCode,
                                 $conf,
                                 $cObj,
-                                $langObj,
+                                $languageObj,
                                 $controlData,
                                 $confObj,
                                 $tcaObj,
@@ -792,7 +792,7 @@ class Setfixed {
                 $errorCode,
                 $conf,
                 $cObj,
-                $langObj,
+                $languageObj,
                 $controlData,
                 $confObj,
                 $tcaObj,
@@ -841,7 +841,7 @@ class Setfixed {
     * Shows a form where the user is asked if he really wants to confirm
     *
     * @param array $cObj: the cObject
-    * @param array $langObj: the language object
+    * @param array $languageObj: the language object
     * @param array $controlData: the object of the control data
     * @param array  $errorFieldArray: array of field with errors (former $this->data->inError[$theField])
     * @return string  the template with substituted markers
@@ -852,7 +852,7 @@ class Setfixed {
         $conf,
         $prefixId,
         $cObj,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Api\Url $url,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
@@ -893,7 +893,7 @@ class Setfixed {
             $errorCode,
             $conf,
             $cObj,
-            $langObj,
+            $languageObj,
             $controlData,
             $confObj,
             $tcaObj,

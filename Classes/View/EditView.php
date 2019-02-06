@@ -52,7 +52,7 @@ class EditView {
     * Displays the record update form
     *
     * @param array $cObj: the cObject
-    * @param array $langObj: the language object
+    * @param array $languageObj: the language object
     * @param array $controlData: the object of the control data
     * @param array  $origArray: the array coming from the database
     * @param array  $errorFieldArray: array of field with errors (former $dataObj->inError[$theField])
@@ -63,7 +63,7 @@ class EditView {
         array $conf,
         $prefixId,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         \JambageCom\Agency\Domain\Tca $tcaObj,
@@ -155,7 +155,7 @@ class EditView {
 
         $markerObj->addStaticInfoMarkers(
             $markerArray,
-            $langObj,
+            $languageObj,
             $prefixId,
             $currentArray
         );
@@ -163,7 +163,7 @@ class EditView {
         $tcaObj->addMarkers(
             $markerArray,
             $conf,
-            $langObj,
+            $languageObj,
             $controlData,
             $currentArray,
             $origArray,
@@ -177,7 +177,7 @@ class EditView {
         $tcaObj->addMarkers(
             $markerArray,
             $conf,
-            $langObj,
+            $languageObj,
             $controlData,
             $currentArray,
             $origArray,
@@ -192,7 +192,7 @@ class EditView {
             $markerArray,
             $conf,
             $cObj,
-            $langObj,
+            $languageObj,
             $controlData->getExtensionKey(),
             $theTable,
             $currentArray,
@@ -214,7 +214,7 @@ class EditView {
                 $fieldConfig['config']['uploadfolder'] != ''
             ) {
                 $markerObj->addFileUploadMarkers(
-                    $langObj,
+                    $languageObj,
                     $theTable,
                     $theField,
                     $fieldConfig,
@@ -315,7 +315,7 @@ class EditView {
     * Checks if the edit form may be displayed; if not, a link to login
     *
     * @param array $cObj: the cObject
-    * @param array $langObj: the language object
+    * @param array $languageObj: the language object
     * @param array $controlData: the object of the control data
     * @param array  $errorFieldArray: array of field with errors (former $this->data->inError[$theField])
     * @return string  the template with substituted markers
@@ -325,7 +325,7 @@ class EditView {
         array &$markerArray,
         $conf,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         $tcaObj,
@@ -415,7 +415,7 @@ class EditView {
                         $conf,
                         $prefixId,
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -438,7 +438,7 @@ class EditView {
                         $errorCode,
                         $conf,
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -460,7 +460,7 @@ class EditView {
                     $errorCode,
                     $conf,
                     $cObj,
-                    $langObj,
+                    $languageObj,
                     $controlData,
                     $confObj,
                     $tcaObj,
@@ -477,7 +477,7 @@ class EditView {
                 );
             }
         } else {
-            $content .= $langObj->getLL('internal_edit_option');
+            $content .= $languageObj->getLabel('internal_edit_option');
         }
 
         return $content;

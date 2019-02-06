@@ -1,5 +1,5 @@
 <?php
-defined('TYPO3_MODE') or die('Access denied.');
+defined('TYPO3_MODE') || die('Access denied.');
 
 $emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
 
@@ -36,7 +36,7 @@ if ($tableExists) {
     // ******************************************************************
     $result = array (
         'ctrl' => array (
-            'title' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:sys_dmail_category',
+            'title' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:sys_dmail_category',
             'label' => 'category',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
@@ -90,14 +90,14 @@ if ($tableExists) {
                 )
             ),
             'category' => array (
-                'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:sys_dmail_category.category',
+                'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:sys_dmail_category.category',
                 'config' => array (
                     'type' => 'input',
                     'size' => '30',
                 )
             ),
             'old_cat_number' => array (
-                'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:sys_dmail_category.old_cat_number',
+                'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:sys_dmail_category.old_cat_number',
                 'l10n_mode' => 'exclude',
                 'config' => array (
                     'type' => 'input',

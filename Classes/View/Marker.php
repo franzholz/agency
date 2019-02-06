@@ -218,7 +218,7 @@ class Marker {
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
         $conf = $confObj->getConf();
-        $langObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Localization::class);
+        $languageObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Localization::class);
         $controlData = GeneralUtility::makeInstance(\JambageCom\Agency\Request\Parameters::class);
 
         $result = '';
@@ -240,7 +240,7 @@ class Marker {
                     $this->tca->addMarkers(
                         $this->tmpTcaMarkers,
                         $conf,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $row,
                         $this->data->getOrigArray(),
@@ -334,7 +334,7 @@ class Marker {
         &$markerArray,
         $conf,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         $extKey,
         $theTable,
         array $row,
@@ -398,18 +398,18 @@ class Marker {
             }
 
             if (!$bChangesOnly || $bValueChanged || in_array($theField, $keepFields)) {
-                $label = $langObj->getLL($theTable . '.' . $theField);
+                $label = $languageObj->getLabel($theTable . '.' . $theField);
                 if (empty($label)) {
-                    $label = $langObj->getLL($theField);
+                    $label = $languageObj->getLabel($theField);
                 }
-                $label = (empty($label) ? $langObj->getLLFromString($tcaColumns[$theField]['label']) : $label);
+                $label = (empty($label) ? $languageObj->getLabelFromString($tcaColumns[$theField]['label']) : $label);
                 $label = htmlspecialchars($label, ENT_QUOTES);
             } else {
                 $label = '';
             }
             $markerArray['###LABEL_' . $markerkey . '###'] = $label;
-            $markerArray['###TOOLTIP_' . $markerkey . '###'] = $langObj->getLL('tooltip_' . $theField);
-            $label = $langObj->getLL('tooltip_invitation_' . $theField);
+            $markerArray['###TOOLTIP_' . $markerkey . '###'] = $languageObj->getLabel('tooltip_' . $theField);
+            $label = $languageObj->getLabel('tooltip_invitation_' . $theField);
             $label = htmlspecialchars($label, ENT_QUOTES);
             $markerArray['###TOOLTIP_INVITATION_' . $markerkey . '###'] = $label;
 
@@ -430,9 +430,9 @@ class Marker {
                     }
 
                     foreach ($fieldArray as $key => $value) {
-                        $label = $langObj->getLLFromString($colConfig['items'][$value][0]);
+                        $label = $languageObj->getLabelFromString($colConfig['items'][$value][0]);
                         $markerArray['###FIELD_' . $markerkey . '_CHECKED###'] .= '- ' . $label . '<br' . HtmlUtility::getXhtmlFix() . '>';
-                        $label = $langObj->getLLFromString($colConfig['items'][$value][0]);
+                        $label = $languageObj->getLabelFromString($colConfig['items'][$value][0]);
                         $markerArray['###LABEL_' . $markerkey . '_CHECKED###'] .= '- ' . $label . '<br' . HtmlUtility::getXhtmlFix() . '>';
                         $markerArray['###POSTVARS_' . $markerkey.'###'] .= chr(10) . '	<input type="hidden" name="FE[fe_users][' . $theField . '][' . $key . ']" value ="' . $value . '"' . HtmlUtility::getXhtmlFix() . '>';
                     }
@@ -440,19 +440,19 @@ class Marker {
             } else if ($colConfig['type'] == 'check') {
                 $yes = (isset($row[$theField]) && $row[$theField] != '');
                 $markerArray['###FIELD_' . $markerkey . '_CHECKED###'] = ($yes ? 'checked' : '');
-                $markerArray['###LABEL_' . $markerkey . '_CHECKED###'] = ($yes ? $langObj->getLL('yes') : $langObj->getLL('no'));
+                $markerArray['###LABEL_' . $markerkey . '_CHECKED###'] = ($yes ? $languageObj->getLabel('yes') : $languageObj->getLabel('no'));
             }
 
             if (in_array(trim($theField), $requiredArray)) {
                 $markerArray['###REQUIRED_' . $markerkey . '###'] = $cObj->cObjGetSingle($conf['displayRequired'], $conf['displayRequired.'], $extKey); // default: '<span>*</span>';
                 $key = 'missing_' . $theField;
-                $label = $langObj->getLL($key);
+                $label = $languageObj->getLabel($key);
                 if ($label == '') {
-                    $label = $langObj->getLL('internal_no_text_found');
+                    $label = $languageObj->getLabel('internal_no_text_found');
                     $label = sprintf($label, $key);
                 }
                 $markerArray['###MISSING_' . $markerkey . '###'] = $label;
-                $markerArray['###MISSING_INVITATION_' . $markerkey . '###'] = $langObj->getLL('missing_invitation_' . $theField);
+                $markerArray['###MISSING_INVITATION_' . $markerkey . '###'] = $languageObj->getLabel('missing_invitation_' . $theField);
             } else {
                 $markerArray['###REQUIRED_' . $markerkey . '###'] = '';
                 $markerArray['###MISSING_' . $markerkey . '###'] = '';
@@ -466,7 +466,7 @@ class Marker {
         foreach($buttonLabels as $labelName) {
             if ($labelName) {
                 $buttonKey = strtoupper($labelName);
-                $markerArray['###LABEL_BUTTON_' . $buttonKey . '###'] = $langObj->getLL('button_' . $labelName);
+                $markerArray['###LABEL_BUTTON_' . $buttonKey . '###'] = $languageObj->getLabel('button_' . $labelName);
                 $attributes = '';
 
                 if (
@@ -570,7 +570,7 @@ class Marker {
         $this->addOtherLabelMarkers(
             $markerArray,
             $cObj,
-            $langObj,
+            $languageObj,
             $conf,
             $name,
             $outputArray,
@@ -581,7 +581,7 @@ class Marker {
     public function addOtherLabelMarkers (
         &$markerArray,
         $cObj,
-        $langObj,
+        $languageObj,
         $conf,
         $name = '',
         $outputArray = '',
@@ -608,7 +608,7 @@ class Marker {
             } else {
                 $labelName = $value;
             }
-            $langText = $langObj->getLL($labelName);
+            $langText = $languageObj->getLabel($labelName);
             $label = sprintf(
                 $langText,
                 $this->thePidTitle,
@@ -828,7 +828,7 @@ class Marker {
     */
     public function addStaticInfoMarkers (
         &$markerArray,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         $prefixId,
         $row = '',
         $viewOnly = false
@@ -852,19 +852,19 @@ class Marker {
                         'static_info_country',
                         $prefixId
                     );
-                $titleCountry = $langObj->getLL('tooltip_' . (($cmd == 'invite') ? 'invitation_' : '')  . 'static_info_country');
+                $titleCountry = $languageObj->getLabel('tooltip_' . (($cmd == 'invite') ? 'invitation_' : '')  . 'static_info_country');
                 $idZone =
                     FrontendUtility::getClassName(
                         'zone',
                         $prefixId
                     );
-                $titleZone = $langObj->getLL('tooltip_' . (($cmd == 'invite') ? 'invitation_' : '')  . 'zone');
+                $titleZone = $languageObj->getLabel('tooltip_' . (($cmd == 'invite') ? 'invitation_' : '')  . 'zone');
                 $idLanguage =
                     FrontendUtility::getClassName(
                         'language',
                         $prefixId
                     );
-                $titleLanguage = $langObj->getLL('tooltip_' . (($cmd == 'invite') ? 'invitation_' : '')  . 'language');
+                $titleLanguage = $languageObj->getLabel('tooltip_' . (($cmd == 'invite') ? 'invitation_' : '')  . 'language');
                 $fieldNameCountry = 'static_info_country';
                 $selected = (is_array($row) && isset($row[$fieldNameCountry]) ? $row[$fieldNameCountry] : array());
                 $where = '';
@@ -938,7 +938,7 @@ class Marker {
     * @return string  generated HTML uploading tags
     */
     public function buildFileUploader (
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         $theField,
         $config,
         $cmd,
@@ -977,15 +977,15 @@ class Marker {
                         '',
                         $prefixId
                     ) .
-                    ' target="_blank" title="' . $langObj->getLL('file_view') . '">' .
-                        $langObj->getLL('file_view') .
+                    ' target="_blank" title="' . $languageObj->getLabel('file_view') . '">' .
+                        $languageObj->getLabel('file_view') .
                     '</a><br' . HtmlUtility::getXhtmlFix() . '>';
                 }
             }
         } else {
             $HTMLContent = '<script>' . chr(13) . '
 var submitFile = function(id){
-    if(confirm(\'' . $langObj->getLL('confirm_file_delete') . '\')) {
+    if(confirm(\'' . $languageObj->getLabel('confirm_file_delete') . '\')) {
         document.getElementById(id).value=\'1\';
         return true;
     } else
@@ -996,8 +996,8 @@ var submitFile = function(id){
                 $partContent =
                     $filenameArray[$i] . '<input type="hidden" id="' . $prefixId . '-file-' . $i . '" name="' . $tablePrefix . '[' . $theField . '][' . $i . '][submit_delete]" value=""' .
                     ' title="' .
-                    $langObj->getLL('icon_delete') .
-                    '" alt="' . $langObj->getLL('icon_delete') . '"' .
+                    $languageObj->getLabel('icon_delete') .
+                    '" alt="' . $languageObj->getLabel('icon_delete') . '"' .
                     FrontendUtility::classParam(
                         'delete-view',
                         '',
@@ -1017,8 +1017,8 @@ var submitFile = function(id){
                         '',
                         $prefixId
                     ) .
-                    ' target="_blank" title="' . $langObj->getLL('file_view') . '">' .
-                    $langObj->getLL('file_view') . '</a>' .
+                    ' target="_blank" title="' . $languageObj->getLabel('file_view') . '">' .
+                    $languageObj->getLabel('file_view') . '</a>' .
                     '<br' . HtmlUtility::getXhtmlFix() . '>';
                 $HTMLContent .= $partContent . '<input type="hidden" name="' . $tablePrefix . '[' . $theField . '][' . $i . '][name]' . '" value="' . $filenameArray[$i] .
                 '"' . HtmlUtility::getXhtmlFix() . '>';
@@ -1032,7 +1032,7 @@ var submitFile = function(id){
                 ) .
                 '-' . ($i - sizeof($filenameArray)) .
                 '" name="' . $tablePrefix . '[' . $theField . '][' . $i . ']" title="' .
-                $langObj->getLL('tooltip_' . (($cmd == 'invite') ? 'invitation_' : '')  . 'image') . '" size="40" type="file" ' .
+                $languageObj->getLabel('tooltip_' . (($cmd == 'invite') ? 'invitation_' : '')  . 'image') . '" size="40" type="file" ' .
                 FrontendUtility::classParam(
                     'uploader-view',
                     '',
@@ -1053,7 +1053,7 @@ var submitFile = function(id){
     * @return void
     */
     public function addFileUploadMarkers (
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         $theTable,
         $theField,
         $fieldConfig,
@@ -1076,7 +1076,7 @@ var submitFile = function(id){
         if ($viewOnly) {
             $markerArray['###UPLOAD_PREVIEW_' . $theField . '###'] =
                 $this->buildFileUploader(
-                    $langObj,
+                    $languageObj,
                     $theField,
                     $fieldConfig['config'],
                     $cmd,
@@ -1091,7 +1091,7 @@ var submitFile = function(id){
         } else {
             $markerArray['###UPLOAD_' . $theField . '###'] =
                 $this->buildFileUploader(
-                    $langObj,
+                    $languageObj,
                     $theField,
                     $fieldConfig['config'],
                     $cmd,
@@ -1379,7 +1379,7 @@ var submitFile = function(id){
                 '###FIELD_password###',
                 '###FIELD_password_again###'
             );
-            $removeMarkerMessage = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_remove_deprecated_marker');
+            $removeMarkerMessage = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xlf:internal_remove_deprecated_marker');
             foreach ($removeMarkers as $marker) {
                 if (strpos($templateCode, $marker) !== false) {
                     $messages[] = sprintf($removeMarkerMessage, $marker, $fileName);
@@ -1392,7 +1392,7 @@ var submitFile = function(id){
                     'replacement' => '###CHECK_NOT_USED1A###'
                 ),
             );
-            $replaceMarkerMessage = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xml:internal_replace_deprecated_marker');
+            $replaceMarkerMessage = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xlf:internal_replace_deprecated_marker');
             foreach ($replaceMarkers as $replaceMarker) {
                 if (strpos($templateCode, $replaceMarker['marker']) !== false) {
                     $messages[] = sprintf($replaceMarkerMessage, $replaceMarker['marker'], $replaceMarker['replacement'], $fileName);

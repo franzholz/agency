@@ -51,7 +51,7 @@ class LocalizationUtility {
         if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['languageResource']) {
             $filename = DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf';
         } else {
-            $filename = '/pi/locallang.xml';
+            $filename = '/pi/locallang.xlf';
         }
         self::setFilename($filename);
     }

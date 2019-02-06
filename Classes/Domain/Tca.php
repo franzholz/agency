@@ -312,7 +312,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
     *
     * @param array $markerArray: the input and output marker array
     * @param array $cObj: the cObject
-    * @param array $langObj: the language object
+    * @param array $languageObj: the language object
     * @param array $controlData: the object of the control data
     * @param array $row: the updated record
     * @param array $origRow: the original record as before the updates
@@ -329,7 +329,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
     public function addMarkers (
         &$markerArray,
         $conf,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         $row,
         $origRow,
@@ -494,7 +494,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
                                         if ($checked) {
                                             $checkedCount++;
-                                            $label = $langObj->getLLFromString($colConfig['items'][$key][0]);
+                                            $label = $languageObj->getLabelFromString($colConfig['items'][$key][0]);
                                             if ($HSC) {
                                                 $label =
                                                     htmlspecialchars(
@@ -515,9 +515,9 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                         (string) $mrow[$colName] != '' &&
                                         (string) $mrow[$colName] != '0'
                                     ) {
-                                        $label = $langObj->getLL('yes');
+                                        $label = $languageObj->getLabel('yes');
                                     } else {
-                                        $label = $langObj->getLL('no');
+                                        $label = $languageObj->getLabel('no');
                                     }
 
                                     if ($HSC) {
@@ -534,7 +534,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                 ) {
                                     $valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', $mrow[$colName]);
                                     $textSchema = $theTable . '.' . $colName . '.I.';
-                                    $itemArray = $langObj->getItemsLL($textSchema, true);
+                                    $itemArray = $languageObj->getItemsLL($textSchema, true);
 
                                     if (!count($itemArray)) {
                                         if ($colConfig['itemsProcFunc']) {
@@ -551,7 +551,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                         }
 
                                         for ($i = 0; $i < count ($valuesArray); $i++) {
-                                            $label = $langObj->getLLFromString($itemKeyArray[$valuesArray[$i]][0]);
+                                            $label = $languageObj->getLabelFromString($itemKeyArray[$valuesArray[$i]][0]);
                                             if ($HSC) {
                                                 $label = htmlspecialchars($label, ENT_QUOTES, $charset);
                                             }
@@ -568,7 +568,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                 ) {
                                     $valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', $mrow[$colName]);
                                     $textSchema = $theTable . '.' . $colName . '.I.';
-                                    $itemArray = $langObj->getItemsLL($textSchema, true);
+                                    $itemArray = $languageObj->getItemsLL($textSchema, true);
 
                                     if (!count($itemArray)) {
                                         if ($colConfig['itemsProcFunc']) {
@@ -583,7 +583,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                     if (is_array($itemArray)) {
                                         $itemKeyArray = $this->getItemKeyArray($itemArray);
                                         for ($i = 0; $i < count($valuesArray); $i++) {
-                                            $label = $langObj->getLLFromString($itemKeyArray[$valuesArray[$i]][0]);
+                                            $label = $languageObj->getLabelFromString($itemKeyArray[$valuesArray[$i]][0]);
                                             if ($HSC) {
                                                 $label = htmlspecialchars($label, ENT_QUOTES, $charset);
                                             }
@@ -648,7 +648,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
                             default:
                                 // unsupported input type
-                                $label = $langObj->getLL('unsupported');
+                                $label = $languageObj->getLabel('unsupported');
                                 if ($HSC)   {
                                     $label = htmlspecialchars($label, ENT_QUOTES, $charset);
                                 }
@@ -668,7 +668,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                 $valuesArray[] = $colConfig['default'];
                             }
                             $textSchema = $theTable . '.' . $colName . '.I.';
-                            $itemArray = $langObj->getItemsLL($textSchema, true);
+                            $itemArray = $languageObj->getItemsLL($textSchema, true);
                             $bUseTCA = false;
                             if (!count($itemArray)) {
                                 if (
@@ -698,7 +698,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                     $colContent .= ' maxlength="' . $colConfig['max'] . '"';
                                 }
                                 if ($colConfig['default']) {
-                                    $label = $langObj->getLLFromString($colConfig['default']);
+                                    $label = $languageObj->getLabelFromString($colConfig['default']);
                                     $label = htmlspecialchars($label, ENT_QUOTES, $charset);
                                     $colContent .= ' value="' . $label . '"';
                                 }
@@ -706,7 +706,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                 break;
 
                             case 'text':
-                                $label = $langObj->getLLFromString($colConfig['default']);
+                                $label = $languageObj->getLabelFromString($colConfig['default']);
                                 $label = htmlspecialchars($label, ENT_QUOTES, $charset);
                                 $colContent = '<textarea id="' .                                    
                                     FrontendUtility::getClassName(
@@ -722,7 +722,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                 break;
 
                             case 'check':
-                                $label = $langObj->getLL('tooltip_' . $colName);
+                                $label = $languageObj->getLabel('tooltip_' . $colName);
                                 $label = htmlspecialchars($label, ENT_QUOTES, $charset);
 
                                 if (isset($itemArray) && is_array($itemArray)) {
@@ -764,7 +764,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                             $checkedHtml = ($useXHTML ? ' checked="checked"' : ' checked');
                                         }
 
-                                        $label = $langObj->getLLFromString($itemArray[$key][0]);
+                                        $label = $languageObj->getLabelFromString($itemArray[$key][0]);
                                         $label = htmlspecialchars($label, ENT_QUOTES, $charset);
                                         $newContent = '<li><input type="checkbox"' .
                                             ' id="' . $uidText . '-' . $key .
@@ -821,7 +821,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
                                     foreach($itemArray as $key => $confArray) {
                                         $value = $confArray[1];
-                                        $label = $langObj->getLLFromString($confArray[0]);
+                                        $label = $languageObj->getLabelFromString($confArray[0]);
                                         $label = htmlspecialchars($label, ENT_QUOTES, $charset);
                                         $itemOut = '<input type="radio"' .
                                         ' id="'.
@@ -930,7 +930,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                     $i = 0;
 
                                     foreach ($itemArray as $k => $item) {
-                                        $label = $langObj->getLLFromString($item[0], true);
+                                        $label = $languageObj->getLabelFromString($item[0], true);
                                         $label = htmlspecialchars($label, ENT_QUOTES, $charset);
                                         if ($colConfig['renderMode'] == 'checkbox') {
 
@@ -1130,7 +1130,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                 break;
 
                             default:
-                                $colContent .= $colConfig['type'] . ':' . $langObj->getLL('unsupported');
+                                $colContent .= $colConfig['type'] . ':' . $languageObj->getLabel('unsupported');
                                 break;
                         }
                     }

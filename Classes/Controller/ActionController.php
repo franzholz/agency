@@ -52,7 +52,7 @@ use JambageCom\Agency\Utility\SessionUtility;
 
 
 class ActionController {
-    public $langObj;
+    public $languageObj;
     public $auth;
     public $email;
     public $requiredArray; // List of required fields
@@ -63,13 +63,13 @@ class ActionController {
 
     public function init (
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         $urlObj
     )
     {
-        $this->langObj = $langObj;
+        $this->langObj = $languageObj;
         $conf = $confObj->getConf();
         $this->urlObj = $urlObj;
             // Retrieve the extension key
@@ -82,7 +82,7 @@ class ActionController {
                 // Check the flexform
             $cObj->data['pi_flexform'] = GeneralUtility::xml2array($cObj->data['pi_flexform']);
             $cmd = \JambageCom\Div2007\Utility\ConfigUtility::getSetupOrFFvalue(
-                $langObj,
+                $languageObj,
                 '',
                 '',
                 $conf['defaultCODE'],
@@ -461,7 +461,7 @@ class ActionController {
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         $setfixedObj,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         \JambageCom\Agency\View\Template $template,
         \JambageCom\Agency\View\CreateView $displayObj,
         \JambageCom\Agency\View\EditView $editView,
@@ -811,7 +811,7 @@ class ActionController {
                     $template->getSimpleTemplate(
                         $conf,
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $markerObj,
                         $templateCode,
                         '###TEMPLATE_DELETE_CANCEL###',
@@ -875,7 +875,7 @@ class ActionController {
                 $afterSave->render(
                     $conf,
                     $cObj,
-                    $langObj,
+                    $languageObj,
                     $controlData,
                     $confObj,
                     $tcaObj,
@@ -913,7 +913,7 @@ class ActionController {
                     $bEmailSent = $email->compile(
                         SETFIXED_PREFIX . 'REVIEW',
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -956,7 +956,7 @@ class ActionController {
                     $bEmailSent = $email->compile(
                         $key,
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -984,7 +984,7 @@ class ActionController {
                     !$bEmailSent &&
                     is_array($errorCode)
                 ) {
-                    $errorText = $langObj->getLL($errorCode['0'], $dummy, '', false, true);
+                    $errorText = $languageObj->getLabel($errorCode['0'], $dummy, '', false, true);
                     $errorContent = sprintf($errorText, $errorCode['1']);
                 }
             }
@@ -1032,7 +1032,7 @@ class ActionController {
                     $loginSuccess =
                         \JambageCom\Agency\Api\System::login(
                             $cObj,
-                            $langObj,
+                            $languageObj,
                             $controlData,
                             $this->urlObj,
                             $conf,
@@ -1063,7 +1063,7 @@ class ActionController {
                 $markerArray,
                 $conf,
                 $cObj,
-                $langObj,
+                $languageObj,
                 $controlData->getExtensionKey(),
                 $theTable,
                 $finalDataArray,
@@ -1101,7 +1101,7 @@ class ActionController {
                     $content = $setfixedObj->process(
                         $conf,
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $this->urlObj,
                         $confObj,
@@ -1153,7 +1153,7 @@ class ActionController {
 
                     $content = $email->processInfo(
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -1179,7 +1179,7 @@ class ActionController {
                         $content == '' &&
                         is_array($errorCode)
                     ) {
-                        $content = $langObj->getLL($errorCode['0']);
+                        $content = $languageObj->getLabel($errorCode['0']);
                     }
                     break;
                 case 'delete':
@@ -1197,7 +1197,7 @@ class ActionController {
                         $prefixId,
                         $extensionKey,
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -1227,7 +1227,7 @@ class ActionController {
                         $markerArray,
                         $conf,
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -1262,7 +1262,7 @@ class ActionController {
                         $prefixId,
                         $extensionKey,
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -1298,7 +1298,7 @@ class ActionController {
                         $prefixId,
                         $extensionKey,
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -1322,7 +1322,7 @@ class ActionController {
             if (
                 is_array($errorCode)
             ) {
-                $errorText = $langObj->getLL($errorCode['0']);
+                $errorText = $languageObj->getLabel($errorCode['0']);
                 if (isset($errorCode['1'])) {
                     $errorContent = sprintf($errorText, $errorCode['1']);
                 } else {

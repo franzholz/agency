@@ -55,7 +55,7 @@ class System {
     */
     public function login (
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Api\Url $url,
         $conf,
@@ -144,11 +144,11 @@ class System {
                 in_array(get_class($authServiceObj), $serviceKeyArray)
             ) {
                     // auto login failed...
-                $message = $langObj->getLL('internal_auto_login_failed');
+                $message = $languageObj->getLabel('internal_auto_login_failed');
                 $result = false;
             } else {
                     // Required authentication service not available
-                $message = $langObj->getLL('internal_required_authentication_service_not_available');
+                $message = $languageObj->getLabel('internal_required_authentication_service_not_available');
                 $result = false;
             }
 
@@ -161,7 +161,7 @@ class System {
             }
         } else {
                 // No enabled user of the given name
-            $message = sprintf($langObj->getLL('internal_no_enabled_user'), $loginData['uname']);
+            $message = sprintf($languageObj->getLabel('internal_no_enabled_user'), $loginData['uname']);
             $result = false;
         }
 

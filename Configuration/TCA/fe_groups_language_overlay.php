@@ -1,5 +1,5 @@
 <?php
-defined('TYPO3_MODE') or die('Access denied.');
+defined('TYPO3_MODE') || die('Access denied.');
 
 $result = false;
 
@@ -18,7 +18,7 @@ if (!$tableExists) {
 
 $result = array(
     'ctrl' => array(
-        'title' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_groups_language_overlay',
+        'title' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_groups_language_overlay',
         'label' => 'title',
         'default_sortby' => 'ORDER BY fe_groups_uid',
         'sortby' => 'sorting',
@@ -32,17 +32,16 @@ $result = array(
         'showRecordFieldList' => 'hidden,fe_group,title'
     ),
     'columns' => array(
-        'hidden' => array(
+        'hidden' => array (
             'exclude' => 0,
-            'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
-            'config' => array(
-                'type' => 'check',
-                'default' => '0'
+            'label'  => DIV2007_LANGUAGE_LGL . 'hidden',
+            'config' => array (
+                'type' => 'check'
             )
         ),
         'fe_group' => array(
             'exclude' => 0,
-            'label' => 'LLL:EXT:cms/locallang_tca.xml:fe_groups',
+            'label'  => DIV2007_LANGUAGE_LGL . 'fe_group',
             'config' => array(
                 'type' => 'select',
                 'foreign_table' => 'fe_groups'
@@ -50,7 +49,7 @@ $result = array(
         ),
         'sys_language_uid' => array(
             'exclude' => 0,
-            'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.language',
+            'label' => DIV2007_LANGUAGE_LGL . 'language',
             'config' => array(
                 'type' => 'select',
                 'foreign_table' => 'sys_language',
@@ -59,7 +58,7 @@ $result = array(
         ),
         'title' => array(
             'exclude' => 0,
-            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:fe_groups_language_overlay.title',
+            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_groups_language_overlay.title',
             'config' => array(
                 'type' => 'input',
                 'size' => '50',

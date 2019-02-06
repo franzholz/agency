@@ -85,7 +85,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
     */
     public function processInfo (
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         \JambageCom\Agency\Domain\Tca $tcaObj,
@@ -156,7 +156,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     $emailHasBeenSent = $this->compile(
                         $key,
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -184,7 +184,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     $emailHasBeenSent = $this->compile(
                         $key,
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -212,7 +212,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     !$emailHasBeenSent &&
                     is_array($errorCode)
                 ){
-                    $errorText = $langObj->getLL($errorCode['0'], $dummy, '', false, true);
+                    $errorText = $languageObj->getLabel($errorCode['0'], $dummy, '', false, true);
                     $errorContent = sprintf($errorText, $errorCode['1']);
                 }
 
@@ -228,7 +228,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                             $errorCode,
                             $conf,
                             $cObj,
-                            $langObj,
+                            $languageObj,
                             $controlData,
                             $confObj,
                             $tcaObj,
@@ -257,7 +257,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                         $errorCode,
                         $conf,
                         $cObj,
-                        $langObj,
+                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -288,7 +288,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
     *
     * @param string  $key: template key
     * @param array $cObj: the cObject
-    * @param array $langObj: the language object
+    * @param array $languageObj: the language object
     * @param array $controlData: the object of the control data
     * @param string $theTable: the table in use
     * @param array $autoLoginKey: the auto-login key
@@ -304,7 +304,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
     public function compile (
         $key,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         \JambageCom\Agency\Domain\Tca $tcaObj,
@@ -554,7 +554,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             $markerArray,
             $conf,
             $cObj,
-            $langObj,
+            $languageObj,
             $extKey,
             $theTable,
             $DBrows[0],
@@ -636,7 +636,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
 
             $markerObj->addStaticInfoMarkers(
                 $markerArray,
-                $langObj,
+                $languageObj,
                 $prefixId,
                 $row,
                 $viewOnly
@@ -655,7 +655,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     )
                 ) {
                     $markerObj->addFileUploadMarkers(
-                        $langObj,
+                        $languageObj,
                         $theTable,
                         $theField,
                         $fieldConfig,
@@ -674,7 +674,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 $markerArray,
                 $conf,
                 $cObj,
-                $langObj,
+                $languageObj,
                 $extKey,
                 $theTable,
                 $row,
@@ -707,7 +707,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 $tcaObj->addMarkers(
                     $fieldMarkerArray,
                     $conf,
-                    $langObj,
+                    $languageObj,
                     $controlData,
                     $row,
                     $origRow,

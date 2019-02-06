@@ -54,7 +54,7 @@ class CreateView {
     * or the first link display to create or edit someone's data
     *
     * @param array $cObj: the cObject
-    * @param array $langObj: the language object
+    * @param array $languageObj: the language object
     * @param array $controlData: the object of the control data
     * @param array  $errorFieldArray: array of field with errors (former $this->data->inError[$theField])
     * @return string  the template with substituted markers
@@ -65,7 +65,7 @@ class CreateView {
         $prefixId,
         $extensionKey,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         \JambageCom\Agency\Domain\Tca $tcaObj,
@@ -196,14 +196,14 @@ class CreateView {
             );
             $markerObj->addStaticInfoMarkers(
                 $markerArray,
-                $langObj,
+                $languageObj,
                 $prefixId,
                 $dataArray
             );
             $tcaObj->addMarkers(
                 $markerArray,
                 $conf,
-                $langObj,
+                $languageObj,
                 $controlData,
                 $dataArray,
                 $origArray,
@@ -220,7 +220,7 @@ class CreateView {
                     $fieldConfig['config']['uploadfolder'] != ''
                 ) {
                     $markerObj->addFileUploadMarkers(
-                        $langObj,
+                        $languageObj,
                         $theTable,
                         $theField,
                         $fieldConfig,
@@ -238,7 +238,7 @@ class CreateView {
                 $markerArray,
                 $conf,
                 $cObj,
-                $langObj,
+                $languageObj,
                 $controlData->getExtensionKey(),
                 $theTable,
                 $dataArray,

@@ -475,13 +475,13 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 $internalPostfix = ($bInternal ? '_internal' : '');
                 if ($theRule) {
                     $labelname = 'evalErrors_' . $theRule . '_' . $theField . $internalPostfix;
-                    $failureLabel = $this->lang->getLL($labelname);
-                    $failureLabel = $failureLabel ? $failureLabel : $this->lang->getLL('evalErrors_' . $theRule . $internalPostfix);
+                    $failureLabel = $this->lang->getLabel($labelname);
+                    $failureLabel = $failureLabel ? $failureLabel : $this->lang->getLabel('evalErrors_' . $theRule . $internalPostfix);
                 }
 
                 if (!$failureLabel) { // this remains only for compatibility reasons
                     $labelname = $label;
-                    $failureLabel = $this->lang->getLL($labelname);
+                    $failureLabel = $this->lang->getLabel($labelname);
                 }
             }
         }

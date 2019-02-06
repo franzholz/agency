@@ -2,79 +2,66 @@
 
 namespace JambageCom\Agency\Api;
 
-/***************************************************************
-*  Copyright notice
-*
-*  (c) 2018 Stanislas Rolland (typo3(arobas)sjbr.ca)
-*  All rights reserved
-*
-*  This script is part of the Typo3 project. The Typo3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*  A copy is found in the textfile GPL.txt and important notices to the license
-*  from the author is found in LICENSE.txt distributed with these scripts.
-*
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
-/**
-* Part of the agency (Agency Registration) extension.
-*
-* language functions, former class tx_agency_lang
-*
-* @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
-* @author	Franz Holzinger <franz@ttproducts.de>
-*
-* @package TYPO3
-* @subpackage agency
-*
-*
-*/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 
+class Localization extends \JambageCom\Div2007\Base\TranslationBase implements \TYPO3\CMS\Core\SingletonInterface {
+    public $allowedSuffixes = array('', 'formal', 'informal'); // list of allowed suffixes
+    protected $salutation = '';
 
-class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements \TYPO3\CMS\Core\SingletonInterface {
-    public $allowedSuffixes = array('formal', 'informal'); // list of allowed suffixes
-
-    public function init1 (
-        $pObj,
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        $conf,
-        $scriptRelPath,
-        $extensionKey,
-        $filename
-    )
-    {
+    public function init (
+        $extensionKey = '',
+        $confLocalLang = array(), // you must pass only the $conf['_LOCAL_LANG.'] part of the setup of the caller
+        $scriptRelPath = '',
+        $lookupFilename = '',
+        $useDiv2007Language = true
+    ) {
+        if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['languageResource']) {
+            $scriptRelPath = DIV2007_LANGUAGE_SUBPATH;
+        } else {
+            $scriptRelPath = 'pi';
+            $lookupFilename = 'locallang.xlf';
+            $useDiv2007Language = false;
+        }
         parent::init(
-            $cObj,
             $extensionKey,
-            $conf,
+            $confLocalLang,
             $scriptRelPath,
-            $filename
+            $lookupFilename,
+            $useDiv2007Language
         );
+        
+        if (!$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['languageResource']) {
+            $this->loadLocalLang(
+                'EXT:' . DIV2007_EXT . '/' . $scriptRelPath . '/' . 'locallang.xlf'
+            );
+        }
 
-        // keep previsous language settings if available
-        if (isset($pObj->LOCAL_LANG) && is_array($pObj->LOCAL_LANG)) {
-            $this->setLocallang($pObj->LOCAL_LANG);
-        }
-        if (isset($pObj->LOCAL_LANG_charset) && is_array($pObj->LOCAL_LANG_charset)) {
-            $this->setLocallangCharset($pObj->LOCAL_LANG_charset);
-        }
-        if (isset($pObj->LOCAL_LANG_loaded)) {
-            $this->setLocallangLoaded($pObj->LOCAL_LANG_loaded);
+    }
+
+    public function setSalutation ($salutation) {
+        if (
+            in_array($salutation, $this->allowedSuffixes, 1)
+        ) {
+            $this->salutation = $salutation;
         }
     }
 
-    public function getLLFromString (
+    public function getSalutation () {
+        return $this->salutation;
+    }
+
+    public function getLabelFromString (
         $string,
         $force = true
     )
@@ -83,7 +70,7 @@ class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements 
         $arr = explode(':', $string);
 
         if($arr[0] == 'LLL' && $arr[1] == 'EXT') {
-            $temp = $this->getLL($arr[3]);
+            $temp = $this->getLabel($arr[3]);
             if ($temp || !$force) {
                 $result = $temp;
             } else {
@@ -94,7 +81,7 @@ class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements 
         }
 
         return $result;
-    } // getLLFromString
+    } // getLabelFromString
 
     /**
     * Get the item array for a select if configured via TypoScript
@@ -110,14 +97,14 @@ class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements 
         $result = array();
         if ($bAll) {
             for ($i = 0; $i < 999; ++$i) {
-                $text = $this->getLL($textSchema . $i);
+                $text = $this->getLabel($textSchema . $i);
                 if ($text != '') {
                     $result[] = array($text, $i);
                 }
             }
         } else {
             foreach ($valuesArray as $k => $i) {
-                $text = $this->getLL($textSchema . $i);
+                $text = $this->getLabel($textSchema . $i);
                 if ($text != '') {
                     $result[] = array($text, $i);
                 }
@@ -144,7 +131,7 @@ class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements 
     * @param boolean If true then an error text will be generated with the information that no text for the key could be found..
     * @return  string      The value from LOCAL_LANG. false in error case
     */
-    public function getLL (
+    public function getLabel (
         $key,
         &$usedLang = '',
         $alternativeLabel = '',
@@ -155,29 +142,30 @@ class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements 
             // If the suffix is allowed and we have a localized string for the desired salutation, we'll take that.
         $localizedLabel = '';
         $usedLang = '';
-        $conf = $this->getConf();
+        $salutation = $this->getSalutation();
+
             // Check for an allowed salutation suffix and, if configured, try to localize
         if (
-            isset($conf['salutation']) &&
-            in_array($conf['salutation'], $this->allowedSuffixes, 1)
+            $salutation != ''
         ) {
-            $expandedKey = $key . '_' . $conf['salutation'];
+            $expandedKey = $key . '_' . $salutation;
             $localizedLabel =
-                parent::getLL(
+                parent::getLabel(
                     $expandedKey,
                     $usedLang,
                     $alternativeLabel,
                     $hsc
                 );
         }
+
             // No allowed salutation suffix and fall back
         if (
             $localizedLabel == '' ||
             $localizedLabel == $alternativeLabel ||
-            $usedLang != $this->getLLkey()
+            $usedLang != $this->getLocalLangKey()
         ) {
             $localizedLabel =
-                parent::getLL(
+                parent::getLabel(
                     $key,
                     $usedLang,
                     $alternativeLabel,
@@ -193,24 +181,24 @@ class Localization extends \JambageCom\Div2007\Base\LocalisationBase implements 
         return $localizedLabel;
     }
 
-    public function loadLL (
+    public function loadLocalLang (
         $langFileParam = '',
         $overwrite = true
     )
     {
-        $result = parent::loadLL(
+        $result = parent::loadLocalLang(
             $langFileParam,
             $overwrite
         );
 
         // do a check if the language file works
-        $tmpText = parent::loadLL('unsupported');
+        $tmpText = parent::getLabel('unsupported');
 
         if ($tmpText == '') {
             $result = false;
         }
 
         return $result;
-    } // loadLL
+    } // loadLocalLang
 }
 

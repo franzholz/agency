@@ -300,7 +300,7 @@ class Template {
     * Initializes a template, filling values for data and labels
     *
     * @param array $cObj: the cObject
-    * @param array $langObj: the language object
+    * @param array $languageObj: the language object
     * @param array $controlData: the object of the control data
     * @param string  $subpartMarker: the template subpart marker
     * @param array  $row: the data array or empty array
@@ -310,7 +310,7 @@ class Template {
         &$errorCode,
         $conf,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         \JambageCom\Agency\Request\Parameters $controlData,
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
         \JambageCom\Agency\Domain\Tca $tcaObj,
@@ -368,7 +368,7 @@ class Template {
 
             $markerObj->addStaticInfoMarkers(
                 $markerArray,
-                $langObj,
+                $languageObj,
                 $prefixId,
                 $row
             );
@@ -378,7 +378,7 @@ class Template {
             $tcaObj->addMarkers(
                 $markerArray,
                 $conf,
-                $langObj,
+                $languageObj,
                 $controlData,
                 $row,
                 $origArray,
@@ -392,7 +392,7 @@ class Template {
                 $markerArray,
                 $conf,
                 $cObj,
-                $langObj,
+                $languageObj,
                 $controlData->getExtensionKey(),
                 $theTable,
                 $row,
@@ -429,7 +429,7 @@ class Template {
             $errorCode['0'] = 'internal_no_subtemplate';
             $errorCode['1'] = $subpartMarker;
             $result = false;
-//             $errorText = $langObj->getLL('internal_no_subtemplate');
+//             $errorText = $languageObj->getLabel('internal_no_subtemplate');
 //             $result = sprintf($errorText, $subpartMarker);
         }
 
@@ -440,7 +440,7 @@ class Template {
     * Initializes a template, filling values for data and labels
     *
     * @param array $cObj: the cObject
-    * @param array $langObj: the language object
+    * @param array $languageObj: the language object
     * @param array $controlData: the object of the control data
     * @param string  $subpartMarker: the template subpart marker
     * @param array  $row: the data array or empty array
@@ -449,7 +449,7 @@ class Template {
     public function getSimpleTemplate (
         $conf,
         $cObj,
-        \JambageCom\Agency\Api\Localization $langObj,
+        \JambageCom\Agency\Api\Localization $languageObj,
         $markerObj,
         $templateCode,
         $subpartMarker,
@@ -463,7 +463,7 @@ class Template {
             $markerObj->addOtherLabelMarkers(
                 $markerArray,
                 $cObj,
-                $langObj,
+                $languageObj,
                 $conf
             );
 
@@ -477,7 +477,7 @@ class Template {
                     $deleteUnusedMarkers
                 );
         } else if ($bCheckEmpty) {
-            $errorText = $langObj->getLL('internal_no_subtemplate');
+            $errorText = $languageObj->getLabel('internal_no_subtemplate');
             $result = sprintf($errorText, $subpartMarker);
         }
 

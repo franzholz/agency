@@ -1,10 +1,10 @@
 <?php
-defined('TYPO3_MODE') or die('Access denied.');
+defined('TYPO3_MODE') || die('Access denied.');
 
 
 $result = array(
     'ctrl' => array (
-        'title' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:sys_agency_fe_users_limit_fe_groups',
+        'title' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:sys_agency_fe_users_limit_fe_groups',
         'label' => 'codes',
         'default_sortby' => 'ORDER BY codes',
         'tstamp' => 'tstamp',
@@ -23,15 +23,15 @@ $result = array(
     ),
     'columns' => array (
         'hidden' => array (
-            'exclude' => 1,
-            'label' => 'LLL:EXT:lang/locallang_general.php:LGL.hidden',
+            'exclude' => 0,
+            'label'  => DIV2007_LANGUAGE_LGL . 'hidden',
             'config' => array (
                 'type' => 'check'
             )
         ),
         'tstamp' => array (
             'exclude' => 1,
-            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:tstamp',
+            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:tstamp',
             'config' => array (
                 'type' => 'input',
                 'size' => '8',
@@ -42,7 +42,7 @@ $result = array(
         ),
         'crdate' => array (
             'exclude' => 1,
-            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:crdate',
+            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:crdate',
             'config' => array (
                 'type' => 'input',
                 'size' => '8',
@@ -81,7 +81,7 @@ $result = array(
         ),
         'codes' => array (
             'exclude' => 0,
-            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:sys_agency_fe_users_limit_fe_groups.codes',
+            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:sys_agency_fe_users_limit_fe_groups.codes',
             'config' => array (
                 'type' => 'text',
                 'cols' => '48',
@@ -92,7 +92,7 @@ $result = array(
         ),
         'status' => array (
             'exclude' => 1,
-            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xml:sys_agency_fe_users_limit_fe_groups.status',
+            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:sys_agency_fe_users_limit_fe_groups.status',
             'config' => array (
                 'type' => 'input',
                 'size' => '10',
