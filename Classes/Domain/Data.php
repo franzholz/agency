@@ -523,6 +523,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
 
         // Check required, set failure if not ok.
         $failureArray = array();
+
         foreach ($requiredArray as $k => $theField) {
 
             $bIsMissing = false;

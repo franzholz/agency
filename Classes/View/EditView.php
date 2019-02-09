@@ -42,8 +42,11 @@ namespace JambageCom\Agency\View;
 *
 */
 
-use JambageCom\Div2007\Utility\FrontendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use JambageCom\Div2007\Utility\FrontendUtility;
+
+use JambageCom\Agency\Constants\Mode;
 
 
 class EditView {
@@ -98,7 +101,7 @@ class EditView {
         if (
             !$conf['linkToPID'] ||
             !$conf['linkToPIDAddButton'] ||
-            !($mode == MODE_PREVIEW ||
+            !($mode == Mode::PREVIEW ||
             !$conf[$cmd . '.']['preview'])
         ) {
             $templateCode =
@@ -136,7 +139,7 @@ class EditView {
                 $theTable,
                 $cmdKey,
                 $templateCode,
-                ($mode == MODE_PREVIEW),
+                ($mode == Mode::PREVIEW),
                 $errorFieldArray,
                 $failure
             );
@@ -223,7 +226,7 @@ class EditView {
                     $cmdKey,
                     $prefixId,
                     $currentArray,
-                    $controlData->getMode() == MODE_PREVIEW
+                    $controlData->getMode() == Mode::PREVIEW
                 );
             }
         }
@@ -277,7 +280,7 @@ class EditView {
                 $deleteUnusedMarkers
             );
 
-        if ($mode != MODE_PREVIEW) {
+        if ($mode != Mode::PREVIEW) {
             $modData =
                 $dataObj->modifyDataArrForFormUpdate(
                     $conf,

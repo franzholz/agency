@@ -5,7 +5,7 @@ namespace JambageCom\Agency\View;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Stanislas Rolland (typo3(arobas)sjbr.ca)
+*  (c) 2019 Stanislas Rolland (typo3(arobas)sjbr.ca)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -42,8 +42,11 @@ namespace JambageCom\Agency\View;
 *
 */
 
-use JambageCom\Div2007\Utility\FrontendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use JambageCom\Div2007\Utility\FrontendUtility;
+
+use JambageCom\Agency\Constants\Mode;
 
 
 class CreateView {
@@ -174,7 +177,7 @@ class CreateView {
                     $theTable,
                     $cmdKey,
                     $templateCode,
-                    $mode == MODE_PREVIEW,
+                    $mode == Mode::PREVIEW,
                     $errorFieldArray,
                     $failure
                 );
@@ -229,7 +232,7 @@ class CreateView {
                         $cmdKey,
                         $prefixId,
                         $dataArray,
-                        $controlData->getMode() == MODE_PREVIEW
+                        $controlData->getMode() == Mode::PREVIEW
                     );
                 }
             }
@@ -276,7 +279,7 @@ class CreateView {
                 $prefixId,
                 $theTable,
                 $dataArray,
-                $mode != MODE_PREVIEW &&
+                $mode != Mode::PREVIEW &&
                     in_array('privacy_policy_acknowledged', $includedFields)
             );
 
@@ -295,7 +298,7 @@ class CreateView {
                 );
 
             if (
-                $mode != MODE_PREVIEW &&
+                $mode != Mode::PREVIEW &&
                 $bNeedUpdateJS
             ) {
                 $fields = $dataObj->getFieldList() . ',' . $dataObj->getAdditionalUpdateFields();

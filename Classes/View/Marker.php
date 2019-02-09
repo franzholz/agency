@@ -49,6 +49,9 @@ use JambageCom\Div2007\Captcha\CaptchaInterface;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\HtmlUtility;
 
+use JambageCom\Agency\Constants\Mode;
+
+
 define('SAVED_SUFFIX', '_SAVED');
 define('SETFIXED_PREFIX', 'SETFIXED_');
 
@@ -838,7 +841,7 @@ class Marker {
             $css = GeneralUtility::makeInstance(\JambageCom\Div2007\Api\Css::class);
             $cmd = $this->controlData->getCmd();
             $theTable = $this->controlData->getTable();
-            if ($this->controlData->getMode() == MODE_PREVIEW || $viewOnly) {
+            if ($this->controlData->getMode() == Mode::PREVIEW || $viewOnly) {
                 $markerArray['###FIELD_static_info_country###'] =
                     $this->staticInfoObj->getStaticInfoName('COUNTRIES', is_array($row) ? $row['static_info_country'] : '');
                 $markerArray['###FIELD_zone###'] = $this->staticInfoObj->getStaticInfoName('SUBDIVISIONS', is_array($row) ? $row['zone'] : '', is_array($row) ? $row['static_info_country'] : '');
@@ -1137,7 +1140,7 @@ var submitFile = function(id){
         $dataArray = array()
     )
     {
-        if ($this->conf[$cmdKey . '.']['preview'] && $mode != MODE_PREVIEW) {
+        if ($this->conf[$cmdKey . '.']['preview'] && $mode != Mode::PREVIEW) {
             $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="' . $prefixId .  '[preview]" value="1"' . HtmlUtility::getXhtmlFix() . '>';
             if (
                 $theTable == 'fe_users' &&
@@ -1152,7 +1155,7 @@ var submitFile = function(id){
         }
         $fieldArray = GeneralUtility::trimExplode(',', $cmdKeyFields, 1);
 
-        if ($mode == MODE_PREVIEW) {
+        if ($mode == Mode::PREVIEW) {
             $fieldArray = array_diff($fieldArray, array('hidden', 'disable'));
 
             $fields = implode(',', $fieldArray);
@@ -1241,11 +1244,7 @@ var submitFile = function(id){
     {
         $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
 
-//         if (!$markerArray) {
-//             $markerArray = $this->getArray();
-//         }
-
-        if ($this->controlData->getMode() == MODE_PREVIEW || $viewOnly) {
+        if ($this->controlData->getMode() == Mode::PREVIEW || $viewOnly) {
             if (!$markerArray['###FIELD_zone###']) {
                 return $cObj->substituteSubpart($templateCode, '###SUB_INCLUDED_FIELD_zone###', '');
             }

@@ -44,6 +44,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Div2007\Utility\FrontendUtility;
 
+use JambageCom\Agency\Constants\Mode;
+
 class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
     public function init ($extKey, $theTable)
@@ -382,7 +384,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
         $fields = $conf[$cmdKey . '.']['fields'];
 
-        if ($mode == MODE_PREVIEW) {
+        if ($mode == Mode::PREVIEW) {
             if ($activity == '') {
                 $activity = 'preview';
             }
@@ -440,7 +442,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                     }
 
                     if (
-                        $mode == MODE_PREVIEW ||
+                        $mode == Mode::PREVIEW ||
                         $viewOnly
                     ) {
                         // Configure preview based on input type
@@ -1139,7 +1141,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                     $colContent = '';
                 }
 
-                if ($mode == MODE_PREVIEW || $viewOnly) {
+                if ($mode == Mode::PREVIEW || $viewOnly) {
                     $markerArray['###TCA_INPUT_VALUE_' . $colName . '###'] = $colContent;
                 }
                 $markerArray['###TCA_INPUT_' . $colName . '###'] = $colContent;

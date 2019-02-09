@@ -46,6 +46,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use JambageCom\Div2007\Utility\SystemUtility;
 
+use JambageCom\Agency\Constants\Mode;
 use JambageCom\Agency\Controller\Email;
 use JambageCom\Agency\Security\SecuredData;
 use JambageCom\Agency\Utility\SessionUtility;
@@ -484,7 +485,7 @@ class ActionController {
         $fD = array();
         $extensionKey = $controlData->getExtensionKey();
         $prefixId = $controlData->getPrefixId();
-        $controlData->setMode(MODE_NORMAL);
+        $controlData->setMode(Mode::NORMAL);
         $controlData->initCaptcha(
             $cmdKey
         );
@@ -789,13 +790,13 @@ class ActionController {
             $controlData->getFailure() != '' ||
             !$parseResult
         ) {
+                // No preview flag if an evaluation failure has occurred
             $controlData->setFeUserData(0, 'preview');
         }
 
-            // No preview flag if a evaluation failure has occured
         if ($controlData->getFeUserData('preview')) {
             $markerObj->setPreviewLabel('_PREVIEW');
-            $controlData->setMode(MODE_PREVIEW);
+            $controlData->setMode(Mode::PREVIEW);
         }
 
             // If data is submitted, we take care of it here.

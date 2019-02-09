@@ -80,6 +80,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         $otherLabelsList
     )
     {
+
         $result = true;
         \JambageCom\Div2007\Utility\HtmlUtility::generateXhtmlFix();
 
