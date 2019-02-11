@@ -100,6 +100,7 @@ class Setfixed {
             \JambageCom\Agency\Request\Parameters::enableAutoLoginOnConfirmation($conf, $cmdKey);
         $systemObj = GeneralUtility::makeInstance(System::class);
         $errorContent = '';
+        $errorCode = '';
         $hasError = false;
         $sendExecutionEmail = false;
         $cryptedPassword = '';
@@ -194,6 +195,7 @@ class Setfixed {
                     $fD
                 );
                 $content = $editView->render(
+                    $errorCode,
                     $markerArray,
                     $conf,
                     $cObj,
@@ -224,6 +226,7 @@ class Setfixed {
                     !$controlData->getSubmit()
                 ) { // ask again if the user really wants to delete
                     $content = $deleteView->render(
+                        $errorCode,
                         $markerArray,
                         $conf,
                         $prefixId,
@@ -317,7 +320,6 @@ class Setfixed {
                         GeneralUtility::trimExplode(',', $dataObj->getFieldList(), 1),
                         GeneralUtility::trimExplode(',', implode($fieldArray, ','), 1)
                     ));
-                    $errorCode = '';
 
                         // Hook: confirmRegistrationClass_preProcess
                     foreach($hookObjectsArray as $hookObj) {
@@ -507,6 +509,7 @@ class Setfixed {
                         }
                         $content =
                             $editView->render(
+                                $errorCode,
                                 $markerArray,
                                 $conf,
                                 $cObj,
