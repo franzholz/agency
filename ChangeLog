@@ -1,3 +1,7 @@
+2019-02-11 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix: add missing parameter errorCode to the render methods of DeleteView and EditView.
+    * bugfix: use flexform_ds_pi.xml and not flexform_ds_pi.xlf
+
 2019-02-09 Franz Holzinger  <franz@ttproducts.de>
     * bugfix for PHP 7.2: replace the preview mode constants MODE_PREVIEW and MODE_NORMAL with namespace constants \JambageCom\Agency\Constants\Mode PREVIEW and NORMAL
     * bugfix to the responsive template file: the TermsAcknowledged parts have been missing for the CREATE, INVITE and EDIT subparts.
