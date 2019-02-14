@@ -143,6 +143,7 @@ class Parameters
         $feUserData = GeneralUtility::_GP($prefixId);
         $bSecureStartCmd =
             (
+                is_array($feUserData) &&
                 count($feUserData) == 1 &&
                 in_array($feUserData['cmd'], array('create', 'edit', 'password'))
             );
