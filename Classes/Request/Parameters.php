@@ -783,7 +783,6 @@ class Parameters
 
     public function getPid ($type = '')
     {
-
         if ($type) {
             if (isset($this->pid[$type])) {
                 $result = $this->pid[$type];

@@ -1,3 +1,6 @@
+2019-04-12 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: support for recursive page ids to have the front end users in underlying sysfolders.
+
 2019-02-11 Franz Holzinger  <franz@ttproducts.de>
     * bugfix: add missing parameter errorCode to the render methods of DeleteView and EditView.
     * bugfix: use flexform_ds_pi.xml and not flexform_ds_pi.xlf

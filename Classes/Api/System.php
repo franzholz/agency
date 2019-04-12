@@ -79,7 +79,12 @@ class System {
 
         // Check against configured pid (defaulting to current page)
         $GLOBALS['TSFE']->fe_user->checkPid = true;
-        $GLOBALS['TSFE']->fe_user->checkPid_value = ($cObj->data['pages'] ? $cObj->data['pages'] . ',' : '') . $controlData->getPid();
+        $pageIds = ($cObj->data['pages'] ? $cObj->data['pages'] . ',' : '') . $controlData->getPid();
+        $GLOBALS['TSFE']->fe_user->checkPid_value =
+            \JambageCom\Div2007\Utility\SystemUtility::getRecursivePids(
+                $pageIds,
+                $cObj->data['recursive']
+            );
 
             // Get authentication info array
         $authInfo = $GLOBALS['TSFE']->fe_user->getAuthInfoArray();
@@ -123,6 +128,7 @@ class System {
                 ) {
                     $serviceChain .= ',' . $authServiceObj->getServiceKey();
                     $ok = $authServiceObj->compareUident($user, $loginData);
+
                     if ($ok) {
                         break;
                     }

@@ -36,13 +36,13 @@
  *
  *
  */
- 
+
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class tx_agency {
     public $cObj;
 
-    public function main($content, $conf) {
+    public function main ($content, $conf) {
         $pibaseObj = GeneralUtility::makeInstance(JambageCom\Agency\Controller\RegisterPluginController::class);
         $pibaseObj->cObj = $this->cObj;
         $content = $pibaseObj->main($content, $conf);
