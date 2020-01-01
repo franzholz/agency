@@ -20,11 +20,11 @@
     }
   ],
   "license": [
-    "GPL-2.0+"
+    "GPL-2.0-or-later"
   ],
   "require": {
     "typo3/cms-core": ">=6.2.0,<8.99.99",
-    "jambagecom/div2007": ">=1.10.17"
+    "jambagecom/div2007": ">=1.10.20"
   },
   "autoload": {
     "psr-4": {
@@ -32,8 +32,8 @@
     }
   },
   "replace": {
-    "agency": "self.version",
-    "jambagecom/agency": "self.version"
+    "jambagecom/agency": "self.version",
+    "typo3-ter/agency": "self.version"
   },
   "extra": {
     "typo3/cms": {

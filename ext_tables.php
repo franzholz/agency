@@ -4,8 +4,7 @@ defined('TYPO3_MODE') || die('Access denied.');
 $emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
 
 if (
-    TYPO3_MODE == 'BE' &&
-    !$loadTcaAdditions
+    TYPO3_MODE == 'BE'
 ) {
     call_user_func($emClass . '::addStaticFile', AGENCY_EXT, 'Configuration/TypoScript/PluginSetup/', 'Agency Registration');
 }

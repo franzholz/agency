@@ -44,8 +44,10 @@ namespace JambageCom\Agency\Controller;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
 use JambageCom\Div2007\Utility\SystemUtility;
 
+use JambageCom\Agency\Api\System;
 use JambageCom\Agency\Constants\Mode;
 use JambageCom\Agency\Controller\Email;
 use JambageCom\Agency\Security\SecuredData;
@@ -1030,8 +1032,9 @@ class ActionController {
                     $autoLoginKey = '';
                     $loginSuccess = false;
                     $password = SecuredData::readPassword($extensionKey);
+                    $systemObj = GeneralUtility::makeInstance(System::class);
                     $loginSuccess =
-                        \JambageCom\Agency\Api\System::login(
+                        $systemObj->login(
                             $cObj,
                             $languageObj,
                             $controlData,

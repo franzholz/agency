@@ -1,3 +1,6 @@
+2019-07-27 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix: Non-static method JambageCom\Agency\Api\System::login
+
 2019-04-12 Franz Holzinger  <franz@ttproducts.de>
     * new feature: support for recursive page ids to have the front end users in underlying sysfolders.
 
