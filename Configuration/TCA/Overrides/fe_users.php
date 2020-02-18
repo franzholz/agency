@@ -1,5 +1,8 @@
 <?php
 defined('TYPO3_MODE') || die('Access denied.');
+if (!defined ('AGENCY_EXT')) {
+    define('AGENCY_EXT', 'agency');
+}
 
 $table = 'fe_users';
 
@@ -190,6 +193,8 @@ if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['forceGender']) {
     );
 }
 
+$directMailTemporaryColumns = array();
+
 if ( // Direct Mail tables exist but Direct Mail shall not be used
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['enableDirectMail'] &&
     !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('direct_mail')
@@ -229,22 +234,22 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
             )
         )
     );
-
-    $temporaryColumns = array_merge($temporaryColumns, $directMailTemporaryColumns);
 }
 
 $columns = array_keys($temporaryColumns);
 
 foreach ($columns as $column) {
-    if (isset($GLOBALS['TCA'][$table]['column'][$column])) {
+    if (isset($GLOBALS['TCA'][$table]['columns'][$column])) {
         unset($temporaryColumns[$column]);
     }
 }
 
+$columns = array_keys($temporaryColumns);
+
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, $temporaryColumns);
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
     $table,
-    'comments, by_invitation, has_privileges, terms_acknowledged, privacy_policy_acknowledged, privacy_policy_date, lost_password',
+    implode(',', $columns),
     '',
     'after:www,'
 );
@@ -253,9 +258,11 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['enableDirectMail'] &&
     !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('direct_mail')
 ) {
+    $columns = array_keys($directMailTemporaryColumns);
+
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
         $table,
-        '--div--;Direct mail, module_sys_dmail_newsletter;;;;1-1-1, module_sys_dmail_category, module_sys_dmail_html'
+        '--div--;Direct mail, module_sys_dmail_newsletter;;;;1-1-1, ' . implode(',', $columns)
     );
 }
 
@@ -274,32 +281,66 @@ $GLOBALS['TCA'][$table]['columns']['image']['config']['max_size'] = $GLOBALS['TY
 $GLOBALS['TCA'][$table]['columns']['image']['config']['allowed'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['imageTypes'];
 
 
-$GLOBALS['TCA'][$table]['interface']['showRecordFieldList'] =
-    preg_replace(
-        '/(^|,)\s*country\s*(,|$)/', '$1zone,static_info_country,country,language$2',
-        $GLOBALS['TCA'][$table]['interface']['showRecordFieldList']
-    );
-$GLOBALS['TCA'][$table]['interface']['showRecordFieldList'] =
-    preg_replace(
-        '/(^|,)\s*title\s*(,|$)/',
-        '$1gender,status,date_of_birth,house_no,title$2',
-        $GLOBALS['TCA'][$table]['interface']['showRecordFieldList']
-    );
+$temporaryColumns['country'] = '';
+$columns = array('zone', 'static_info_country', 'country', 'language');
+$validColumns = array();
+foreach ($columns as $column) {
+    if (isset($temporaryColumns[$column])) {
+        $validColumns[] = $column;
+    }
+}
+
+if (isset($GLOBALS['TCA'][$table]['interface']['showRecordFieldList'])) {
+    $GLOBALS['TCA'][$table]['interface']['showRecordFieldList'] =
+        preg_replace(
+            '/(^|,)\s*country\s*(,|$)/', '$1' .  implode(',', $validColumns) . '$2',
+            $GLOBALS['TCA'][$table]['interface']['showRecordFieldList']
+        );
+}
 
 $GLOBALS['TCA'][$table]['types']['0']['showitem'] =
     preg_replace(
-        '/(^|,)\s*country\s*(,|$)/', '$1 zone, static_info_country, country, language$2',
+        '/(^|,)\s*country\s*(,|$)/', '$1 ' .  implode(',', $validColumns) . '$2',
         $GLOBALS['TCA'][$table]['types']['0']['showitem']
     );
+        
+$temporaryColumns['title'] = '';
+    
+$columns = array('gender', 'status', 'date_of_birth', 'house_no', 'title');
+$validColumns = array();
+foreach ($columns as $column) {
+    if (isset($temporaryColumns[$column])) {
+        $validColumns[] = $column;
+    }
+}
+
+if (isset($GLOBALS['TCA'][$table]['interface']['showRecordFieldList'])) {
+    $GLOBALS['TCA'][$table]['interface']['showRecordFieldList'] =
+        preg_replace(
+            '/(^|,)\s*title\s*(,|$)/',
+            '$1' .  implode(',', $validColumns) . '$2',
+            $GLOBALS['TCA'][$table]['interface']['showRecordFieldList']
+        );
+}
+
+$temporaryColumns['address'] = '';
+$columns = array('cnum', 'status', 'date_of_birth', 'house_no', 'address');
+$validColumns = array();
+foreach ($columns as $column) {
+    if (isset($temporaryColumns[$column])) {
+        $validColumns[] = $column;
+    }
+}
+
 $GLOBALS['TCA'][$table]['types']['0']['showitem'] =
     preg_replace(
         '/(^|,)\s*address\s*(,|$)/',
-        '$1 cnum, status, date_of_birth, house_no, address$2',
+        '$1 ' .  implode(',', $validColumns) . '$2',
         $GLOBALS['TCA'][$table]['types']['0']['showitem']
     );
 
-$GLOBALS['TCA'][$table]['palettes']['2']['showitem'] = 'gender,--linebreak--,' . $GLOBALS['TCA'][$table]['palettes']['2']['showitem'];
 
+$GLOBALS['TCA'][$table]['palettes']['2']['showitem'] = 'gender,--linebreak--,' . $GLOBALS['TCA'][$table]['palettes']['2']['showitem'];
 $GLOBALS['TCA'][$table]['ctrl']['thumbnail'] = 'image';
 
 

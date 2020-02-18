@@ -1,5 +1,8 @@
 <?php
 defined('TYPO3_MODE') || die('Access denied.');
+if (!defined ('AGENCY_EXT')) {
+    define('AGENCY_EXT', 'agency');
+}
 
 $result = false;
 
@@ -15,7 +18,6 @@ if (!$tableExists) {
     return $result;
 }
 
-
 $result = array(
     'ctrl' => array(
         'title' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_groups_language_overlay',
@@ -26,7 +28,9 @@ $result = array(
         'enablecolumns' => array(
             'disabled' => 'hidden'
         ),
-        'iconfile' => 'gfx/i/fe_groups.gif',
+        'typeicon_classes' => [
+            'default' => 'status-user-group-frontend'
+        ],
     ),
     'interface' => array (
         'showRecordFieldList' => 'hidden,fe_group,title'
@@ -72,6 +76,18 @@ $result = array(
     )
 );
 
+if (
+    version_compare(TYPO3_version, '8.0.0', '<')
+) {
+    unset($result['ctrl']['typeicon_classes'];
+    if (
+        version_compare(TYPO3_version, '7.0.0', '>')
+    ) {
+        $result['ctrl']['iconfile'] = 'EXT:t3skin/icons/gfx/i/fe_groups.gif',
+    } else {
+        $result['ctrl']['iconfile'] = 'gfx/i/fe_groups.gif',
+    }
+}
 
 return $result;
 

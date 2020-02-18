@@ -1,7 +1,8 @@
 <?php
 defined('TYPO3_MODE') || die('Access denied.');
-
-$emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
+if (!defined ('AGENCY_EXT')) {
+    define('AGENCY_EXT', 'agency');
+}
 
 $result = FALSE;
 $tableExists = FALSE;
@@ -10,7 +11,7 @@ $table = 'sys_dmail_category';
 
 if ( // Direct Mail tables exist but Direct Mail shall not be used
     !$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['enableDirectMail'] ||
-    call_user_func($emClass . '::isLoaded', 'direct_mail')
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('direct_mail')
 ) {
     return $result;
 }
@@ -18,7 +19,7 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
 
 if ( // Direct Mail tables exist but Direct Mail shall not be used
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['enableDirectMail'] &&
-    !call_user_func($emClass . '::isLoaded', 'direct_mail')
+    !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('direct_mail')
 ) {
     $queryResult =
         $GLOBALS['TYPO3_DB']->admin_query(
@@ -28,9 +29,7 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
     $tableExists = $GLOBALS['TYPO3_DB']->sql_num_rows($queryResult) > 0;
 }
 
-
 if ($tableExists) {
-
     // ******************************************************************
     // Categories
     // ******************************************************************

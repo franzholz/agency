@@ -1,6 +1,8 @@
 <?php
 defined('TYPO3_MODE') || die('Access denied.');
-
+if (!defined ('AGENCY_EXT')) {
+    define('AGENCY_EXT', 'agency');
+}
 
 $result = array(
     'ctrl' => array (
