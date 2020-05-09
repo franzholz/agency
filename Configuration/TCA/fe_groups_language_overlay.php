@@ -46,14 +46,36 @@ $result = array(
                 'type' => 'check'
             )
         ),
-        'fe_group' => array(
-            'exclude' => 0,
+        'fe_group' => [
+            'exclude' => true,
+            'l10n_mode' => 'exclude',
             'label'  => DIV2007_LANGUAGE_LGL . 'fe_group',
-            'config' => array(
+            'config' => [
                 'type' => 'select',
-                'foreign_table' => 'fe_groups'
-            )
-        ),
+                'renderType' => 'selectMultipleSideBySide',
+                'size' => 7,
+                'maxitems' => 20,
+                'items' => [
+                    [
+                        DIV2007_LANGUAGE_LGL . 'hide_at_login',
+                        -1
+                    ],
+                    [
+                        DIV2007_LANGUAGE_LGL . 'any_login',
+                        -2
+                    ],
+                    [
+                        DIV2007_LANGUAGE_LGL . 'usergroups',
+                        '--div--'
+                    ]
+                ],
+                'exclusiveKeys' => '-1,-2',
+                'foreign_table' => 'fe_groups',
+                'foreign_table_where' => 'ORDER BY fe_groups.title',
+                'enableMultiSelectFilterTextfield' => true,
+                'default' => 0,
+            ]
+        ],
         'sys_language_uid' => array(
             'exclude' => 0,
             'label' => DIV2007_LANGUAGE_LGL . 'language',

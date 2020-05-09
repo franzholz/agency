@@ -99,7 +99,7 @@ class Parameters
             $this->initPasswordField($conf);
         }
         $this->confObj = $confObj;
-        $this->setDefaultPid($conf);
+        $this->setDefaultPid($conf['pid']);
 
         $this->site_url = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 
@@ -453,11 +453,11 @@ class Parameters
         return $this->usePasswordAgain;
     }
 
-    public function setDefaultPid ($conf)
+    public function setDefaultPid ($pid)
     {
 
-        $bPidIsInt = MathUtility::canBeInterpretedAsInteger($conf['pid']);
-        $this->defaultPid = ($bPidIsInt ? intval($conf['pid']) : $GLOBALS['TSFE']->id);
+        $bPidIsInt = MathUtility::canBeInterpretedAsInteger($pid);
+        $this->defaultPid = ($bPidIsInt ? intval($pid) : $GLOBALS['TSFE']->id);
     }
 
     public function getDefaultPid ()
@@ -783,6 +783,7 @@ class Parameters
 
     public function getPid ($type = '')
     {
+        $result = false;
         if ($type) {
             if (isset($this->pid[$type])) {
                 $result = $this->pid[$type];

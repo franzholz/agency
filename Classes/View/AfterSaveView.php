@@ -42,6 +42,7 @@ namespace JambageCom\Agency\View;
 *
 */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 class AfterSaveView {
