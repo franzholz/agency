@@ -76,6 +76,7 @@ class Template {
         $failure = ''
     )
     {
+        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
         $conf = $confObj->getConf();
         $requiredArray = $controlData->getRequiredArray();
         $includedFields = $confObj->getIncludedFields($cmdKey);
@@ -122,7 +123,7 @@ class Template {
             !$controlData->getCaptcha()
         ) {
             $templateCode =
-                $cObj->substituteSubpart(
+                $templateService->substituteSubpart(
                     $templateCode,
                     '###SUB_INCLUDED_FIELD_' . \JambageCom\Agency\Constants\Field::CAPTCHA . '###',
                     ''
@@ -141,7 +142,7 @@ class Template {
                 $extConf['disableCombinedNameField'] == '1'
             ) {
                 $templateCode =
-                    $cObj->substituteSubpart(
+                    $templateService->substituteSubpart(
                         $templateCode,
                         '###SUB_INCLUDED_FIELD_name###',
                         ''
@@ -164,20 +165,20 @@ class Template {
             ) {
                 if (!GeneralUtility::inList($failure, $theField)) {
                     $templateCode =
-                        $cObj->substituteSubpart(
+                        $templateService->substituteSubpart(
                             $templateCode,
                             '###SUB_REQUIRED_FIELD_' . $theField . '###',
                             ''
                         );
                     $templateCode =
-                        $cObj->substituteSubpart(
+                        $templateService->substituteSubpart(
                             $templateCode,
                             '###SUB_ERROR_FIELD_' . $theField . '###',
                             ''
                         );
                 } else if (!$errorFieldArray[$theField]) {
                     $templateCode =
-                        $cObj->substituteSubpart(
+                        $templateService->substituteSubpart(
                             $templateCode,
                             '###SUB_ERROR_FIELD_' . $theField . '###',
                             ''
@@ -191,14 +192,14 @@ class Template {
                     !GeneralUtility::inList($failure, $theField)
                 ) {
                     $templateCode =
-                        $cObj->substituteSubpart(
+                        $templateService->substituteSubpart(
                             $templateCode,
                             '###SUB_INCLUDED_FIELD_' . $theField . '###',
                             ''
                         );
                 } else {
                     $templateCode =
-                        $cObj->substituteSubpart(
+                        $templateService->substituteSubpart(
                             $templateCode,
                             '###SUB_REQUIRED_FIELD_' . $theField . '###',
                             ''
@@ -206,7 +207,7 @@ class Template {
 
                     if (!GeneralUtility::inList($failure, $theField)) {
                         $templateCode =
-                            $cObj->substituteSubpart(
+                            $templateService->substituteSubpart(
                                 $templateCode,
                                 '###SUB_ERROR_FIELD_' . $theField . '###',
                                 ''
@@ -227,7 +228,7 @@ class Template {
                                     for($i = 0; $i < 10; $i++) {
                                         if(!in_array($i, $positions)) {
                                             $templateCode =
-                                                $cObj->substituteSubpart(
+                                                $templateService->substituteSubpart(
                                                     $templateCode,
                                                     '###SUB_INCLUDED_FIELD_' . $theField . '_' . $i . '###',
                                                     ''
@@ -329,6 +330,7 @@ class Template {
     )
     {
         $useAdditionalFields = false;
+        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
             !is_array($GLOBALS['TCA'][$theTable]['columns'])
@@ -337,7 +339,7 @@ class Template {
         }
 
         $cmdKey = $controlData->getCmdKey();
-        $templateCode = $cObj->getSubpart($templateCode, $subpartMarker);
+        $templateCode = $templateService->getSubpart($templateCode, $subpartMarker);
 
         if ($templateCode != '') {
                 // Remove non-included fields
@@ -418,7 +420,7 @@ class Template {
             $deleteUnusedMarkers = true;
 
             $result =
-                $cObj->substituteMarkerArray(
+                $templateService->substituteMarkerArray(
                     $templateCode,
                     $markerArray,
                     '',
@@ -429,8 +431,6 @@ class Template {
             $errorCode['0'] = 'internal_no_subtemplate';
             $errorCode['1'] = $subpartMarker;
             $result = false;
-//             $errorText = $languageObj->getLabel('internal_no_subtemplate');
-//             $result = sprintf($errorText, $subpartMarker);
         }
 
         return $result;
@@ -457,7 +457,8 @@ class Template {
         $bCheckEmpty = true
     )
     {
-        $templateCode = $cObj->getSubpart($templateCode, $subpartMarker);
+        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
+        $templateCode = $templateService->getSubpart($templateCode, $subpartMarker);
 
         if ($templateCode != '') {
             $markerObj->addOtherLabelMarkers(
@@ -469,7 +470,7 @@ class Template {
 
             $deleteUnusedMarkers = true;
             $result =
-                $cObj->substituteMarkerArray(
+                $templateService->substituteMarkerArray(
                     $templateCode,
                     $markerArray,
                     '',

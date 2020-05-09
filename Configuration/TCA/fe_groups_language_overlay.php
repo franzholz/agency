@@ -5,15 +5,18 @@ if (!defined ('AGENCY_EXT')) {
 }
 
 $result = false;
-
+$tableExists = true;
 $table = 'fe_groups_language_overlay';
 
-$queryResult =
-    $GLOBALS['TYPO3_DB']->admin_query(
-        'SELECT * FROM INFORMATION_SCHEMA.TABLES ' .
-        'WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=\'' . $table . '\''
-    );
-$tableExists = $GLOBALS['TYPO3_DB']->sql_num_rows($queryResult) > 0;
+if (is_object($GLOBALS['TYPO3_DB'])) {
+    $queryResult =
+        $GLOBALS['TYPO3_DB']->admin_query(
+            'SELECT * FROM INFORMATION_SCHEMA.TABLES ' .
+            'WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=\'' . $table . '\''
+        );
+    $tableExists = $GLOBALS['TYPO3_DB']->sql_num_rows($queryResult) > 0;
+}
+
 if (!$tableExists) {
     return $result;
 }
@@ -79,14 +82,8 @@ $result = array(
 if (
     version_compare(TYPO3_version, '8.0.0', '<')
 ) {
-    unset($result['ctrl']['typeicon_classes'];
-    if (
-        version_compare(TYPO3_version, '7.0.0', '>')
-    ) {
-        $result['ctrl']['iconfile'] = 'EXT:t3skin/icons/gfx/i/fe_groups.gif',
-    } else {
-        $result['ctrl']['iconfile'] = 'gfx/i/fe_groups.gif',
-    }
+    unset($result['ctrl']['typeicon_classes']);
+    $result['ctrl']['iconfile'] = 'EXT:t3skin/icons/gfx/i/fe_groups.gif';
 }
 
 return $result;

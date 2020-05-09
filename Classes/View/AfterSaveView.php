@@ -87,10 +87,11 @@ class AfterSaveView {
     {
         $useAdditionalFields = true;
         $errorContent = '';
+        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
 
             // Display confirmation message
         $subpartMarker = '###TEMPLATE_' . $key . '###';
-        $templateCode = $cObj->getSubpart($templateCode, $subpartMarker);
+        $templateCode = $templateService->getSubpart($templateCode, $subpartMarker);
 
         if ($templateCode) {
                 // Remove non-included fields
@@ -193,7 +194,7 @@ class AfterSaveView {
 
             $uppercase = false;
             $deleteUnusedMarkers = true;
-            $content = $cObj->substituteMarkerArray(
+            $content = $templateService->substituteMarkerArray(
                 $templateCode,
                 $markerArray,
                 '',

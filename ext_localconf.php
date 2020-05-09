@@ -49,7 +49,7 @@ call_user_func(function () {
     // Configure captcha hooks
     if (!is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['captcha'])) {
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['captcha'] = array();
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['captcha'][] = \JambageCom\Div2007\Captcha\\aptcha::class;
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['captcha'][] = \JambageCom\Div2007\Captcha\Captcha::class;
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['captcha'][] = \JambageCom\Div2007\Captcha\Freecap::class;
     }
 

@@ -94,6 +94,7 @@ class CreateView {
             return false;
         }
 
+        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
         $templateCode = $dataObj->getTemplateCode();
         $currentArray = array_merge($origArray, $dataArray);
 
@@ -157,11 +158,11 @@ class CreateView {
                     );
             }
 
-            $templateCode = $cObj->getSubpart($templateCode, $subpartKey);
+            $templateCode = $templateService->getSubpart($templateCode, $subpartKey);
             $failure = GeneralUtility::_GP('noWarnings') ? false : $controlData->getFailure();
 
             if ($failure == false) {
-                $templateCode = $cObj->substituteSubpart(
+                $templateCode = $templateService->substituteSubpart(
                     $templateCode,
                     '###SUB_REQUIRED_FIELDS_WARNING###',
                     ''
@@ -289,7 +290,7 @@ class CreateView {
             $deleteUnusedMarkers = true;
 
             $content =
-                $cObj->substituteMarkerArray(
+                $templateService->substituteMarkerArray(
                     $templateCode,
                     $markerArray,
                     '',

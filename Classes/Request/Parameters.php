@@ -990,11 +990,13 @@ class Parameters
 
         $shortUrlLife = intval($conf['shortUrlLife']) ? strval(intval($conf['shortUrlLife'])) : '30';
         $max_life = time() - (86400 * intval($shortUrlLife));
-        $res =
-            $GLOBALS['TYPO3_DB']->exec_DELETEquery(
-                'cache_md5params',
-                'tstamp<' . $max_life . ' AND type=99'
-            );
+        if (is_object($GLOBALS['TYPO3_DB'])) {
+            $res =
+                $GLOBALS['TYPO3_DB']->exec_DELETEquery(
+                    'cache_md5params',
+                    'tstamp<' . $max_life . ' AND type=99'
+                );
+        }
     }   // cleanShortUrlCache
 }
 

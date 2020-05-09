@@ -11,12 +11,12 @@ $EM_CONF[$_EXTKEY] = array(
     'author' => 'Franz Holzinger',
     'author_email' => 'franz@ttproducts.de',
     'author_company' => 'jambage.com',
-    'version' => '0.8.6',
+    'version' => '0.9.0',
     'constraints' => array(
         'depends' => array(
             'php' => '5.5.0-7.99.99',
-            'typo3' => '6.2.0-8.99.99',
-            'div2007' => '1.10.20-0.0.0',
+            'typo3' => '7.6.0-9.5.99',
+            'div2007' => '1.10.28-0.0.0',
         ),
         'conflicts' => array(
             'sr_feuser_register' => '',
@@ -26,6 +26,7 @@ $EM_CONF[$_EXTKEY] = array(
             'rsaauth' => '',
             'saltedpasswords' => '',
             'static_info_tables' => '',
+            'typo3db_legacy' => '1.0.0-1.1.99',
         ),
     ),
 );

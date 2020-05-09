@@ -19,7 +19,8 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
 
 if ( // Direct Mail tables exist but Direct Mail shall not be used
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['enableDirectMail'] &&
-    !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('direct_mail')
+    !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('direct_mail') &&
+    is_object($GLOBALS['TYPO3_DB'])
 ) {
     $queryResult =
         $GLOBALS['TYPO3_DB']->admin_query(

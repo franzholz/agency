@@ -336,6 +336,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         $userSubpartsFound = 0;
         $adminSubpartsFound = 0;
         $checkEmailSent = false;
+        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
 
         if (!isset($DBrows[0]) || !is_array($DBrows[0])) {
             $DBrows = $origRows;
@@ -402,7 +403,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             $subpartMarker = '###' . $this->emailMarkPrefix . $key . '###';
             $content['user']['all'] =
                 trim(
-                    $cObj->getSubpart(
+                    $templateService->getSubpart(
                         $templateCode,
                         $subpartMarker
                     )
@@ -428,7 +429,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
 
             if ($useHtml) {
                 $subpartMarker = '###' . $this->emailMarkPrefix . $key . $this->emailMarkHTMLSuffix . '###';
-                $content['userhtml']['all'] = trim($cObj->getSubpart($templateCode,  $subpartMarker));
+                $content['userhtml']['all'] = trim($templateService->getSubpart($templateCode,  $subpartMarker));
 
                 if ($content['userhtml']['all'] == '') {
                     $missingSubpartArray[] = $subpartMarker;
@@ -458,7 +459,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             $subpartMarker = '###' . $this->emailMarkPrefix . $key . $this->emailMarkAdminSuffix . '###';
             $content['admin']['all'] =
                 trim(
-                    $cObj->getSubpart(
+                    $templateService->getSubpart(
                         $templateCode,
                         $subpartMarker
                     )
@@ -486,7 +487,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 $subpartMarker =  '###' . $this->emailMarkPrefix . $key . $this->emailMarkAdminSuffix . $this->emailMarkHTMLSuffix . '###';
                 $content['adminhtml']['all'] =
                     trim(
-                        $cObj->getSubpart(
+                        $templateService->getSubpart(
                             $templateCode,
                             $subpartMarker
                         )
@@ -517,19 +518,19 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         $contentIndexArray['html'] = array();
 
         if ($content['user']['all']) {
-            $content['user']['rec'] = $cObj->getSubpart($content['user']['all'],  '###SUB_RECORD###');
+            $content['user']['rec'] = $templateService->getSubpart($content['user']['all'],  '###SUB_RECORD###');
             $contentIndexArray['text'][] = 'user';
         }
         if ($content['userhtml']['all']) {
-            $content['userhtml']['rec'] = $cObj->getSubpart($content['userhtml']['all'],  '###SUB_RECORD###');
+            $content['userhtml']['rec'] = $templateService->getSubpart($content['userhtml']['all'],  '###SUB_RECORD###');
             $contentIndexArray['html'][] = 'userhtml';
         }
         if ($content['admin']['all']) {
-            $content['admin']['rec'] = $cObj->getSubpart($content['admin']['all'],  '###SUB_RECORD###');
+            $content['admin']['rec'] = $templateService->getSubpart($content['admin']['all'],  '###SUB_RECORD###');
             $contentIndexArray['text'][] = 'admin';
         }
         if ($content['adminhtml']['all']) {
-            $content['adminhtml']['rec'] = $cObj->getSubpart($content['adminhtml']['all'],  '###SUB_RECORD###');
+            $content['adminhtml']['rec'] = $templateService->getSubpart($content['adminhtml']['all'],  '###SUB_RECORD###');
             $contentIndexArray['html'][] = 'adminhtml';
         }
         $bChangesOnly = ($conf['email.']['EDIT_SAVED'] == '2' && $cmd == 'edit');
@@ -568,22 +569,22 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             $bChangesOnly
         );
         $content['user']['all'] =
-            $cObj->substituteMarkerArray(
+            $templateService->substituteMarkerArray(
                 $content['user']['all'],
                 $markerArray
             );
         $content['userhtml']['all'] =
-            $cObj->substituteMarkerArray(
+            $templateService->substituteMarkerArray(
                 $content['userhtml']['all'],
                 $markerArray
             );
         $content['admin']['all'] =
-            $cObj->substituteMarkerArray(
+            $templateService->substituteMarkerArray(
                 $content['admin']['all'],
                 $markerArray
             );
         $content['adminhtml']['all'] =
-            $cObj->substituteMarkerArray(
+            $templateService->substituteMarkerArray(
                 $content['adminhtml']['all'],
                 $markerArray
             );
@@ -731,7 +732,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                         );
 
                     $content[$index]['accum'] .=
-                        $cObj->substituteMarkerArray(
+                        $templateService->substituteMarkerArray(
                             $content[$index]['rec'],
                             $markerArray
                         );
@@ -745,7 +746,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             // Substitute the markers and eliminate HTML markup from plain text versions
         if ($content['user']['all']) {
             $content['user']['final'] =
-                $cObj->substituteSubpart(
+                $templateService->substituteSubpart(
                     $content['user']['all'],
                     '###SUB_RECORD###',
                     $content['user']['accum']
@@ -772,7 +773,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
 
         if ($content['userhtml']['all']) {
             $content['userhtml']['final'] =
-                $cObj->substituteSubpart(
+                $templateService->substituteSubpart(
                     $content['userhtml']['all'],
                     '###SUB_RECORD###',
                     FrontendUtility::wrapInBaseClass(
@@ -789,7 +790,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
 
         if ($content['admin']['all']) {
             $content['admin']['final'] =
-                $cObj->substituteSubpart(
+                $templateService->substituteSubpart(
                     $content['admin']['all'], '###SUB_RECORD###', $content['admin']['accum']
                 );
             $content['admin']['final'] =
@@ -807,7 +808,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
 
         if ($content['adminhtml']['all']) {
             $content['adminhtml']['final'] =
-                $cObj->substituteSubpart(
+                $templateService->substituteSubpart(
                     $content['adminhtml']['all'],
                     '###SUB_RECORD###',
                     FrontendUtility::wrapInBaseClass(
@@ -968,7 +969,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
     {
         $markerArray['###CSS_STYLES###'] = '	/*<![CDATA[*/
 ';
-        $fileResource = $cObj->fileResource($conf['email.']['HTMLMailCSS']);
+        $fileResource = FrontendUtility::fileResource($conf['email.']['HTMLMailCSS']);
         $markerArray['###CSS_STYLES###'] .= $fileResource;
         $markerArray['###CSS_STYLES###'] .= '
 /*]]>*/';

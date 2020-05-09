@@ -74,7 +74,7 @@ class RegisterPluginController extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
             );
 
             // Check installation security settings
-        $content =
+        $content .=
             ConfigurationCheck::checkSecuritySettings(
                 $this->extKey
             );

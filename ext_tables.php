@@ -11,6 +11,6 @@ call_user_func(function () {
         !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('direct_mail')
     ) {
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages( 'sys_dmail_category');
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToInsertRecords)'sys_dmail_category');
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToInsertRecords('sys_dmail_category');
     }
 });

@@ -46,10 +46,11 @@ use TYPO3\CMS\Rsaauth\Storage\StorageFactory;
 use TYPO3\CMS\Saltedpasswords\Salt\SaltFactory;
 use TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility;
 
+use JambageCom\Div2007\Utility\FrontendUtility;
+
 use JambageCom\Agency\Utility\LocalizationUtility;
 
 class ConfigurationCheck {
-
 
     /* Checks requirements for this plugin
     *
@@ -63,6 +64,11 @@ class ConfigurationCheck {
         $content = '';
         $requiredExtensions = array();
         $loginSecurityLevel = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
+        if (
+            version_compare(TYPO3_version, '9.0.0', '>=')
+        ) {
+            $requiredExtensions[] = 'typo3db_legacy';
+        }
 
             // Check if all required extensions are available
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['constraints']['depends'])) {
@@ -198,7 +204,7 @@ class ConfigurationCheck {
     )
     {
         $content = '';
-        $templateCode = $cObj->fileResource($conf['templateFile']);
+        $templateCode = FrontendUtility::fileResource($conf['templateFile']);
         $messages =
             \JambageCom\Agency\View\Marker::checkDeprecatedMarkers(
                 $templateCode,

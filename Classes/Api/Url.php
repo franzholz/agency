@@ -94,7 +94,7 @@ class Url implements \TYPO3\CMS\Core\SingletonInterface {
         }
 
         foreach($vars as $key => $val) {
-            $piVars[$this->prefixId . '%5B' . $key . '%5D'] = $val;
+            $piVars[$this->prefixId . '[' . $key . ']'] = $val;
         }
 
         if ($tag) {

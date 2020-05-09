@@ -85,6 +85,7 @@ class EditView {
     )
     {
         $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
+        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
         if (isset($dataArray) && is_array($dataArray)) {
             $currentArray = array_merge($origArray, $dataArray);
         } else {
@@ -96,7 +97,7 @@ class EditView {
         } else {
             $subpart = '###TEMPLATE_EDIT' . $markerObj->getPreviewLabel() . '###';
         }
-        $templateCode = $cObj->getSubpart($dataObj->getTemplateCode(), $subpart);
+        $templateCode = $templateService->getSubpart($dataObj->getTemplateCode(), $subpart);
 
         if (
             !$conf['linkToPID'] ||
@@ -105,7 +106,7 @@ class EditView {
             !$conf[$cmd . '.']['preview'])
         ) {
             $templateCode =
-                $cObj->substituteSubpart(
+                $templateService->substituteSubpart(
                     $templateCode,
                     '###SUB_LINKTOPID_ADD_BUTTON###',
                     ''
@@ -115,7 +116,7 @@ class EditView {
 
         if (!$failure) {
             $templateCode =
-                $cObj->substituteSubpart(
+                $templateService->substituteSubpart(
                     $templateCode,
                     '###SUB_REQUIRED_FIELDS_WARNING###',
                     ''
@@ -272,7 +273,7 @@ class EditView {
         $deleteUnusedMarkers = true;
 
         $content =
-            $cObj->substituteMarkerArray(
+            $templateService->substituteMarkerArray(
                 $templateCode,
                 $markerArray,
                 '',

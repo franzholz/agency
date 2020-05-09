@@ -69,7 +69,7 @@ class ActionController {
         \JambageCom\Agency\Api\Localization $languageObj,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         \JambageCom\Agency\Request\Parameters $controlData,
-        $urlObj
+        \JambageCom\Agency\Api\Url $urlObj
     )
     {
         $this->langObj = $languageObj;
@@ -484,6 +484,7 @@ class ActionController {
     {
         $dataArray = $dataObj->getDataArray();
         $conf = $confObj->getConf();
+        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
         $fD = array();
         $extensionKey = $controlData->getExtensionKey();
         $prefixId = $controlData->getPrefixId();
@@ -1061,7 +1062,7 @@ class ActionController {
         } else if ($dataObj->getError()) {
 
                 // If there was an error, we return the template-subpart with the error message
-            $templateCode = $cObj->getSubpart($templateCode, $dataObj->getError());
+            $templateCode = $templateService->getSubpart($templateCode, $dataObj->getError());
 
             $markerObj->addLabelMarkers(
                 $markerArray,
@@ -1081,7 +1082,7 @@ class ActionController {
                 false
             );
             $markerObj->setArray($markerArray);
-            $content = $cObj->substituteMarkerArray($templateCode, $markerArray);
+            $content = $templateService->substituteMarkerArray($templateCode, $markerArray);
         } else if ($content == '') {
                 // Finally, there has been no attempt to save.
                 // That is either preview or just displaying an empty or not correctly filled form

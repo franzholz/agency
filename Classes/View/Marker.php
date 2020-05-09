@@ -80,7 +80,7 @@ class Marker {
         $extKey,
         $prefixId,
         $theTable,
-        $urlObj,
+        \JambageCom\Agency\Api\Url $urlObj,
         $staticInfoObj,
         $uid,
         $token
@@ -352,6 +352,7 @@ class Marker {
     )
     {
         $bUseMissingFields = false;
+        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
         if ($activity == 'email') {
             $bUseMissingFields = true;
         }
@@ -482,7 +483,7 @@ class Marker {
                         $attributesArray[] = $key . '="' . $value . '"';
                     }
                     $attributes = implode(' ', $attributesArray);
-                    $attributes = $cObj->substituteMarkerArray($attributes, $formUrlMarkerArray);
+                    $attributes = $templateService->substituteMarkerArray($attributes, $formUrlMarkerArray);
                 }
                 $markerArray['###ATTRIBUTE_BUTTON_' . $buttonKey . '###'] = $attributes;
             }
@@ -643,7 +644,7 @@ class Marker {
     * @return void
     */
     public function generateURLMarkers (
-        $urlObj,
+        \JambageCom\Agency\Api\Url $urlObj,
         $backUrl,
         $uid,
         $token,
@@ -1242,15 +1243,15 @@ var submitFile = function(id){
         $viewOnly = false
     )
     {
-        $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
+        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
 
         if ($this->controlData->getMode() == Mode::PREVIEW || $viewOnly) {
             if (!$markerArray['###FIELD_zone###']) {
-                return $cObj->substituteSubpart($templateCode, '###SUB_INCLUDED_FIELD_zone###', '');
+                return $templateService->substituteSubpart($templateCode, '###SUB_INCLUDED_FIELD_zone###', '');
             }
         } else {
             if (!$markerArray['###SELECTOR_ZONE###']) {
-                return $cObj->substituteSubpart($templateCode, '###SUB_INCLUDED_FIELD_zone###', '');
+                return $templateService->substituteSubpart($templateCode, '###SUB_INCLUDED_FIELD_zone###', '');
             }
         }
         return $templateCode;
