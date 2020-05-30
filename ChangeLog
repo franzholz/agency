@@ -1,5 +1,6 @@
 2020-05-30 Franz Holzinger  <franz@ttproducts.de>
     * replace the documentation in the outdated sxw format manual.sxw by the manual.odt in the Open Document Format.
+    * bugfix: the template must use field specific label classes and not labelStatus outside of the status field
 
 2020-05-09 Franz Holzinger  <franz@ttproducts.de>
     * support for TYPO3 9.x
