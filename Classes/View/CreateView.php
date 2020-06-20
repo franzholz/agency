@@ -255,12 +255,12 @@ class CreateView {
                 '',
                 false
             );
+
             $templateCode =
                 $markerObj->removeStaticInfoSubparts(
                     $templateCode,
                     $markerArray
                 );
-
             $markerObj->addHiddenFieldsMarkers(
                 $markerArray,
                 $theTable,

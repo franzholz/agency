@@ -812,7 +812,6 @@ class Setfixed {
             );
             // TODO: Your registration has been confirmed .
         } 
-
         return $content;
     }	// processSetFixed
 

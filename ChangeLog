@@ -1,3 +1,8 @@
+2020-06-20 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: the locallange setup shall be merged to the already present items of the TCA for radio or select. E.g. you can override the gender and the status by a locallang setup. You the constants mergeLabels to activate this feature.
+    * bugfix: add missing button to enter in the login box after the click on the registration confirmation link.
+    * bugfix: missing agency setup. The method addStaticFile must be called also for the frontend.
+
 2020-05-30 Franz Holzinger  <franz@ttproducts.de>
     * replace the documentation in the outdated sxw format manual.sxw by the manual.odt in the Open Document Format.
     * bugfix: the template must use field specific label classes and not labelStatus outside of the status field

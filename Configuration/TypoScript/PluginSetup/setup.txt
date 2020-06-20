@@ -37,6 +37,7 @@ plugin.tx_agency {
 	useLocalCountry = {$plugin.tx_agency.useLocalCountry}
 	dateFormat = {$plugin.tx_agency.dateFormat}
 	dateSplit = {$plugin.tx_agency.dateSplit}
+	mergeLabels = {$plugin.tx_agency.mergeLabels}
 
 	onChangeCountryAttribute = {$plugin.tx_agency.onChangeCountryAttribute}
 

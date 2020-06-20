@@ -277,4 +277,7 @@ plugin.tx_agency {
 
     # cat=plugin.tx_agency//; type=string; label= Split char for Date Format (-)
   dateSplit = -
+
+    # cat=plugin.tx_agency//; type=boolean; label= Merge labels: If set then the labels for select boxes found in setup are merged to the labels already in the TCA, which might come from TCEFORM.fe_users altLabels or addItems. If 0, then only the labels from plugin.tx_agency._LOCAL_LANG.de.fe_users.x.I.x are taken.
+  mergeLabels = 1
 }

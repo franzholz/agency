@@ -290,8 +290,8 @@ class Parameters
                 $fdArray = GeneralUtility::_GP('fD');
             }
         }
-        $this->setFd($fdArray);
 
+        $this->setFd($fdArray);
             // Get the token
         $token = '';
 

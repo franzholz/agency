@@ -308,6 +308,30 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
         return $whereClause;
     }
+    
+    protected function mergeItems(
+        $itemArray,
+        $labelItemArray
+    ) {
+        $result = [];
+        if (!is_array($itemArray)) {
+            $result = $labelItemArray;
+        } else if (!is_array($labelItemArray)) {
+            $result = $itemArray;
+        } else {
+            $keyArray = [];
+            foreach ($itemArray as $valuesArray) {
+                $keyArray[$valuesArray['1']] = $valuesArray['0'];
+            }
+            foreach ($labelItemArray as $labelValuesArray) {
+                $keyArray[$labelValuesArray['1']] = $labelValuesArray['0'];
+            }
+            foreach ($keyArray as $key => $value) {
+                $result[] = ['0' => $value, '1' => $key];
+            }
+        }
+        return $result;
+    }
 
     /**
     * Adds form element markers from the Table Configuration Array to a marker array
@@ -393,7 +417,6 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
         }
 
         foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
-
             if (
                 GeneralUtility::inList($fields, $colName) ||
                 $useMissingFields
@@ -536,13 +559,18 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                 ) {
                                     $valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', $mrow[$colName]);
                                     $textSchema = $theTable . '.' . $colName . '.I.';
-                                    $itemArray = $languageObj->getItemsLL($textSchema, true);
+                                    $labelItemArray = $languageObj->getItemsLL($textSchema, true);
 
-                                    if (!count($itemArray)) {
+                                    if ($conf['mergeLabels'] || !count($labelItemArray)) {
                                         if ($colConfig['itemsProcFunc']) {
                                             $itemArray = GeneralUtility::callUserFunction($colConfig['itemsProcFunc'], $colConfig, $this, '');
                                         }
                                         $itemArray = $colConfig['items'];
+                                        if ($conf['mergeLabels']) {
+                                            $itemArray = $this->mergeItems($itemArray, $labelItemArray);
+                                        }
+                                    } else {
+                                        $itemArray = $labelItemArray;
                                     }
 
                                     if (is_array($itemArray)) {
@@ -570,14 +598,21 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                 ) {
                                     $valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', $mrow[$colName]);
                                     $textSchema = $theTable . '.' . $colName . '.I.';
-                                    $itemArray = $languageObj->getItemsLL($textSchema, true);
+                                    $textSchema = $theTable . '.' . $colName . '.I.';
+                                    $labelItemArray = $languageObj->getItemsLL($textSchema, true);
 
-                                    if (!count($itemArray)) {
+                                    if ($conf['mergeLabels'] || !count($labelItemArray)) {
                                         if ($colConfig['itemsProcFunc']) {
                                             $itemArray = GeneralUtility::callUserFunction($colConfig['itemsProcFunc'], $colConfig, $this, '');
                                         }
                                         $itemArray = $colConfig['items'];
+                                        if ($conf['mergeLabels']) {
+                                            $itemArray = $this->mergeItems($itemArray, $labelItemArray);
+                                        }
+                                    } else {
+                                        $itemArray = $labelItemArray;
                                     }
+
                                     if (!$bStdWrap) {
                                         $stdWrap['wrap'] = '|<br' . $xhtmlFix . '>';
                                     }
@@ -666,23 +701,19 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                             if (!$valuesArray[0] && $colConfig['default']) {
                                 $valuesArray[] = $colConfig['default'];
                             }
-                            $textSchema = $theTable . '.' . $colName . '.I.';
-                            $itemArray = $languageObj->getItemsLL($textSchema, true);
-                            $bUseTCA = false;
-                            if (!count($itemArray)) {
-                                if (
-                                    in_array($type, array('radio', 'select')) &&
-                                    $colConfig['itemsProcFunc']
-                                ) {
-                                    $itemArray = GeneralUtility::callUserFunction(
-                                        $colConfig['itemsProcFunc'],
-                                        $colConfig,
-                                        $this,
-                                        ''
-                                    );
+                            $textSchema = $theTable . '.' . $colName . '.I.';                            
+                            $labelItemArray = $languageObj->getItemsLL($textSchema, true);
+
+                            if ($conf['mergeLabels'] || !count($labelItemArray)) {
+                                if ($colConfig['itemsProcFunc']) {
+                                    $itemArray = GeneralUtility::callUserFunction($colConfig['itemsProcFunc'], $colConfig, $this, '');
                                 }
                                 $itemArray = $colConfig['items'];
-                                $bUseTCA = true;
+                                if ($conf['mergeLabels']) {
+                                    $itemArray = $this->mergeItems($itemArray, $labelItemArray);
+                                }
+                            } else {
+                                $itemArray = $labelItemArray;
                             }
                         }
 
@@ -724,7 +755,11 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                 $label = $languageObj->getLabel('tooltip_' . $colName);
                                 $label = htmlspecialchars($label, ENT_QUOTES, $charset);
 
-                                if (isset($itemArray) && is_array($itemArray)) {
+                                if (
+                                    isset($itemArray) &&
+                                    is_array($itemArray) &&
+                                    !empty($itemArray)
+                                ) {
                                     $uidText =
                                         FrontendUtility::getClassName(
                                             $colName,
