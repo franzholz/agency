@@ -26,6 +26,13 @@
     "typo3/cms-core": ">=7.6.0,<9.5.99",
     "jambagecom/div2007": ">=1.10.28,<2"
   },
+  "suggest": {
+    "typo3/cms-felogin": ">=0.0.1",
+    "typo3/cms-rsaauth":  ">=7.6.0",
+    "friendsoftypo3/rdct": ">=2.0.0",
+    "friendsoftypo3/typo3db-legacy": ">=1.0.0,<1.99",
+    "sjbr/static-info-tables": ">=6.7.0"
+  },
   "autoload": {
     "psr-4": {
       "JambageCom\\Agency\\": "Classes"

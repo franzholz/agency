@@ -1,3 +1,7 @@
+
+2020-10-29 Franz Holzinger  <franz@ttproducts.de>
+    * workaround for bug in TYPO3 9.5.22: ExtensionManagementUtility::isLoaded for saltedpasswords must not be true.
+
 2020-06-20 Franz Holzinger  <franz@ttproducts.de>
     * new feature: the locallange setup shall be merged to the already present items of the TCA for radio or select. E.g. you can override the gender and the status by a locallang setup. You the constants mergeLabels to activate this feature.
     * bugfix: add missing button to enter in the login box after the click on the registration confirmation link.

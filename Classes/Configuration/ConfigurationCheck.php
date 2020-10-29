@@ -42,9 +42,6 @@ namespace JambageCom\Agency\Configuration;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Rsaauth\Backend\BackendFactory;
-use TYPO3\CMS\Rsaauth\Storage\StorageFactory;
-use TYPO3\CMS\Saltedpasswords\Salt\SaltFactory;
-use TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility;
 
 use JambageCom\Div2007\Utility\FrontendUtility;
 
@@ -155,14 +152,14 @@ class ConfigurationCheck {
                 $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
             } else {
                     // Check if salted passwords are enabled in front end
-                if (ExtensionManagementUtility::isLoaded('saltedpasswords')) {
-                    if (!SaltedPasswordsUtility::isUsageEnabled('FE')) {
+                if (class_exists(\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::class)) {
+                    if (!\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::isUsageEnabled('FE')) {
                         $message = LocalizationUtility::translate('internal_salted_passwords_disabled');
                         GeneralUtility::sysLog($message, $extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
                         $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
                     } else {
                             // Check if we can get a salting instance
-                        $objSalt = SaltFactory::getSaltingInstance(NULL);
+                        $objSalt = \TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::getSaltingInstance(NULL);
                         if (!is_object($objSalt)) {
                                 // Could not get a salting instance from saltedpasswords
                             $message = LocalizationUtility::translate('internal_salted_passwords_no_instance');
@@ -175,7 +172,7 @@ class ConfigurationCheck {
                     // Check if we can get a backend from rsaauth
                 if (ExtensionManagementUtility::isLoaded('rsaauth')) {
                     $backend = BackendFactory::getBackend();
-                    $storage = StorageFactory::getStorage();
+                    $storage = \TYPO3\CMS\Rsaauth\Storage\StorageFactory::getStorage();
                     if (
                         !is_object($backend) ||
                         !$backend->isAvailable() ||

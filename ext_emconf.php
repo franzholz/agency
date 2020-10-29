@@ -23,6 +23,7 @@ $EM_CONF[$_EXTKEY] = array(
         ),
         'suggests' => array(
             'felogin' => '',
+            'rdct' => '',
             'rsaauth' => '',
             'saltedpasswords' => '',
             'static_info_tables' => '',
