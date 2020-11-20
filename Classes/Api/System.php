@@ -101,8 +101,10 @@ class System {
                 $ok = false;
                 $serviceKeyArray = array();
 
-                if (class_exists('\\TYPO3\\CMS\\Saltedpasswords\\SaltedPasswordService')) {
-                    $serviceKeyArray[] = 'TYPO3\\CMS\\Saltedpasswords\\SaltedPasswordService';
+                if (class_exists(\TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordService::class)) {
+                    $serviceKeyArray[] = \TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordService::class;
+                } else if (class_exists(\TYPO3\CMS\Saltedpasswords\SaltedPasswordService::class)) {
+                    $serviceKeyArray[] = \TYPO3\CMS\Saltedpasswords\SaltedPasswordService::class;
                 }
 
                 if (

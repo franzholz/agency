@@ -1630,7 +1630,7 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
 				<source>Salted passwords must be enabled for the front end</source>
 			</trans-unit>
 			<trans-unit id="internal_salted_passwords_no_instance" xml:space="preserve">
-				<source>Could not get a salting instance from saltedpasswords</source>
+				<source>Could not get an instance for hashed password processing</source>
 			</trans-unit>
 			<trans-unit id="internal_required_extension_missing" xml:space="preserve">
 				<source>The extension &quot;%1$s&quot; is required and must be installed</source>
