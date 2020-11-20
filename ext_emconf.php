@@ -1,6 +1,6 @@
 <?php
 
-$EM_CONF[$_EXTKEY] = array(
+$EM_CONF[$_EXTKEY] = [
     'title' => 'Agency Registration',
     'description' => 'An improved variant of Kasper Skårhøj?s Front End User Admin extension.',
     'category' => 'plugin',
@@ -12,23 +12,23 @@ $EM_CONF[$_EXTKEY] = array(
     'author_email' => 'franz@ttproducts.de',
     'author_company' => 'jambage.com',
     'version' => '0.9.2',
-    'constraints' => array(
-        'depends' => array(
+    'constraints' => [
+        'depends' => [
             'php' => '5.5.0-7.99.99',
             'typo3' => '7.6.0-9.5.99',
             'div2007' => '1.10.28-0.0.0',
-        ),
-        'conflicts' => array(
+        ],
+        'conflicts' => [
             'sr_feuser_register' => '',
-        ),
-        'suggests' => array(
+        ],
+        'suggests' => [
             'felogin' => '',
             'rdct' => '',
             'rsaauth' => '',
             'saltedpasswords' => '',
             'static_info_tables' => '',
             'typo3db_legacy' => '1.0.0-1.1.99',
-        ),
-    ),
-);
+        ],
+    ],
+];
 
