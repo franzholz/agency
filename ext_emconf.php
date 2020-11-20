@@ -2,7 +2,7 @@
 
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Agency Registration',
-    'description' => 'An improved variant of Kasper Skårhøj?s Front End User Admin extension.',
+    'description' => 'An improved variant of Kasper SkÃ¥rhÃ¸jâ€™s Front End User Admin extension.',
     'category' => 'plugin',
     'state' => 'stable',
     'uploadfolder' => 1,
