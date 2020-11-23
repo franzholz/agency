@@ -43,7 +43,8 @@ $result = array(
             'exclude' => 0,
             'label'  => DIV2007_LANGUAGE_LGL . 'hidden',
             'config' => array (
-                'type' => 'check'
+                'type' => 'check',
+                'default' => 0
             )
         ),
         'fe_group' => [
@@ -82,7 +83,8 @@ $result = array(
             'config' => array(
                 'type' => 'select',
                 'foreign_table' => 'sys_language',
-                'foreign_table_where' => 'ORDER BY sys_language.title'
+                'foreign_table_where' => 'ORDER BY sys_language.title',
+                'default' => 0
             )
         ),
         'title' => array(
@@ -93,6 +95,7 @@ $result = array(
                 'size' => '50',
                 'max' => '70',
                 'eval' => 'trim,required',
+                'default' => '',
             )
         ),
     ),

@@ -62,7 +62,8 @@ if ($tableExists) {
                     'items' => array(
                         array(DIV2007_LANGUAGE_LGL . 'allLanguages', -1),
                         array(DIV2007_LANGUAGE_LGL . 'default_value', 0)
-                    )
+                    ),
+                    'default' => 0
                 )
             ),
             'l18n_parent' => array(
@@ -75,6 +76,7 @@ if ($tableExists) {
                     ),
                     'foreign_table' => 'sys_dmail_category',
                     'foreign_table_where' => 'AND sys_dmail_category.pid=###CURRENT_PID### AND sys_dmail_category.sys_language_uid IN (-1,0)',
+                    'default' => 0
                 )
             ),
             'l18n_diffsource' => array(
@@ -94,6 +96,7 @@ if ($tableExists) {
                 'config' => array (
                     'type' => 'input',
                     'size' => '30',
+                    'default' => ''
                 )
             ),
             'old_cat_number' => array (
@@ -104,6 +107,7 @@ if ($tableExists) {
                     'size' => '2',
                     'eval' => 'trim',
                     'max' => '2',
+                    'default' => ''
                 )
             ),
         ),
@@ -123,7 +127,4 @@ if ($tableExists) {
     }
 }
 
-
 return $result;
-
-

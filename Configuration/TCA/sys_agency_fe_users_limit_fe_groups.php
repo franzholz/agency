@@ -28,7 +28,8 @@ $result = array(
             'exclude' => 0,
             'label'  => DIV2007_LANGUAGE_LGL . 'hidden',
             'config' => array (
-                'type' => 'check'
+                'type' => 'check',
+                'default' => 0
             )
         ),
         'tstamp' => array (
@@ -37,9 +38,9 @@ $result = array(
             'config' => array (
                 'type' => 'input',
                 'size' => '8',
-                'max' => '20',
                 'eval' => 'date',
-                'default' => '0'
+                'renderType' => 'inputDateTime',
+                'default' => 0
             )
         ),
         'crdate' => array (
@@ -48,33 +49,31 @@ $result = array(
             'config' => array (
                 'type' => 'input',
                 'size' => '8',
-                'max' => '20',
-                'eval' => 'date',
-                'default' => '0'
+                'renderType' => 'inputDateTime',
+                'default' => 0
             )
         ),
         'starttime' => array (
             'exclude' => 1,
-            'label' => 'LLL:EXT:lang/locallang_general.php:LGL.starttime',
+            'label' => DIV2007_LANGUAGE_LGL . 'starttime',
             'config' => array (
                 'type' => 'input',
                 'size' => '8',
                 'max' => '20',
                 'eval' => 'date',
-                'checkbox' => '0',
-                'default' => '0'
+                'renderType' => 'inputDateTime',
+                'default' => 0
             )
         ),
         'endtime' => array (
             'exclude' => 1,
-            'label' => 'LLL:EXT:lang/locallang_general.php:LGL.endtime',
+            'label' => DIV2007_LANGUAGE_LGL . 'endtime',
             'config' => array (
                 'type' => 'input',
                 'size' => '8',
-                'max' => '20',
                 'eval' => 'date',
-                'checkbox' => '0',
-                'default' => '0',
+                'renderType' => 'inputDateTime',
+                'default' => 0,
                 'range' => array (
                     'upper' => mktime(0, 0, 0, 12, 31, $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['endtimeYear']),
                     'lower' => mktime(0, 0, 0, date('n') - 1, date('d'), date('Y'))
@@ -104,10 +103,9 @@ $result = array(
         ),
     ),
     'types' => array(
-        '0' => array( 'showitem' => 'hidden, codes, status, starttime, endtime')
+        '0' => array('showitem' => 'hidden, codes, status, starttime, endtime')
     )
 );
-
 
 return $result;
 

@@ -76,6 +76,7 @@ $temporaryColumns = array(
                 array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.gender.I.0', '0'),
                 array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.gender.I.1', '1')
             ),
+            'default' => 99
         )
     ),
     'status' => array(
@@ -92,6 +93,7 @@ $temporaryColumns = array(
             ),
             'size' => 1,
             'maxitems' => 1,
+            'default' => 0
         )
     ),
     'comments' => array(
@@ -136,7 +138,8 @@ $temporaryColumns = array(
         'config' => array(
             'type' => 'text',
             'rows' => '1',
-            'cols' => '32'
+            'cols' => '32',
+            'default' => null
         )
     ),
     'tx_agency_password' => array (
@@ -153,7 +156,8 @@ $temporaryColumns = array(
             'type' => 'input',
             'eval' => 'trim',
             'size' => '20',
-            'max' => '20'
+            'max' => '20',
+            'default' => ''
         )
     ),
     'lost_password' => array(
@@ -206,8 +210,9 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
         'module_sys_dmail_newsletter' => array(
             'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.module_sys_dmail_newsletter',
             'exclude' => '1',
-            'config'=>array(
-                'type'=>'check'
+            'config' => array(
+                    'type' => 'check',
+                    'default' => '0'
                 )
             ),
         'module_sys_dmail_category' => array(
@@ -226,13 +231,15 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
                 'renderMode' => 'check',
                 'minitems' => 0,
                 'maxitems' => 1000,
+                'default' => '0'
             )
         ),
         'module_sys_dmail_html' => array(
             'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.module_sys_dmail_html',
             'exclude' => '1',
             'config' => array(
-                'type'=>'check'
+                'type'=>'check',
+                'default' => '0'
             )
         )
     );
