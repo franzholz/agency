@@ -24,7 +24,7 @@
   ],
   "require": {
     "typo3/cms-core": "^8.7 || ^9.5",
-    "jambagecom/div2007": "^1.11",
+    "jambagecom/div2007": "^1.11"
   },
   "suggest": {
     "typo3/cms-felogin": "^8.7 || ^9.5",
