@@ -23,15 +23,15 @@
     "GPL-2.0-or-later"
   ],
   "require": {
-    "typo3/cms-core": ">=7.6.0,<9.5.99",
-    "jambagecom/div2007": ">=1.10.28,<2"
+    "typo3/cms-core": "^8.7 || ^9.5",
+    "jambagecom/div2007": "^1.11",
   },
   "suggest": {
-    "typo3/cms-felogin": ">=0.0.1",
-    "typo3/cms-rsaauth":  ">=7.6.0",
-    "friendsoftypo3/rdct": ">=2.0.0",
-    "friendsoftypo3/typo3db-legacy": ">=1.0.0,<1.99",
-    "sjbr/static-info-tables": ">=6.7.0"
+    "typo3/cms-felogin": "^8.7 || ^9.5",
+    "typo3/cms-rsaauth": "^8.7 || ^9.5",
+    "friendsoftypo3/rdct": "^2.0",
+    "friendsoftypo3/typo3db-legacy": "^1.1",
+    "sjbr/static-info-tables": "^6.7,^6.8,^6.9"
   },
   "autoload": {
     "psr-4": {
