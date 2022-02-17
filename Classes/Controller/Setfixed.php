@@ -318,7 +318,7 @@ class Setfixed {
                     }
                     $newFieldList = implode(',', array_intersect(
                         GeneralUtility::trimExplode(',', $dataObj->getFieldList(), 1),
-                        GeneralUtility::trimExplode(',', implode($fieldArray, ','), 1)
+                        GeneralUtility::trimExplode(',', implode(',', $fieldArray), 1)
                     ));
 
                         // Hook: confirmRegistrationClass_preProcess

@@ -508,7 +508,7 @@ class ActionController {
             (
                 $theTable == 'fe_users' &&
                 (
-                    !$GLOBALS['TSFE']->loginUser ||
+                    !\JambageCom\Div2007\Utility\CompatibilityUtility::isLoggedIn() ||
                     ($uid > 0 && $GLOBALS['TSFE']->fe_user->user['uid'] != $uid)
                 ) &&
                 !in_array($cmd, $this->noLoginCommands)

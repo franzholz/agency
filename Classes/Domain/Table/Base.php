@@ -91,7 +91,7 @@ class Base {
 
     public function getObj ($className)
     {
-        $fieldObj = GeneralUtility::getUserObj($className);	// fetch and store it as persistent object
+        $fieldObj = GeneralUtility::makeInstance($className);	// fetch and store it as persistent object
         if ($fieldObj->needsInit()) {
             $fieldObj->init($this->cObj);
         }

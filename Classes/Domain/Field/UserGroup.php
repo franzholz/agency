@@ -273,7 +273,8 @@ class UserGroup extends Base {
                     isset($lineConfig['uid']) &&
                     isset($lineConfig['file'])
                 ) {
-                    $dataFilename = $GLOBALS['TSFE']->tmpl->getFileName($lineConfig['file']);
+                    $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
+                    $dataFilename = $sanitizer->sanitize($lineConfig['file']);
                     $absFilename = GeneralUtility::getFileAbsFileName($dataFilename);
                     $handle = fopen($absFilename, 'rt');
                     if ($handle === false) {

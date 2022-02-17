@@ -102,7 +102,7 @@ class DeleteView {
             }
 
             if (
-                ($theTable == 'fe_users' && $GLOBALS['TSFE']->loginUser) ||
+                ($theTable == 'fe_users' && \JambageCom\Div2007\Utility\CompatibilityUtility::isLoggedIn()) ||
                 $aCAuth
             ) {
                 // Must be logged in OR be authenticated by the aC code in order to delete

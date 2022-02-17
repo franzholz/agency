@@ -139,7 +139,7 @@ class CreateView {
                 $subpartKey = '###TEMPLATE_' . $key . $markerObj->getPreviewLabel() . '###';
             } else {
                 $bNeedUpdateJS = false;
-                if ($GLOBALS['TSFE']->loginUser) {
+                if (\JambageCom\Div2007\Utility\CompatibilityUtility::isLoggedIn()) {
                     $subpartKey = '###TEMPLATE_CREATE_LOGIN###';
                 } else {
                     $subpartKey = '###TEMPLATE_AUTH###';

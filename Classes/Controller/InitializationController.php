@@ -141,9 +141,9 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
             $conf['_LOCAL_LANG.']
         );
         $languageObj->loadLocalLang(
-            'locallang.xlf',
+            'EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf',
             false
-        );
+        );        
         $tmpText = $languageObj->getLabel('unsupported');
         if ($tmpText == '') {
             $result = false;

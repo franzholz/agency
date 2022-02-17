@@ -84,6 +84,7 @@ $temporaryColumns = array(
         'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.status',
         'config' => array(
             'type' => 'select',
+            'renderType' => 'selectSingle',
             'items' => array(
                 array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.status.I.0', '0'),
                 array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.status.I.1', '1'),

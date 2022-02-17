@@ -46,15 +46,10 @@ class LocalizationUtility {
 
     static public function init ()
     {
-        $filename = '';
-        if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['languageResource']) {
-            $filename = DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf';
-        } else {
-            $filename = '/pi/locallang.xlf';
-        }
+        $filename = DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf';
         self::setFilename($filename);
     }
-    
+
     static public function setFilename ($filename)
     {
         self::$filename = $filename;

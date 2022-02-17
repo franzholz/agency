@@ -23,15 +23,16 @@
     "GPL-2.0-or-later"
   ],
   "require": {
-    "typo3/cms-core": "^8.7 || ^9.5",
-    "jambagecom/div2007": "^1.11"
+    "php": "^7.4",
+    "typo3/cms-core": "^10.4",
+    "jambagecom/div2007": "^1.14.2",
+    "friendsoftypo3/rdct": "^2.0",
+    "friendsoftypo3/typo3db-legacy": "^1.1"
   },
   "suggest": {
-    "typo3/cms-felogin": "^8.7 || ^9.5",
-    "typo3/cms-rsaauth": "^8.7 || ^9.5",
-    "friendsoftypo3/rdct": "^2.0",
-    "friendsoftypo3/typo3db-legacy": "^1.1",
-    "sjbr/static-info-tables": "^6.7,^6.8,^6.9"
+    "typo3/cms-felogin": "^10.4",
+    "friendsoftypo3/rsaauth": "^10.4",
+    "sjbr/static-info-tables": "^6.7 || ^6.8 || ^6.9"
   },
   "autoload": {
     "psr-4": {
@@ -39,7 +40,6 @@
     }
   },
   "replace": {
-    "jambagecom/agency": "self.version",
     "typo3-ter/agency": "self.version"
   },
   "extra": {

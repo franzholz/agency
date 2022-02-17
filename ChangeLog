@@ -1,3 +1,9 @@
+2022-02-17 Franz Holzinger  <franz@ttproducts.de>
+    Deprecation: #81852 - Deprecate usage of rsaauth
+
+2021-12-16 Franz Holzinger  <franz@ttproducts.de>
+    * support for TYPO3 10.x
+
 2020-11-20 Franz Holzinger  <franz@ttproducts.de>
     * bugfix for TYPO3 9.5: Use the classes \TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordService instead of \TYPO3\CMS\Saltedpasswords\SaltedPasswordService and  \TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactor instead of \TYPO3\CMS\Saltedpasswords\Salt\SaltFactory
 

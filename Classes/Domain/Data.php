@@ -46,6 +46,8 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 use JambageCom\Div2007\Database\CoreQuery;
 use JambageCom\Div2007\Captcha\CaptchaInterface;
 use JambageCom\Div2007\Utility\SystemUtility;
+use JambageCom\Div2007\Utility\TableUtility;
+
 
 class Data implements \TYPO3\CMS\Core\SingletonInterface {
     public $lang;
@@ -614,7 +616,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                 $where = $theField . '=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($dataArray[$theField], $theTable);
 
                                 if ($theCmd == 'uniqueLocal' || $theCmd == 'uniqueGlobal') {
-                                    $where .= $GLOBALS['TSFE']->sys_page->deleteClause($theTable);
+                                    $where .= TableUtility::deleteClause($theTable);
                                 }
                                 if ($theCmd == 'uniqueLocal' || $theCmd == 'uniqueDeletedLocal') {
                                     $where .= ' AND pid IN (' . $recordTestPid . ')';
@@ -1098,7 +1100,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                         if ($markContentArray['###EVAL_ERROR_saved###']) {
                             $markContentArray['###EVAL_ERROR_saved###'] .= '<br' . $xhtmlFix . '>';
                         }
-                        $errorMsg = implode($failureMsg[$theField], '<br' . $xhtmlFix . '>');
+                        $errorMsg = implode('<br' . $xhtmlFix . '>', $failureMsg[$theField]);
                         $markContentArray['###EVAL_ERROR_saved###'] .= $errorMsg;
                     } else {
                         $errorMsg = '';
@@ -1131,7 +1133,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         }
 
         $failureArray = array_unique($failureArray);
-        $failure = implode($failureArray, ',');
+        $failure = implode(',', $failureArray);
         $this->controlData->setFailure($failure);
         return $this->evalErrors;
     } // evalValues
@@ -1475,7 +1477,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                     // Fetch the original record to check permissions
                 if (
                     $conf['edit'] &&
-                    ($GLOBALS['TSFE']->loginUser || $aCAuth)
+                    (\JambageCom\Div2007\Utility\CompatibilityUtility::isLoggedIn() || $aCAuth)
                 ) {
                         // Must be logged in in order to edit  (OR be validated by email)
                     $newFieldList =
@@ -1675,7 +1677,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                         // Enable users to own themselves.
                     if (
                         $theTable == 'fe_users' &&
-                        $conf['fe_userOwnSelf']
+                        !empty($conf['fe_userOwnSelf'])
                     ) {
                         $extraList = '';
                         $tmpDataArray = array();
@@ -1795,7 +1797,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
                 $aCAuth = $authObj->aCAuth($origArray, $conf['setfixed.']['DELETE.']['_FIELDLIST']);
 
-                if ($GLOBALS['TSFE']->loginUser || $aCAuth) {
+                if (\JambageCom\Div2007\Utility\CompatibilityUtility::isLoggedIn() || $aCAuth) {
                     // Must be logged in OR be authenticated by the aC code in order to delete
                     // If the recUid selects a record.... (no check here)
 

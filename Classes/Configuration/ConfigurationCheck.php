@@ -5,7 +5,7 @@ namespace JambageCom\Agency\Configuration;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2018 Stanislas Rolland (typo3(arobas)sjbr.ca)
+*  (c) 2022 Stanislas Rolland (typo3(arobas)sjbr.ca)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -39,21 +39,26 @@ namespace JambageCom\Agency\Configuration;
 *
 */
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Rsaauth\Backend\BackendFactory;
 
 use JambageCom\Div2007\Utility\FrontendUtility;
 
 use JambageCom\Agency\Utility\LocalizationUtility;
 
-class ConfigurationCheck {
+
+class ConfigurationCheck implements LoggerAwareInterface {
+    use LoggerAwareTrait;
+
 
     /* Checks requirements for this plugin
     *
     * @return string Error message, if error found, empty string otherwise
     */
-    static public function checkRequirements (
+    public function checkRequirements (
         $conf,
         $extensionKey
     )
@@ -76,25 +81,11 @@ class ConfigurationCheck {
                 );
         }
 
-        if (
-            $loginSecurityLevel == 'rsa' ||
-            (
-                \JambageCom\Agency\Request\Parameters::enableAutoLoginOnConfirmation($conf, '')
-            )
-        ) {
-            $requiredExtensions[] = 'rsaauth';
-        }
-
         foreach ($requiredExtensions as $extension) {
             if (!ExtensionManagementUtility::isLoaded($extension)) {
                 $message = sprintf(LocalizationUtility::translate('internal_required_extension_missing'), $extension);
 
-                GeneralUtility::sysLog(
-                    $message,
-                    $extensionKey,
-                    GeneralUtility::SYSLOG_SEVERITY_ERROR
-                );
-
+                $this->logger->critical($message);
                 $content .=
                     sprintf(
                         LocalizationUtility::translate('internal_check_requirements_frontend'),
@@ -116,7 +107,7 @@ class ConfigurationCheck {
             foreach ($conflictingExtensions as $extension) {
                 if (ExtensionManagementUtility::isLoaded($extension)) {
                     $message = sprintf(LocalizationUtility::translate('internal_conflicting_extension_installed'), $extension);
-                    GeneralUtility::sysLog($message, $extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
+                    $this->logger->critical($message);
                     $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
                 }
             }
@@ -131,7 +122,7 @@ class ConfigurationCheck {
     * @param string $extensionKey the extension key
     * @return string Error message, if error found, empty string otherwise
     */
-    static public function checkSecuritySettings ($extensionKey)
+    public function checkSecuritySettings ($extensionKey)
     {
         $content = '';
         if ($extensionKey == 'agency') {
@@ -148,7 +139,7 @@ class ConfigurationCheck {
                 )
             ) {
                 $message = LocalizationUtility::translate('internal_login_security_level');
-                GeneralUtility::sysLog($message, $extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
+                $this->logger->critical($message);
                 $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
             } else {
                     // Check if salted passwords are enabled in front end
@@ -161,7 +152,7 @@ class ConfigurationCheck {
                         !\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::isUsageEnabled('FE')
                     ) {
                         $message = LocalizationUtility::translate('internal_salted_passwords_disabled');
-                        GeneralUtility::sysLog($message, $extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
+                        $this->logger->critical($message);
                         $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
                     } else {
                         $objSalt = null;
@@ -175,7 +166,7 @@ class ConfigurationCheck {
                         if (!is_object($objSalt)) {
                                 // Could not get a salting instance from saltedpasswords
                             $message = LocalizationUtility::translate('internal_salted_passwords_no_instance');
-                            GeneralUtility::sysLog($message, $extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
+                            $this->logger->critical($message);
                             $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
                         }
                     }
@@ -183,7 +174,7 @@ class ConfigurationCheck {
 
                     // Check if we can get a backend from rsaauth
                 if (ExtensionManagementUtility::isLoaded('rsaauth')) {
-                    $backend = BackendFactory::getBackend();
+                    $backend = \TYPO3\CMS\Rsaauth\Backend\BackendFactory::getBackend();
                     $storage = \TYPO3\CMS\Rsaauth\Storage\StorageFactory::getStorage();
                     if (
                         !is_object($backend) ||
@@ -192,7 +183,7 @@ class ConfigurationCheck {
                     ) {
                             // Required RSA auth backend not available
                         $message = LocalizationUtility::translate('internal_rsaauth_backend_not_available');
-                        GeneralUtility::sysLog($message, $extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
+                        $this->logger->critical($message);
                         $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
                     }
                 }
@@ -206,7 +197,7 @@ class ConfigurationCheck {
     *
     * @return string Error message, if error found, empty string otherwise
     */
-    static public function checkDeprecatedMarkers (
+    public function checkDeprecatedMarkers (
         $cObj,
         array $conf,
         $extensionKey
@@ -222,7 +213,7 @@ class ConfigurationCheck {
             );
 
         foreach ($messages as $message) {
-            GeneralUtility::sysLog($message, $extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
+            $this->logger->warning($message);
             $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
         }
 

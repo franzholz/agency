@@ -26,11 +26,7 @@ class Localization extends \JambageCom\Div2007\Base\TranslationBase implements \
         $lookupFilename = 'locallang.xlf',
         $useDiv2007Language = true
     ) {
-        if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['languageResource']) {
-            $scriptRelPath = DIV2007_LANGUAGE_SUBPATH;
-        } else {
-            $scriptRelPath = 'pi/';
-        }
+        $scriptRelPath = DIV2007_LANGUAGE_SUBPATH;
         parent::init(
             $extensionKey,
             $confLocalLang,

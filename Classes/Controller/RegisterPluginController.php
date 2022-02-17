@@ -65,23 +65,24 @@ class RegisterPluginController extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
         $this->pi_setPiVarDefaults();
         $this->conf = $conf;
         LocalizationUtility::init();
+        $configurationCheck = GeneralUtility::makeInstance(ConfigurationCheck::class);
 
             // Check installation requirements
         $content =
-            ConfigurationCheck::checkRequirements(
+            $configurationCheck->checkRequirements(
                 $conf,
                 $this->extKey
             );
 
             // Check installation security settings
         $content .=
-            ConfigurationCheck::checkSecuritySettings(
+            $configurationCheck->checkSecuritySettings(
                 $this->extKey
             );
 
             // Check presence of deprecated markers
         $content .=
-            ConfigurationCheck::checkDeprecatedMarkers(
+            $configurationCheck->checkDeprecatedMarkers(
                 $this->cObj,
                 $conf,
                 $this->extKey

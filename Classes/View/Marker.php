@@ -714,7 +714,8 @@ class Marker {
         if ($this->conf['terms.']['url']) {
             $termsUrlParam = $this->conf['terms.']['url'];
         } else {
-            $termsUrlParam = ($this->conf['terms.']['file'] ? $GLOBALS['TSFE']->tmpl->getFileName($this->conf['terms.']['file']) : '');
+            $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
+            $termsUrlParam = $sanitizer->sanitize($this->conf['terms.']['file']);
         }
         $markerArray['###TERMS_URL###'] = $urlObj->get('', $termsUrlParam, array(), array(), false);
 
@@ -722,7 +723,8 @@ class Marker {
         if ($this->conf['privacy.']['url']) {
             $privacyUrlParam = $this->conf['privacy.']['url'];
         } else {
-            $privacyUrlParam = ($this->conf['privacy.']['file'] ? $GLOBALS['TSFE']->tmpl->getFileName($this->conf['privacy.']['file']) : '');
+            $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
+            $privacyUrlParam = $sanitizer->sanitize($this->conf['privacy.']['file']);
         }
         $markerArray['###PRIVACY_POLICY_URL###'] =
             $urlObj->get(
@@ -1009,9 +1011,12 @@ var submitFile = function(id){
                     ) .
                     HtmlUtility::getXhtmlFix() . '>';
 
+                $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
+                $fileUrl = $sanitizer->sanitize($this->conf['icon_delete']);
+
                 $partContent .=
                     '<input type="image" name="submit_delete" src="' .
-                    $GLOBALS['TSFE']->tmpl->getFileName($this->conf['icon_delete']) . '"' .
+                    $fileUrl . '"' .
                     ' onclick="return submitFile(\'' . $prefixId . '-file-' . $i . '\');"' . HtmlUtility::getXhtmlFix() . '>';
 
                 $partContent .=
@@ -1379,7 +1384,11 @@ var submitFile = function(id){
                 '###FIELD_password###',
                 '###FIELD_password_again###'
             );
-            $removeMarkerMessage = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xlf:internal_remove_deprecated_marker');
+            $removeMarkerMessage = 
+                $GLOBALS['TSFE']->sL(
+                    'LLL:EXT:' . $extKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:internal_remove_deprecated_marker'
+                );
+
             foreach ($removeMarkers as $marker) {
                 if (strpos($templateCode, $marker) !== false) {
                     $messages[] = sprintf($removeMarkerMessage, $marker, $fileName);
@@ -1392,7 +1401,11 @@ var submitFile = function(id){
                     'replacement' => '###CHECK_NOT_USED1A###'
                 ),
             );
-            $replaceMarkerMessage = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extKey . '/pi/locallang.xlf:internal_replace_deprecated_marker');
+            $replaceMarkerMessage = 
+                $GLOBALS['TSFE']->sL(
+                    'LLL:EXT:' . $extKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:internal_replace_deprecated_marker'
+                );
+
             foreach ($replaceMarkers as $replaceMarker) {
                 if (strpos($templateCode, $replaceMarker['marker']) !== false) {
                     $messages[] = sprintf($replaceMarkerMessage, $replaceMarker['marker'], $replaceMarker['replacement'], $fileName);

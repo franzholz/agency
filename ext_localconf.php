@@ -6,17 +6,9 @@ call_user_func(function () {
         define('AGENCY_EXT', 'agency');
     }
 
-    $extensionConfiguration = array();
-
-    if (
-        version_compare(TYPO3_version, '9.0.0', '>=')
-    ) {
-        $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-            \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
-        )->get(AGENCY_EXT);
-    } else {
-        $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][AGENCY_EXT]);
-    }
+    $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+        \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
+    )->get(AGENCY_EXT);
 
     if (!defined(STATIC_INFO_TABLES_EXT)) {
         define('STATIC_INFO_TABLES_EXT', 'static_info_tables');
@@ -43,7 +35,7 @@ call_user_func(function () {
 
     if (!isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['loginSecurityLevels'])) {
 
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['loginSecurityLevels'] = array('normal', 'rsa');
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['loginSecurityLevels'] = array('normal');
     }
 
     // Configure captcha hooks
@@ -53,21 +45,12 @@ call_user_func(function () {
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['captcha'][] = \JambageCom\Div2007\Captcha\Freecap::class;
     }
 
-    if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['languageResource']) {
-            // Scheduler hook
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_agency_feusergroup_scheduler'] = array(
-            'extension' => AGENCY_EXT,
-            'title' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db_layout.xlf:feUserGroupScheduler.name',
-            'description' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db_layout.xlf:feUserGroupScheduler.description',
-        );
-    } else {
-            // Scheduler hook
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_agency_feusergroup_scheduler'] = array(
-            'extension' => AGENCY_EXT,
-            'title' => 'LLL:EXT:' . AGENCY_EXT . '/locallang.xlf:feUserGroupScheduler.name',
-            'description' => 'LLL:EXT:' . AGENCY_EXT . '/locallang.xlf:feUserGroupScheduler.description',
-        );
-    }
+        // Scheduler hook
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_agency_feusergroup_scheduler'] = array(
+        'extension' => AGENCY_EXT,
+        'title' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db_layout.xlf:feUserGroupScheduler.name',
+        'description' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db_layout.xlf:feUserGroupScheduler.description',
+    );
 
     if (TYPO3_MODE == 'BE') {
 
@@ -78,4 +61,3 @@ call_user_func(function () {
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers']['Agency Registration'][] = \JambageCom\Agency\Hooks\StatusProvider::class;
     }
 });
-

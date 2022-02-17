@@ -48,6 +48,9 @@ use JambageCom\Div2007\Captcha\CaptchaInterface;
 use JambageCom\Agency\Security\SecuredData;
 use JambageCom\Agency\Utility\SessionUtility;
 
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\LanguageAspect;
+
 
 /**
  * Request parameters
@@ -185,7 +188,7 @@ class Parameters
 
                     foreach ($getVars as $k => $v ) {
                         // restore former GET values for the url
-                        GeneralUtility::_GETset($v, $k);
+                        \JambageCom\Div2007\Utility\ControlUtility::_GETset($v, $k);
                     }
 
                     if (
@@ -412,9 +415,9 @@ class Parameters
      */
     protected function setPidTitle ($conf, $sys_language_uid)
     {
-        $pidRecord = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Page\PageRepository::class);
-        $pidRecord->init(0);
-        $pidRecord->sys_language_uid = (int) $sys_language_uid;
+        $context = GeneralUtility::makeInstance(Context::class);
+        $context->setAspect('language', new LanguageAspect($sys_language_uid));
+        $pidRecord = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Page\PageRepository::class, $context);
         $row = $pidRecord->getPage((int) $this->getPid());
         $this->thePidTitle = trim($conf['pidTitleOverride']) ?: $row['title'];
     }
@@ -512,7 +515,7 @@ class Parameters
         }
 
         if ($cmdKey == 'create') {
-            $result &= !self::enableAutoLoginOnCreate($conf);
+            $result &= !static::enableAutoLoginOnCreate($conf);
         }
 
         return $result;

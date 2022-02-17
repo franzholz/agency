@@ -390,7 +390,7 @@ class EditView {
             if (
                 is_array($origArray) &&
                 (
-                    ($theTable == 'fe_users' && $GLOBALS['TSFE']->loginUser) ||
+                    ($theTable == 'fe_users' && \JambageCom\Div2007\Utility\CompatibilityUtility::isLoggedIn()) ||
                     $aCAuth ||
                     (
                         $theAuthCode != '' &&

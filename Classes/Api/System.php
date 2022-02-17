@@ -40,12 +40,17 @@ namespace JambageCom\Agency\Api;
  *
  */
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Agency\Utility\SessionUtility;
 
 
-class System {
+class System implements LoggerAwareInterface {
+    use LoggerAwareTrait;
+
 
     /**
     * Perform user login and redirect to configured url, if any
@@ -68,6 +73,7 @@ class System {
         $result = true;
         $ok = true;
         $message = '';
+        $authServiceObj = null;
 
             // Log the user in
         $loginData = array(
@@ -116,7 +122,6 @@ class System {
                 }
 
                 $serviceChain = '';
-                $authServiceObj = false;
 
                 while (
                     is_object(
@@ -146,7 +151,9 @@ class System {
                 $GLOBALS['TSFE']->fe_user->setAndSaveSessionData('dummy', true);
                 $GLOBALS['TSFE']->initUserGroups();
                 $GLOBALS['TSFE']->fe_user->user = $GLOBALS['TSFE']->fe_user->fetchUserSession();
-                $GLOBALS['TSFE']->loginUser = 1;
+                $aspect = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Context\UserAspect::class, $GLOBALS['TSFE']->fe_user);
+                $context = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Context\Context::class);
+                $context->setAspect('frontend.user', $aspect);
             } else if (
                 is_object($authServiceObj) &&
                 in_array(get_class($authServiceObj), $serviceKeyArray)
@@ -174,14 +181,8 @@ class System {
         }
 
         if ($result == false) {
-            $extensionKey = $controlData->getExtensionKey();
-            SessionUtility::clearData(
-                $extensionKey,
-                false
-            );
-
-            if ($message != '') {
-                GeneralUtility::sysLog($message, $extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
+            if (strlen($message)) {
+                $this->logger->critical($message);
             }
             $ok = false;
         }
