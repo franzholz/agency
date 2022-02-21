@@ -417,7 +417,7 @@ class Parameters
     {
         $context = GeneralUtility::makeInstance(Context::class);
         $context->setAspect('language', new LanguageAspect($sys_language_uid));
-        $pidRecord = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Page\PageRepository::class, $context);
+        $pidRecord = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Domain\Repository\PageRepository::class, $context);
         $row = $pidRecord->getPage((int) $this->getPid());
         $this->thePidTitle = trim($conf['pidTitleOverride']) ?: $row['title'];
     }

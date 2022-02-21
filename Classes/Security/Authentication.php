@@ -68,7 +68,7 @@ class Authentication implements \TYPO3\CMS\Core\SingletonInterface {
                 // to isolate multiple agency configurations on the same installation
                 // This makes the authCode incompatible with TYPO3 standard authCode
                 // See GeneralUtility::stdAuthCode
-            if ($this->conf['authcodeFields.']['addKey']) {
+            if (isset($this->conf['authcodeFields.']['addKey'])) {
                 $this->config['addKey'] = $this->conf['authcodeFields.']['addKey'];
             }
             $confObj->setConfig($this->config);

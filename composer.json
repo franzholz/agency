@@ -30,9 +30,9 @@
     "friendsoftypo3/typo3db-legacy": "^1.1"
   },
   "suggest": {
-    "typo3/cms-felogin": "^10.4",
+    "typo3/cms-felogin": "^10.4 || ^11.5",
     "friendsoftypo3/rsaauth": "^10.4",
-    "sjbr/static-info-tables": "^6.7 || ^6.8 || ^6.9"
+    "sjbr/static-info-tables": "^6.7 || ^6.8 || ^6.9 || ^11.5"
   },
   "autoload": {
     "psr-4": {

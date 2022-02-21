@@ -64,20 +64,15 @@ class ConfigurationCheck implements LoggerAwareInterface {
     )
     {
         $content = '';
-        $requiredExtensions = array();
-        $loginSecurityLevel = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
-        if (
-            version_compare(TYPO3_version, '9.0.0', '>=')
-        ) {
-            $requiredExtensions[] = 'typo3db_legacy';
-        }
+        $requiredExtensions = [];
+        $requiredExtensions[] = 'typo3db_legacy';
 
             // Check if all required extensions are available
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['constraints']['depends'])) {
             $requiredExtensions =
                 array_diff(
                     array_keys($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['constraints']['depends']),
-                    array('php', 'typo3')
+                    ['php', 'typo3']
                 );
         }
 
@@ -126,66 +121,49 @@ class ConfigurationCheck implements LoggerAwareInterface {
     {
         $content = '';
         if ($extensionKey == 'agency') {
-            $loginSecurityLevel = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
-
-            // Check if front end login security level is correctly set
-            $supportedTransmissionSecurityLevels = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['loginSecurityLevels'];
-
-            if (
-                $loginSecurityLevel != '' &&
-                !in_array(
-                    $loginSecurityLevel,
-                    $supportedTransmissionSecurityLevels
-                )
+                // Check if salted passwords are enabled in front end
+            if (                
+                class_exists(\TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordsUtility::class) ||
+                class_exists(\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::class)
             ) {
-                $message = LocalizationUtility::translate('internal_login_security_level');
-                $this->logger->critical($message);
-                $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
-            } else {
-                    // Check if salted passwords are enabled in front end
-                if (                
-                    class_exists(\TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordsUtility::class) ||
-                    class_exists(\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::class)
+                if (
+                    class_exists(\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::class) &&
+                    !\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::isUsageEnabled('FE')
                 ) {
-                    if (
-                        class_exists(\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::class) &&
-                        !\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::isUsageEnabled('FE')
-                    ) {
-                        $message = LocalizationUtility::translate('internal_salted_passwords_disabled');
+                    $message = LocalizationUtility::translate('internal_salted_passwords_disabled');
+                    $this->logger->critical($message);
+                    $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
+                } else {
+                    $objSalt = null;
+                    if (version_compare(TYPO3_version, '9.5.0', '>=')) {
+                            // Check if we can get a salting instance
+                        $objSalt = \TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::getSaltingInstance(null);
+                    } else {
+                        $objSalt = \TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::getSaltingInstance(null);
+                    }
+
+                    if (!is_object($objSalt)) {
+                            // Could not get a salting instance from saltedpasswords
+                        $message = LocalizationUtility::translate('internal_salted_passwords_no_instance');
                         $this->logger->critical($message);
                         $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
-                    } else {
-                        $objSalt = null;
-                        if (version_compare(TYPO3_version, '9.5.0', '>=')) {
-                                // Check if we can get a salting instance
-                            $objSalt = \TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::getSaltingInstance(null);
-                        } else {
-                            $objSalt = \TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::getSaltingInstance(null);
-                        }
-
-                        if (!is_object($objSalt)) {
-                                // Could not get a salting instance from saltedpasswords
-                            $message = LocalizationUtility::translate('internal_salted_passwords_no_instance');
-                            $this->logger->critical($message);
-                            $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
-                        }
                     }
                 }
+            }
 
-                    // Check if we can get a backend from rsaauth
-                if (ExtensionManagementUtility::isLoaded('rsaauth')) {
-                    $backend = \TYPO3\CMS\Rsaauth\Backend\BackendFactory::getBackend();
-                    $storage = \TYPO3\CMS\Rsaauth\Storage\StorageFactory::getStorage();
-                    if (
-                        !is_object($backend) ||
-                        !$backend->isAvailable() ||
-                        !is_object($storage)
-                    ) {
-                            // Required RSA auth backend not available
-                        $message = LocalizationUtility::translate('internal_rsaauth_backend_not_available');
-                        $this->logger->critical($message);
-                        $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
-                    }
+                // Check if we can get a backend from rsaauth
+            if (ExtensionManagementUtility::isLoaded('rsaauth')) {
+                $backend = \TYPO3\CMS\Rsaauth\Backend\BackendFactory::getBackend();
+                $storage = \TYPO3\CMS\Rsaauth\Storage\StorageFactory::getStorage();
+                if (
+                    !is_object($backend) ||
+                    !$backend->isAvailable() ||
+                    !is_object($storage)
+                ) {
+                        // Required RSA auth backend not available
+                    $message = LocalizationUtility::translate('internal_rsaauth_backend_not_available');
+                    $this->logger->critical($message);
+                    $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
                 }
             }
         }

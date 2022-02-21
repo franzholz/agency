@@ -1,5 +1,10 @@
+
+
+2022-02-21 Franz Holzinger  <franz@ttproducts.de>
+    Deprecation no.94312: - Remove loginSecurityLevel for FE and BE
+
 2022-02-17 Franz Holzinger  <franz@ttproducts.de>
-    Deprecation: #81852 - Deprecate usage of rsaauth
+    Deprecation no.81852: - Deprecate usage of rsaauth
 
 2021-12-16 Franz Holzinger  <franz@ttproducts.de>
     * support for TYPO3 10.x

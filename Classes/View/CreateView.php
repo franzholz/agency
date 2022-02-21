@@ -42,6 +42,7 @@ namespace JambageCom\Agency\View;
 *
 */
 
+use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Div2007\Utility\FrontendUtility;
@@ -341,7 +342,9 @@ class CreateView {
                         $form,
                         $controlData->getUsePasswordAgain()
                     );
-                $GLOBALS['TSFE']->setJS('agency-security', $securityJavaScript);
+                GeneralUtility::makeInstance(AssetCollector::class)
+                    ->addJavaScript('agency-security', $securityJavaScript);
+//                 $GLOBALS['TSFE']->setJS('agency-security', $securityJavaScript);
 
                 $finalJavaScript = '';
                 \JambageCom\Agency\Api\Javascript::getOnSubmitHooks(
