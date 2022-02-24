@@ -121,7 +121,7 @@ class Tables implements \TYPO3\CMS\Core\SingletonInterface {
                 );
             }
         } else {
-            debug ('Object for \'' . $functablename . '\' has not been found.', 'internal error in ' . AGENCY_EXT); // keep this
+            debug('Object for \'' . $functablename . '\' has not been found.', 'internal error in ' . AGENCY_EXT); // keep this
         }
 
         if (

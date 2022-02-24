@@ -1,4 +1,9 @@
+2022-02-24 Franz Holzinger  <franz@ttproducts.de>
+    * Add support for PHP 8
+    * Replace PATH_site
 
+2022-02-22 Franz Holzinger  <franz@ttproducts.de>
+    * compatibility 9: replace PATH_site by \TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/' 
 
 2022-02-21 Franz Holzinger  <franz@ttproducts.de>
     Deprecation no.94312: - Remove loginSecurityLevel for FE and BE

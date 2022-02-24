@@ -57,14 +57,14 @@ define('SETFIXED_PREFIX', 'SETFIXED_');
 
 
 class Marker {
-    public $conf = array();
+    public $conf = [];
     public $data;
     public $control;
     public $controlData;
     public $tca;
     public $previewLabel;
     public $staticInfoObj;
-    public $markerArray = array();
+    public $markerArray = [];
     public $buttonLabelsList;
     public $otherLabelsList;
     public $dataArray; // temporary array of data
@@ -93,7 +93,7 @@ class Marker {
         $this->staticInfoObj = $staticInfoObj;
         $this->thePidTitle = $controlData->getPidTitle();
 
-        $markerArray = array();
+        $markerArray = [];
 
         $charset = $GLOBALS['TSFE']->metaCharset ? $GLOBALS['TSFE']->metaCharset : 'utf-8';
         $markerArray['###CHARSET###'] = $charset;
@@ -234,7 +234,7 @@ class Marker {
             break;
             case 'tca':
                 if (!is_array($this->tmpTcaMarkers)) {
-                    $this->tmpTcaMarkers = array();
+                    $this->tmpTcaMarkers = [];
                     $dataArray = $this->getReplaceData();
                     $row = $dataArray['row'];
                     $cmd = $controlData->getCmd();
@@ -293,7 +293,10 @@ class Marker {
         &$markContentArray
     )
     {
-        if (is_array($this->conf[$cmdKey . '.']['evalValues.'])) {
+        if (
+            !empty($cmdKey) &&
+            isset($this->conf[$cmdKey . '.']['evalValues.'])
+        ) {
             foreach($this->conf[$cmdKey . '.']['evalValues.'] as $theField => $theValue) {
                 $markContentArray['###EVAL_ERROR_FIELD_' . $theField . '###'] = '<!--no error-->';
             }
@@ -373,7 +376,7 @@ class Marker {
         $infoFieldArray = GeneralUtility::trimExplode(',', $infoFields, 1);
         $specialFieldArray = GeneralUtility::trimExplode(',', $this->data->getSpecialFieldList(), 1);
 
-        if ($specialFieldArray[0] != '') {
+        if (!empty($specialFieldArray['0'])) {
             $infoFieldArray = array_merge($infoFieldArray, $specialFieldArray);
             $requiredArray = array_merge($requiredArray, $specialFieldArray);
         }
@@ -407,26 +410,30 @@ class Marker {
                     $label = $languageObj->getLabel($theField);
                 }
                 $label = (empty($label) ? $languageObj->getLabelFromString($tcaColumns[$theField]['label']) : $label);
-                $label = htmlspecialchars($label, ENT_QUOTES);
+                $label = htmlspecialchars($label);
             } else {
                 $label = '';
             }
             $markerArray['###LABEL_' . $markerkey . '###'] = $label;
             $markerArray['###TOOLTIP_' . $markerkey . '###'] = $languageObj->getLabel('tooltip_' . $theField);
             $label = $languageObj->getLabel('tooltip_invitation_' . $theField);
-            $label = htmlspecialchars($label, ENT_QUOTES);
+            $label = htmlspecialchars($label);
             $markerArray['###TOOLTIP_INVITATION_' . $markerkey . '###'] = $label;
 
             $colConfig = $tcaColumns[$theField]['config'];
 
-            if ($colConfig['type'] == 'select' && $colConfig['items']) {
+            if (
+                $colConfig['type'] == 'select' &&
+                isset($colConfig['items']) &&
+                is_array($colConfig['items'])
+            ) {
                 $colContent = '';
                 $markerArray['###FIELD_' . $markerkey . '_CHECKED###'] = '';
                 $markerArray['###LABEL_' . $markerkey . '_CHECKED###'] = '';
                 $markerArray['###POSTVARS_' . $markerkey . '###'] = '';
 
                 if (isset($row[$theField])) {
-                    $fieldArray = array();
+                    $fieldArray = [];
                     if (is_array($row[$theField])) {
                         $fieldArray = $row[$theField];
                     } else {
@@ -478,7 +485,7 @@ class Marker {
                     && isset($conf['button.'][$buttonKey . '.'])
                     && isset($conf['button.'][$buttonKey . '.']['attribute.'])
                 ) {
-                    $attributesArray = array();
+                    $attributesArray = [];
                     foreach ($conf['button.'][$buttonKey . '.']['attribute.'] as $key => $value) {
                         $attributesArray[] = $key . '="' . $value . '"';
                     }
@@ -533,11 +540,11 @@ class Marker {
         $name = htmlspecialchars($name);
 
         $this->tmpTcaMarkers = NULL; // reset function replaceVariables
-        $dataArray = array();
+        $dataArray = [];
         $dataArray['row'] = $row;
         $this->setReplaceData($dataArray);
 
-        $outputArray = array('username' => '', 'email' => '', 'password' => '');
+        $outputArray = ['username' => '', 'email' => '', 'password' => ''];
         foreach ($outputArray as $field => $value) {
             if (
                 isset($row[$field]) &&
@@ -553,7 +560,7 @@ class Marker {
             $outputArray['username'] = $outputArray['email'];
         }
 
-        $genderLabelArray = array();
+        $genderLabelArray = [];
         $vDear = 'v_dear';
         if (isset($row['gender'])) {
             if (
@@ -593,7 +600,7 @@ class Marker {
     )
     {
         if (!is_array($outputArray)) {
-            $outputArray = array('username' => '', 'email' => '', 'password' => '');
+            $outputArray = ['username' => '', 'email' => '', 'password' => ''];
         }
         $otherLabelsList = $this->getOtherLabelsList();
 
@@ -621,7 +628,7 @@ class Marker {
                 $outputArray['email'],
                 $outputArray['password']
             );
-            $label = preg_replace_callback('/{([a-z_]+):([a-zA-Z0-9_]+)}/', array($this, 'replaceVariables'), $label);
+            $label = preg_replace_callback('/{([a-z_]+):([a-zA-Z0-9_]+)}/', [$this, 'replaceVariables'], $label);
             $markerkey = $cObj->caseshift($value, 'upper');
             $markerArray['###LABEL_' . $markerkey . '###'] = $label;
         }
@@ -653,14 +660,14 @@ class Marker {
         $prefixId
     )
     {
-        $markerArray = array();
-        $vars = array();
+        $markerArray = [];
+        $vars = [];
         $unsetVarsList = 'mode,pointer,sort,sword,backURL,submit,rU,aC,sFK,doNotSave,preview';
         $unsetVars = GeneralUtility::trimExplode(',', $unsetVarsList);
         $unsetVars['cmd'] = 'cmd';
         $unsetVarsAll = $unsetVars;
         $unsetVarsAll[] = 'token';
-        $formUrl = $urlObj->get('', $GLOBALS['TSFE']->id . ',' . $GLOBALS['TSFE']->type, $vars, $unsetVarsAll);
+        $formUrl = $urlObj->get($GLOBALS['TSFE']->id . ',' . $GLOBALS['TSFE']->type, '', $vars, $unsetVarsAll);
 
         unset($unsetVars['cmd']);
         $markerArray['###FORM_URL###'] = $formUrl;
@@ -676,29 +683,29 @@ class Marker {
         $vars['rU'] = $uid;
         $vars['preview'] = '1';
 
-        $markerArray['###DELETE_URL###'] = $urlObj->get('', $this->controlData->getPid('edit') . ',' . $GLOBALS['TSFE']->type, $vars);
+        $markerArray['###DELETE_URL###'] = $urlObj->get($this->controlData->getPid('edit') . ',' . $GLOBALS['TSFE']->type, '', $vars);
 
         $vars['cmd'] = 'create';
 
         $unsetVars[] = 'regHash';
-        $url = $urlObj->get('', $this->controlData->getPid('register') . ',' . $GLOBALS['TSFE']->type, $vars, $unsetVars);
+        $url = $urlObj->get($this->controlData->getPid('register') . ',' . $GLOBALS['TSFE']->type, '', $vars, $unsetVars);
         $markerArray['###REGISTER_URL###'] = $url;
 
         $unsetVarsList = 'mode,pointer,sort,sword,backURL,submit,doNotSave,preview';
         $unsetVars = GeneralUtility::trimExplode(',', $unsetVarsList);
 
         $vars['cmd'] = 'login';
-        $markerArray['###LOGIN_FORM###'] = $urlObj->get('', $this->controlData->getPid('login') . ',' . $GLOBALS['TSFE']->type, $vars, $unsetVars);
+        $markerArray['###LOGIN_FORM###'] = $urlObj->get($this->controlData->getPid('login') . ',' . $GLOBALS['TSFE']->type, '', $vars, $unsetVars);
 
         $vars['cmd'] = 'infomail';
-        $markerArray['###INFOMAIL_URL###'] = $urlObj->get('', $this->controlData->getPid('infomail') . ',' . $GLOBALS['TSFE']->type, $vars, $unsetVars);
+        $markerArray['###INFOMAIL_URL###'] = $urlObj->get($this->controlData->getPid('infomail') . ',' . $GLOBALS['TSFE']->type, '', $vars, $unsetVars);
 
         $vars['cmd'] = 'edit';
 
         $markerArray['###EDIT_URL###'] =
             $urlObj->get(
-                '',
                 $this->controlData->getPid('edit') . ',' . $GLOBALS['TSFE']->type,
+                '',
                 $vars,
                 $unsetVars
             );
@@ -717,7 +724,7 @@ class Marker {
             $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
             $termsUrlParam = $sanitizer->sanitize($this->conf['terms.']['file']);
         }
-        $markerArray['###TERMS_URL###'] = $urlObj->get('', $termsUrlParam, array(), array(), false);
+        $markerArray['###TERMS_URL###'] = $urlObj->get($termsUrlParam, '', [], [], false);
 
             // Set the url to the privacy policy
         if ($this->conf['privacy.']['url']) {
@@ -728,10 +735,10 @@ class Marker {
         }
         $markerArray['###PRIVACY_POLICY_URL###'] =
             $urlObj->get(
-                '',
                 $privacyUrlParam,
-                array(),
-                array(),
+                '',
+                [],
+                [],
                 false
             );
 
@@ -746,23 +753,23 @@ class Marker {
     */
     public function generateFormURLMarkers ($urlObj)
     {
-        $commandArray = array('register', 'edit', 'delete', 'confirm', 'login');
-        $markerArray = array();
-        $vars = array();
+        $commandArray =  ['register', 'edit', 'delete', 'confirm', 'login'];
+        $markerArray = [];
+        $vars = [];
         $unsetVarsList = 'mode,pointer,sort,sword,backURL,submit,rU,aC,sFK,doNotSave,preview';
         $unsetVars = GeneralUtility::trimExplode(',', $unsetVarsList);
         $unsetVars['cmd'] = 'cmd';
         $unsetVarsAll = $unsetVars;
         $unsetVarsAll[] = 'token';
-        $commandPidArray = array();
+        $commandPidArray = [];
 
         foreach ($commandArray as $command) {
             $upperCommand = strtoupper($command);
-            $pid = $this->conf[$command . 'PID'];
+            $pid = $this->conf[$command . 'PID'] ?? 0;
             if (!$pid) {
                 $pid = $GLOBALS['TSFE']->id;
             }
-            $formUrl = $urlObj->get('', $pid . ',' . $GLOBALS['TSFE']->type, $vars, $unsetVarsAll);
+            $formUrl = $urlObj->get($pid . ',' . $GLOBALS['TSFE']->type, '', $vars, $unsetVarsAll);
             $markerArray['###FORM_' . $upperCommand . '_URL###'] = $formUrl;
         }
         return $markerArray;
@@ -793,7 +800,7 @@ class Marker {
         array $fD
     )
     {
-        $localMarkerArray = array();
+        $localMarkerArray = [];
         $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
         $authCode = $authObj->getAuthCode();
 
@@ -801,7 +808,7 @@ class Marker {
         $extKey = $this->controlData->getExtensionKey();
         $prefixId = $this->controlData->getPrefixId();
 
-        $localMarkerArray['###HIDDENFIELDS###'] = $markerArray['###HIDDENFIELDS###'] . ($cmd ? '<input type="hidden" name="' . $prefixId . '[cmd]" value="' . $cmd . '"' . HtmlUtility::getXhtmlFix() . '>' : '');
+        $localMarkerArray['###HIDDENFIELDS###'] = ($markerArray['###HIDDENFIELDS###'] ?? '') . ($cmd ? '<input type="hidden" name="' . $prefixId . '[cmd]" value="' . $cmd . '"' . HtmlUtility::getXhtmlFix() . '>' : '');
         $localMarkerArray['###HIDDENFIELDS###'] .= chr(10) . ($authCode ? '<input type="hidden" name="' . $prefixId . '[aC]" value="' . $authCode . '"' . HtmlUtility::getXhtmlFix() . '>' : '');
         $localMarkerArray['###HIDDENFIELDS###'] .= chr(10) . ($backUrl ? '<input type="hidden" name="' . $prefixId . '[backURL]" value="' . htmlspecialchars($backUrl) . '"' . HtmlUtility::getXhtmlFix() . '>' : '');
 
@@ -872,7 +879,7 @@ class Marker {
                     );
                 $titleLanguage = $languageObj->getLabel('tooltip_' . (($cmd == 'invite') ? 'invitation_' : '')  . 'language');
                 $fieldNameCountry = 'static_info_country';
-                $selected = (is_array($row) && isset($row[$fieldNameCountry]) ? $row[$fieldNameCountry] : array());
+                $selected = (is_array($row) && isset($row[$fieldNameCountry]) ? $row[$fieldNameCountry] : []);
                 $where = '';
                 if (isset($this->conf['where.']) && is_array($this->conf['where.'])) {
                     $where = $this->conf['where.']['static_countries'];
@@ -957,9 +964,12 @@ class Marker {
         $bHtml = true
     )
     {
+        $HTMLContent = '';
         $tablePrefix = 'FE[' . $theTable . ']';
         $size = $config['maxitems'];
-        $cmdParts = preg_split('/\[|\]/', $this->conf[$cmdKey . '.']['evalValues.'][$theField]);
+        if (!empty($cmdKey)) {
+            $cmdParts = preg_split('/\[|\]/', $this->conf[$cmdKey . '.']['evalValues.'][$theField]);
+        }
         if(!empty($cmdParts[1])) {
             $size = min($size, intval($cmdParts[1]));
         }
@@ -1070,13 +1080,13 @@ var submitFile = function(id){
         $cmd,
         $cmdKey,
         $prefixId,
-        $dataArray = array(),
+        $dataArray = [],
         $viewOnly = false,
         $activity = '',
         $bHtml = true
     )
     {
-        $filenameArray = array();
+        $filenameArray = [];
 
         if ($dataArray[$theField]) {
             $filenameArray = $dataArray[$theField];
@@ -1143,7 +1153,7 @@ var submitFile = function(id){
         $useEmailAsUsername,
         $enableEmailConfirmation,
         $cmdKeyFields,
-        $dataArray = array()
+        $dataArray = []
     )
     {
         if ($this->conf[$cmdKey . '.']['preview'] && $mode != Mode::PREVIEW) {
@@ -1162,18 +1172,18 @@ var submitFile = function(id){
         $fieldArray = GeneralUtility::trimExplode(',', $cmdKeyFields, 1);
 
         if ($mode == Mode::PREVIEW) {
-            $fieldArray = array_diff($fieldArray, array('hidden', 'disable'));
+            $fieldArray = array_diff($fieldArray, ['hidden', 'disable']);
 
             $fields = implode(',', $fieldArray);
             $fields = \JambageCom\Agency\Security\SecuredData::getOpenFields($fields);
             $fieldArray = explode(',', $fields);
 
             foreach ($fieldArray as $theField) {
-                $value = $dataArray[$theField];
+                $value = $dataArray[$theField] ?? '';
                 if (is_array($value)) {
                     $value = implode (',', $value);
                 } else {
-                    $value = htmlspecialchars($dataArray[$theField]);
+                    $value = htmlspecialchars($value);
                 }
                 $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="FE[' . $theTable . '][' . $theField . ']" value="' . $value . '"' . HtmlUtility::getXhtmlFix() . '>';
             }
@@ -1251,11 +1261,11 @@ var submitFile = function(id){
         $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
 
         if ($this->controlData->getMode() == Mode::PREVIEW || $viewOnly) {
-            if (!$markerArray['###FIELD_zone###']) {
+            if (empty($markerArray['###FIELD_zone###'])) {
                 return $templateService->substituteSubpart($templateCode, '###SUB_INCLUDED_FIELD_zone###', '');
             }
         } else {
-            if (!$markerArray['###SELECTOR_ZONE###']) {
+            if (empty($markerArray['###SELECTOR_ZONE###'])) {
                 return $templateService->substituteSubpart($templateCode, '###SUB_INCLUDED_FIELD_zone###', '');
             }
         }
@@ -1293,12 +1303,13 @@ var submitFile = function(id){
             }
         }
 
-        if ($fieldList) {
+        if ($fieldList != '') {
             $fArr = GeneralUtility::trimExplode(',', $fieldList, 1);
             foreach($fArr as $field) {
                 $markerArray['###' . $prefix . $field . '###'] = $nl2br ? nl2br($row[$field]) : $row[$field];
             }
         } else {
+
             if (is_array($row)) {
                 foreach($row as $field => $value) {
                     $bFieldIsInt = MathUtility::canBeInterpretedAsInteger($field);
@@ -1306,10 +1317,11 @@ var submitFile = function(id){
                         if (is_array($value)) {
                             $value = implode(',', $value);
                         }
-                        if ($HSC) {
+                        if ($HSC && !empty($value)) {
                             $value = htmlspecialchars($value);
                         }
-                        $markerArray['###' . $prefix . $field . '###'] = $nl2br ? nl2br($value) : $value;
+                        $markerArray['###' . $prefix . $field . '###'] = 
+                            $nl2br && !empty($value) ? nl2br($value) : $value;
                     }
                 }
             }
@@ -1317,9 +1329,12 @@ var submitFile = function(id){
             // Add global markers
         $extKey = $controlData->getExtensionKey();
 
-        if (is_array ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'])) {
+        if (
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess']) &&
+            is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'])
+        ) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'] as $classRef) {
-                $hookObj= GeneralUtility::makeInstance($classRef);
+                $hookObj = GeneralUtility::makeInstance($classRef);
 
                 if (method_exists($hookObj, 'addGlobalMarkers')) {
                     if (
@@ -1374,16 +1389,16 @@ var submitFile = function(id){
         $fileName
     )
     {
-        $messages = array();
+        $messages = [];
             // These changes apply only to agency
         if ($extKey == 'agency') {
                 // Version 0: no clear-text passwords in templates
                 // Remove any ###FIELD_password###, ###FIELD_password_again### markers
                 // Remove markers ###TEMPLATE_INFOMAIL###, ###TEMPLATE_INFOMAIL_SENT### and ###EMAIL_TEMPLATE_INFOMAIL###
-            $removeMarkers = array(
+            $removeMarkers = [
                 '###FIELD_password###',
                 '###FIELD_password_again###'
-            );
+            ];
             $removeMarkerMessage = 
                 $GLOBALS['TSFE']->sL(
                     'LLL:EXT:' . $extKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:internal_remove_deprecated_marker'
@@ -1395,12 +1410,12 @@ var submitFile = function(id){
                 }
             }
 
-            $replaceMarkers = array(
-                array(
+            $replaceMarkers = [
+                [
                     'marker' => '###CHECK_NOT_USED1###',
                     'replacement' => '###CHECK_NOT_USED1A###'
-                ),
-            );
+                ],
+            ];
             $replaceMarkerMessage = 
                 $GLOBALS['TSFE']->sL(
                     'LLL:EXT:' . $extKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:internal_replace_deprecated_marker'

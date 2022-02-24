@@ -276,9 +276,8 @@ class Setfixed {
                 $newFieldList = '';
 
                 if (
-                    !$setfixedConfig['askAgain'] ||
-                    $controlData->getSubmit() /* ||
-                    $controlData->getRegHash()*/
+                    empty($setfixedConfig['askAgain']) ||
+                    $controlData->getSubmit()
                 ) { // ask again if the user really wants to confirm
                     if ($theTable == 'fe_users') {
                         if ($conf['create.']['allowUserGroupSelection']) {
@@ -302,7 +301,10 @@ class Setfixed {
 
                         // Hook: first we initialize the hooks
                     $hookObjectsArray = array();
-                    if (is_array ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['confirmRegistrationClass'])) {
+                    if (
+                        isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['confirmRegistrationClass']) &&
+                        is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['confirmRegistrationClass'])
+                    ) {
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['confirmRegistrationClass'] as $classRef) {
                             $hookObj = GeneralUtility::makeInstance($classRef);
                             if (
@@ -441,7 +443,7 @@ class Setfixed {
             if ($setFixedKey != 'EDIT') {
 
                 if (
-                    $setfixedConfig['askAgain'] &&
+                    !empty($setfixedConfig['askAgain']) &&
                     !$controlData->getSubmit()
                 ) { // ask again if the user really wants to confirm
                     $content =
@@ -873,7 +875,6 @@ class Setfixed {
     )
     {
     // Display the form, if access granted.
-
         $xhtmlFix = HtmlUtility::getXhtmlFix();
         $markerArray['###HIDDENFIELDS###'] .=
             '<input type="hidden" name="' .
@@ -881,7 +882,6 @@ class Setfixed {
             $dataObj->getRecUid() .
             '" ' . $xhtmlFix . '>';
 
-        $tokenParameter = $controlData->getTokenParameter();
         $markerArray['###BACK_URL###'] =
             (
                 $controlData->getBackURL() ?
@@ -889,7 +889,7 @@ class Setfixed {
                     $cObj->getTypoLink_URL(
                         $conf['loginPID'] . ',' . $GLOBALS['TSFE']->type
                     )
-            ) . $tokenParameter;
+            );
         $subpartMarker = '###TEMPLATE_' . $setFixedKey . '_PREVIEW###';
         $content = $template->getPlainTemplate(
             $errorCode,

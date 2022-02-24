@@ -46,6 +46,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\MailUtility;
+use JambageCom\Div2007\Utility\TableUtility;
+
 
 
 class Email implements \TYPO3\CMS\Core\SingletonInterface {
@@ -113,7 +115,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         if ($conf['infomail'] && $conf['email.']['field']) {
 
             if (!empty($pidLock) && !$failure) {
-                $enable = $GLOBALS['TSFE']->sys_page->enableFields($theTable);
+                $enable = TableUtility::enableFields($theTable);
                     // Getting records
                     // $conf['email.']['field'] must be a valid field in the table!
                 $DBrows = \TYPO3\CMS\Frontend\Page\PageRepository::getRecordsByField(
@@ -136,7 +138,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
 
                     if ($theTable == 'fe_users') {
                         $key = 'SETFIXED_PASSWORD';
-                        $outGoingData = array();
+                        $outGoingData = [];
                         // add a r
                         $outGoingData['lost_password'] = '1';
 
@@ -180,7 +182,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                     );
                 } elseif (GeneralUtility::validEmail($fetch)) {
                     $key = 'INFOMAIL_NORECORD';
-                    $fetchArray = array( '0' => array('email' => $fetch));
+                    $fetchArray = ['0' => ['email' => $fetch]];
                     $emailHasBeenSent = $this->compile(
                         $key,
                         $cObj,
@@ -203,7 +205,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                         $cmdKey,
                         $templateCode,
                         $dataObj->getInError(),
-                        array(),
+                        [],
                         $errorCode
                     );
                 }
@@ -240,7 +242,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                             $origArr,
                             $theTable,
                             $prefixId,
-                            (is_array($DBrows) ? $DBrows[0] : (is_array($fetchArray) ? $fetchArray[0] : array())),
+                            (is_array($DBrows) ? $DBrows[0] : (is_array($fetchArray) ? $fetchArray[0] : [])),
                             $securedArray,
                             false
                         );
@@ -269,14 +271,14 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                         $origArr,
                         $theTable,
                         $prefixId,
-                        array(),
+                        [],
                         $securedArray,
                         true,
                         $failure
                     );
             }
         } else {
-            $errorCode = array();
+            $errorCode = [];
             $errorCode['0'] = 'internal_infomail_configuration';
         }
 
@@ -332,7 +334,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         $useAdditionalFields = true;
         $extKey = $controlData->getExtensionKey();
         $result = true;
-        $missingSubpartArray = array();
+        $missingSubpartArray = [];
         $userSubpartsFound = 0;
         $adminSubpartsFound = 0;
         $checkEmailSent = false;
@@ -367,27 +369,27 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         }
 
         $viewOnly = true;
-        $content = array(
-            'user' => array(),
-            'userhtml' => array(),
-            'admin' => array(),
-            'adminhtml' => array(),
-            'mail' => array()
-        );
+        $content = [
+            'user' => [],
+            'userhtml' => [],
+            'admin' => [],
+            'adminhtml' => [],
+            'mail' => []
+        ];
         $content['mail'] = '';
         $content['user']['all'] = '';
         $content['userhtml']['all'] = '';
         $content['admin']['all'] = '';
         $content['adminhtml']['all'] = '';
         $setfixedArray =
-            array(
+            [
                 'SETFIXED_CREATE',
                 'SETFIXED_CREATE_REVIEW',
                 'SETFIXED_PASSWORD',
                 'SETFIXED_INVITE',
                 'SETFIXED_REVIEW'
-            );
-        $infomailArray = array('INFOMAIL', 'INFOMAIL_NORECORD');
+            ];
+        $infomailArray = ['INFOMAIL', 'INFOMAIL_NORECORD'];
 
         if (
             ($conf['enableEmailConfirmation'] && in_array($key, $setfixedArray)) ||
@@ -513,9 +515,9 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             }
         }
 
-        $contentIndexArray = array();
-        $contentIndexArray['text'] = array();
-        $contentIndexArray['html'] = array();
+        $contentIndexArray = [];
+        $contentIndexArray['text'] = [];
+        $contentIndexArray['html'] = [];
 
         if ($content['user']['all']) {
             $content['user']['rec'] = $templateService->getSubpart($content['user']['all'],  '###SUB_RECORD###');
@@ -536,9 +538,9 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         $bChangesOnly = ($conf['email.']['EDIT_SAVED'] == '2' && $cmd == 'edit');
 
         if ($bChangesOnly) {
-            $keepFields = array('uid', 'pid', 'tstamp', 'name', 'first_name', 'middle_name', 'last_name', 'username');
+            $keepFields = ['uid', 'pid', 'tstamp', 'name', 'first_name', 'middle_name', 'last_name', 'username'];
         } else {
-            $keepFields = array();
+            $keepFields = [];
         }
         $markerArray =
             $markerObj->fillInMarkerArray(
@@ -603,13 +605,16 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             }
 
             if ($bChangesOnly) {
-                $mrow = array();
+                $mrow = [];
                 foreach ($row as $field => $v) {
                     if (in_array($field, $keepFields)) {
-                        $mrow[$field] = $row[$field];
+                        $mrow[$field] = $v;
                     } else {
-                        if ($row[$field] != $origRow[$field]) {
-                            $mrow[$field] = $row[$field];
+                        if (
+                            isset($origRow[$field]) &&
+                            $v != $origRow[$field]
+                        ) {
+                            $mrow[$field] = $v;
                         } else {
                             $mrow[$field] = ''; // needed to empty the ###FIELD_...### markers
                         }
@@ -629,8 +634,9 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 $setFixedConfig,
                 $currentRow,
                 $theTable,
-                $conf['useShortUrls'],
-                $conf['edit.']['setfixed'],
+                $extKey,
+                $conf['useShortUrls'] ?? '',
+                $conf['edit.']['setfixed'] ?? '',
                 $autoLoginKey,
                 $conf['confirmType']
             );
@@ -647,28 +653,32 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
 
                 if (
                     (
+                        isset($fieldConfig['config']['internal_type']) &&
                         $fieldConfig['config']['internal_type'] == 'file' &&
-                        $fieldConfig['config']['allowed'] != '' &&
-                        $fieldConfig['config']['uploadfolder'] != ''
+                        !empty($fieldConfig['config']['allowed']) &&
+                        !empty($fieldConfig['config']['uploadfolder'])
                     ) ||
                     (
+                        isset($fieldConfig['config']['foreign_table']) &&
                         $fieldConfig['config']['foreign_table'] == 'sys_file_reference'
                     )
                 ) {
-                    $markerObj->addFileUploadMarkers(
-                        $languageObj,
-                        $theTable,
-                        $theField,
-                        $fieldConfig,
-                        $markerArray,
-                        $cmd,
-                        $cmdKey,
-                        $prefixId,
-                        $row,
-                        $viewOnly,
-                        'email',
-                        ($emailType == 'html')
-                    );
+                    foreach ($contentIndexArray as $emailType => $indexArray) {
+                        $markerObj->addFileUploadMarkers(
+                            $languageObj,
+                            $theTable,
+                            $theField,
+                            $fieldConfig,
+                            $markerArray,
+                            $cmd,
+                            $cmdKey,
+                            $prefixId,
+                            $row,
+                            $viewOnly,
+                            'email',
+                            ($emailType == 'html')
+                        );
+                    }
                 }
             }
             $markerObj->addLabelMarkers(
@@ -690,7 +700,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             );
 
             foreach ($contentIndexArray as $emailType => $indexArray) {
-                $fieldMarkerArray = array();
+                $fieldMarkerArray = [];
                 $fieldMarkerArray =
                     $markerObj->fillInMarkerArray(
                         $fieldMarkerArray,
@@ -724,6 +734,10 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 $markerArray = array_merge($markerArray, $fieldMarkerArray);
 
                 foreach ($indexArray as $index) {
+                    if (!isset($content[$index]['accum'])) {
+                        $content[$index]['accum'] = '';
+                    }
+
                     $content[$index]['rec'] =
                         $markerObj->removeStaticInfoSubparts(
                             $content[$index]['rec'],
@@ -829,6 +843,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             $fe_userRec = $GLOBALS['TSFE']->sys_page->getRawRecord('fe_users', $recipient);
             $recipient = $fe_userRec['email'];
         }
+        $file = '';
 
             // Check if we need to add an attachment
         if (
@@ -851,17 +866,17 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             $result = $this->send(
                 $conf,
                 $recipient,
-                $conf['email.']['admin'],
-                $content['user']['final'],
-                $content['userhtml']['final'],
-                $content['admin']['final'],
-                $content['adminhtml']['final'],
+                $conf['email.']['admin'] ?? '',
+                $content['user']['final'] ?? '',
+                $content['userhtml']['final'] ?? '',
+                $content['admin']['final'] ?? '',
+                $content['adminhtml']['final'] ?? '',
                 $file
             );
         } else {
             $result = false;
             if (!empty($missingSubpartArray)) { // $conf['notify.'][$key]
-                $errorCode = array();
+                $errorCode = [];
                 $errorCode['0'] = 'internal_no_subtemplate';
                 $errorCode['1'] = $missingSubpartArray['0'];
             }
@@ -872,7 +887,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             $result === false &&
             empty($errorCode)
         ) {
-            $errorCode = array();
+            $errorCode = [];
             $errorCode['0'] = 'internal_email_not_sent';
             $errorCode['1'] = $recipient;
         }
@@ -1012,7 +1027,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             $defaultSubject = 'Agency Registration';
             $result = MailUtility::send(
                 $recipient,
-                $subject,
+                '', // The first line of the template is taken as subject.
                 $PLAINContent,
                 $HTMLContent,
                 $fromEmail,

@@ -47,8 +47,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 class Authentication implements \TYPO3\CMS\Core\SingletonInterface {
-    public $conf = array();
-    public $config = array();
+    public $conf = [];
+    public $config = [];
     protected $authCode;
 
     public function init (\JambageCom\Agency\Configuration\ConfigurationStore $confObj)
@@ -107,7 +107,7 @@ class Authentication implements \TYPO3\CMS\Core\SingletonInterface {
         if ($codeLength == 0) {
             $codeLength = intval($this->config['codeLength']) ? intval($this->config['codeLength']) : 8;
         }
-        $recordCopy = array();
+        $recordCopy = [];
 
         if ($fields) {
             $fieldArray = GeneralUtility::trimExplode(',', $fields, 1);
@@ -136,16 +136,16 @@ class Authentication implements \TYPO3\CMS\Core\SingletonInterface {
             // Non-standard extra fields
             // Any of these extras makes the authCode incompatible with TYPO3 standard authCode
             // See GeneralUtility::stdAuthCode
-        $extraArray = array();
+        $extraArray = [];
         if ($extra != '') {
             $extraArray[] = $extra;
         }
             // Non-standard addKey field
-        if ($this->config['addKey'] != '') {
+        if (!empty($this->config['addKey'])) {
             $extraArray[] = $this->config['addKey'];
         }
             // Non-standard addDate field
-        if ($this->conf['authcodeFields.']['addDate']) {
+        if (!empty($this->conf['authcodeFields.']['addDate'])) {
             $extraArray[] = date($this->conf['authcodeFields.']['addDate']);
         }
 

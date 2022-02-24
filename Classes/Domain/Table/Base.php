@@ -62,16 +62,14 @@ class Base {
 
     public function getFieldClass ($fieldname)
     {
-        global $TCA;
-
-
         $class = '';
         $tablename = $this->getTablename();
 
         if (
             $fieldname &&
-            isset($TCA[$tablename]['columns'][$fieldname]) &&
-            is_array($TCA[$tablename]['columns'][$fieldname])
+            isset($GLOBALS['TCA'][$tablename]['columns'][$fieldname]) &&
+            is_array($GLOBALS['TCA'][$tablename]['columns'][$fieldname]) &&
+            isset($this->fieldClassArray[$fieldname])
         ) {
             $class = $this->fieldClassArray[$fieldname];
         }
@@ -81,6 +79,7 @@ class Base {
 
     public function getFieldObj ($fieldname)
     {
+        $result = null;
         $class = $this->getFieldClass($fieldname);
 
         if ($class) {
@@ -93,7 +92,7 @@ class Base {
     {
         $fieldObj = GeneralUtility::makeInstance($className);	// fetch and store it as persistent object
         if ($fieldObj->needsInit()) {
-            $fieldObj->init($this->cObj);
+            $fieldObj->init();
         }
 
         return $fieldObj;

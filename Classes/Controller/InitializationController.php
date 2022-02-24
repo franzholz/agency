@@ -138,7 +138,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         $languageObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Localization::class);
         $languageObj->init(
             AGENCY_EXT,
-            $conf['_LOCAL_LANG.']
+            $conf['_LOCAL_LANG.'] ?? ''
         );
         $languageObj->loadLocalLang(
             'EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf',
@@ -150,7 +150,6 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         }
 
         $languageObj->setSalutation($conf['salutation']);
-        
         $urlObj->init(
             $cObj,
             $controlData->getPiVars(),

@@ -10,7 +10,7 @@ $table = 'fe_users';
 $temporaryColumns = array(
     'cnum' => array(
         'exclude' => 0,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.cnum',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.cnum',
         'config' => array(
             'type' => 'input',
             'size' => '20',
@@ -21,7 +21,7 @@ $temporaryColumns = array(
     ),
     'static_info_country' => array(
         'exclude' => 0,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.static_info_country',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.static_info_country',
         'config' => array(
             'type' => 'input',
             'size' => '5',
@@ -32,7 +32,7 @@ $temporaryColumns = array(
     ),
     'zone' => array(
         'exclude' => 0,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.zone',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.zone',
         'config' => array(
             'type' => 'input',
             'size' => '20',
@@ -43,7 +43,7 @@ $temporaryColumns = array(
     ),
     'language' => array(
         'exclude' => 0,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.language',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.language',
         'config' => array(
             'type' => 'input',
             'size' => '4',
@@ -54,7 +54,7 @@ $temporaryColumns = array(
     ),
     'date_of_birth' => array(
         'exclude' => 0,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.date_of_birth',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.date_of_birth',
         'config' => array(
             'type' => 'input',
             'renderType' => 'inputDateTime',
@@ -68,29 +68,29 @@ $temporaryColumns = array(
     ),
     'gender' => array(
         'exclude' => 0,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.gender',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.gender',
         'config' => array(
             'type' => 'radio',
             'items' => array(
-                array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.gender.I.99', '99'),
-                array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.gender.I.0', '0'),
-                array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.gender.I.1', '1')
+                array('LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.gender.I.99', '99'),
+                array('LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.gender.I.0', '0'),
+                array('LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.gender.I.1', '1')
             ),
             'default' => 99
         )
     ),
     'status' => array(
         'exclude' => 0,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.status',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.status',
         'config' => array(
             'type' => 'select',
             'renderType' => 'selectSingle',
             'items' => array(
-                array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.status.I.0', '0'),
-                array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.status.I.1', '1'),
-                array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.status.I.2', '2'),
-                array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.status.I.3', '3'),
-                array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.status.I.4', '4'),
+                array('LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.status.I.0', '0'),
+                array('LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.status.I.1', '1'),
+                array('LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.status.I.2', '2'),
+                array('LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.status.I.3', '3'),
+                array('LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.status.I.4', '4'),
             ),
             'size' => 1,
             'maxitems' => 1,
@@ -99,7 +99,7 @@ $temporaryColumns = array(
     ),
     'comments' => array(
         'exclude' => 0,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.comments',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.comments',
         'config' => array(
             'type' => 'text',
             'rows' => '5',
@@ -110,7 +110,7 @@ $temporaryColumns = array(
     ),
     'by_invitation' => array(
         'exclude' => 0,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.by_invitation',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.by_invitation',
         'config' => array(
             'type' => 'check',
             'default' => '0'
@@ -118,7 +118,7 @@ $temporaryColumns = array(
     ),
     'has_privileges' => array(
         'exclude' => 0,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.has_privileges',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.has_privileges',
         'config' => array(
             'type' => 'check',
             'default' => '0'
@@ -126,7 +126,7 @@ $temporaryColumns = array(
     ),
     'terms_acknowledged' => array(
         'exclude' => 0,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.terms_acknowledged',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.terms_acknowledged',
         'config' => array(
             'type' => 'check',
             'default' => '0',
@@ -135,7 +135,7 @@ $temporaryColumns = array(
     ),
     'token' => array(
         'exclude' => 1,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.token',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.token',
         'config' => array(
             'type' => 'text',
             'rows' => '1',
@@ -145,14 +145,14 @@ $temporaryColumns = array(
     ),
     'tx_agency_password' => array (
         'exclude' => 1,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.tx_agency_password',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.tx_agency_password',
         'config' => array (
             'type' => 'passthrough',
         )
     ),
     'house_no' => array(
         'exclude' => 1,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.house_no',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.house_no',
         'config' => array(
             'type' => 'input',
             'eval' => 'trim',
@@ -163,7 +163,7 @@ $temporaryColumns = array(
     ),
     'lost_password' => array(
         'exclude' => 0,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.lost_password',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.lost_password',
         'config' => array(
             'type' => 'check',
             'default' => '0'
@@ -171,7 +171,7 @@ $temporaryColumns = array(
     ),
     'privacy_policy_acknowledged' => array(
         'exclude' => 0,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.privacy_policy_acknowledged',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.privacy_policy_acknowledged',
         'config' => array(
             'type' => 'check',
             'default' => '0',
@@ -180,7 +180,7 @@ $temporaryColumns = array(
     ),
     'privacy_policy_date' => array(
         'exclude' => 0,
-        'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.privacy_policy_date',
+        'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.privacy_policy_date',
         'config' => array(
             'type' => 'input',
             'size' => '10',
@@ -195,8 +195,8 @@ $temporaryColumns = array(
 
 if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][AGENCY_EXT]['forceGender']) {
     $temporaryColumns['gender']['config']['items'] = array(
-        array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.gender.I.0', '0'),
-        array('LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.gender.I.1', '1')
+        array('LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.gender.I.0', '0'),
+        array('LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.gender.I.1', '1')
     );
 }
 
@@ -209,7 +209,7 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
     // fe_users modified
     $directMailTemporaryColumns = array(
         'module_sys_dmail_newsletter' => array(
-            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.module_sys_dmail_newsletter',
+            'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.module_sys_dmail_newsletter',
             'exclude' => '1',
             'config' => array(
                     'type' => 'check',
@@ -217,7 +217,7 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
                 )
             ),
         'module_sys_dmail_category' => array(
-            'label'=>'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.module_sys_dmail_category',
+            'label'=>'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.module_sys_dmail_category',
             'exclude' => '1',
             'config' => array(
                 'type' => 'select',
@@ -236,7 +236,7 @@ if ( // Direct Mail tables exist but Direct Mail shall not be used
             )
         ),
         'module_sys_dmail_html' => array(
-            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_users.module_sys_dmail_html',
+            'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_users.module_sys_dmail_html',
             'exclude' => '1',
             'config' => array(
                 'type'=>'check',

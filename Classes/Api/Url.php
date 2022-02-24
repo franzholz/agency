@@ -71,15 +71,15 @@ class Url implements \TYPO3\CMS\Core\SingletonInterface {
     * @return string  generated link or url
     */
     public function get (
-        $tag = '',
         $id,
-        $vars = array(),
-        $unsetVars = array(),
+        $tag = '',
+        $vars = [],
+        $unsetVars = [],
         $usePiVars = true
     )
     {
         $result = '';
-        $piVars = array();
+        $piVars = [];
         $vars = (array) $vars;
         $unsetVars = (array) $unsetVars;
         if ($usePiVars) {
@@ -102,7 +102,7 @@ class Url implements \TYPO3\CMS\Core\SingletonInterface {
         } else {
             $result = $this->cObj->getTypoLink_URL($id, $piVars);
         }
-        $result = str_replace(array('[', ']'), array('%5B', '%5D'), $result);
+        $result = str_replace(['[', ']'], ['%5B', '%5D'], $result);
         return $result;
     }	// get_url
 }

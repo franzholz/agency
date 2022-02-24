@@ -72,6 +72,7 @@ class AfterSaveView {
         \JambageCom\Agency\Domain\Data $dataObj,
         \JambageCom\Agency\View\Template $template,
         $theTable,
+        $extensionKey,
         $autoLoginKey,
         $prefixId,
         $dataArray,
@@ -174,23 +175,26 @@ class AfterSaveView {
                     );
             }
 
-            if (isset($conf[$cmdKey . '.']['marker.'])) {
-                if ($conf[$cmdKey . '.']['marker.']['computeUrl'] == '1') {
-                    \JambageCom\Agency\Setfixed\SetfixedUrls::compute(
-                        $cmd,
-                        $prefixId,
-                        $cObj,
-                        $controlData,
-                        $markerArray,
-                        $conf['setfixed.'],
-                        $dataArray,
-                        $theTable,
-                        $conf['useShortUrls'],
-                        $conf['edit.']['setfixed'],
-                        $autoLoginKey,
-                        $conf['confirmType']
-                    );
-                }
+            if (
+                isset($conf[$cmdKey . '.']['marker.']) &&
+                isset($conf[$cmdKey . '.']['marker.']['computeUrl']) &&
+                $conf[$cmdKey . '.']['marker.']['computeUrl'] == '1'
+            ) {
+                \JambageCom\Agency\Setfixed\SetfixedUrls::compute(
+                    $cmd,
+                    $prefixId,
+                    $cObj,
+                    $controlData,
+                    $markerArray,
+                    $conf['setfixed.'],
+                    $dataArray,
+                    $theTable,
+                    $extensionKey,
+                    $conf['useShortUrls'],
+                    $conf['edit.']['setfixed'],
+                    $autoLoginKey,
+                    $conf['confirmType']
+                );
             }
 
             $uppercase = false;

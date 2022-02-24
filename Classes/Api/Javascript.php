@@ -51,9 +51,11 @@ class Javascript {
     )
     {
         if (
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']) &&
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs']) &&
             is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs'])
         ) {
-            $_params = array();
+            $_params = [];
             $out = '';
             foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs'] as $funcRef) {
                 list($onSubmit, $hiddenFields) =

@@ -220,9 +220,10 @@ class CreateView {
 
             foreach ($GLOBALS['TCA'][$theTable]['columns'] as $theField => $fieldConfig) {
                 if (
+                    isset($fieldConfig['config']['internal_type']) &&
                     $fieldConfig['config']['internal_type'] == 'file' &&
-                    $fieldConfig['config']['allowed'] != '' &&
-                    $fieldConfig['config']['uploadfolder'] != ''
+                    !empty($fieldConfig['config']['allowed']) &&
+                    !empty($fieldConfig['config']['uploadfolder'])
                 ) {
                     $markerObj->addFileUploadMarkers(
                         $languageObj,

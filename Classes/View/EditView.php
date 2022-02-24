@@ -91,6 +91,9 @@ class EditView {
         } else {
             $currentArray = $origArray;
         }
+        if (!isset($markerArray['###HIDDENFIELDS###'])) {
+            $markerArray['###HIDDENFIELDS###'] = '';
+        }
 
         if ($cmdKey == 'password') {
             $subpart = '###TEMPLATE_SETFIXED_OK_APPROVE_INVITE###';
@@ -213,9 +216,10 @@ class EditView {
         foreach ($GLOBALS['TCA'][$theTable]['columns'] as $theField => $fieldConfig) {
 
             if (
+                isset($fieldConfig['config']['internal_type']) &&
                 $fieldConfig['config']['internal_type'] == 'file' &&
-                $fieldConfig['config']['allowed'] != '' &&
-                $fieldConfig['config']['uploadfolder'] != ''
+                !empty($fieldConfig['config']['allowed']) &&
+                !empty($fieldConfig['config']['uploadfolder'])
             ) {
                 $markerObj->addFileUploadMarkers(
                     $languageObj,
@@ -384,7 +388,7 @@ class EditView {
             $aCAuth =
                 $authObj->aCAuth(
                     $origArray,
-                    $conf['setfixed.']['EDIT.']['_FIELDLIST']
+                    $conf['setfixed.']['EDIT.']['_FIELDLIST'] ?? ''
                 );
 
             if (

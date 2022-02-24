@@ -6,7 +6,7 @@ if (!defined ('AGENCY_EXT')) {
 
 $result = array(
     'ctrl' => array (
-        'title' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:sys_agency_fe_users_limit_fe_groups',
+        'title' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:sys_agency_fe_users_limit_fe_groups',
         'label' => 'codes',
         'default_sortby' => 'ORDER BY codes',
         'tstamp' => 'tstamp',
@@ -34,7 +34,7 @@ $result = array(
         ),
         'tstamp' => array (
             'exclude' => 1,
-            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:tstamp',
+            'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:tstamp',
             'config' => array (
                 'type' => 'input',
                 'size' => '8',
@@ -45,7 +45,7 @@ $result = array(
         ),
         'crdate' => array (
             'exclude' => 1,
-            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:crdate',
+            'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:crdate',
             'config' => array (
                 'type' => 'input',
                 'size' => '8',
@@ -82,7 +82,7 @@ $result = array(
         ),
         'codes' => array (
             'exclude' => 0,
-            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:sys_agency_fe_users_limit_fe_groups.codes',
+            'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:sys_agency_fe_users_limit_fe_groups.codes',
             'config' => array (
                 'type' => 'text',
                 'cols' => '48',
@@ -93,7 +93,7 @@ $result = array(
         ),
         'status' => array (
             'exclude' => 1,
-            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:sys_agency_fe_users_limit_fe_groups.status',
+            'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:sys_agency_fe_users_limit_fe_groups.status',
             'config' => array (
                 'type' => 'input',
                 'size' => '10',

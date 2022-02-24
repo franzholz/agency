@@ -36,7 +36,7 @@ if ($tableExists) {
     // ******************************************************************
     $result = array (
         'ctrl' => array (
-            'title' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:sys_dmail_category',
+            'title' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:sys_dmail_category',
             'label' => 'category',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
@@ -47,7 +47,7 @@ if ($tableExists) {
             'enablecolumns' => array (
                 'disabled' => 'hidden',
             ),
-            'iconfile' => 'EXT:' . AGENCY_EXT . '/icon_tx_directmail_category.gif',
+            'iconfile' => 'EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'icon_tx_directmail_category.gif',
         ),
         'interface' => array (
                 'showRecordFieldList' => 'hidden,category'
@@ -92,7 +92,7 @@ if ($tableExists) {
                 )
             ),
             'category' => array (
-                'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:sys_dmail_category.category',
+                'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:sys_dmail_category.category',
                 'config' => array (
                     'type' => 'input',
                     'size' => '30',
@@ -100,7 +100,7 @@ if ($tableExists) {
                 )
             ),
             'old_cat_number' => array (
-                'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:sys_dmail_category.old_cat_number',
+                'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:sys_dmail_category.old_cat_number',
                 'l10n_mode' => 'exclude',
                 'config' => array (
                     'type' => 'input',

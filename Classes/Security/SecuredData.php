@@ -123,7 +123,7 @@ class SecuredData
     */
     static public function secureInput (
         &$dataArray,
-        $bHtmlSpecial = true
+        $htmlSpecial = true
     )
     {
         foreach ($dataArray as $key => $value) {
@@ -158,8 +158,11 @@ class SecuredData
     )
     {
         $securedValue = $value;
-        if (!in_array($field, self::getSecuredFields())) {
-            $securedValue = htmlspecialchars_decode($value);
+        if (
+            !empty($securedValue) &&
+            !in_array($field, self::getSecuredFields()
+        )) {
+            $securedValue = htmlspecialchars_decode($securedValue);
             if ($htmlSpecial) {
                 $securedValue = htmlspecialchars($securedValue);
             }
@@ -180,9 +183,9 @@ class SecuredData
         &$errorMessage
     ) {
         $result = true;
-        $data = array();
+        $data = [];
             // Decrypt incoming password (and eventually other encrypted fields)
-        $passwordRow = array('password' => self::readPassword($extensionKey));
+        $passwordRow = ['password' => self::readPassword($extensionKey)];
         $errorCode = '';
         $errorMessage = '';
         $passwordDecrypted =
@@ -203,7 +206,7 @@ class SecuredData
             self::writePassword(
                 $extensionKey,
                 $passwordRow['password'],
-                $row['password_again']
+                $row['password_again'] ?? ''
             );
         } else {
             $result = false;
@@ -350,7 +353,7 @@ class SecuredData
     static public function readSecuredArray (
         $extensionKey
     ) {
-        $securedArray = array();
+        $securedArray = [];
         $sessionData = SessionUtility::readData($extensionKey);
         $securedFields = self::getSecuredFields();
         foreach ($securedFields as $securedField) {

@@ -45,7 +45,7 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 
 class UserGroup extends Base {
 
-    protected $savedReservedValues = array();
+    protected $savedReservedValues = [];
 
     /*
     * Modifies the form fields configuration depending on the $cmdKey
@@ -58,14 +58,18 @@ class UserGroup extends Base {
     {
             // Add usergroup to the list of fields and required fields if the user is allowed to select user groups
             // Except when only updating password
-        if ($cmdKey != 'password') {
-            if ($conf[$cmdKey . '.']['allowUserGroupSelection']) {
+        if (
+            !empty($cmdKey) &&
+            $cmdKey != 'password' &&
+            $cmdKey != 'delete'
+        ) {
+            if (isset($conf[$cmdKey . '.']['allowUserGroupSelection'])) {
                 $conf[$cmdKey . '.']['fields'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',usergroup', 1)));
                 $conf[$cmdKey . '.']['required'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',usergroup', 1)));
             } else {
                     // Remove usergroup from the list of fields and required fields if the user is not allowed to select user groups
-                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), array('usergroup')));
-                $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), array('usergroup')));
+                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['usergroup']));
+                $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), ['usergroup']));
             }
         }
             // If inviting and administrative review is enabled, save original reserved user groups
@@ -139,8 +143,9 @@ class UserGroup extends Base {
     )
     {
         $whereClause = '';
-        $subgroupWhereClauseArray = array();
-        $pidArray = array();
+        $subgroupWhereClauseArray = [];
+        $subgroupWhereClause = '';
+        $pidArray = [];
         $tmpArray = GeneralUtility::trimExplode(',', $conf['userGroupsPidList'], 1);
         if (count($tmpArray)) {
             foreach($tmpArray as $value) {
@@ -158,7 +163,7 @@ class UserGroup extends Base {
         }
 
         $whereClausePart2 = '';
-        $whereClausePart2Array = array();
+        $whereClausePart2Array = [];
 
         $this->getAllowedValues(
             $conf,
@@ -214,7 +219,7 @@ class UserGroup extends Base {
             isset($dataArray[$fieldname]) &&
             is_array($dataArray[$fieldname])
         ) {
-            $valuesArray = array();
+            $valuesArray = [];
 
             if (
                 isset($origArray) &&
@@ -299,7 +304,7 @@ class UserGroup extends Base {
                                     $tag = $myRow->nodeName;
                                     if ($tag == 'Row') {
                                         $objRowDetails = $myRow->childNodes;
-                                        $xmlRow = array();
+                                        $xmlRow = [];
                                         $count = 0;
 
                                         foreach ($objRowDetails as $rowDetail) {
@@ -324,8 +329,9 @@ class UserGroup extends Base {
                                             $cnumInput != '' &&
                                             $cnumInput == $cnumXml
                                         ) {
-                                            $textArray = array($row['last_name'], $xmlRow['last_name']);
-                                            $nameArray = array();
+                                            $textArray = 
+                                                [$row['last_name'], $xmlRow['last_name']];
+                                            $nameArray = [];
                                             foreach ($textArray as $text) {
                                                 $text = strtolower($text);
                                                 $text = preg_replace('@\x{00e4}@u', 'ae', $text); // umlaut ä => ae

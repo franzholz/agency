@@ -68,6 +68,7 @@ class SetFixedUrls {
         $setfixed,
         array $record,
         $theTable,
+        $extensionKey,
         $useShortUrls,
         $editSetfixed,
         $autoLoginKey,

@@ -23,7 +23,7 @@ if (!$tableExists) {
 
 $result = array(
     'ctrl' => array(
-        'title' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_groups_language_overlay',
+        'title' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_groups_language_overlay',
         'label' => 'title',
         'default_sortby' => 'ORDER BY fe_groups_uid',
         'sortby' => 'sorting',
@@ -89,7 +89,7 @@ $result = array(
         ),
         'title' => array(
             'exclude' => 0,
-            'label' => 'LLL:EXT:' . AGENCY_EXT . '/locallang_db.xlf:fe_groups_language_overlay.title',
+            'label' => 'LLL:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_groups_language_overlay.title',
             'config' => array(
                 'type' => 'input',
                 'size' => '50',

@@ -66,14 +66,14 @@ class Parameters
     public $extensionKey;
     public $cmd = '';
     public $cmdKey = '';
-    public $pid = array();
+    public $pid = [];
     public $defaultPid = '';
     public $setfixedEnabled = 0;
     public $submit = false;
     public $bDoNotSave = false;
     public $failure = false; // is set if data did not have the required fields set.
     public $sys_language_content;
-    public $feUserData = array();
+    public $feUserData = [];
     public $bValidRegHash;
     public $regHash;
     private $confObj;
@@ -83,9 +83,9 @@ class Parameters
     protected $usePasswordAgain = false;
     protected $usePassword = false;
     protected $captcha = null;
-    protected $setFixedOptions = array('DELETE', 'EDIT', 'UNSUBSCRIBE');
-    protected $setFixedParameters = array('rU', 'aC', 'cmd', 'sFK');
-    protected $fD = array();
+    protected $setFixedOptions = ['DELETE', 'EDIT', 'UNSUBSCRIBE'];
+    protected $setFixedParameters = ['rU', 'aC', 'cmd', 'sFK'];
+    protected $fD = [];
 
 
     public function init (
@@ -96,7 +96,7 @@ class Parameters
         $theTable
     )
     {
-        $fdArray = array();
+        $fdArray = [];
         $conf = $confObj->getConf();
         if ($theTable == 'fe_users') {
             $this->initPasswordField($conf);
@@ -122,21 +122,21 @@ class Parameters
         $this->setTable($theTable);
         $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
 
-        $this->sys_language_content = intval($GLOBALS['TSFE']->config['config']['sys_language_uid']);
+        $this->sys_language_content = intval($GLOBALS['TSFE']->config['config']['sys_language_uid'] ?? 0);
 
             // set the title language overlay
         $this->setPidTitle($conf, $this->sys_language_content);
 
-        $pidTypeArray = array('login', 'register', 'edit', 'infomail', 'confirm', 'confirmInvitation', 'password');
+        $pidTypeArray = ['login', 'register', 'edit', 'infomail', 'confirm', 'confirmInvitation', 'password'];
         // set the pid's
 
         foreach ($pidTypeArray as $k => $type) {
-            $this->setPid($type, $conf[$type . 'PID']);
+            $this->setPid($type, $conf[$type . 'PID'] ?? '');
         }
 
         if (
             $conf['enableEmailConfirmation'] ||
-            ($this->theTable == 'fe_users' && $conf['enableAdminReview']) ||
+            ($this->theTable == 'fe_users' && !empty($conf['enableAdminReview'])) ||
             $conf['setfixed']
         ) {
             $this->setSetfixedEnabled(1);
@@ -148,20 +148,31 @@ class Parameters
             (
                 is_array($feUserData) &&
                 count($feUserData) == 1 &&
-                in_array($feUserData['cmd'], array('create', 'edit', 'password'))
+                isset($feUserData['cmd']) &&
+                in_array($feUserData['cmd'], ['create', 'edit', 'password'])
             );
         $bValidRegHash = false;
 
-        if ($conf['useShortUrls']) {
+        if (!empty($conf['useShortUrls'])) {
+            $regHash = false;
+
             $this->cleanShortUrlCache();
-            if (isset($feUserData) && is_array($feUserData)) {
+            if (
+                isset($feUserData) &&
+                is_array($feUserData) &&
+                isset($feUserData['regHash'])
+            ) {
                 $regHash = $feUserData['regHash'];
             }
 
             if (!$regHash) {
                 $getData = GeneralUtility::_GET($prefixId);
 
-                if (isset($getData) && is_array($getData)) {
+                if (
+                    isset($getData) &&
+                    is_array($getData) &&
+                    isset($getData['regHash'])
+                ) {
                     $regHash = $getData['regHash'];
                 }
             }
@@ -176,8 +187,8 @@ class Parameters
                     count($getVars)
                 ) {
                     $bValidRegHash = true;
-                    $origDataFieldArray = array('sFK', 'cmd', 'submit', 'fetch', 'regHash', 'preview', 'token');
-                    $origFeuserData = array();
+                    $origDataFieldArray = ['sFK', 'cmd', 'submit', 'fetch', 'regHash', 'preview', 'token'];
+                    $origFeuserData = [];
                     // copy the original values which must not be overridden by the regHash stored values
                     foreach ($origDataFieldArray as $origDataField) {
                         if (isset($feUserData[$origDataField])) {
@@ -192,6 +203,7 @@ class Parameters
                     }
 
                     if (
+                        isset($feUserData['rU']) &&
                         $restoredFeUserData['rU'] > 0 &&
                         $restoredFeUserData['rU'] == $feUserData['rU']
                     ) {
@@ -200,7 +212,7 @@ class Parameters
                         $feUserData = $restoredFeUserData;
                     }
 
-                    if (isset($feUserData) && is_array($feUserData)) {
+                    if (is_array($feUserData)) {
                         $setFixedCmd = '';
 
                         if (isset($origFeuserData['cmd'])) {
@@ -228,7 +240,7 @@ class Parameters
         $piVarArray = $this->getSetfixedParameters();
 
         foreach ($piVarArray as $pivar) {
-            $value = htmlspecialchars(GeneralUtility::_GP($pivar));
+            $value = GeneralUtility::_GP($pivar);
             if ($value != '') {
                 $this->setFeUserData($value, $pivar);
             }
@@ -271,7 +283,7 @@ class Parameters
         }
 
             // Get the data for the uid provided in query parameters
-        $bRuIsInt = MathUtility::canBeInterpretedAsInteger($feUserData['rU']);
+        $bRuIsInt = MathUtility::canBeInterpretedAsInteger($feUserData['rU'] ?? '');
         if ($bRuIsInt) {
             $theUid = intval($feUserData['rU']);
             $origArray = $GLOBALS['TSFE']->sys_page->getRawRecord($theTable, $theUid);
@@ -319,8 +331,9 @@ class Parameters
             (
                 !count($feUserData) ||
                 $bSecureStartCmd ||
-                ($token != '' && $feUserData['token'] == $token) ||
-                ($token == '' && $feUserData['token'] != '' && $cmd == 'create') // Allow always the creation of a new user. No session data exists in this case.
+                (!empty($token) && $feUserData['token'] == $token) ||
+                (empty($token) && !empty($feUserData['token']) && $cmd == 'create')
+                    // Allow always the creation of a new user. No session data exists in this case.
             )
         ) {
             $this->setTokenValid(true);
@@ -370,7 +383,7 @@ class Parameters
             $this->writeRedirectUrl();
         } else {
                 // Erase all FE user data when the token is not valid
-            $this->setFeUserData(array());
+            $this->setFeUserData([]);
                 // Erase any stored password
             SecuredData::writePassword(
                 $extensionKey,
@@ -392,10 +405,14 @@ class Parameters
         $extensionKey = $this->getExtensionKey();
 
         $usesCaptcha =
-            GeneralUtility::inList($conf[$cmdKey . '.']['fields'], \JambageCom\Agency\Constants\Field::CAPTCHA) &&
-            is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha']) &&
-            is_array($conf[$cmdKey . '.']) &&
-            is_array($conf[$cmdKey . '.']['evalValues.']) &&
+            !empty($cmdKey) &&
+            isset($conf[$cmdKey . '.']['fields']) &&
+            GeneralUtility::inList(
+                $conf[$cmdKey . '.']['fields'],  
+                \JambageCom\Agency\Constants\Field::CAPTCHA
+            ) &&
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha']) &&
+            isset($conf[$cmdKey . '.']['evalValues.']) &&
             is_object(
                 $captcha = \JambageCom\Div2007\Captcha\CaptchaManager::getCaptcha(
                     $extensionKey,
@@ -612,7 +629,7 @@ class Parameters
     {
         $redirectUrl = GeneralUtility::_GET('redirect_url');
         if ($redirectUrl != '') {
-            $data = array();
+            $data = [];
             $data['redirect_url'] = $redirectUrl;
             $extensionKey = $this->getExtensionKey();
             SessionUtility::writeData(
@@ -925,7 +942,7 @@ class Parameters
         $conf = $confObj->getConf();
         $cmdKey = $this->getCmdKey();
 
-        $result = ($conf[$cmdKey . '.']['preview'] && $this->getFeUserData('preview'));
+        $result = (!empty($cmdKey) && !empty($conf[$cmdKey . '.']['preview']) && $this->getFeUserData('preview'));
         return $result;
     }   // isPreview
 
@@ -938,7 +955,7 @@ class Parameters
     public function getShortUrl ($regHash)
     {
             // get the serialised array from the DB based on the passed hash value
-        $varArray = array();
+        $varArray = [];
         $res =
             $GLOBALS['TYPO3_DB']->exec_SELECTquery(
                 'params',
@@ -955,11 +972,11 @@ class Parameters
         $GLOBALS['TYPO3_DB']->sql_free_result($res);
 
             // convert the array to one that will be properly incorporated into the GET global array.
-        $retArray = array();
+        $retArray = [];
         foreach($varArray as $key => $val) {
             $val = str_replace('%2C', ',', $val);
-            $search = array('[%5D]', '[%5B]');
-            $replace = array('\']', '\'][\'');
+            $search = ['[%5D]', '[%5B]'];
+            $replace = ['\']', '\'][\''];
             $newkey = "['" . preg_replace($search, $replace, $key);
             if (!preg_match('/' . preg_quote(']') . '$/', $newkey)){
                 $newkey .= "']";

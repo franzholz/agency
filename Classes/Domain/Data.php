@@ -54,23 +54,23 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     public $tca;
     public $freeCap; // object of type tx_srfreecap_pi2
     public $controlData;
-    public $dataArray = array();
-    public $origArray = array();
-    protected $evalErrors = array();
+    public $dataArray = [];
+    public $origArray = [];
+    protected $evalErrors = [];
     public $saved = false; // is set if data is saved
     public $theTable;
-    public $addTableArray = array();
+    public $addTableArray = [];
     public $fileFunc = ''; // Set to a basic_filefunc object for file uploads
 
     public $error;
     public $additionalUpdateFields = '';
-    public $additionalOverrideFields = array();
+    public $additionalOverrideFields = [];
     public $fieldList = ''; // List of fields from $TCA[table]['columns'] or fe_admin_fieldList (TYPO3 below 6.2)
     public $specialfieldlist = ''; // list of special fields like captcha
-    public $additionalIncludedFields = array(); // list of additional front end fields which are active only in the preview mode: username, cnum
+    public $additionalIncludedFields = []; // list of additional front end fields which are active only in the preview mode: username, cnum
     public $recUid = 0;
-    public $missing = array(); // array of required missing fields
-    public $inError = array(); // array of fields with eval errors other than absence
+    public $missing = []; // array of required missing fields
+    public $inError = []; // array of fields with eval errors other than absence
     public $templateCode = '';
     /**
      * @var CoreQuery
@@ -272,7 +272,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
 
     public function resetDataArray ()
     {
-        $this->dataArray = array();
+        $this->dataArray = [];
     }
 
     public function setOrigArray (array $origArray)
@@ -288,7 +288,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     public function bNewAvailable ()
     {
         $dataArray = $this->getDataArray();
-        $result = ($dataArray['username'] != '' || $dataArray['email'] != '');
+        $result = (!empty($dataArray['username']) || !empty($dataArray['email']));
         return $result;
     }
 
@@ -297,14 +297,18 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     *
     * @return void  all overriding done directly on array $this->dataArray
     */
-    public function overrideValues (array &$dataArray, $overrideConf)
+    public function overrideValues (
+        array &$dataArray,
+        $cmdKey,
+        $conf
+    )
     {
         $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
-        $overrideFieldArray = array();
+        $overrideFieldArray = [];
 
         // Addition of overriding values
-        if (is_array($overrideConf['overrideValues.'])) {
-            foreach ($overrideConf['overrideValues.'] as $theField => $theValue) {
+        if (isset($conf['overrideValues.'])) {
+            foreach ($conf['overrideValues.'] as $theField => $theValue) {
                 $control = false;
 
                 if (
@@ -362,7 +366,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 } else if (
                     $theField == 'usergroup' &&
                     $this->controlData->getTable() == 'fe_users' &&
-                    $conf[$cmdKey.'.']['allowUserGroupSelection']
+                    !empty($conf['allowUserGroupSelection'])
                 ) {
                     $overrideArray = GeneralUtility::trimExplode(',', $theValue, 1);
                     if (is_array($dataArray[$theField])) {
@@ -372,13 +376,9 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                     }
                     $dataValue = array_unique($dataValue);
                 } else {
-                    $stdWrap = $overrideConf[$theField . '.'];
+                    $stdWrap = ($conf['overrideValues.'][$theField . '.'] ?? '');
                     if ($stdWrap) {
                         $dataValue = $cObj->stdWrap($theValue, $stdWrap);
-                    } else if (
-                        isset($overrideConf[$theField])
-                    ) {
-                        $dataValue = $overrideConf[$theField];
                     } else {
                         $dataValue = $theValue;
                     }
@@ -405,7 +405,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     {
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
-        $dataArray = array();
+        $dataArray = [];
 
         // Addition of default values
         if (is_array($conf[$cmdKey . '.']['defaultValues.'])) {
@@ -515,16 +515,17 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     )
     {
         $conf = $confObj->getConf();
-        $failureMsg = array();
+        $failureMsg = [];
         $displayFieldArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1);
         if (
             $captcha instanceof CaptchaInterface
         ) {
             $displayFieldArray[] = \JambageCom\Agency\Constants\Field::CAPTCHA;
         }
+        $pathSite = \TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/';
 
         // Check required, set failure if not ok.
-        $failureArray = array();
+        $failureArray = [];
 
         foreach ($requiredArray as $k => $theField) {
 
@@ -546,10 +547,11 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
             }
         }
 
-        $pid = intval($dataArray['pid']);
+        $pid = intval($dataArray['pid'] ?? '');
 
         // Evaluate: This evaluates for more advanced things than "required" does. But it returns the same error code, so you must let the required-message tell, if further evaluation has failed!
         $bRecordExists = false;
+        $recordTestPid = 0;
 
         if (is_array($conf[$cmdKey . '.']['evalValues.'])) {
             $cmd = $this->controlData->getCmd();
@@ -557,7 +559,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 if ($pid) {
                         // This may be tricked if the input has the pid-field set but the edit-field list does NOT allow the pid to be edited. Then the pid may be false.
                     $recordTestPid = $pid;
-                } else {
+                } else if (!empty($dataArray['uid'])) {
                     $tempRecArr = $GLOBALS['TSFE']->sys_page->getRawRecord($this->controlData->getTable(), $dataArray['uid']);
                     $recordTestPid = intval($tempRecArr['pid']);
                 }
@@ -566,9 +568,9 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 $thePid = $this->controlData->getPid();
                 $recordTestPid = ($thePid ? $thePid : MathUtility::convertToPositiveInteger($pid));
             }
-            $countArray = array();
-            $countArray['hook'] = array();
-            $countArray['preg'] = array();
+            $countArray = [];
+            $countArray['hook'] = [];
+            $countArray['preg'] = [];
 
             foreach ($conf[$cmdKey . '.']['evalValues.'] as $theField => $theValue) {
                 if (
@@ -577,8 +579,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 ) {
                     continue;
                 }
-                $this->evalErrors[$theField] = array();
-                $failureMsg[$theField] = array();
+                $this->evalErrors[$theField] = [];
+                $failureMsg[$theField] = [];
                 $listOfCommands = GeneralUtility::trimExplode(',', $theValue, 1);
                     // Unset the incoming value is empty and unsetEmpty is specified
                 if (array_search('unsetEmpty', $listOfCommands) !== false) {
@@ -650,8 +652,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                 }
                             break;
                             case 'twice':
-                                $fieldValue = strval($dataArray[$theField]);
-                                $fieldAgainValue = strval($dataArray[$theField . '_again']);
+                                $fieldValue = strval($dataArray[$theField] ?? '');
+                                $fieldAgainValue = strval($dataArray[$theField . '_again'] ?? '');
                                 if (strcmp($fieldValue, $fieldAgainValue)) {
                                     $failureArray[] = $theField;
                                     $this->inError[$theField] = true;
@@ -704,6 +706,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                 $chars = intval($cmdParts[1]);
 
                                 if (
+                                    isset($dataArray[$theField]) &&
                                     !is_array($dataArray[$theField]) &&
                                     strlen($dataArray[$theField]) < $chars
                                 ) {
@@ -724,7 +727,10 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             break;
                             case 'atMost':
                                 $chars = intval($cmdParts[1]);
-                                if (!is_array($dataArray[$theField]) && strlen($dataArray[$theField]) > $chars) {
+                                if (
+                                    isset($dataArray[$theField]) &&
+                                    !is_array($dataArray[$theField]) && strlen($dataArray[$theField]) > $chars
+                                ) {
                                     $failureArray[] = $theField;
                                     $this->inError[$theField] = true;
                                     $this->evalErrors[$theField][] = $theCmd;
@@ -768,7 +774,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             break;
                             case 'upload':
                                 if (
-                                    $dataArray[$theField] &&
+                                    isset($dataArray[$theField]) &&
+                                    isset($GLOBALS['TCA'][$theTable]['columns'][$theField]['config']) &&
                                     is_array($GLOBALS['TCA'][$theTable]['columns'][$theField]['config'])
                                 ) {
                                     $colSettings = $GLOBALS['TCA'][$theTable]['columns'][$theField];
@@ -781,7 +788,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                         $allowedExtArray = GeneralUtility::trimExplode(',', $colConfig['allowed'], 1);
                                         $maxSize = $colConfig['max_size'];
                                         $fileNameArray = $dataArray[$theField];
-                                        $newFileNameArray = array();
+                                        $newFileNameArray = [];
 
                                         if (
                                             is_array($fileNameArray) &&
@@ -794,13 +801,13 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                                 $bAllowedFilename = $this->checkFilename($filename);
                                                 $fI = pathinfo($filename);
                                                 $fileExtension = strtolower($fI['extension']);
-                                                $fullfilename = PATH_site . $uploadPath . '/' . $filename;
+                                                $fullfilename = $pathSite . $uploadPath . '/' . $filename;
                                                 if (
                                                     $bAllowedFilename &&
                                                     (!count($allowedExtArray) || in_array($fileExtension, $allowedExtArray))
                                                 ) {
                                                     if (@is_file($fullfilename)) {
-                                                        if (!$maxSize || (filesize(PATH_site.$uploadPath.'/'.$filename) < ($maxSize * 1024))) {
+                                                        if (!$maxSize || (filesize($pathSite . $uploadPath.'/'.$filename) < ($maxSize * 1024))) {
                                                             $newFileNameArray[] = $filename;
                                                         } else {
                                                             $this->evalErrors[$theField][] = $theCmd;
@@ -816,8 +823,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                                             );
                                                             $failureArray[] = $theField;
                                                             $this->inError[$theField] = true;
-                                                            if (@is_file(PATH_site.$uploadPath . '/' . $filename)) {
-                                                                @unlink(PATH_site.$uploadPath . '/' . $filename);
+                                                            if (@is_file($pathSite . $uploadPath . '/' . $filename)) {
+                                                                @unlink($pathSite . $uploadPath . '/' . $filename);
                                                             }
                                                         }
                                                     } else {
@@ -934,7 +941,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                     }
                                     $pattern = str_replace('preg[', '', $cmd);
                                     $pattern = substr($pattern, 0, strlen($pattern) - 1);
-                                    $matches = array();
+                                    $matches = [];
                                     $test = preg_match($pattern, $dataArray[$theField], $matches);
 
                                     if ($test === false || $test == 0) {
@@ -1097,11 +1104,10 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                         )
                     ) {
                         $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
-                        if ($markContentArray['###EVAL_ERROR_saved###']) {
-                            $markContentArray['###EVAL_ERROR_saved###'] .= '<br' . $xhtmlFix . '>';
-                        }
+                        $markerOut = $markContentArray['###EVAL_ERROR_saved###'] ?? '';
+                        $markerOut .= '<br' . $xhtmlFix . '>';
                         $errorMsg = implode('<br' . $xhtmlFix . '>', $failureMsg[$theField]);
-                        $markContentArray['###EVAL_ERROR_saved###'] .= $errorMsg;
+                        $markContentArray['###EVAL_ERROR_saved###'] = $markerOut . $errorMsg;
                     } else {
                         $errorMsg = '';
                     }
@@ -1118,7 +1124,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
             $markContentArray['###EVAL_ERROR_saved###'] = '';
         }
 
-        if ($this->missing['zone'] && is_object($staticInfoObj)) {
+        if (!empty($this->missing['zone']) && is_object($staticInfoObj)) {
             // empty zone if there is not zone for the provided country
             $zoneArray = $staticInfoObj->initCountrySubdivisions($dataArray['static_info_country']);
 
@@ -1161,7 +1167,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 if (in_array('setEmptyIfAbsent', $listOfCommands)) {
                     $this->setEmptyIfAbsent($theTable, $theField, $dataArray);
                 }
-                $internalType = $GLOBALS['TCA'][$theTable]['columns'][$theField]['config']['internal_type'];
+                $internalType = $GLOBALS['TCA'][$theTable]['columns'][$theField]['config']['internal_type'] ?? '';
 
                 if (
                     isset($dataArray[$theField]) ||
@@ -1170,8 +1176,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 ) {
                     foreach($listOfCommands as $cmd) {
                         $cmdParts = preg_split('/\[|\]/', $cmd); // Point is to enable parameters after each command enclosed in brackets [..]. These will be in position 1 in the array.
-                        $theCmd = trim($cmdParts[0]);
-                        $parameter = trim($cmdParts[1]);
+                        $theCmd = trim($cmdParts['0']);
+                        $parameter = trim($cmdParts['1'] ?? '');
                         $bValueAssigned = true;
                         if (
                             $theField == 'password' &&
@@ -1212,8 +1218,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                 $dataValue = substr(md5(uniqid(microtime(), 1)), 0, intval($cmdParts[1]));
                             break;
                             case 'files':
-                                $fieldDataArray = array();
-                                if ($dataArray[$theField]) {
+                                $fieldDataArray = [];
+                                if (!empty($dataValue)) {
                                     if (is_array($dataValue)) {
                                         $fieldDataArray = $dataValue;
                                     } else if (is_string($dataValue) && $dataValue) {
@@ -1234,10 +1240,13 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                 }
                             break;
                             case 'multiple':
-                                $fieldDataArray = array();
+                                $fieldDataArray = [];
                                 if (
                                     !empty($dataArray[$theField]) ||
-                                    $dataArray[$theField] == '0' // A zero value is different from an empty value. It must be kept for the case when only the first element of a checkbox with the value 0 has been selected.
+                                    (
+                                        isset($dataArray[$theField]) &&
+                                        $dataArray[$theField] == '0' // A zero value is different from an empty value. It must be kept for the case when only the first element of a checkbox with the value 0 has been selected.
+                                    )
                                 ) {
                                     if (is_array($dataArray[$theField])) {
                                         $fieldDataArray = $dataArray[$theField];
@@ -1275,7 +1284,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             break;
                             case 'uniqueHashInt':
                                 $otherFields = GeneralUtility::trimExplode(';', $cmdParts[1], 1);
-                                $hashArray = array();
+                                $hashArray = [];
                                 foreach($otherFields as $fN) {
                                     $vv = $dataArray[$fN];
                                     $vv = preg_replace('/\s+/', '', $vv);
@@ -1390,7 +1399,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         if (is_array($GLOBALS['TCA'][$theTable]['columns'][$theField])) {
             $uploadPath = $GLOBALS['TCA'][$theTable]['columns'][$theField]['config']['uploadfolder'];
         }
-        $fileNameArray = array();
+        $fileNameArray = [];
+        $pathSite = \TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/';
 
         if ($uploadPath) {
             if (count($fieldDataArray)) {
@@ -1399,8 +1409,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                         if ($this->checkFilename($file['name'])) {
                             if ($file['submit_delete']) {
 //                              if ($cmdKey != 'edit') {
-                                    if (@is_file(PATH_site . $uploadPath . '/' . $file['name'])) {
-                                        @unlink(PATH_site . $uploadPath . '/' . $file['name']);
+                                    if (@is_file($pathSite . $uploadPath . '/' . $file['name'])) {
+                                        @unlink($pathSite . $uploadPath . '/' . $file['name']);
                                         $deleted = true;
                                     }
 //                              }
@@ -1416,7 +1426,10 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 }
             }
 
-            if (is_array($_FILES['FE']['name'][$theTable][$theField])) {
+            if (
+                isset($_FILES['FE']['name'][$theTable][$theField]) &&
+                is_array($_FILES['FE']['name'][$theTable][$theField])
+            ) {
                 foreach($_FILES['FE']['name'][$theTable][$theField] as $i => $filename) {
 
                     if (
@@ -1429,7 +1442,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                         if (GeneralUtility::verifyFilenameAgainstDenyPattern($fI['name'])) {
                             $tmpFilename = basename($filename, '.' . $fI['extension']) . '_' . GeneralUtility::shortmd5(uniqid($filename)) . '.' . $fI['extension'];
                             $cleanFilename = $this->fileFunc->cleanFileName($tmpFilename);
-                            $theDestFile = $this->fileFunc->getUniqueName($cleanFilename, PATH_site . $uploadPath . '/');
+                            $theDestFile = $this->fileFunc->getUniqueName($cleanFilename, $pathSite . $uploadPath . '/');
                             $result = GeneralUtility::upload_copy_move($_FILES['FE']['tmp_name'][$theTable][$theField][$i], $theDestFile);
                             $fI2 = pathinfo($theDestFile);
                             $fileNameArray[] = $fI2['basename'];
@@ -1472,7 +1485,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 $theUid = $dataArray['uid'];
                 $result = $theUid;
                 $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
-                $aCAuth = $authObj->aCAuth($origArray, $conf['setfixed.']['EDIT.']['_FIELDLIST']);
+                $aCAuth = $authObj->aCAuth($origArray, $conf['setfixed.']['EDIT.']['_FIELDLIST'] ?? '');
 
                     // Fetch the original record to check permissions
                 if (
@@ -1507,8 +1520,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                         $newFieldArray = array_diff($newFieldArray, array('name'));
                     }
                         // Do not reset the username if we have no new value
-                    if (!in_array('username', $fieldArray) && $dataArray['username'] == '') {
-                        $newFieldArray = array_diff($newFieldArray, array('username'));
+                    if (!in_array('username', $fieldArray) && empty($dataArray['username'])) {
+                        $newFieldArray = array_diff($newFieldArray, ['username']);
                     }
 
                     if (
@@ -1517,8 +1530,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             $theTable,
                             $origArray,
                             $GLOBALS['TSFE']->fe_user->user,
-                            $conf['allowedGroups'],
-                            $conf['fe_userEditSelf']
+                            $conf['allowedGroups'] ?? '',
+                            $conf['fe_userEditSelf'] ?? ''
                         )
                     ) {
                         $outGoingData =
@@ -1565,7 +1578,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             $this->control,
                             $conf['edit.'],
                             'userFunc_afterSave',
-                            array('rec' => $newRow, 'origRec' => $origArray)
+                            ['rec' => $newRow, 'origRec' => $origArray]
                         );
 
                         // Post-edit processing: call user functions and hooks
@@ -1657,6 +1670,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                     if ($theTable == 'fe_users') {
                         $parsedArray['password'] = $password;
                     }
+
                     if (isset($GLOBALS['TCA'][$theTable]['ctrl']['token'])) {
 
                         $parsedArray['token'] = $token;
@@ -1680,15 +1694,15 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                         !empty($conf['fe_userOwnSelf'])
                     ) {
                         $extraList = '';
-                        $tmpDataArray = array();
-                        if ($GLOBALS['TCA'][$theTable]['ctrl']['fe_cruser_id']) {
+                        $tmpDataArray = [];
+                        if (isset($GLOBALS['TCA'][$theTable]['ctrl']['fe_cruser_id'])) {
                             $field = $GLOBALS['TCA'][$theTable]['ctrl']['fe_cruser_id'];
                             $dataArray[$field] = $newId;
                             $tmpDataArray[$field] = $newId;
                             $extraList .= ',' . $field;
                         }
 
-                        if ($GLOBALS['TCA'][$theTable]['ctrl']['fe_crgroup_id']) {
+                        if (isset($GLOBALS['TCA'][$theTable]['ctrl']['fe_crgroup_id'])) {
                             $field = $GLOBALS['TCA'][$theTable]['ctrl']['fe_crgroup_id'];
                             if (is_array($dataArray['usergroup'])) {
                                 list($tmpDataArray[$field]) = $dataArray['usergroup'];
@@ -1731,7 +1745,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             $this->control,
                             $conf['create.'],
                             'userFunc_afterSave',
-                            array('rec' => $newRow, 'origRec' => $origArray)
+                            ['rec' => $newRow, 'origRec' => $origArray]
                         );
 
                         // Call all afterSaveCreate hooks after the record has been created and saved
@@ -1807,8 +1821,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             $theTable,
                             $origArray,
                             $GLOBALS['TSFE']->fe_user->user,
-                            $conf['allowedGroups'],
-                            $conf['fe_userEditSelf']
+                            $conf['allowedGroups'] ?? '',
+                            $conf['fe_userEditSelf'] ?? ''
                         )
                     ) {
                             // Delete the record and display form, if access granted.
@@ -1836,7 +1850,10 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             }
                         }
 
-                        if (!$GLOBALS['TCA'][$theTable]['ctrl']['delete'] || $conf['forceFileDelete']) {
+                        if (
+                            empty($GLOBALS['TCA'][$theTable]['ctrl']['delete']) ||
+                            !empty($conf['forceFileDelete'])
+                        ) {
                                 // If the record is being fully deleted... then remove the images or files attached.
                             $this->deleteFilesFromRecord($theTable, $origArray);
                         }
@@ -1876,10 +1893,12 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $row
     )
     {
-        $updateFields = array();
+        $updateFields = [];
+        $pathSite = \TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/';
         foreach($GLOBALS['TCA'][$theTable]['columns'] as $field => $conf) {
             if (
                 $conf['config']['type'] == 'group' &&
+                isset($conf['config']['internal_type']) &&
                 $conf['config']['internal_type'] == 'file' &&
                 isset($row[$field])
             ) {
@@ -1899,7 +1918,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 }
                 foreach($delFileArr as $n) {
                     if ($n != '') {
-                        $fpath = PATH_site . $conf['config']['uploadfolder'] . '/' . $n;
+                        $fpath = $pathSite . $conf['config']['uploadfolder'] . '/' . $n;
                         if(@is_file($fpath)) {
                             @unlink($fpath);
                         }
@@ -1921,7 +1940,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
 
-        $resultArray = array('m' => '', 'd' => '', 'y' => '');
+        $resultArray = ['m' => '', 'd' => '', 'y' => ''];
         $dateValue = trim($value);
         $split = $conf['dateSplit'];
         if (!$split) {
@@ -2011,7 +2030,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
             if (
                 in_array($colName, $fieldsList) &&
                 $colSettings['config']['type'] == 'select' &&
-                $colSettings['config']['MM']
+                isset($colSettings['config']['MM'])
             ) {
                 $valuesArray = $row[$colName];
                 if (isset($valuesArray) && is_array($valuesArray)) {
@@ -2020,7 +2039,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             $colSettings['config']['MM'],
                             'uid_local=' . intval($row['uid'])
                         );
-                    $insertFields = array();
+                    $insertFields = [];
                     $insertFields['uid_local'] = intval($row['uid']);
                     $insertFields['tablenames'] = '';
                     $insertFields['sorting'] = 0;
@@ -2046,7 +2065,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     public function deleteMMRelations (
         $theTable,
         $uid,
-        array $row = array()
+        array $row = []
     )
     {
             // update the MM relation
@@ -2055,9 +2074,13 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
             if (
                 in_array($colName, $fieldsList) &&
                 $colSettings['config']['type'] == 'select' &&
-                $colSettings['config']['MM']
+                isset($colSettings['config']['MM'])
             ) {
-                $res = $GLOBALS['TYPO3_DB']->exec_DELETEquery($colSettings['config']['MM'], 'uid_local=' . intval($uid));
+                $res = 
+                    $GLOBALS['TYPO3_DB']->exec_DELETEquery(
+                        $colSettings['config']['MM'],
+                        'uid_local=' . intval($uid)
+                    );
             }
         }
     }   // deleteMMRelations
@@ -2187,9 +2210,9 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                     $dataArray['last_name']
                 );
             } else {
-                $dataArray['name'] = trim(trim($dataArray['first_name'])
-                    . ((in_array('middle_name', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)) && trim($dataArray['middle_name']) != '') ? ' ' . trim($dataArray['middle_name']) : '' )
-                    . ' ' . trim($dataArray['last_name']));
+                $dataArray['name'] = trim(trim($dataArray['first_name'] ?? '')
+                    . ((in_array('middle_name', GeneralUtility::trimExplode(',', ($conf[$cmdKey . '.']['fields'] ?? ''), 1)) && !empty($dataArray['middle_name'])) ? ' ' . trim($dataArray['middle_name']) : '' )
+                    . ' ' . trim($dataArray['last_name'] ?? ''));
             }
         }
     }
@@ -2230,7 +2253,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
 
-        $parsedArray = array();
+        $parsedArray = [];
         $parsedArray = $origArray;
         if (count($origArray) && is_array($conf['parseFromDBValues.'])) {
             foreach($conf['parseFromDBValues.'] as $theField => $theValue) {
@@ -2287,6 +2310,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $conf = $confObj->getConf();
         $parsedArray = $dataArray;
+        $pathSite = \TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/';
 
         if (is_array($conf['parseToDBValues.'])) {
 
@@ -2339,13 +2363,13 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                 $fieldConfig['uploadfolder']
                             ) {
                                 $uploadPath = $fieldConfig['uploadfolder'];
-                                $origFiles = array();
+                                $origFiles = [];
                                 if (is_array($origArray[$theField])) {
                                     $origFiles = $origArray[$theField];
                                 } else if ($origArray[$theField]) {
                                     $origFiles = GeneralUtility::trimExplode(',', $origArray[$theField], 1);
                                 }
-                                $updatedFiles = array();
+                                $updatedFiles = [];
                                 if (is_array($dataArray[$theField])) {
                                     $updatedFiles = $dataArray[$theField];
                                 } else if ($dataArray[$theField]) {
@@ -2353,8 +2377,8 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                 }
                                 $unReferencedFiles = array_diff($origFiles, $updatedFiles);
                                 foreach ($unReferencedFiles as $file) {
-                                    if(@is_file(PATH_site . $uploadPath . '/' . $file)) {
-                                        @unlink(PATH_site . $uploadPath . '/' . $file);
+                                    if(@is_file($pathSite . $uploadPath . '/' . $file)) {
+                                        @unlink($pathSite . $uploadPath . '/' . $file);
                                     }
                                 }
                             }
@@ -2395,7 +2419,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 ) {
                     if (
                         $colSettings['config']['type'] == 'select' &&
-                        $colSettings['config']['MM']
+                        isset($colSettings['config']['MM'])
                     ) {
                         // set the count instead of the comma separated list
                         if ($parsedArray[$colName]) {
@@ -2403,7 +2427,10 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                         } else {
                             $parsedArray[$colName] = '';
                         }
-                    } else if ($colSettings['config']['type'] == 'check') {
+                    } else if (
+                        isset($colSettings['config']['type']) &&
+                        $colSettings['config']['type'] == 'check'
+                    ) {
                         $value = 0;
                         foreach ($parsedArray[$colName] as $dec) {  // Combine values to one hexidecimal number
                             $value |= (1 << $dec);

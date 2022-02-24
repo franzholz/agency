@@ -58,6 +58,8 @@ class RegistrationProcessHooks
         $cmdKey,
         ConfigurationStore $confObj
     ) {
+        $conf = $confObj->getConf();
+
         // in the case of this hook, the record array is passed by reference
         // in this example hook, we generate a username based on the first and last names of the user
         if ($parameters->getFeUserData('preview') && $conf[$cmdKey . '.']['generateUsername']) {

@@ -72,7 +72,7 @@ class Template {
         $cmdKey,
         $templateCode,
         $useAdditionalFields = true,
-        $errorFieldArray = array(),
+        $errorFieldArray = [],
         $failure = ''
     )
     {
@@ -91,7 +91,7 @@ class Template {
         if (!is_array($infoFields)) {
             return false;
         }
-        $specialFields = array();
+        $specialFields = [];
         $specialFieldList = $dataObj->getSpecialFieldList();
 
         if ($specialFieldList != '') {
@@ -108,7 +108,8 @@ class Template {
 
         foreach ($directMailFields as $theField) {
             if (
-                !is_array($GLOBALS['TCA'][$theTable]['columns'][$theField])
+                is_array($includedFields) &&
+                !isset($GLOBALS['TCA'][$theTable]['columns'][$theField])
             ) {
                 $includedFields = array_diff(
                     $includedFields,
@@ -215,7 +216,8 @@ class Template {
                     }
 
                     if (
-                        is_array($conf['parseValues.']) &&
+                        isset($conf['parseValues.']) &&
+                        isset($conf['parseValues.'][$theField]) &&
                         strpos($conf['parseValues.'][$theField], 'checkArray')
                     ) {
                         $listOfCommands = GeneralUtility::trimExplode(',', $conf['parseValues.'][$theField], 1);
@@ -400,7 +402,7 @@ class Template {
                 $row,
                 $origArray,
                 $securedArray,
-                array(),
+                [],
                 $controlData->getRequiredArray(),
                 $dataObj->getFieldList(),
                 $GLOBALS['TCA'][$theTable]['columns'],

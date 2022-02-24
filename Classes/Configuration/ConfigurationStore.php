@@ -68,6 +68,7 @@ class ConfigurationStore implements \TYPO3\CMS\Core\SingletonInterface {
 
     public function getConf ($key = '')
     {
+        $result = '';
         if ($key != '') {
             if (isset($this->conf[$key])) {
                 $result = $this->conf[$key];
@@ -99,9 +100,12 @@ class ConfigurationStore implements \TYPO3\CMS\Core\SingletonInterface {
     public function getIncludedFields (
         $cmdKey
     ) {
-        $result = false;
+        $result = [];
 
-        $configuration = $this->getConf($cmdKey . '.');
+        if (!empty($cmdKey)) {
+            $configuration = $this->getConf($cmdKey . '.');
+        }
+
         if (
             isset($configuration) &&
             is_array($configuration) &&

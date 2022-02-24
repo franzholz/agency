@@ -61,7 +61,7 @@ class ActionController {
     public $requiredArray; // List of required fields
     public $controlData;
         // Commands that may be processed when no user is logged in
-    public $noLoginCommands = array('create', 'invite', 'setfixed', 'infomail', 'login');
+    public $noLoginCommands = ['create', 'invite', 'setfixed', 'infomail', 'login'];
 
 
     public function init (
@@ -170,15 +170,20 @@ class ActionController {
         $theUid = 0;
         $setFixedUid = false;
 
-        if (is_array($dataArray) && $dataArray['uid']) {
+        if (is_array($dataArray) && !empty($dataArray['uid'])) {
             $theUid = $dataArray['uid'];
-        } else if (is_array($feUserdata) && $feUserdata['rU']) {
+        } else if (is_array($feUserdata) && !empty($feUserdata['rU'])) {
             $theUid = $feUserdata['rU'];
 
             if ($cmd == 'setfixed') {
                 $setFixedUid = true;
             }
-        } else if (!in_array($cmd, $this->noLoginCommands)) {
+        } else if (
+            !in_array($cmd, $this->noLoginCommands) &&
+            isset($GLOBALS['TSFE']->fe_user) &&
+            isset($GLOBALS['TSFE']->fe_user->user) &&
+            isset($GLOBALS['TSFE']->fe_user->user['uid'])
+        ) {
             $theUid = $GLOBALS['TSFE']->fe_user->user['uid'];
         }
 
@@ -214,6 +219,7 @@ class ActionController {
             isset($origArray['uid']) &&
             (
                 $theTable != 'fe_users' ||
+                isset($GLOBALS['TSFE']->fe_user->user['uid']) &&
                 $theUid == $GLOBALS['TSFE']->fe_user->user['uid'] || // for security reason: do not allow the change of other user records
                 $origArray['disable'] // needed for setfixed after INVITE
             )
@@ -235,9 +241,9 @@ class ActionController {
 
         if (
             $cmdKey == '' &&
-            !$setFixedUid // Setfixed needs the original array in order to calculate the authorization key
+            empty($setFixedUid) // Setfixed needs the original array in order to calculate the authorization key
         ) {
-            $origArray = array(); // do not use the read in original array
+            $origArray = []; // do not use the read in original array
             $cmdKey = 'create';
         }
 
@@ -249,7 +255,7 @@ class ActionController {
             }
         }
 
-        if (trim($conf['addAdminFieldList'])) {
+        if (!empty($conf['addAdminFieldList'])) {
             $adminFieldList .= ',' . trim($conf['addAdminFieldList']);
         }
         $adminFieldList =
@@ -262,15 +268,21 @@ class ActionController {
             );
         $dataObj->setAdminFieldList($adminFieldList);
 
-        if (ExtensionManagementUtility::isLoaded('direct_mail')) {
-            $conf[$cmdKey.'.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), array('module_sys_dmail_category,module_sys_dmail_newsletter')));
-            $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), array('module_sys_dmail_category, module_sys_dmail_newsletter')));
-        }
+        if (!empty($cmdKey)) {
+            if (
+                ExtensionManagementUtility::isLoaded('direct_mail')
+            ) {
+                $conf[$cmdKey.'.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1),['module_sys_dmail_category,module_sys_dmail_newsletter']));
+                $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), ['module_sys_dmail_category, module_sys_dmail_newsletter']));
+            }
 
-        $fieldConfArray = array('fields', 'required');
-        foreach ($fieldConfArray as $k => $v) {
-            // make it ready for GeneralUtility::inList which does not yet allow blanks
-            $conf[$cmdKey . '.'][$v] = implode(',',  array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.'][$v])));
+            $fieldConfArray = ['fields', 'required'];
+            foreach ($fieldConfArray as $k => $v) {
+                // make it ready for GeneralUtility::inList which does not yet allow blanks
+                if (isset($conf[$cmdKey . '.'][$v])) {
+                    $conf[$cmdKey . '.'][$v] = implode(',',  array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.'][$v])));
+                }
+            }
         }
 
         $theTable = $controlData->getTable();
@@ -278,9 +290,14 @@ class ActionController {
             $theTable == 'fe_users'
         ) {
             if (
+                !empty($cmdKey) &&
                 $cmdKey != 'edit' &&
-                $cmdKey != 'password'
+                $cmdKey != 'password' &&
+                isset($conf[$cmdKey . '.']['fields'])
             ) {
+                if (!isset($conf[$cmdKey . '.']['required'])) {
+                    $conf[$cmdKey . '.']['required'] = '';
+                }
                     // When not in edit mode, add username to lists of fields and required fields unless explicitly disabled
                 if (!empty($conf[$cmdKey.'.']['doNotEnforceUsername'])) {
                     $conf[$cmdKey . '.']['fields'] = GeneralUtility::rmFromList('username', $conf[$cmdKey . '.']['fields']);
@@ -293,44 +310,50 @@ class ActionController {
 
             // When in edit mode, remove password from required fields
             if ($cmdKey == 'edit') {
-                $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), array('password')));
+                $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), ['password']));
             }
 
             if (
-                $conf[$cmdKey . '.']['generateUsername'] ||
+                !empty($conf[$cmdKey . '.']['generateUsername']) ||
                 $cmdKey == 'password'
             ) {
-                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), array('username')));
+                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['username']));
             }
 
             if (
-                $conf[$cmdKey . '.']['generateCustomerNumber']
+                !empty($conf[$cmdKey . '.']['generateCustomerNumber'])
             ) {
-                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), array('cnum')));
+                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['cnum']));
             }
 
             if (
                 (
                     $cmdKey == 'invite' ||
                     $cmdKey == 'create'
-                ) && $conf[$cmdKey . '.']['generatePassword']
+                ) && !empty($conf[$cmdKey . '.']['generatePassword'])
             ) {
-                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), array('password')));
+                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['password']));
             }
 
-            if ($conf[$cmdKey . '.']['useEmailAsUsername']) {
-                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), array('username')));
+            if (!empty($conf[$cmdKey . '.']['useEmailAsUsername'])) {
+                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['username']));
 
-                if ($cmdKey == 'create' || $cmdKey == 'invite') {
+                if (
+                    $cmdKey == 'create' ||
+                    $cmdKey == 'invite'
+                ) {
                     $conf[$cmdKey . '.']['fields'] = implode(',', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',email', 1));
                     $conf[$cmdKey . '.']['required'] = implode(',', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',email', 1));
                 }
 
                 if (
-                    ($cmdKey == 'edit' || $cmdKey == 'password') &&
+                    (
+                        $cmdKey == 'edit' ||
+                        $cmdKey == 'password'
+                    ) &&
                     $controlData->getSetfixedEnabled()
                 ) {
-                    $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), array('email')));
+                    $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['email']));
                 }
             }
             $userGroupObj = $addressObj->getFieldObj('usergroup');
@@ -371,7 +394,10 @@ class ActionController {
         }
 
             // Adjust some evaluation settings
-        if (is_array($conf[$cmdKey . '.']['evalValues.'])) {
+        if (
+            !empty($cmdKey) &&
+            isset($conf[$cmdKey . '.']['evalValues.']
+        )) {
         // TODO: Fix scope issue: unsetting $conf entry here has no effect
                 // Do not evaluate any password when inviting
             if ($cmdKey == 'invite') {
@@ -379,9 +405,9 @@ class ActionController {
             }
                 // Do not evaluate the username if it is generated or if email is used
             if (
-                $conf[$cmdKey . '.']['useEmailAsUsername'] ||
+                !empty($conf[$cmdKey . '.']['useEmailAsUsername']) ||
                 (
-                    $conf[$cmdKey . '.']['generateUsername'] &&
+                    !empty($conf[$cmdKey . '.']['generateUsername']) &&
                     $cmdKey != 'edit' &&
                     $cmdKey != 'password'
                 )
@@ -390,26 +416,32 @@ class ActionController {
             }
 
             if (
-                $conf[$cmdKey . '.']['generateCustomerNumber']
+                !empty($conf[$cmdKey . '.']['generateCustomerNumber'])
             ) {
                 unset($conf[$cmdKey . '.']['evalValues.']['cnum']);
             }
         }
         $confObj->setConf($conf);
+        $requiredArray = [];
 
-            // Setting requiredArray to the fields in "required" fields list intersected with the total field list in order to remove invalid fields.
-        $requiredArray = array_intersect(
-            GeneralUtility::trimExplode(
-                ',',
-                $conf[$cmdKey . '.']['required'],
-                1
-            ),
-            GeneralUtility::trimExplode(
-                ',',
-                $conf[$cmdKey . '.']['fields'],
-                1
-            )
-        );
+        if (
+            !empty($cmdKey) &&
+            isset($conf[$cmdKey . '.']['required'])
+        ) {
+                // Setting requiredArray to the fields in "required" fields list intersected with the total field list in order to remove invalid fields.
+            $requiredArray = array_intersect(
+                GeneralUtility::trimExplode(
+                    ',',
+                    $conf[$cmdKey . '.']['required'],
+                    1
+                ),
+                GeneralUtility::trimExplode(
+                    ',',
+                    $conf[$cmdKey . '.']['fields'],
+                    1
+                )
+            );
+        }
         $dataObj->setDataArray($dataArray);
         $controlData->setRequiredArray($requiredArray);
 
@@ -417,23 +449,23 @@ class ActionController {
         $fieldArray = GeneralUtility::trimExplode(',', $fieldList, 1);
         $additionalFields = $dataObj->getAdditionalIncludedFields();
 
-        if ($theTable == 'fe_users') {
+        if ($theTable == 'fe_users' &&!empty($cmdKey)) {
 
             if (
-                $conf[$cmdKey . '.']['useEmailAsUsername'] ||
-                $conf[$cmdKey . '.']['generateUsername']
+                !empty($conf[$cmdKey . '.']['useEmailAsUsername']) ||
+                !empty($conf[$cmdKey . '.']['generateUsername'])
             ) {
-                $additionalFields = array_merge($additionalFields, array('username'));
+                $additionalFields = array_merge($additionalFields, ['username']);
             }
 
-            if ($conf[$cmdKey . '.']['useEmailAsUsername']) {
-                $additionalFields = array_merge($additionalFields, array('email'));
+            if (!empty($conf[$cmdKey . '.']['useEmailAsUsername'])) {
+                $additionalFields = array_merge($additionalFields, ['email']);
             }
 
             if (
-                $conf[$cmdKey . '.']['generateCustomerNumber']
+                !empty($conf[$cmdKey . '.']['generateCustomerNumber'])
             ) {
-                $additionalFields = array_merge($additionalFields, array('cnum'));
+                $additionalFields = array_merge($additionalFields, ['cnum']);
             }
 
             if (
@@ -441,7 +473,7 @@ class ActionController {
                 !in_array('email', $additionalFields) &&
                 !in_array('username', $additionalFields)
             ) {
-                $additionalFields = array_merge($additionalFields, array('username'));
+                $additionalFields = array_merge($additionalFields, ['username']);
             }
         }
 
@@ -485,7 +517,8 @@ class ActionController {
         $dataArray = $dataObj->getDataArray();
         $conf = $confObj->getConf();
         $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
-        $fD = array();
+        $fD = [];
+        $bSubmit = false;
         $extensionKey = $controlData->getExtensionKey();
         $prefixId = $controlData->getPrefixId();
         $controlData->setMode(Mode::NORMAL);
@@ -497,11 +530,12 @@ class ActionController {
         $autoLoginKey = '';
         $hasError = false;
         $parseResult = true;
+        $bDoNotSave = false;
 
             // Commands with which the data will not be saved by $dataObj->save
-        $noSaveCommands = array('infomail', 'login', 'delete');
+        $noSaveCommands = ['infomail', 'login', 'delete'];
         $uid = $dataObj->getRecUid();
-        $securedArray = array();
+        $securedArray = [];
             // Check for valid token
         if (
             !$controlData->isTokenValid() ||
@@ -515,7 +549,7 @@ class ActionController {
             )
         ) {
             $controlData->setCmd($cmd);
-            $origArray = array();
+            $origArray = [];
             $dataObj->setOrigArray($origArray);
             $dataObj->resetDataArray();
             $finalDataArray = $dataArray;
@@ -591,6 +625,7 @@ class ActionController {
                 );
             $dataObj->overrideValues(
                 $finalDataArray,
+                $cmdKey,
                 $conf[$cmdKey . '.']
             );
 
@@ -612,12 +647,13 @@ class ActionController {
                     $markerArray,
                     $cmdKey,
                     $controlData->getRequiredArray(),
-                    array(),
+                    [],
                     $controlData->getCaptcha()
                 );
 
                     // If the two password fields are not equal, clear session data
                 if (
+                    isset($evalErrors['password']) &&
                     is_array($evalErrors['password']) &&
                     in_array('twice', $evalErrors['password'])
                 ) {
@@ -630,7 +666,8 @@ class ActionController {
                 }
 
                 if (
-                    $conf['evalFunc'] &&
+                    isset($conf['evalFunc']) &&
+                    isset($conf['evalFunc.']) &&
                     is_array($conf['evalFunc.'])
                 ) {
                     $markerObj->setArray($markerArray);
@@ -644,9 +681,9 @@ class ActionController {
                     $markerArray = $markerObj->getArray();
                 }
             } else {
-                $checkFieldArray = array();
+                $checkFieldArray = [];
                 if (!count($origArray)) {
-                    $checkFieldArray = array('password'); // only check for the password field on creation
+                    $checkFieldArray = ['password']; // only check for the password field on creation
                 }
 
                     // This is either a country change submitted through the onchange event or a file deletion already processed by the parsing function
@@ -667,6 +704,7 @@ class ActionController {
 
                      // If the two password fields are not equal, clear session data
                 if (
+                    isset($evalErrors['password']) &&
                     is_array($evalErrors['password']) &&
                     in_array('twice', $evalErrors['password'])
                 ) {
@@ -721,7 +759,7 @@ class ActionController {
                     $extraFields = 'privacy_policy_date';
                 }
 
-                $newDataArray = array();
+                $newDataArray = [];
                 $theUid = $dataObj->save(
                     $staticInfoObj,
                     $theTable,
@@ -773,12 +811,12 @@ class ActionController {
                     $origArray,
                     $markerArray,
                     $cmdKey,
-                    array(),
-                    array(),
+                    [],
+                    [],
                     $controlData->getCaptcha()
                 );
             }
-            $controlData->setRequiredArray(array());
+            $controlData->setRequiredArray([]);
             $markerObj->setArray($markerArray);
             $controlData->setFeUserData(0, 'preview');
         } else {
@@ -802,6 +840,7 @@ class ActionController {
             $controlData->setMode(Mode::PREVIEW);
         }
 
+        $content = '';
             // If data is submitted, we take care of it here.
         if (
             $cmd == 'delete' &&
@@ -887,6 +926,7 @@ class ActionController {
                     $dataObj,
                     $template,
                     $theTable,
+                    $extensionKey,
                     $autoLoginKey,
                     $prefixId,
                     $dataArray,
@@ -927,8 +967,8 @@ class ActionController {
                         $theTable,
                         $autoLoginKey,
                         $prefixId,
-                        array($dataArray),
-                        array($origArray),
+                        [$dataArray],
+                        [$origArray],
                         $securedArray,
                         $conf['email.']['admin'],
                         $markerArray,
@@ -950,7 +990,7 @@ class ActionController {
                         (
                             isset($finalDataArray) &&
                             is_array($finalDataArray) &&
-                            $finalDataArray[$emailField]
+                            !empty($finalDataArray[$emailField])
                         ) ?
                         $finalDataArray[$emailField] :
                         $origArray[$emailField];
@@ -970,8 +1010,8 @@ class ActionController {
                         $theTable,
                         $autoLoginKey,
                         $prefixId,
-                        array($dataArray),
-                        array($origArray),
+                        [$dataArray],
+                        [$origArray],
                         $securedArray,
                         $recipient,
                         $markerArray,
@@ -1074,7 +1114,7 @@ class ActionController {
                 $finalDataArray,
                 $dataObj->getOrigArray(),
                 $securedArray,
-                array(),
+                [],
                 $controlData->getRequiredArray(),
                 $dataObj->getFieldList(),
                 $GLOBALS['TCA'][$theTable]['columns'],
@@ -1325,6 +1365,7 @@ class ActionController {
             }
 
             if (
+                isset($errorCode) &&
                 is_array($errorCode)
             ) {
                 $errorText = $languageObj->getLabel($errorCode['0']);

@@ -83,6 +83,9 @@ class DeleteView {
         $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
 
         if ($conf['delete']) {
+            if (!isset($markerArray['###HIDDENFIELDS###'])) {
+                $markerArray['###HIDDENFIELDS###'] = '';
+            }
             $templateCode = $dataObj->getTemplateCode();
             $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
 
@@ -114,12 +117,12 @@ class DeleteView {
                             $theTable,
                             $origArray,
                             $GLOBALS['TSFE']->fe_user->user,
-                            $conf['allowedGroups'],
-                            $conf['fe_userEditSelf']
+                            $conf['allowedGroups'] ?? '',
+                            $conf['fe_userEditSelf'] ?? ''
                         );
 
                     if ($aCAuth || $bMayEdit) {
-                        $markerArray = $markerObj->getArray();
+//                         $markerArray = $markerObj->getArray();
                         // Display the form, if access granted.
 
                         $markerArray['###HIDDENFIELDS###'] .=
