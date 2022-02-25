@@ -851,6 +851,7 @@ class Marker {
             $css = GeneralUtility::makeInstance(\JambageCom\Div2007\Api\Css::class);
             $cmd = $this->controlData->getCmd();
             $theTable = $this->controlData->getTable();
+
             if ($this->controlData->getMode() == Mode::PREVIEW || $viewOnly) {
                 $markerArray['###FIELD_static_info_country###'] =
                     $this->staticInfoObj->getStaticInfoName('COUNTRIES', is_array($row) ? $row['static_info_country'] : '');
@@ -908,8 +909,8 @@ class Marker {
                         'SUBDIVISIONS',
                         'FE[' . $theTable . ']' . '[' . $fieldNameZone . ']',
                         $css->getClassName($fieldNameZone, 'select'),
-                        is_array($row) ? $row[$fieldNameZone] : '',
-                        is_array($row) ? $row[$fieldNameCountry] : '',
+                        $row[$fieldNameZone] ?? '',
+                        $row[$fieldNameCountry] ?? '',
                         '',
                         $idZone,
                         $titleZone,
@@ -930,7 +931,7 @@ class Marker {
                         'LANGUAGES',
                         'FE[' . $theTable . ']' . '[' . $fieldNameLanguage . ']',
                         $css->getClassName($fieldNameLanguage, 'select'),
-                        is_array($row) ? $row[$fieldNameLanguage] : '',
+                        $row[$fieldNameLanguage] ?? '',
                         '',
                         '',
                         $idLanguage,
