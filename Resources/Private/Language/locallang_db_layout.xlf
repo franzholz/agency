@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2018-03-07T09:00:22Z" product-name="agency">
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="EXT:agency/Resources/Private/Language/locallang_db_layout.xlf" date="2018-03-07T09:00:22Z" product-name="agency">
 		<header/>
 		<body>
-			<trans-unit id="agency" xml:space="preserve">
+			<trans-unit id="agency" resname="agency">
 				<source>Agency Registration</source>
 			</trans-unit>
-			<trans-unit id="feUserGroupScheduler.name" xml:space="preserve">
+			<trans-unit id="feUserGroupScheduler.name" resname="feUserGroupScheduler.name">
 				<source>FE User Group Check for Timeouts</source>
 			</trans-unit>
-			<trans-unit id="feUserGroupScheduler.description" xml:space="preserve">
+			<trans-unit id="feUserGroupScheduler.description" resname="feUserGroupScheduler.description">
 				<source>This task checks all FE User Groups of all FE Users for a timeout. The FE User might lose a FE User Group membership if its endtime has been reached.</source>
 			</trans-unit>
 		</body>
