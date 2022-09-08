@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="EXT:agency/Resources/Private/Language/locallang.xlf" date="2022-09-08T20:30:16Z" product-name="agency">
+		<header/>
+		<body>
+			<trans-unit id="tx_agency_domain_model_frontenduser" resname="tx_agency_domain_model_frontenduser">
+				<source>Frontend User</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

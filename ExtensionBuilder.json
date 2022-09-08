@@ -1,0 +1,95 @@
+{
+    "modules": [
+        {
+            "config": {
+                "position": [
+                    82,
+                    85
+                ]
+            },
+            "name": "New Model Object",
+            "value": {
+                "actionGroup": {
+                    "_default0_index": true,
+                    "_default1_list": false,
+                    "_default2_show": true,
+                    "_default3_new_create": true,
+                    "_default4_edit_update": true,
+                    "_default5_delete": true,
+                    "customActions": [
+                        ""
+                    ]
+                },
+                "name": "FrontendUser",
+                "objectsettings": {
+                    "addDeletedField": true,
+                    "addHiddenField": true,
+                    "addStarttimeEndtimeFields": true,
+                    "aggregateRoot": true,
+                    "categorizable": true,
+                    "description": "User",
+                    "mapToTable": "fe_users",
+                    "parentClass": "",
+                    "sorting": true,
+                    "type": "Entity",
+                    "uid": "232380471307"
+                },
+                "propertyGroup": {
+                    "properties": []
+                },
+                "relationGroup": {
+                    "relations": []
+                }
+            }
+        }
+    ],
+    "properties": {
+        "backendModules": [],
+        "description": "An improved variant of Kasper Sk\u00e5rh\u00f8j\u2019s Front End User Admin extension.",
+        "emConf": {
+            "category": "plugin",
+            "custom_category": "",
+            "dependsOn": "typo3 => 11.5.0-11.5.99\n",
+            "disableLocalization": false,
+            "disableVersioning": true,
+            "generateDocumentationTemplate": true,
+            "generateEditorConfig": true,
+            "generateEmptyGitRepository": false,
+            "sourceLanguage": "en",
+            "state": "alpha",
+            "targetVersion": "11.5.0-11.5.99",
+            "version": "1.0.0"
+        },
+        "extensionKey": "agency",
+        "name": "Franz Holzinger",
+        "originalExtensionKey": "agency",
+        "originalVendorName": "JambageCom",
+        "persons": [
+            {
+                "company": "jambage.com",
+                "email": "franz@ttproducts.de",
+                "name": "Franz Holzinger",
+                "role": "Developer"
+            }
+        ],
+        "plugins": [
+            {
+                "actions": {
+                    "controllerActionCombinations": "User =>  show,new,preview,edit,update",
+                    "noncacheableActions": "User =>  show,new,preview,edit,update"
+                },
+                "description": "Register a front end user.",
+                "key": "register",
+                "name": "Register User"
+            }
+        ],
+        "vendorName": "JambageCom"
+    },
+    "wires": [],
+    "storagePath": "\/var\/www\/html\/typo3conf\/ext\/",
+    "log": {
+        "last_modified": "2022-09-08 08:30",
+        "extension_builder_version": "11.0.3",
+        "be_user": "Franz Holzinger (1)"
+    }
+}
