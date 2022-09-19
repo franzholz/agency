@@ -18,12 +18,3 @@ Jens Hirschfeld <Jens.Hirschfeld@KeepOut.de>: Sharing of his code for stdWrap to
 Martin Kutschker (Masi) http://activesolution.at/ from Austria: Sharing of his code for enhanced label markers 'v_...', changes to label markers
 Pierre Lamoureux: Improvements for security token
 
-
-
-
-
-
-
-
-
-
