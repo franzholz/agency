@@ -1,3 +1,6 @@
+2022-09-19 Franz Holzinger <franz@ttproducts.de>
+    * compatibility TYPO3 8.7: deprecation no 77934: The field `select_key` of the table `tt_content` is not used in the core and has been removed.
+
 2022-02-24 Franz Holzinger  <franz@ttproducts.de>
     * Add support for PHP 8
     * Replace PATH_site

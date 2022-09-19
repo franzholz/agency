@@ -8,7 +8,7 @@ $table = 'tt_content';
 
 $listType = AGENCY_EXT;
 
-$GLOBALS['TCA'][$table]['types']['list']['subtypes_excludelist'][$listType] = 'layout,select_key';
+$GLOBALS['TCA'][$table]['types']['list']['subtypes_excludelist'][$listType] = 'layout';
 $GLOBALS['TCA'][$table]['types']['list']['subtypes_addlist'][$listType] = 'pi_flexform';
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue($listType, 'FILE:EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'pi/flexform_ds_pi.xml');
