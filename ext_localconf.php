@@ -13,6 +13,9 @@ call_user_func(function () {
     if (!defined('STATIC_INFO_TABLES_EXT')) {
         define('STATIC_INFO_TABLES_EXT', 'static_info_tables');
     }
+    if (!defined('DIV2007_LANGUAGE_SUBPATH')) {
+        define('DIV2007_LANGUAGE_SUBPATH', '/Resources/Private/Language/');
+    }
 
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPItoST43(AGENCY_EXT, 'class.tx_agency.php', '', 'list_type', 0);
 
