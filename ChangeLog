@@ -1,3 +1,6 @@
+2022-10-26 Franz Holzinger <franz@ttproducts.de>
+    * bugfix: Set correct path for flexform. pi/flexform_ds_pi.xml -> Configuration/FlexForms/flexform_ds.xml
+
 2022-09-19 Franz Holzinger <franz@ttproducts.de>
     * compatibility TYPO3 8.7: deprecation no 77934: The field `select_key` of the table `tt_content` is not used in the core and has been removed.
 
