@@ -12,6 +12,7 @@
 					<label>LLL:EXT:agency/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.display_mode</label>
 					<config>
 						<type>select</type>
+                        <renderType>selectMultipleSideBySide</renderType>
 						<items>
 							<numindex index="1">
 								<numindex index="0">LLL:EXT:agency/Resources/Private/Language/locallang_db.xlf:tt_content.pi_flexform.display_mode.1</numindex>
