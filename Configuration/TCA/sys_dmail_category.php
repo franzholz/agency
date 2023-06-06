@@ -1,11 +1,11 @@
 <?php
-defined('TYPO3_MODE') || die('Access denied.');
+defined('TYPO3') || die('Access denied.');
 if (!defined ('AGENCY_EXT')) {
     define('AGENCY_EXT', 'agency');
 }
 
-$result = FALSE;
-$tableExists = FALSE;
+$result = false;
+$tableExists = false;
 $table = 'sys_dmail_category';
 
 
