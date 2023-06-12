@@ -99,11 +99,11 @@ class Template {
             $infoFields = array_merge($infoFields, $specialFields);
         }
 
-        $directMailFields = array(
+        $directMailFields = [
             'module_sys_dmail_category',
             'module_sys_dmail_newsletter',
             'module_sys_dmail_html',
-        );
+        ];
         $infoFields = array_merge($infoFields, $directMailFields); // add always the Direct Mail fields because its markers are present in the HTML template
 
         foreach ($directMailFields as $theField) {
@@ -113,9 +113,9 @@ class Template {
             ) {
                 $includedFields = array_diff(
                     $includedFields,
-                    array(
+                    [
                         $theField
-                    )
+                    ]
                 );
             }
         }

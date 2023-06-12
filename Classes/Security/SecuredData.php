@@ -58,7 +58,7 @@ class SecuredData
     *
     * @var array
     */
-    static protected $securedFields = array('password', 'password_again', 'tx_agency_password');
+    static protected $securedFields = ['password', 'password_again', 'tx_agency_password'];
 
     /**
      * Gets the transmission security object

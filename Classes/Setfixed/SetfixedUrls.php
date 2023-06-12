@@ -82,7 +82,7 @@ class SetFixedUrls {
                 if (strstr($theKey, '.')) {
                     $theKey = substr($theKey, 0, -1);
                 }
-                $setfixedpiVars = array();
+                $setfixedpiVars = [];
                 $noFeusersEdit = false;
 
                 if ($theTable != 'fe_users' && $theKey == 'EDIT') {
@@ -180,9 +180,9 @@ class SetFixedUrls {
 
                 if ($useShortUrls) {
                     $theHash = self::storeFixedPiVars($setfixedpiVars);
-                    $setfixedpiVars = array($prefixId . '%5BregHash%5D' => $theHash);
+                    $setfixedpiVars = [$prefixId . '%5BregHash%5D' => $theHash];
                 }
-                $urlConf = array();
+                $urlConf = [];
                 $urlConf['disableGroupAccessCheck'] = true;
                 $confirmType = (MathUtility::canBeInterpretedAsInteger($confirmType) ? intval($confirmType) : $GLOBALS['TSFE']->type);
                 $url =
@@ -197,7 +197,7 @@ class SetFixedUrls {
                 $bIsAbsoluteURL = ((strncmp($url, 'http://', 7) == 0) || (strncmp($url, 'https://', 8) == 0));
                 $markerKey = '###SETFIXED_' . $cObj->caseshift($theKey, 'upper') . '_URL###';
                 $url = ($bIsAbsoluteURL ? '' : $controlData->getSiteUrl()) . ltrim($url, '/');
-                $markerArray[$markerKey] = str_replace(array('[', ']'), array('%5B', '%5D'), $url);
+                $markerArray[$markerKey] = str_replace(['[', ']'], ['%5B', '%5D'], $url);
             }	// foreach
         }
     }	// compute

@@ -45,7 +45,7 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 class Tables implements \TYPO3\CMS\Core\SingletonInterface {
 
-    public $tableClassArray = array();
+    public $tableClassArray = [];
     public $tablename;
 
     public function init ($tablename)
@@ -84,8 +84,8 @@ class Tables implements \TYPO3\CMS\Core\SingletonInterface {
         $bView = false
     )
     {
-        $classNameArray = array();
-        $tableObjArray = array();
+        $classNameArray = [];
+        $tableObjArray = [];
 
         $classNameArray['model'] = $this->getTableClass($functablename, false);
         if ($bView) {

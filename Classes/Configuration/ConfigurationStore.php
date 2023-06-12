@@ -45,13 +45,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ConfigurationStore implements \TYPO3\CMS\Core\SingletonInterface {
 
-    protected $conf = array();
-    protected $config = array();
+    protected $conf = [];
+    protected $config = [];
 
     public function init ($conf)
     {
         $this->conf = $conf;
-        $this->config = array();
+        $this->config = [];
     }
 
     public function setConf (

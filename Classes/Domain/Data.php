@@ -1322,14 +1322,14 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                 ) {
                                     $dateArray = $this->fetchDate($dataValue, $conf['dateFormat']);
                                     $dataValue = $dateArray['y'] . '-' . $dateArray['m'] . '-'.$dateArray['d'];
-                                    $translateArray = array(
+                                    $translateArray = [
                                         'd' => ($dateArray['d'] < 10 ? '0'.$dateArray['d'] : $dateArray['d']),
                                         'j' => $dateArray['d'],
-                                        'm' => ($dateArray['m'] < 10 ? '0'.$dateArray['m'] : $dateArray['m']),
+                                        'm' => ($dateArray['m'] < 10 ? '0' . $dateArray['m'] : $dateArray['m']),
                                         'n' => $dateArray['m'],
                                         'y' => $dateArray['y'],
                                         'Y' => $dateArray['y']
-                                    );
+                                    ];
                                     $searchArray = array_keys($translateArray);
                                     $replaceArray = array_values($translateArray);
                                     $dataValue = str_replace($searchArray, $replaceArray, $conf['dateFormat']);
@@ -1517,7 +1517,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                         !in_array('first_name', $fieldArray) &&
                         !in_array('last_name', $fieldArray)
                     ) {
-                        $newFieldArray = array_diff($newFieldArray, array('name'));
+                        $newFieldArray = array_diff($newFieldArray, ['name']);
                     }
                         // Do not reset the username if we have no new value
                     if (!in_array('username', $fieldArray) && empty($dataArray['username'])) {

@@ -69,7 +69,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
             isset($GLOBALS['TCA']['tt_address']['feInterface']['fe_admin_fieldList'])
         ) {
             $fieldArray = array_unique(GeneralUtility::trimExplode(',', $GLOBALS['TCA']['tt_address']['feInterface']['fe_admin_fieldList'], 1));
-            $fieldArray = array_diff($fieldArray, array('middle_first_name', 'last_first_name'));
+            $fieldArray = array_diff($fieldArray, ['middle_first_name', 'last_first_name']);
             $fieldList = implode(',', $fieldArray);
             $fieldList = str_replace('first_first_name', 'first_name', $fieldList);
             $GLOBALS['TCA']['tt_address']['feInterface']['fe_admin_fieldList'] = $fieldList;
@@ -709,7 +709,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                     } else {
                         $itemArray = '';
                         // Configure inputs based on TCA type
-                        if (in_array($type, array('check', 'radio', 'select'))) {
+                        if (in_array($type, ['check', 'radio', 'select'])) {
                             $valuesArray = [];
 
                             if (isset($mrow[$colName])) {
@@ -1274,7 +1274,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
         // If language UID is different from zero, do overlay:
         if ($languageUid) {
-            $fieldArr = array('title');
+            $fieldArr = ['title'];
             if (is_array($usergroup)) {
                 $fe_groups_uid = $usergroup['uid'];
                 // Was the whole record

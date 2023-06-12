@@ -76,12 +76,12 @@ class System implements LoggerAwareInterface {
         $authServiceObj = null;
 
             // Log the user in
-        $loginData = array(
+        $loginData = [
             'uname' => $username,
             'uident' => $cryptedPassword,
             'uident_text' => $cryptedPassword,
             'status' => 'login',
-        );
+        ];
 
         // Check against configured pid (defaulting to current page)
         $GLOBALS['TSFE']->fe_user->checkPid = true;
@@ -105,7 +105,7 @@ class System implements LoggerAwareInterface {
         if (is_array($user)) {
             if ($requiresAuthorization) {
                 $ok = false;
-                $serviceKeyArray = array();
+                $serviceKeyArray = [];
 
                 if (class_exists(\TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordService::class)) {
                     $serviceKeyArray[] = \TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordService::class;
@@ -218,10 +218,10 @@ class System implements LoggerAwareInterface {
         $row
     )
     {
-        $deleteFields = array(
+        $deleteFields = [
             'lost_password',
             'tx_agency_password'
-        );
+        ];
         foreach ($deleteFields as $field) {
             $row[$field] = '';
         }

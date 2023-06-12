@@ -250,7 +250,7 @@ class CreateView {
                 $dataArray,
                 $origArray,
                 $securedArray,
-                array(),
+                [],
                 $controlData->getRequiredArray(),
                 $infoFields,
                 $GLOBALS['TCA'][$theTable]['columns'],

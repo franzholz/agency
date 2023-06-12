@@ -153,7 +153,7 @@ class AfterSaveView {
                 $dataArray,
                 $origArray,
                 $securedArray,
-                array(),
+                [],
                 $controlData->getRequiredArray(),
                 $dataObj->getFieldList(),
                 $GLOBALS['TCA'][$theTable]['columns'],

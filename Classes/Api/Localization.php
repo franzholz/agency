@@ -16,12 +16,12 @@ namespace JambageCom\Agency\Api;
  */
 
 class Localization extends \JambageCom\Div2007\Base\TranslationBase implements \TYPO3\CMS\Core\SingletonInterface {
-    public $allowedSuffixes = array('', 'formal', 'informal'); // list of allowed suffixes
+    public $allowedSuffixes = ['', 'formal', 'informal']; // list of allowed suffixes
     protected $salutation = '';
 
     public function init (
         $extensionKey = '',
-        $confLocalLang = array(), // you must pass only the $conf['_LOCAL_LANG.'] part of the setup of the caller
+        $confLocalLang = [], // you must pass only the $conf['_LOCAL_LANG.'] part of the setup of the caller
         $scriptRelPath = '',
         $lookupFilename = 'locallang.xlf',
         $useDiv2007Language = true
@@ -78,22 +78,22 @@ class Localization extends \JambageCom\Div2007\Base\TranslationBase implements \
     public function getItemsLL (
         $textSchema,
         $bAll = true,
-        $valuesArray = array()
+        $valuesArray = []
     )
     {
-        $result = array();
+        $result = [];
         if ($bAll) {
             for ($i = 0; $i < 999; ++$i) {
                 $text = $this->getLabel($textSchema . $i);
                 if ($text != '') {
-                    $result[] = array($text, $i);
+                    $result[] = [$text, $i];
                 }
             }
         } else {
             foreach ($valuesArray as $k => $i) {
                 $text = $this->getLabel($textSchema . $i);
                 if ($text != '') {
-                    $result[] = array($text, $i);
+                    $result[] = [$text, $i];
                 }
             }
         }

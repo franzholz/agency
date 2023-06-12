@@ -205,7 +205,7 @@ class EditView {
             $currentArray,
             $origArray,
             $securedArray,
-            array(),
+            [],
             $controlData->getRequiredArray(),
             $dataObj->getFieldList(),
             $GLOBALS['TCA'][$theTable]['columns'],
@@ -370,7 +370,7 @@ class EditView {
                 $conf['setfixed.']['EDIT.']['_FIELDLIST']
             ) {
                 $fD = GeneralUtility::_GP('fD');
-                $fieldArr = array();
+                $fieldArr = [];
                 if (is_array($fD)) {
                     foreach($fD as $field => $value) {
                         $origArray[$field] = rawurldecode($value);

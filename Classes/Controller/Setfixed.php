@@ -130,7 +130,7 @@ class Setfixed {
         $setfixedUsergroup = '';
         $setfixedSuffix = $setFixedKey = $controlData->getFeUserData('sFK');
         $fD = $controlData->getFd();
-        $setfixedConfig = array();
+        $setfixedConfig = [];
         if (
             isset($conf['setfixed.']) &&
             isset($conf['setfixed.'][$setfixedSuffix . '.']) &&
@@ -139,7 +139,7 @@ class Setfixed {
             $setfixedConfig = $conf['setfixed.'][$setfixedSuffix . '.']['_CONFIG.'];
         }
 
-        $fieldArray = array();
+        $fieldArray = [];
 
         if (is_array($fD)) {
             foreach ($fD as $field => $value) {
@@ -300,7 +300,7 @@ class Setfixed {
                     }
 
                         // Hook: first we initialize the hooks
-                    $hookObjectsArray = array();
+                    $hookObjectsArray = [];
                     if (
                         isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['confirmRegistrationClass']) &&
                         is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['confirmRegistrationClass'])
@@ -372,7 +372,7 @@ class Setfixed {
                                 $autoLoginKey
                             );
                     }
-                    $modArray = array();
+                    $modArray = [];
                     $currentArray =
                         $tcaObj->modifyTcaMMfields(
                             $theTable,
@@ -384,10 +384,10 @@ class Setfixed {
                         $pObj,
                         $conf['setfixed.'],
                         'userFunc_afterSave',
-                        array(
+                        [
                             'rec' => $currentArray,
                             'origRec' => $origArray
-                        )
+                        ]
                     );
 
                         // Hook: confirmRegistrationClass_postProcess
@@ -552,7 +552,7 @@ class Setfixed {
                                 $origArray,
                                 $theTable,
                                 $prefixId,
-                                array(),
+                                [],
                                 ''
                             );
                         $hasError = true;
@@ -648,8 +648,8 @@ class Setfixed {
                         $theTable,
                         $autoLoginKey,
                         $prefixId,
-                        array($row),
-                        array($origArray),
+                        [$row],
+                        [$origArray],
                         $securedArray,
                         $origArray[$conf['email.']['field']],
                         $markerArray,
@@ -693,8 +693,8 @@ class Setfixed {
                             $theTable,
                             $autoLoginKey,
                             $prefixId,
-                            array($row),
-                            array($origArray),
+                            [$row],
+                            [$origArray],
                             $securedArray,
                             $origArray[$conf['email.']['field']],
                             $markerArray,
@@ -778,7 +778,7 @@ class Setfixed {
                                 $origArray,
                                 $theTable,
                                 $prefixId,
-                                array(),
+                                [],
                                 ''
                             );
                             $hasError = true;
@@ -809,7 +809,7 @@ class Setfixed {
                 $origArray,
                 $theTable,
                 $prefixId,
-                array(),
+                [],
                 ''
             );
             // TODO: Your registration has been confirmed .

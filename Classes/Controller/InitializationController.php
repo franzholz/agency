@@ -265,7 +265,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         $dataObj = null; // object of type tx_agency_data
         $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
         $errorMessage = '';
-        $origArray = array();
+        $origArray = [];
 
         $success = $this->init(
             $controlData,

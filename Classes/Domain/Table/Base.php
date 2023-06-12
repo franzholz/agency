@@ -45,7 +45,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class Base {
     public $functablename;
     public $tablename;
-    public $fieldClassArray = array(); // must be overridden
+    public $fieldClassArray = []; // must be overridden
     public $hasBeenInitialised = false;
 
     public function init ($functablename, $tablename)

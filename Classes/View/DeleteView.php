@@ -208,7 +208,7 @@ class DeleteView {
                         $origArray,
                         $theTable,
                         $prefixId,
-                        array(),
+                        [],
                         $securedArray
                     );
                 } else {
@@ -228,7 +228,7 @@ class DeleteView {
                         $origArray,
                         $theTable,
                         $prefixId,
-                        array(),
+                        [],
                         $securedArray
                     );
                 }

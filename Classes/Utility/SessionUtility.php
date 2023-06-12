@@ -53,7 +53,7 @@ class SessionUtility {
     */
     static public function readData ($extensionKey, $readAll = false)
     {
-        $sessionData = array();
+        $sessionData = [];
         $allSessionData = $GLOBALS['TSFE']->fe_user->getKey('ses', 'feuser');
 
         if (
@@ -142,7 +142,7 @@ class SessionUtility {
         $redirectUrl = '' 
     )
     {
-        $data = array();
+        $data = [];
         static::writeData(
             $extensionKey,
             $data,
