@@ -8,7 +8,7 @@ call_user_func(function($extensionKey, $table)
 
     $temporaryColumns = [
         'cnum' => [
-            'exclude' => 0,
+            'exclude' => 1,
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.cnum',
             'config' => [
                 'type' => 'input',
@@ -19,7 +19,7 @@ call_user_func(function($extensionKey, $table)
             ]
         ],
         'static_info_country' => [
-            'exclude' => 0,
+            'exclude' => 1,
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.static_info_country',
             'config' => [
                 'type' => 'input',
@@ -30,7 +30,7 @@ call_user_func(function($extensionKey, $table)
             ]
         ],
         'zone' => [
-            'exclude' => 0,
+            'exclude' => 1,
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.zone',
             'config' => [
                 'type' => 'input',
@@ -41,7 +41,7 @@ call_user_func(function($extensionKey, $table)
             ]
         ],
         'language' => [
-            'exclude' => 0,
+            'exclude' => 1,
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.language',
             'config' => [
                 'type' => 'input',
@@ -52,7 +52,7 @@ call_user_func(function($extensionKey, $table)
             ]
         ],
         'date_of_birth' => [
-            'exclude' => 0,
+            'exclude' => 1,
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.date_of_birth',
             'config' => [
                 'type' => 'input',
@@ -66,7 +66,7 @@ call_user_func(function($extensionKey, $table)
             ]
         ],
         'gender' => [
-            'exclude' => 0,
+            'exclude' => 1,
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.gender',
             'config' => [
                 'type' => 'radio',
@@ -79,7 +79,7 @@ call_user_func(function($extensionKey, $table)
             ]
         ],
         'status' => [
-            'exclude' => 0,
+            'exclude' => 1,
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.status',
             'config' => [
                 'type' => 'select',
@@ -97,7 +97,7 @@ call_user_func(function($extensionKey, $table)
             ]
         ],
         'comments' => [
-            'exclude' => 0,
+            'exclude' => 1,
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.comments',
             'config' => [
                 'type' => 'text',
@@ -108,7 +108,7 @@ call_user_func(function($extensionKey, $table)
             ]
         ],
         'by_invitation' => [
-            'exclude' => 0,
+            'exclude' => 1,
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.by_invitation',
             'config' => [
                 'type' => 'check',
@@ -116,7 +116,7 @@ call_user_func(function($extensionKey, $table)
             ]
         ],
         'has_privileges' => [
-            'exclude' => 0,
+            'exclude' => 1,
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.has_privileges',
             'config' => [
                 'type' => 'check',
@@ -124,7 +124,7 @@ call_user_func(function($extensionKey, $table)
             ]
         ],
         'terms_acknowledged' => [
-            'exclude' => 0,
+            'exclude' => 1,
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.terms_acknowledged',
             'config' => [
                 'type' => 'check',
@@ -161,7 +161,7 @@ call_user_func(function($extensionKey, $table)
             ]
         ],
         'lost_password' => [
-            'exclude' => 0,
+            'exclude' => 1,
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.lost_password',
             'config' => [
                 'type' => 'check',
@@ -178,7 +178,7 @@ call_user_func(function($extensionKey, $table)
             ]
         ],
         'privacy_policy_date' => [
-            'exclude' => 0,
+            'exclude' => 1,
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.privacy_policy_date',
             'config' => [
                 'type' => 'input',
@@ -348,15 +348,11 @@ call_user_func(function($extensionKey, $table)
             $GLOBALS['TCA'][$table]['types']['0']['showitem']
         );
 
-
     $GLOBALS['TCA'][$table]['palettes']['2']['showitem'] = 'gender,--linebreak--,' . $GLOBALS['TCA'][$table]['palettes']['2']['showitem'];
     $GLOBALS['TCA'][$table]['ctrl']['thumbnail'] = 'image';
-
-
 
     $searchFields = explode(',', $GLOBALS['TCA'][$table]['ctrl']['searchFields'] . ',cnum,comments');
     $searchFields = array_unique($searchFields);
     $GLOBALS['TCA'][$table]['ctrl']['searchFields'] = implode(',', $searchFields);
-
 }, 'agency', basename(__FILE__, '.php'));
 

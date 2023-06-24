@@ -82,7 +82,7 @@ $result = [
             ]
         ],
         'codes' => [
-            'exclude' => 0,
+            'exclude' => 1,
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:sys_agency_fe_users_limit_fe_groups.codes',
             'config' => [
                 'type' => 'text',

@@ -100,7 +100,7 @@ $result = [
         ],
     ),
     'types' => [
-        '0' => ['showitem' => 'hidden;;;;1-1-1, fe_group, sys_language_uid, title']
+        '0' => ['showitem' => 'hidden, fe_group, sys_language_uid, title']
     ]
 ];
 
