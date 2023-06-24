@@ -17,7 +17,7 @@ $EM_CONF[$_EXTKEY] = [
             'typo3' => '10.4.0-11.5.99',
             'div2007' => '1.14.3-0.0.0',
             'rdct' => '2.0.0-0.0.0',
-            'typo3db_legacy' => '1.0.0-1.1.99',
+            'typo3db_legacy' => '1.0.0-1.2.99',
         ],
         'conflicts' => [
             'sr_feuser_register' => '',
@@ -25,7 +25,6 @@ $EM_CONF[$_EXTKEY] = [
         'suggests' => [
             'felogin' => '',
             'rsaauth' => '',
-            'saltedpasswords' => '',
             'static_info_tables' => '',
         ],
     ],

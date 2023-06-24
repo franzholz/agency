@@ -32,7 +32,7 @@
   "suggest": {
     "typo3/cms-felogin": "^10.4 || ^11.5",
     "friendsoftypo3/rsaauth": "^10.4",
-    "sjbr/static-info-tables": "^6.7 || ^6.8 || ^6.9 || ^11.5"
+    "sjbr/static-info-tables": "^6.9 || ^11.5"
   },
   "autoload": {
     "psr-4": {

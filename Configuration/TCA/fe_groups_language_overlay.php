@@ -104,12 +104,5 @@ $result = [
     ]
 ];
 
-if (
-    version_compare(TYPO3_version, '8.0.0', '<')
-) {
-    unset($result['ctrl']['typeicon_classes']);
-    $result['ctrl']['iconfile'] = 'EXT:t3skin/icons/gfx/i/fe_groups.gif';
-}
-
 return $result;
 

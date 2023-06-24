@@ -134,13 +134,8 @@ class ConfigurationCheck implements LoggerAwareInterface {
                     $this->logger->critical($message);
                     $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
                 } else {
-                    $objSalt = null;
-                    if (version_compare(TYPO3_version, '9.5.0', '>=')) {
-                            // Check if we can get a salting instance
-                        $objSalt = \TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::getSaltingInstance(null);
-                    } else {
-                        $objSalt = \TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::getSaltingInstance(null);
-                    }
+                        // Check if we can get a salting instance
+                    $objSalt = \TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::getSaltingInstance(null);
 
                     if (!is_object($objSalt)) {
                             // Could not get a salting instance from saltedpasswords

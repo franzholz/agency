@@ -119,13 +119,6 @@ if ($tableExists) {
             '1' => ['showitem' => '']
         ]
     ];
-
-    if (
-        version_compare(TYPO3_version, '8.6.0', '<')
-    ) {
-        $result['ctrl']['transOrigPointerField'] = 'l18n_parent';
-        $result['ctrl']['transOrigDiffSourceField'] = 'l18n_diffsource';
-    }
 }
 
 return $result;
