@@ -539,7 +539,7 @@ class Marker {
         }
         $name = htmlspecialchars($name);
 
-        $this->tmpTcaMarkers = NULL; // reset function replaceVariables
+        $this->tmpTcaMarkers = null; // reset function replaceVariables
         $dataArray = [];
         $dataArray['row'] = $row;
         $this->setReplaceData($dataArray);
