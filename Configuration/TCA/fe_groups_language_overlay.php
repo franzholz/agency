@@ -5,7 +5,9 @@ $extensionKey = 'agency';
 $result = false;
 $tableExists = true;
 $table = 'fe_groups_language_overlay';
-
+$languageSubpath = '/Resources/Private/Language/';
+$languageLglPath = 'LLL:EXT:core' . $languageSubpath . 'locallang_general.xlf:LGL.';
+        
 if (is_object($GLOBALS['TYPO3_DB'])) {
     $queryResult =
         $GLOBALS['TYPO3_DB']->admin_query(
@@ -19,36 +21,36 @@ if (!$tableExists) {
     return $result;
 }
 
-$result = array(
-    'ctrl' => array(
-        'title' => 'LLL:EXT:' . $extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_groups_language_overlay',
+$result = [
+    'ctrl' => [
+        'title' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_groups_language_overlay',
         'label' => 'title',
         'default_sortby' => 'ORDER BY fe_groups_uid',
         'sortby' => 'sorting',
         'delete' => 'deleted',
-        'enablecolumns' => array(
+        'enablecolumns' => [
             'disabled' => 'hidden'
-        ),
+        ],
         'typeicon_classes' => [
             'default' => 'status-user-group-frontend'
         ],
-    ),
-    'interface' => array (
+    ],
+    'interface' => [
         'showRecordFieldList' => 'hidden,fe_group,title'
-    ),
-    'columns' => array(
-        'hidden' => array (
+    ],
+    'columns' => [
+        'hidden' => [
             'exclude' => 0,
-            'label'  => DIV2007_LANGUAGE_LGL . 'hidden',
-            'config' => array (
+            'label'  => $languageLglPath . 'hidden',
+            'config' => [
                 'type' => 'check',
                 'default' => 0
-            )
-        ),
+            ]
+        ],
         'fe_group' => [
             'exclude' => true,
             'l10n_mode' => 'exclude',
-            'label'  => DIV2007_LANGUAGE_LGL . 'fe_group',
+            'label'  => $languageLglPath . 'fe_group',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectMultipleSideBySide',
@@ -56,15 +58,15 @@ $result = array(
                 'maxitems' => 20,
                 'items' => [
                     [
-                        DIV2007_LANGUAGE_LGL . 'hide_at_login',
+                        $languageLglPath . 'hide_at_login',
                         -1
                     ],
                     [
-                        DIV2007_LANGUAGE_LGL . 'any_login',
+                        $languageLglPath . 'any_login',
                         -2
                     ],
                     [
-                        DIV2007_LANGUAGE_LGL . 'usergroups',
+                        $languageLglPath . 'usergroups',
                         '--div--'
                     ]
                 ],
@@ -75,32 +77,32 @@ $result = array(
                 'default' => 0,
             ]
         ],
-        'sys_language_uid' => array(
+        'sys_language_uid' => [
             'exclude' => 0,
-            'label' => DIV2007_LANGUAGE_LGL . 'language',
-            'config' => array(
+            'label' => $languageLglPath . 'language',
+            'config' => [
                 'type' => 'select',
                 'foreign_table' => 'sys_language',
                 'foreign_table_where' => 'ORDER BY sys_language.title',
                 'default' => 0
-            )
-        ),
-        'title' => array(
+            ]
+        ],
+        'title' => [
             'exclude' => 0,
-            'label' => 'LLL:EXT:' . $extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:fe_groups_language_overlay.title',
-            'config' => array(
+            'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_groups_language_overlay.title',
+            'config' => [
                 'type' => 'input',
                 'size' => '50',
                 'max' => '70',
                 'eval' => 'trim,required',
                 'default' => '',
-            )
-        ),
+            ]
+        ],
     ),
-    'types' => array(
-        '0' => array( 'showitem' => 'hidden;;;;1-1-1, fe_group, sys_language_uid, title')
-    )
-);
+    'types' => [
+        '0' => ['showitem' => 'hidden;;;;1-1-1, fe_group, sys_language_uid, title']
+    ]
+];
 
 if (
     version_compare(TYPO3_version, '8.0.0', '<')

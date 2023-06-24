@@ -5,6 +5,8 @@ $extensionKey = 'agency';
 $result = false;
 $tableExists = false;
 $table = 'sys_dmail_category';
+$languageSubpath = '/Resources/Private/Language/';
+$languageLglPath = 'LLL:EXT:core' . $languageSubpath . 'locallang_general.xlf:LGL.';
 
 
 if ( // Direct Mail tables exist but Direct Mail shall not be used
@@ -32,9 +34,9 @@ if ($tableExists) {
     // ******************************************************************
     // Categories
     // ******************************************************************
-    $result = array (
-        'ctrl' => array (
-            'title' => 'LLL:EXT:' . $extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:sys_dmail_category',
+    $result = [
+        'ctrl' => [
+            'title' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:sys_dmail_category',
             'label' => 'category',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
@@ -42,81 +44,81 @@ if ($tableExists) {
             'languageField' => 'sys_language_uid',
             'sortby' => 'sorting',
             'delete' => 'deleted',
-            'enablecolumns' => array (
+            'enablecolumns' => [
                 'disabled' => 'hidden',
-            ),
-            'iconfile' => 'EXT:' . $extensionKey . DIV2007_LANGUAGE_SUBPATH . 'icon_tx_directmail_category.gif',
-        ),
-        'interface' => array (
+            ],
+            'iconfile' => 'EXT:' . $extensionKey . $languageSubpath . 'icon_tx_directmail_category.gif',
+        ],
+        'interface' => [
                 'showRecordFieldList' => 'hidden,category'
-        ),
-        'columns' => array (
-            'sys_language_uid' => array(
-                'label' => DIV2007_LANGUAGE_LGL . 'language',
-                'config' => array(
+        ],
+        'columns' => [
+            'sys_language_uid' => [
+                'label' => $languageLglPath . 'language',
+                'config' => [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'foreign_table' => 'sys_language',
                     'foreign_table_where' => 'ORDER BY sys_language.title',
-                    'items' => array(
-                        array(DIV2007_LANGUAGE_LGL . 'allLanguages', -1),
-                        array(DIV2007_LANGUAGE_LGL . 'default_value', 0)
-                    ),
+                    'items' => [
+                        [$languageLglPath . 'allLanguages', -1),
+                        [$languageLglPath . 'default_value', 0)
+                    ],
                     'default' => 0
-                )
-            ),
-            'l18n_parent' => array(
+                ]
+            ],
+            'l18n_parent' => [
                 'displayCond' => 'FIELD:sys_language_uid:>:0',
-                'label' => DIV2007_LANGUAGE_LGL . 'l18n_parent',
-                'config' => array(
+                'label' => $languageLglPath . 'l18n_parent',
+                'config' => [
                     'type' => 'select',
-                    'items' => array(
-                        array('', 0),
-                    ),
+                    'items' => [
+                        ['', 0],
+                    ],
                     'foreign_table' => 'sys_dmail_category',
                     'foreign_table_where' => 'AND sys_dmail_category.pid=###CURRENT_PID### AND sys_dmail_category.sys_language_uid IN (-1,0)',
                     'default' => 0
-                )
-            ),
-            'l18n_diffsource' => array(
-                'config' => array(
+                ]
+            ],
+            'l18n_diffsource' => [
+                'config' => [
                     'type' => 'passthrough'
-                )
-            ),
-            'hidden' => array(
-                'label' => DIV2007_LANGUAGE_LGL . 'hidden',
-                'config' => array(
+                ]
+            ],
+            'hidden' => [
+                'label' => $languageLglPath . 'hidden',
+                'config' => [
                     'type' => 'check',
                     'default' => '0'
-                )
-            ),
-            'category' => array (
-                'label' => 'LLL:EXT:' . $extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:sys_dmail_category.category',
-                'config' => array (
+                ]
+            ],
+            'category' => [
+                'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:sys_dmail_category.category',
+                'config' => [
                     'type' => 'input',
                     'size' => '30',
                     'default' => ''
-                )
-            ),
-            'old_cat_number' => array (
-                'label' => 'LLL:EXT:' . $extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang_db.xlf:sys_dmail_category.old_cat_number',
+                ]
+            ],
+            'old_cat_number' => [
+                'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:sys_dmail_category.old_cat_number',
                 'l10n_mode' => 'exclude',
-                'config' => array (
+                'config' => [
                     'type' => 'input',
                     'size' => '2',
                     'eval' => 'trim',
                     'max' => '2',
                     'default' => ''
-                )
-            ),
-        ),
-        'types' => array(
-            '0' => array('showitem' => 'sys_language_uid, l18n_parent, l18n_diffsource, hidden,--palette--;;1, category')
-        ),
-        'palettes' => array(
-            '1' => array('showitem' => '')
-        )
-    );
+                ]
+            ],
+        ],
+        'types' => [
+            '0' => ['showitem' => 'sys_language_uid, l18n_parent, l18n_diffsource, hidden,--palette--;;1, category']
+        ],
+        'palettes' => [
+            '1' => ['showitem' => '']
+        ]
+    ];
 
     if (
         version_compare(TYPO3_version, '8.6.0', '<')
