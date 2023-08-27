@@ -104,7 +104,7 @@ $result = [
         ],
     ],
     'types' => [
-        '0' => ]'showitem' => 'hidden, codes, status, starttime, endtime']
+        '0' => ['showitem' => 'hidden, codes, status, starttime, endtime']
     ]
 ];
 

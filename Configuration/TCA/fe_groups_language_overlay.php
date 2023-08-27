@@ -98,7 +98,7 @@ $result = [
                 'default' => '',
             ]
         ],
-    ),
+    ],
     'types' => [
         '0' => ['showitem' => 'hidden, fe_group, sys_language_uid, title']
     ]

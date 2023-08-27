@@ -61,8 +61,8 @@ if ($tableExists) {
                     'foreign_table' => 'sys_language',
                     'foreign_table_where' => 'ORDER BY sys_language.title',
                     'items' => [
-                        [$languageLglPath . 'allLanguages', -1),
-                        [$languageLglPath . 'default_value', 0)
+                        [$languageLglPath . 'allLanguages', -1],
+                        [$languageLglPath . 'default_value', 0]
                     ],
                     'default' => 0
                 ]

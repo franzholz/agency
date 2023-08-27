@@ -194,12 +194,12 @@ call_user_func(function($extensionKey, $table)
 
     if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['forceGender']) {
         $temporaryColumns['gender']['config']['items'] = [
-            ['LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.gender.I.0', '0'),
-            ['LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.gender.I.1', '1')
+            ['LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.gender.I.0', '0'],
+            ['LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.gender.I.1', '1']
         ];
     }
 
-    $directMailTemporaryColumns = [);
+    $directMailTemporaryColumns = [];
 
     if ( // Direct Mail tables exist but Direct Mail shall not be used
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['enableDirectMail'] &&
@@ -291,8 +291,8 @@ call_user_func(function($extensionKey, $table)
 
 
     $temporaryColumns['country'] = '';
-    $columns = ['zone', 'static_info_country', 'country', 'language');
-    $validColumns = [);
+    $columns = ['zone', 'static_info_country', 'country', 'language'];
+    $validColumns = [];
     foreach ($columns as $column) {
         if (isset($temporaryColumns[$column])) {
             $validColumns[] = $column;
@@ -315,8 +315,8 @@ call_user_func(function($extensionKey, $table)
             
     $temporaryColumns['title'] = '';
         
-    $columns = ['gender', 'status', 'date_of_birth', 'house_no', 'title');
-    $validColumns = [);
+    $columns = ['gender', 'status', 'date_of_birth', 'house_no', 'title'];
+    $validColumns = [];
     foreach ($columns as $column) {
         if (isset($temporaryColumns[$column])) {
             $validColumns[] = $column;
@@ -333,8 +333,8 @@ call_user_func(function($extensionKey, $table)
     }
 
     $temporaryColumns['address'] = '';
-    $columns = ['cnum', 'status', 'date_of_birth', 'house_no', 'address');
-    $validColumns = [);
+    $columns = ['cnum', 'status', 'date_of_birth', 'house_no', 'address'];
+    $validColumns = [];
     foreach ($columns as $column) {
         if (isset($temporaryColumns[$column])) {
             $validColumns[] = $column;
