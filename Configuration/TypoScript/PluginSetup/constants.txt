@@ -24,7 +24,7 @@ plugin.tx_agency {
   privacyPolicyUrl =
 
   # cat=plugin.tx_agency/file; type=file[gif]; label= Icon used for deletion of uploaded files.
-  file.icon_delete = EXT:agency/res/icons/fe/icon_delete.gif
+  file.icon_delete = EXT:agency/Resources/Public/Icons/icon_delete.gif
 
     # cat=plugin.tx_agency/file; type=file[css]; label= HTML emails stylesheet: If HTML emails are enabled, this file contains the CSS stylesheet to be incorporated in these mails.
   HTMLMailCSS = EXT:agency/template/tx_agency_htmlmail_xhtml.css

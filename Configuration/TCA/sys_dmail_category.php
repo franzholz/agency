@@ -47,7 +47,7 @@ if ($tableExists) {
             'enablecolumns' => [
                 'disabled' => 'hidden',
             ],
-            'iconfile' => 'EXT:' . $extensionKey . $languageSubpath . 'icon_tx_directmail_category.gif',
+            'iconfile' => 'EXT:' . $extensionKey . '/Resources/Public/Icons/icon_tx_directmail_category.gif'
         ],
         'interface' => [
                 'showRecordFieldList' => 'hidden,category'

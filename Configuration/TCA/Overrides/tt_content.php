@@ -14,8 +14,7 @@ call_user_func(function($extensionKey, $table)
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPlugin(
         [
             'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:tt_content.list_type',
-            $listType,
-            'EXT:' . $extensionKey . '/ext_icon.gif'
+            $listType
         ],
         'list_type',
         $extensionKey

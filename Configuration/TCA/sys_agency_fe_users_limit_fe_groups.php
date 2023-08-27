@@ -19,7 +19,7 @@ $result = [
             'starttime' => 'starttime',
             'endtime' => 'endtime',
         ],
-        'iconfile' => 'EXT:' . $extensionKey . '/ext_icon.gif',
+        'iconfile' => 'EXT:' . $extensionKey . '/Resources/Public/Icons/Extension.gif',
     ],
     'interface' => [
         'showRecordFieldList' => 'hidden,starttime,endtime,codes,status'
