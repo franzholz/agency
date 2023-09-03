@@ -851,8 +851,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             $conf['addAttachment.']['cmd'] == $cmd &&
             $conf['addAttachment.']['sFK'] == $controlData->getFeUserData('sFK')
         ) {
-            $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
-            $file = $sanitizer->sanitize($conf['addAttachment.']['file']);
+            $file = $conf['addAttachment.']['file'];
         }
 
             // SETFIXED_REVIEW will be sent to user only if the admin part is present

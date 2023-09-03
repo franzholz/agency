@@ -1,3 +1,8 @@
+
+
+2023-09-03 Franz Holzinger <franz@ttproducts.de>
+    * compatibility TYPO3 11.5: remove FilePathSanitizer for files which are not shown directly in the front end.
+
 2022-10-26 Franz Holzinger <franz@ttproducts.de>
     * bugfix: Set correct path for flexform. pi/flexform_ds_pi.xml -> Configuration/FlexForms/flexform_ds.xml
     * bugfix: Set relative language file path of flexform to Resources/Private/Language.
