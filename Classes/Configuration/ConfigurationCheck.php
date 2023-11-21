@@ -145,22 +145,6 @@ class ConfigurationCheck implements LoggerAwareInterface {
                     }
                 }
             }
-
-                // Check if we can get a backend from rsaauth
-            if (ExtensionManagementUtility::isLoaded('rsaauth')) {
-                $backend = \TYPO3\CMS\Rsaauth\Backend\BackendFactory::getBackend();
-                $storage = \TYPO3\CMS\Rsaauth\Storage\StorageFactory::getStorage();
-                if (
-                    !is_object($backend) ||
-                    !$backend->isAvailable() ||
-                    !is_object($storage)
-                ) {
-                        // Required RSA auth backend not available
-                    $message = LocalizationUtility::translate('internal_rsaauth_backend_not_available');
-                    $this->logger->critical($message);
-                    $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
-                }
-            }
         }
 
         return $content;

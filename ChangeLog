@@ -1,4 +1,5 @@
-
+2023-11-20 Franz Holzinger  <franz@ttproducts.de>
+    Deprecation no.81852: - Remove dependency on rsaauth
 
 2023-09-03 Franz Holzinger <franz@ttproducts.de>
     * compatibility TYPO3 11.5: remove FilePathSanitizer for files which are not shown directly in the front end.

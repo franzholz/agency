@@ -10,12 +10,12 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Franz Holzinger',
     'author_email' => 'franz@ttproducts.de',
     'author_company' => 'jambage.com',
-    'version' => '0.11.2',
+    'version' => '0.12.0',
     'constraints' => [
         'depends' => [
-            'php' => '7.4.0-8.1.99',
-            'typo3' => '10.4.0-11.5.99',
-            'div2007' => '1.17.1-0.0.0',
+            'php' => '8.0.0-8.4.99',
+            'typo3' => '11.5.99-12.4.99',
+            'div2007' => '1.17.0-0.0.0',
             'rdct' => '2.0.0-0.0.0',
             'typo3db_legacy' => '1.0.0-1.2.99',
         ],
@@ -24,7 +24,6 @@ $EM_CONF[$_EXTKEY] = [
         ],
         'suggests' => [
             'felogin' => '',
-            'rsaauth' => '',
             'static_info_tables' => '',
         ],
     ],
