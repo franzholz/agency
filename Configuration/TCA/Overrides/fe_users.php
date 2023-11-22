@@ -15,7 +15,7 @@ call_user_func(function($extensionKey, $table)
                 'size' => '20',
                 'max' => '50',
                 'eval' => 'trim',
-                'default' => ''
+                'default' => null
             ]
         ],
         'static_info_country' => [
@@ -26,7 +26,7 @@ call_user_func(function($extensionKey, $table)
                 'size' => '5',
                 'max' => '3',
                 'eval' => '',
-                'default' => ''
+                'default' => null
             ]
         ],
         'zone' => [
@@ -37,7 +37,7 @@ call_user_func(function($extensionKey, $table)
                 'size' => '20',
                 'max' => '40',
                 'eval' => 'trim',
-                'default' => ''
+                'default' => null
             ]
         ],
         'language' => [
@@ -48,7 +48,7 @@ call_user_func(function($extensionKey, $table)
                 'size' => '4',
                 'max' => '2',
                 'eval' => '',
-                'default' => ''
+                'default' => null
             ]
         ],
         'date_of_birth' => [
@@ -62,7 +62,7 @@ call_user_func(function($extensionKey, $table)
                 'max' => '20',
                 'eval' => 'date',
                 'checkbox' => '0',
-                'default' => ''
+                'default' => null
             ]
         ],
         'gender' => [
@@ -157,7 +157,7 @@ call_user_func(function($extensionKey, $table)
                 'eval' => 'trim',
                 'size' => '20',
                 'max' => '20',
-                'default' => ''
+                'default' => null
             ]
         ],
         'lost_password' => [
@@ -186,7 +186,7 @@ call_user_func(function($extensionKey, $table)
                 'max' => '20',
                 'eval' => 'date',
                 'checkbox' => '0',
-                'default' => '',
+                'default' => null,
                 'readOnly' => '1'
             ]
         ],

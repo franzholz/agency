@@ -97,7 +97,7 @@ if ($tableExists) {
                 'config' => [
                     'type' => 'input',
                     'size' => '30',
-                    'default' => ''
+                    'default' => null
                 ]
             ],
             'old_cat_number' => [
@@ -108,7 +108,7 @@ if ($tableExists) {
                     'size' => '2',
                     'eval' => 'trim',
                     'max' => '2',
-                    'default' => ''
+                    'default' => null
                 ]
             ],
         ],

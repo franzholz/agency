@@ -95,7 +95,7 @@ $result = [
                 'size' => '50',
                 'max' => '70',
                 'eval' => 'trim,required',
-                'default' => '',
+                'default' => null,
             ]
         ],
     ],
