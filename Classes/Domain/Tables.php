@@ -43,6 +43,9 @@ namespace JambageCom\Agency\Domain;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
+use JambageCom\Agency\Constants\Extension;
+
+
 class Tables implements \TYPO3\CMS\Core\SingletonInterface {
 
     public $tableClassArray = [];
@@ -93,7 +96,7 @@ class Tables implements \TYPO3\CMS\Core\SingletonInterface {
         }
 
         if (!$classNameArray['model'] || $bView && !$classNameArray['model']) {
-            debug('Error in ' . AGENCY_EXT . '. No class found after calling function tx_agency_lib_tables::get with parameters "' . $functablename . '", ' . $bView . '.', 'internal error'); // keep this
+            debug('Error in ' . Extension::KEY . '. No class found after calling function tx_agency_lib_tables::get with parameters "' . $functablename . '", ' . $bView . '.', 'internal error'); // keep this
             return 'ERROR';
         }
 
@@ -105,7 +108,7 @@ class Tables implements \TYPO3\CMS\Core\SingletonInterface {
                     list($extKey, $className) = GeneralUtility::trimExplode(':', $className, true);
 
                     if (!ExtensionManagementUtility::isLoaded($extKey)) {
-                        debug('Error in ' . AGENCY_EXT . '. No extension "' . $extKey . '" has been loaded to use class class.' . $className . '.','internal error'); // keep this
+                        debug('Error in ' . Extension::KEY . '. No extension "' . $extKey . '" has been loaded to use class class.' . $className . '.','internal error'); // keep this
                         continue;
                     }
                 }
@@ -121,7 +124,7 @@ class Tables implements \TYPO3\CMS\Core\SingletonInterface {
                 );
             }
         } else {
-            debug('Object for \'' . $functablename . '\' has not been found.', 'internal error in ' . AGENCY_EXT); // keep this
+            debug('Object for \'' . $functablename . '\' has not been found.', 'internal error in ' . Extension::KEY); // keep this
         }
 
         if (

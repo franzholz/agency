@@ -41,6 +41,9 @@ namespace JambageCom\Agency\Utility;
 */
 
 
+use JambageCom\Agency\Constants\Extension;
+
+
 class LocalizationUtility {
     static protected $filename = '';
 
@@ -66,7 +69,7 @@ class LocalizationUtility {
 
         $result =
             \JambageCom\Div2007\Utility\FrontendUtility::translate(
-                AGENCY_EXT,
+                Extension::KEY,
                 $filename,
                 $key
             );

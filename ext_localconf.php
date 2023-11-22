@@ -1,21 +1,18 @@
 <?php
 defined('TYPO3') || die('Access denied.');
 
+use JambageCom\Agency\Constants\Extension;
+
+
 call_user_func(function($extensionKey)
 {
-    if (!defined ('AGENCY_EXT')) {
-        define('AGENCY_EXT', $extensionKey);
-    }
-
+    $languageSubpath = '/Resources/Private/Language/';
     $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
         \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
     )->get($extensionKey);
 
     if (!defined('STATIC_INFO_TABLES_EXT')) {
         define('STATIC_INFO_TABLES_EXT', 'static_info_tables');
-    }
-    if (!defined('DIV2007_LANGUAGE_SUBPATH')) {
-        define('DIV2007_LANGUAGE_SUBPATH', '/Resources/Private/Language/');
     }
 
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPItoST43($extensionKey, 'class.tx_agency.php', '', 'list_type', 0);
@@ -52,14 +49,11 @@ call_user_func(function($extensionKey)
         // Scheduler hook
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_agency_feusergroup_scheduler'] = [
         'extension' => $extensionKey,
-        'title' => 'LLL:EXT:' . $extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang_db_layout.xlf:feUserGroupScheduler.name',
-        'description' => 'LLL:EXT:' . $extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang_db_layout.xlf:feUserGroupScheduler.description',
+        'title' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db_layout.xlf:feUserGroupScheduler.name',
+        'description' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db_layout.xlf:feUserGroupScheduler.description',
     ];
 
-    // replace the output of the former CODE field with the flexform
-    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info'][$extensionKey . '_pi'][] =
-        'JambageCom\\Agency\\Hooks\\CmsBackend->pmDrawItem';
     // Register Status Report Hook
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['reports']['tx_reports']['status']['providers']['Agency Registration'][] = \JambageCom\Agency\Hooks\StatusProvider::class;
 
-}, 'agency');
+}, Extension::KEY);

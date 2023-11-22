@@ -1,7 +1,9 @@
 <?php
 defined('TYPO3') || die('Access denied.');
 
-$extensionKey = 'agency';
+use JambageCom\Agency\Constants\Extension;
+
+$extensionKey = Extension::KEY;
 $result = false;
 $tableExists = true;
 $table = 'fe_groups_language_overlay';

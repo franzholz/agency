@@ -42,8 +42,10 @@ namespace JambageCom\Agency\Controller;
 */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 use JambageCom\Div2007\Utility\FrontendUtility;
+
+use JambageCom\Agency\Constants\Extension;
+
 
 
 class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
@@ -137,11 +139,11 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
 
         $languageObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Localization::class);
         $languageObj->init(
-            AGENCY_EXT,
+            Extension::KEY,
             $conf['_LOCAL_LANG.'] ?? ''
         );
         $languageObj->loadLocalLang(
-            'EXT:' . AGENCY_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf',
+            'EXT:' . Extension::KEY . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf',
             false
         );        
         $tmpText = $languageObj->getLabel('unsupported');
@@ -157,7 +159,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         );
 
         if ($result !== false) {
-            if ($pibaseObj->extKey != AGENCY_EXT) {
+            if ($pibaseObj->extKey != Extension::KEY) {
                 $filename = \JambageCom\Agency\Utility\LocalizationUtility::getFilename();
                 $filename = 'EXT:' . $pibaseObj->extKey . $filename;
 

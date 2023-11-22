@@ -1,6 +1,8 @@
 <?php
 defined('TYPO3') || die('Access denied.');
 
+use JambageCom\Agency\Constants\Extension;
+
 call_user_func(function($extensionKey)
 {
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages( 'fe_groups_language_overlay');
@@ -11,4 +13,4 @@ call_user_func(function($extensionKey)
     ) {
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages( 'sys_dmail_category');
     }
-}, 'agency');
+}, Extension::KEY);

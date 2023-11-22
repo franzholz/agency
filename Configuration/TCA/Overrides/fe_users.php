@@ -1,6 +1,8 @@
 <?php
 defined('TYPO3') || die('Access denied.');
 
+use JambageCom\Agency\Constants\Extension;
+
 call_user_func(function($extensionKey, $table)
 {
     $table = 'fe_users';
@@ -354,5 +356,5 @@ call_user_func(function($extensionKey, $table)
     $searchFields = explode(',', $GLOBALS['TCA'][$table]['ctrl']['searchFields'] . ',cnum,comments');
     $searchFields = array_unique($searchFields);
     $GLOBALS['TCA'][$table]['ctrl']['searchFields'] = implode(',', $searchFields);
-}, 'agency', basename(__FILE__, '.php'));
+}, Extension::KEY, basename(__FILE__, '.php'));
 

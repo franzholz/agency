@@ -49,6 +49,7 @@ use JambageCom\Div2007\Captcha\CaptchaInterface;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\HtmlUtility;
 
+use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Constants\Mode;
 
 
@@ -1392,7 +1393,7 @@ var submitFile = function(id){
     {
         $messages = [];
             // These changes apply only to agency
-        if ($extKey == 'agency') {
+        if ($extKey == Extension::KEY) {
                 // Version 0: no clear-text passwords in templates
                 // Remove any ###FIELD_password###, ###FIELD_password_again### markers
                 // Remove markers ###TEMPLATE_INFOMAIL###, ###TEMPLATE_INFOMAIL_SENT### and ###EMAIL_TEMPLATE_INFOMAIL###

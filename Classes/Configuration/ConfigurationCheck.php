@@ -47,6 +47,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Div2007\Utility\FrontendUtility;
 
+use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Utility\LocalizationUtility;
 
 
@@ -120,7 +121,7 @@ class ConfigurationCheck implements LoggerAwareInterface {
     public function checkSecuritySettings ($extensionKey)
     {
         $content = '';
-        if ($extensionKey == 'agency') {
+        if ($extensionKey == Extension::KEY) {
                 // Check if salted passwords are enabled in front end
             if (                
                 class_exists(\TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordsUtility::class) ||

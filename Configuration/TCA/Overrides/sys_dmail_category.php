@@ -1,8 +1,10 @@
 <?php
 defined('TYPO3') || die('Access denied.');
 
+use JambageCom\Agency\Constants\Extension;
+
 call_user_func(function($extensionKey, $table)
 {
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToInsertRecords($table);
-}, 'agency', basename(__FILE__, '.php'));
+}, Extension::KEY, basename(__FILE__, '.php'));
 

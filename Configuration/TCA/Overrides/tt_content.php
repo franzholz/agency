@@ -1,6 +1,9 @@
 <?php
 defined('TYPO3') || die('Access denied.');
 
+use JambageCom\Agency\Constants\Extension;
+
+
 call_user_func(function($extensionKey, $table)
 {
     $listType = $extensionKey;
@@ -19,5 +22,5 @@ call_user_func(function($extensionKey, $table)
         'list_type',
         $extensionKey
     );
-}, 'agency', basename(__FILE__, '.php'));
+}, Extension::KEY, basename(__FILE__, '.php'));
 

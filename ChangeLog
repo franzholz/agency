@@ -1,4 +1,7 @@
-2023-11-20 Franz Holzinger  <franz@ttproducts.de>
+
+
+2023-11-22 Franz Holzinger  <franz@ttproducts.de>
+    compatibility 12: replace CmsBackend->pmDrawItem by PageContentPreviewRenderingListener listener
     Deprecation no.81852: - Remove dependency on rsaauth
 
 2023-09-03 Franz Holzinger <franz@ttproducts.de>

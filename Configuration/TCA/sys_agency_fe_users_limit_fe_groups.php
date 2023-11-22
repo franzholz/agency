@@ -1,7 +1,9 @@
 <?php
 defined('TYPO3') || die('Access denied.');
 
-$extensionKey = 'agency';
+use JambageCom\Agency\Constants\Extension;
+
+$extensionKey = Extension::KEY;
 $languageSubpath = '/Resources/Private/Language/';
 $languageLglPath = 'LLL:EXT:core' . $languageSubpath . 'locallang_general.xlf:LGL.';
 

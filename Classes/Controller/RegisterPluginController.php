@@ -42,20 +42,21 @@ namespace JambageCom\Agency\Controller;
 *
 */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Configuration\ConfigurationCheck;
 use JambageCom\Agency\Utility\LocalizationUtility;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 
 class RegisterPluginController extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 
         // Plugin initialization variables
-    public $prefixId = 'agency';
+    public $prefixId = Extension::KEY;
     public $scriptRelPath = 'Classes/Controller/RegisterPluginController.php'; // Path to this script relative to the extension dir.
-    public $extKey = AGENCY_EXT;		// Extension key.
-
+    public $extKey = Extension::KEY;		// Extension key.
 
     public function main (
         $content,
