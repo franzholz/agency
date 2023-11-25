@@ -55,7 +55,7 @@ use JambageCom\Agency\Utility\SessionUtility;
 
 
 class ActionController {
-    public $languageObj;
+    public $urlObj;
     public $auth;
     public $email;
     public $requiredArray; // List of required fields
@@ -72,7 +72,6 @@ class ActionController {
         \JambageCom\Agency\Api\Url $urlObj
     )
     {
-        $this->langObj = $languageObj;
         $conf = $confObj->getConf();
         $this->urlObj = $urlObj;
             // Retrieve the extension key

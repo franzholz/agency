@@ -57,28 +57,31 @@ use TYPO3\CMS\Core\Context\LanguageAspect;
  */
 class Parameters
 {
-    public $thePid = 0;
-    public $thePidTitle;
-    public $theTable;
-    public $site_url;
-    public $prefixId;
-    public $piVars;
-    public $extensionKey;
-    public $cmd = '';
-    public $cmdKey = '';
-    public $pid = [];
-    public $defaultPid = '';
-    public $setfixedEnabled = 0;
-    public $submit = false;
-    public $bDoNotSave = false;
-    public $failure = false; // is set if data did not have the required fields set.
-    public $sys_language_content;
-    public $feUserData = [];
-    public $bValidRegHash;
-    public $regHash;
     private $confObj;
+    protected $thePid = 0;
+    protected $thePidTitle;
+    protected $mode;
+    protected $theTable;
+    protected $requiredArray;
+    protected $site_url;
+    protected $prefixId;
+    protected $piVars;
+    protected $extensionKey;
+    protected $cmd = '';
+    protected $cmdKey = '';
+    protected $pid = [];
+    protected $defaultPid = '';
+    protected $setfixedEnabled = 0;
+    protected $submit = false;
+    protected $bDoNotSave = false;
+    protected $failure = false; // is set if data did not have the required fields set.
+
+    protected $sys_language_content;
+    protected $feUserData = [];
+    protected $bValidRegHash;
+    protected $regHash;
         // Whether the token was found valid
-    protected $isTokenValid = false;
+    protected $tokenValid = false;
         // support for repeated password (password_again internal field)
     protected $usePasswordAgain = false;
     protected $usePassword = false;
@@ -548,7 +551,7 @@ class Parameters
     */
     public function isTokenValid ()
     {
-        return $this->isTokenValid;
+        return $this->tokenValid;
     }
 
     /**
@@ -559,7 +562,7 @@ class Parameters
     */
     protected function setTokenValid ($valid)
     {
-        $this->isTokenValid = $valid;
+        $this->tokenValid = $valid;
     }
 
     /**

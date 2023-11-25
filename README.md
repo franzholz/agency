@@ -8,4 +8,13 @@ A documentation manual.sxw is available in the doc folder.
 
 
 
+## Compatibility
 
+TYPO3 12 has new requirement for front end user passwords
+
+* At least 8 chars
+* At least one number
+* At least one upper case char
+* At least one special char
+
+However the password cannot be checked, because it is transfered to the server in a crypted form.

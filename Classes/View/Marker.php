@@ -71,6 +71,7 @@ class Marker {
     public $dataArray; // temporary array of data
     private $urlMarkerArray;
     private $thePidTitle;
+    private $tmpTcaMarkers;
 
     public function init (
         \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
@@ -442,9 +443,9 @@ class Marker {
                     }
 
                     foreach ($fieldArray as $key => $value) {
-                        $label = $languageObj->getLabelFromString($colConfig['items'][$value][0]);
+                        $label = $languageObj->getLabelFromString($colConfig['items'][$value]['label']);
                         $markerArray['###FIELD_' . $markerkey . '_CHECKED###'] .= '- ' . $label . '<br' . HtmlUtility::getXhtmlFix() . '>';
-                        $label = $languageObj->getLabelFromString($colConfig['items'][$value][0]);
+                        $label = $languageObj->getLabelFromString($colConfig['items'][$value]['label']);
                         $markerArray['###LABEL_' . $markerkey . '_CHECKED###'] .= '- ' . $label . '<br' . HtmlUtility::getXhtmlFix() . '>';
                         $markerArray['###POSTVARS_' . $markerkey.'###'] .= chr(10) . '	<input type="hidden" name="FE[fe_users][' . $theField . '][' . $key . ']" value ="' . $value . '"' . HtmlUtility::getXhtmlFix() . '>';
                     }
@@ -969,7 +970,8 @@ class Marker {
         $HTMLContent = '';
         $tablePrefix = 'FE[' . $theTable . ']';
         $size = $config['maxitems'];
-        if (!empty($cmdKey)) {
+        $cmdParts = [];
+        if (!empty($cmdKey) && isset($this->conf[$cmdKey . '.']['evalValues.'][$theField])) {
             $cmdParts = preg_split('/\[|\]/', $this->conf[$cmdKey . '.']['evalValues.'][$theField]);
         }
         if(!empty($cmdParts[1])) {

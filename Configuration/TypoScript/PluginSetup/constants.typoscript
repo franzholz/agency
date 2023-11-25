@@ -234,7 +234,7 @@ plugin.tx_agency {
   keepUnselectableUserGroups = 1
 
     # cat=plugin.tx_agency//; type=int+; label= Minimum password length: The minimum number of characters that the password must contain.
-  passwordAtLeast = 5
+  passwordAtLeast = 8
 
     # cat=plugin.tx_agency//; type=int+; label= Maximum password length: The maximum number of characters that the password may contain.
   passwordAtMost = 40

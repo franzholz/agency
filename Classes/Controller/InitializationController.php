@@ -134,7 +134,6 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
                 $coreQuery
             );
         $markerObj = GeneralUtility::makeInstance(\JambageCom\Agency\View\Marker::class);
-        $this->setfixedObj = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\Setfixed::class);
         $actionController = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\ActionController::class);
 
         $languageObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Localization::class);
@@ -293,14 +292,15 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         $templateCode = $dataObj->getTemplateCode();
 
         if ($success) {
+            $setfixedObj = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\Setfixed::class);
             $displayObj = GeneralUtility::makeInstance(\JambageCom\Agency\View\CreateView::class);
             $editView = GeneralUtility::makeInstance(\JambageCom\Agency\View\EditView::class);
             $deleteView = GeneralUtility::makeInstance(\JambageCom\Agency\View\DeleteView::class);
             $template = GeneralUtility::makeInstance(\JambageCom\Agency\View\Template::class);
             $content = $actionController->doProcessing(
-                $pibaseObj->cObj,
+                $cObj,
                 $confObj,
-                $this->setfixedObj,
+                $setfixedObj,
                 $languageObj,
                 $template,
                 $displayObj,

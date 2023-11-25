@@ -332,13 +332,13 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
         } else {
             $keyArray = [];
             foreach ($itemArray as $valuesArray) {
-                $keyArray[$valuesArray['1']] = $valuesArray['0'];
+                $keyArray[$valuesArray['value']] = $valuesArray['label'];
             }
             foreach ($labelItemArray as $labelValuesArray) {
-                $keyArray[$labelValuesArray['1']] = $labelValuesArray['0'];
+                $keyArray[$labelValuesArray['value']] = $labelValuesArray['label'];
             }
             foreach ($keyArray as $key => $value) {
-                $result[] = ['0' => $value, '1' => $key];
+                $result[] = ['label' => $value, 'value' => $key];
             }
         }
         return $result;
@@ -532,7 +532,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
                                         if ($checked) {
                                             $checkedCount++;
-                                            $label = $languageObj->getLabelFromString($colConfig['items'][$key][0]);
+                                            $label = $languageObj->getLabelFromString($colConfig['items'][$key]['label']);
                                             if ($HSC) {
                                                 $label =
                                                     htmlspecialchars($label);
@@ -541,7 +541,6 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                             $colContent .= ((!$bNotLast || $checkedCount < count($bCheckedArray)) ?  $cObj->stdWrap($label, $stdWrap) : $label);
                                         }
                                     }
-                                    $cObj->alternativeData = $colConfig['items'];
                                     $colContent = $cObj->stdWrap($colContent, $listWrap);
                                 } else {
                                     if (
@@ -590,7 +589,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                         }
 
                                         for ($i = 0; $i < count ($valuesArray); $i++) {
-                                            $label = $languageObj->getLabelFromString($itemKeyArray[$valuesArray[$i]][0]);
+                                            $label = $languageObj->getLabelFromString($itemKeyArray[$valuesArray[$i]]['label']);
                                             if ($HSC) {
                                                 $label = htmlspecialchars($label);
                                             }
@@ -610,7 +609,6 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                     )
                                 ) {
                                     $valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', $mrow[$colName]);
-                                    $textSchema = $theTable . '.' . $colName . '.I.';
                                     $textSchema = $theTable . '.' . $colName . '.I.';
                                     $labelItemArray = $languageObj->getItemsLL($textSchema, true);
 
@@ -636,7 +634,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                             if (empty($itemKeyArray)) {
                                                 $label = $valuesArray[$i];
                                             } else {
-                                                $label = $languageObj->getLabelFromString($itemKeyArray[$valuesArray[$i]][0]);
+                                                $label = $languageObj->getLabelFromString($itemKeyArray[$valuesArray[$i]]['label']);
                                             }
                                             if ($HSC) {
                                                 $label = htmlspecialchars($label);
@@ -821,7 +819,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                             $checkedHtml = ($useXHTML ? ' checked="checked"' : ' checked');
                                         }
 
-                                        $label = $languageObj->getLabelFromString($itemArray[$key][0]);
+                                        $label = $languageObj->getLabelFromString($value['label']);
                                         $label = htmlspecialchars($label);
                                         $newContent = '<li><input type="checkbox"' .
                                             ' id="' . $uidText . '-' . $key .
@@ -862,10 +860,11 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                 } else {
                                     $startVal = $colConfig['default'] ?? '';
                                 }
+
                                 if (empty($startVal) && isset($colConfig['items'])) {
                                     reset($colConfig['items']);
                                     list($startConf) = $colConfig['items'];
-                                    $startVal = $startConf['1'];
+                                    $startVal = $startConf['value'];
                                 }
 
                                 if (!$bStdWrap) {
@@ -877,8 +876,8 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                     $checkedHtml = ($useXHTML ? ' checked="checked"' : ' checked');
 
                                     foreach($itemArray as $key => $confArray) {
-                                        $value = $confArray['1'];
-                                        $label = $languageObj->getLabelFromString($confArray['0']);
+                                        $value = $confArray['value'];
+                                        $label = $languageObj->getLabelFromString($confArray['label']);
                                         $label = htmlspecialchars($label);
                                         $itemOut = '<input type="radio"' .
                                         ' id="'.
@@ -991,7 +990,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                     $i = 0;
 
                                     foreach ($itemArray as $k => $item) {
-                                        $label = $languageObj->getLabelFromString($item[0], true);
+                                        $label = $languageObj->getLabelFromString($item['label'], true);
                                         $label = htmlspecialchars($label);
                                         if (
                                             isset($colConfig['renderMode']) &&
@@ -1237,7 +1236,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
         if (is_array($itemArray)) {
             foreach ($itemArray as $k => $row) {
-                $key = $row[1];
+                $key = $row['value'];
                 $rc[$key] = $row;
             }
         }

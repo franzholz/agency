@@ -64,7 +64,7 @@ call_user_func(function($extensionKey, $table)
                 'max' => '20',
                 'eval' => 'date',
                 'checkbox' => '0',
-                'default' => null
+                'default' => 0
             ]
         ],
         'gender' => [

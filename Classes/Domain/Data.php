@@ -53,6 +53,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     public $lang;
     public $tca;
     public $freeCap; // object of type tx_srfreecap_pi2
+    public $control;
     public $controlData;
     public $dataArray = [];
     public $origArray = [];
@@ -67,6 +68,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     public $additionalOverrideFields = [];
     public $fieldList = ''; // List of fields from $TCA[table]['columns'] or fe_admin_fieldList (TYPO3 below 6.2)
     public $specialfieldlist = ''; // list of special fields like captcha
+    public $adminFieldList;
     public $additionalIncludedFields = []; // list of additional front end fields which are active only in the preview mode: username, cnum
     public $recUid = 0;
     public $missing = []; // array of required missing fields
@@ -1312,7 +1314,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                     }
                                 }
                             break;
-                            case 'date':
+                            case 'date':                        
                                 if (
                                     $dataValue &&
                                     $this->evalDate(
@@ -1323,7 +1325,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                     $dateArray = $this->fetchDate($dataValue, $conf['dateFormat']);
                                     $dataValue = $dateArray['y'] . '-' . $dateArray['m'] . '-'.$dateArray['d'];
                                     $translateArray = [
-                                        'd' => ($dateArray['d'] < 10 ? '0'.$dateArray['d'] : $dateArray['d']),
+                                        'd' => ($dateArray['d'] < 10 ? '0' . $dateArray['d'] : $dateArray['d']),
                                         'j' => $dateArray['d'],
                                         'm' => ($dateArray['m'] < 10 ? '0' . $dateArray['m'] : $dateArray['m']),
                                         'n' => $dateArray['m'],
@@ -1336,7 +1338,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                 } else if (!isset($dataArray[$theField])) {
                                     $bValueAssigned = false;
                                 } else if (!$dataValue) {
-                                    $dataValue = '';
+                                    $dataValue = '0';
                                 }
                             break;
                             default:

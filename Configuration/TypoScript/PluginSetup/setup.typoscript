@@ -312,7 +312,7 @@ plugin.tx_agency {
 	.agency legend { padding: 0 .5em; font-weight: bold; }
 	.agency .agency-notice { font-style: italic; margin-bottom: 1em; }
 	.agency .agency-trash { margin-bottom: 2em; }
-	.agency a { padding-left: 14px; background-image: url("../typo3conf/ext/agency/Resources/Public/Icons/internal_link.gif"); background-repeat: no-repeat; background-position: 0% 60%; text-decoration:none; }
+	.agency a { padding-left: 14px; background-image: url("/typo3conf/ext/agency/Resources/Public/Icons/internal_link.gif"); background-repeat: no-repeat; background-position: 0% 60%; text-decoration:none; }
 	.agency label { margin: 0; padding: 0; }
 	.agency label span { color: #ff0000; }
 	.agency .agency-error { color: #ff0000; }
@@ -323,7 +323,7 @@ plugin.tx_agency {
 	* html .agency input.agency-radio, * html .agency input.agency-checkbox { background-color: transparent; }
 	.agency .agency-delete-icon { margin-left: 1em; background-color: transparent; }
 	.agency .agency-delete-icon:hover { cursor: pointer; }
-	.agency a.agency-file-view { padding-left: 15px; background-image: url("../typo3conf/ext/agency/Resources/Public/Icons/internal_link_new_window.gif"); background-color: transparent; background-repeat: no-repeat; font-size: .8em; margin-left: 1em; }
+	.agency a.agency-file-view { padding-left: 15px; background-image: url("/typo3conf/ext/agency/Resources/Public/Icons/internal_link_new_window.gif"); background-color: transparent; background-repeat: no-repeat; font-size: .8em; margin-left: 1em; }
 	.agency ul { margin: 0; padding: 0; list-style-position: inside; }
 	.agency ul.agency-multiple-checkboxes { list-style-type: none; }
 	.agency ul.agency-multiple-checkboxes li { margin: 0 0 .3em 0; padding: 0; }
