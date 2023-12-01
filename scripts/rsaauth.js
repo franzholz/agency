@@ -5,10 +5,10 @@ function tx_agency_encrypt(form) {
 		// For login forms
 	if (typeof form.pass !== 'undefined') {
 		var pass = form.pass.value;
-		var cryptedPass = rsa.encrypt(pass);
+		var encryptedPass = rsa.encrypt(pass);
 		form.pass.value = '';
-		if (cryptedPass) {
-			form.pass.value = 'rsa:' + hex2b64(cryptedPass);
+		if (encryptedPass) {
+			form.pass.value = 'rsa:' + hex2b64(encryptedPass);
 		}
 	}
 		// For password and password_again entry forms
@@ -16,9 +16,9 @@ function tx_agency_encrypt(form) {
 		var password = form['FE[fe_users][password]'].value;
 		form['FE[fe_users][password]'].value = '';
 		if (password && password.length > 0) {
-			var cryptedPassword = rsa.encrypt(password);
-			if (cryptedPassword) {
-				form['FE[fe_users][password]'].value = 'rsa:' + hex2b64(cryptedPassword);
+			var encryptedPassword = rsa.encrypt(password);
+			if (encryptedPassword) {
+				form['FE[fe_users][password]'].value = 'rsa:' + hex2b64(encryptedPassword);
 			}
 		}
 	}
@@ -26,9 +26,9 @@ function tx_agency_encrypt(form) {
 		var password_again = form['FE[fe_users][password_again]'].value;
 		form['FE[fe_users][password_again]'].value = '';
 		if (password_again && password_again.length > 0) {
-			var cryptedPassword_again = rsa.encrypt(password_again);
-			if (cryptedPassword_again) {
-				form['FE[fe_users][password_again]'].value = 'rsa:' + hex2b64(cryptedPassword_again);
+			var encryptedPassword_again = rsa.encrypt(password_again);
+			if (encryptedPassword_again) {
+				form['FE[fe_users][password_again]'].value = 'rsa:' + hex2b64(encryptedPassword_again);
 			}
 		}
 	}

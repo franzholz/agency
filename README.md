@@ -17,4 +17,4 @@ TYPO3 12 has new requirement for front end user passwords
 * At least one upper case char
 * At least one special char
 
-However the password cannot be checked, because it is transfered to the server in a crypted form.
+However the password cannot be checked, because it is transfered to the server in an encrypted form.
