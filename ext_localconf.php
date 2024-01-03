@@ -17,13 +17,13 @@ call_user_func(function($extensionKey)
 
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPItoST43($extensionKey, 'class.tx_agency.php', '', 'list_type', 0);
 
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['uploadfolder'] = $extensionConfiguration['uploadFolder'] ? $extensionConfiguration['uploadFolder'] : 'uploads/tx_agency';
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['uploadfolder'] = $extensionConfiguration['uploadFolder'] ?: 'uploads/tx_agency';
 
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['imageMaxSize'] = $extensionConfiguration['imageMaxSize'] ? $extensionConfiguration['imageMaxSize'] : 250;
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['imageTypes'] = $extensionConfiguration['imageTypes'] ? $extensionConfiguration['imageTypes'] : 'png,jpeg,jpg,gif,tif,tiff';
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['enableDirectMail'] = $extensionConfiguration['enableDirectMail'] ? $extensionConfiguration['enableDirectMail'] : 0;
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['forceGender'] = $extensionConfiguration['forceGender'] ? $extensionConfiguration['forceGender'] : 0;
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['endtimeYear'] = $extensionConfiguration['endtimeYear'] ? $extensionConfiguration['endtimeYear'] : 2030;
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['imageMaxSize'] = $extensionConfiguration['imageMaxSize'] ?: 250;
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['imageTypes'] = $extensionConfiguration['imageTypes'] ?: 'png,jpeg,jpg,gif,tif,tiff';
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['enableDirectMail'] = $extensionConfiguration['enableDirectMail'] ?: 0;
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['forceGender'] = $extensionConfiguration['forceGender'] ?: 0;
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['endtimeYear'] = $extensionConfiguration['endtimeYear'] ?: 2030;
 
         /* Example of configuration of hooks */
     // $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['confirmRegistrationClass'][] = \MyWebsiteCom\MyExtension\Hooks\Handler::class;

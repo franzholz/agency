@@ -40,7 +40,10 @@ namespace JambageCom\Agency\Setfixed;
 *
 *
 */
-
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Security\Authentication;
+use JambageCom\Agency\Domain\Tables;
+use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
@@ -63,7 +66,7 @@ class SetFixedUrls {
         $nextCmd,
         $prefixId,
         $cObj,
-        \JambageCom\Agency\Request\Parameters $controlData,
+        Parameters $controlData,
         &$markerArray,
         $setfixed,
         array $record,
@@ -76,7 +79,7 @@ class SetFixedUrls {
     )
     {
         if ($controlData->getSetfixedEnabled() && is_array($setfixed)) {
-            $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
+            $authObj = GeneralUtility::makeInstance(Authentication::class);
 
             foreach($setfixed as $theKey => $data) {
                 if (strstr($theKey, '.')) {
@@ -98,7 +101,7 @@ class SetFixedUrls {
                         $fieldValue = $data[$fieldname];
 
                         if ($fieldname == 'usergroup' && $data['usergroup.']) {
-                            $tablesObj = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tables::class);
+                            $tablesObj = GeneralUtility::makeInstance(Tables::class);
                             $addressObj = $tablesObj->get('address');
                             $userGroupObj = $addressObj->getFieldObj('usergroup');
 
@@ -207,7 +210,7 @@ class SetFixedUrls {
     */
     static public function storeFixedPiVars (array $params)
     {
-        $hashCalculator = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Page\CacheHashCalculator::class);
+        $hashCalculator = GeneralUtility::makeInstance(CacheHashCalculator::class);
         $calc = $hashCalculator->calculateCacheHash($params); 
         $regHash_calc = substr($calc, 0, 20);
 

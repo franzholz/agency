@@ -41,7 +41,19 @@ namespace JambageCom\Agency\View;
 *
 *
 */
-
+use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Agency\Domain\Data;
+use JambageCom\Agency\Domain\Tca;
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Api\Url;
+use JambageCom\Agency\Api\Localization;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
+use JambageCom\Agency\Security\Authentication;
+use JambageCom\Div2007\Api\Css;
+use JambageCom\Agency\Security\SecuredData;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
@@ -74,15 +86,15 @@ class Marker {
     private $tmpTcaMarkers;
 
     public function init (
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        \JambageCom\Agency\Domain\Data $data,
-        \JambageCom\Agency\Domain\Tca $tcaObj,
-        \JambageCom\Agency\Request\Parameters $controlData,
+        ConfigurationStore $confObj,
+        Data $data,
+        Tca $tcaObj,
+        Parameters $controlData,
         $backUrl,
         $extKey,
         $prefixId,
         $theTable,
-        \JambageCom\Agency\Api\Url $urlObj,
+        Url $urlObj,
         $staticInfoObj,
         $uid,
         $token
@@ -97,7 +109,7 @@ class Marker {
 
         $markerArray = [];
 
-        $charset = $GLOBALS['TSFE']->metaCharset ? $GLOBALS['TSFE']->metaCharset : 'utf-8';
+        $charset = $GLOBALS['TSFE']->metaCharset ?: 'utf-8';
         $markerArray['###CHARSET###'] = $charset;
         $markerArray['###PREFIXID###'] = $prefixId;
         $markerArray['###FORM_NAME###'] = $controlData->determineFormId();
@@ -220,11 +232,11 @@ class Marker {
     (
         $matches
     ) {
-        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
-        $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
+        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
+        $cObj = FrontendUtility::getContentObjectRenderer();
         $conf = $confObj->getConf();
-        $languageObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Localization::class);
-        $controlData = GeneralUtility::makeInstance(\JambageCom\Agency\Request\Parameters::class);
+        $languageObj = GeneralUtility::makeInstance(Localization::class);
+        $controlData = GeneralUtility::makeInstance(Parameters::class);
 
         $result = '';
 
@@ -341,8 +353,8 @@ class Marker {
     public function addLabelMarkers (
         &$markerArray,
         $conf,
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $languageObj,
+        ContentObjectRenderer $cObj,
+        Localization $languageObj,
         $extKey,
         $theTable,
         array $row,
@@ -357,13 +369,13 @@ class Marker {
     )
     {
         $bUseMissingFields = false;
-        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
+        $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         if ($activity == 'email') {
             $bUseMissingFields = true;
         }
         $markerArray['###XHTML###'] = HtmlUtility::getXhtmlFix();
 
-        $urlObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Url::class);
+        $urlObj = GeneralUtility::makeInstance(Url::class);
         $formUrlMarkerArray = $this->generateFormURLMarkers($urlObj);
         $urlMarkerArray = $this->getUrlMarkerArray();
         $formUrlMarkerArray = array_merge($urlMarkerArray, $formUrlMarkerArray);
@@ -503,7 +515,7 @@ class Marker {
             $name = $row['first_name'];
         } else {
                 // Honour Address List (tt_address) configuration settings
-            if ($theTable == 'tt_address' && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tt_address') && isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address'])) {
+            if ($theTable == 'tt_address' && ExtensionManagementUtility::isLoaded('tt_address') && isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address'])) {
                 $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address']);
                 if (is_array($extConf)) {
                     $nameFormat = '';
@@ -653,7 +665,7 @@ class Marker {
     * @return void
     */
     public function generateURLMarkers (
-        \JambageCom\Agency\Api\Url $urlObj,
+        Url $urlObj,
         $backUrl,
         $uid,
         $token,
@@ -723,7 +735,7 @@ class Marker {
         if ($this->conf['terms.']['url']) {
             $termsUrlParam = $this->conf['terms.']['url'];
         } else {
-            $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
+            $sanitizer = GeneralUtility::makeInstance(FilePathSanitizer::class);
             $termsUrlParam = $sanitizer->sanitize($this->conf['terms.']['file']);
         }
         $markerArray['###TERMS_URL###'] = $urlObj->get($termsUrlParam, '', [], [], false);
@@ -732,7 +744,7 @@ class Marker {
         if ($this->conf['privacy.']['url']) {
             $privacyUrlParam = $this->conf['privacy.']['url'];
         } else {
-            $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
+            $sanitizer = GeneralUtility::makeInstance(FilePathSanitizer::class);
             $privacyUrlParam = $sanitizer->sanitize($this->conf['privacy.']['file']);
         }
         $markerArray['###PRIVACY_POLICY_URL###'] =
@@ -803,7 +815,7 @@ class Marker {
     )
     {
         $localMarkerArray = [];
-        $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
+        $authObj = GeneralUtility::makeInstance(Authentication::class);
         $authCode = $authObj->getAuthCode();
 
         $backUrl = $this->controlData->getBackURL();
@@ -843,14 +855,14 @@ class Marker {
     */
     public function addStaticInfoMarkers (
         &$markerArray,
-        \JambageCom\Agency\Api\Localization $languageObj,
+        Localization $languageObj,
         $prefixId,
         $row = '',
         $viewOnly = false
     )
     {
         if (is_object($this->staticInfoObj)) {
-            $css = GeneralUtility::makeInstance(\JambageCom\Div2007\Api\Css::class);
+            $css = GeneralUtility::makeInstance(Css::class);
             $cmd = $this->controlData->getCmd();
             $theTable = $this->controlData->getTable();
 
@@ -954,7 +966,7 @@ class Marker {
     * @return string  generated HTML uploading tags
     */
     public function buildFileUploader (
-        \JambageCom\Agency\Api\Localization $languageObj,
+        Localization $languageObj,
         $theField,
         $config,
         $cmd,
@@ -977,7 +989,7 @@ class Marker {
         if(!empty($cmdParts[1])) {
             $size = min($size, intval($cmdParts[1]));
         }
-        $size = $size ? $size : 1;
+        $size = $size ?: 1;
         $number = $size - sizeof($filenameArray);
         $dir = $config['uploadfolder'];
 
@@ -1025,7 +1037,7 @@ var submitFile = function(id){
                     ) .
                     HtmlUtility::getXhtmlFix() . '>';
 
-                $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
+                $sanitizer = GeneralUtility::makeInstance(FilePathSanitizer::class);
                 $fileUrl = $sanitizer->sanitize($this->conf['icon_delete']);
 
                 $partContent .=
@@ -1076,7 +1088,7 @@ var submitFile = function(id){
     * @return void
     */
     public function addFileUploadMarkers (
-        \JambageCom\Agency\Api\Localization $languageObj,
+        Localization $languageObj,
         $theTable,
         $theField,
         $fieldConfig,
@@ -1179,7 +1191,7 @@ var submitFile = function(id){
             $fieldArray = array_diff($fieldArray, ['hidden', 'disable']);
 
             $fields = implode(',', $fieldArray);
-            $fields = \JambageCom\Agency\Security\SecuredData::getOpenFields($fields);
+            $fields = SecuredData::getOpenFields($fields);
             $fieldArray = explode(',', $fields);
 
             foreach ($fieldArray as $theField) {
@@ -1262,7 +1274,7 @@ var submitFile = function(id){
         $viewOnly = false
     )
     {
-        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
+        $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
 
         if ($this->controlData->getMode() == Mode::PREVIEW || $viewOnly) {
             if (empty($markerArray['###FIELD_zone###'])) {
@@ -1291,9 +1303,9 @@ var submitFile = function(id){
         $markerArray,
         $row,
         $securedArray,
-        \JambageCom\Agency\Request\Parameters $controlData,
+        Parameters $controlData,
         $dataObj,
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
+        ConfigurationStore $confObj,
         $fieldList = '',
         $nl2br = true,
         $prefix = 'FIELD_',

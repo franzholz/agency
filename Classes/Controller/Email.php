@@ -41,7 +41,21 @@ namespace JambageCom\Agency\Controller;
  *
  *
  */
-
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Agency\Domain\Tca;
+use JambageCom\Agency\View\Marker;
+use JambageCom\Agency\Domain\Data;
+use JambageCom\Agency\View\Template;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
+use JambageCom\Agency\Security\Authentication;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use JambageCom\Agency\Setfixed\SetfixedUrls;
+use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Div2007\Utility\FrontendUtility;
@@ -50,7 +64,7 @@ use JambageCom\Div2007\Utility\TableUtility;
 
 
 
-class Email implements \TYPO3\CMS\Core\SingletonInterface {
+class Email implements SingletonInterface {
 	public $infomailPrefix = 'INFOMAIL_';
 	public $emailMarkPrefix = 'EMAIL_TEMPLATE_';
 	public $emailMarkAdminSuffix = '_ADMIN';
@@ -86,14 +100,14 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
     * @see init(),compile(), send()
     */
     public function processInfo (
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $languageObj,
-        \JambageCom\Agency\Request\Parameters $controlData,
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        \JambageCom\Agency\Domain\Tca $tcaObj,
-        \JambageCom\Agency\View\Marker $markerObj,
-        \JambageCom\Agency\Domain\Data $dataObj,
-        \JambageCom\Agency\View\Template $template,
+        ContentObjectRenderer $cObj,
+        Localization $languageObj,
+        Parameters $controlData,
+        ConfigurationStore $confObj,
+        Tca $tcaObj,
+        Marker $markerObj,
+        Data $dataObj,
+        Template $template,
         $theTable,
         $autoLoginKey,
         $prefixId,
@@ -118,7 +132,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 $enable = TableUtility::enableFields($theTable);
                     // Getting records
                     // $conf['email.']['field'] must be a valid field in the table!
-                $DBrows = \TYPO3\CMS\Frontend\Page\PageRepository::getRecordsByField(
+                $DBrows = PageRepository::getRecordsByField(
                     $theTable,
                     $conf['email.']['field'],
                     $fetch,
@@ -305,14 +319,14 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
     */
     public function compile (
         $key,
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $languageObj,
-        \JambageCom\Agency\Request\Parameters $controlData,
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        \JambageCom\Agency\Domain\Tca $tcaObj,
-        \JambageCom\Agency\View\Marker $markerObj,
-        \JambageCom\Agency\Domain\Data $dataObj,
-        \JambageCom\Agency\View\Template $template,
+        ContentObjectRenderer $cObj,
+        Localization $languageObj,
+        Parameters $controlData,
+        ConfigurationStore $confObj,
+        Tca $tcaObj,
+        Marker $markerObj,
+        Data $dataObj,
+        Template $template,
         $theTable,
         $autoLoginKey,
         $prefixId,
@@ -338,19 +352,19 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         $userSubpartsFound = 0;
         $adminSubpartsFound = 0;
         $checkEmailSent = false;
-        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
+        $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
 
         if (!isset($DBrows[0]) || !is_array($DBrows[0])) {
             $DBrows = $origRows;
         }
-        $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
+        $authObj = GeneralUtility::makeInstance(Authentication::class);
 
         if (
             $this->isHTMLMailEnabled($conf)
         ) {
             if (
                 (
-                    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('direct_mail') ||
+                    ExtensionManagementUtility::isLoaded('direct_mail') ||
                     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['enableDirectMail']
                 ) &&
                 isset($DBrows[0]['module_sys_dmail_html'])
@@ -625,7 +639,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
             }
 
             $markerArray['###SYS_AUTHCODE###'] = $authObj->generateAuthCode($row);
-            \JambageCom\Agency\Setfixed\SetfixedUrls::compute(
+            SetfixedUrls::compute(
                 $cmd,
                 $prefixId,
                 $cObj,
@@ -838,7 +852,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
         }
 
         if (
-            \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($recipient)
+            MathUtility::canBeInterpretedAsInteger($recipient)
         ) {
             $fe_userRec = $GLOBALS['TSFE']->sys_page->getRawRecord('fe_users', $recipient);
             $recipient = $fe_userRec['email'];
@@ -962,7 +976,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
                 $recipient,
                 $conf['email.']['from'],
                 $conf['email.']['fromName'],
-                $conf['email.']['replyToAdmin'] ? $conf['email.']['replyToAdmin'] : '',
+                $conf['email.']['replyToAdmin'] ?: '',
                 $fileAttachment
             );
         }
@@ -979,7 +993,7 @@ class Email implements \TYPO3\CMS\Core\SingletonInterface {
     public function addCSSStyleMarkers (
         array &$markerArray,
         $conf,
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj
+        ContentObjectRenderer $cObj
     )
     {
         $markerArray['###CSS_STYLES###'] = '	/*<![CDATA[*/

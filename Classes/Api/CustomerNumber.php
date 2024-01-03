@@ -39,11 +39,11 @@ namespace JambageCom\Agency\Api;
  *
  *
  */
-
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
-class CustomerNumber implements \TYPO3\CMS\Core\SingletonInterface {
+class CustomerNumber implements SingletonInterface {
 
     static public function generate (
         $theTable,

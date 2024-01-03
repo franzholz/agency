@@ -42,7 +42,9 @@ namespace JambageCom\Agency\Security;
 *
 *
 */
-
+use JambageCom\Div2007\Security\TransmissionSecurity;
+use JambageCom\Div2007\Security\StorageSecurity;
+use JambageCom\Agency\Request\Parameters;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Agency\Utility\SessionUtility;
@@ -67,7 +69,7 @@ class SecuredData
      */
     static public function getTransmissionSecurity () {
         $result = GeneralUtility::makeInstance(
-            \JambageCom\Div2007\Security\TransmissionSecurity::class
+            TransmissionSecurity::class
         );
         return $result;
     }
@@ -79,7 +81,7 @@ class SecuredData
      */
     static public function getStorageSecurity () {
         $result = GeneralUtility::makeInstance(
-            \JambageCom\Div2007\Security\StorageSecurity::class
+            StorageSecurity::class
         );
         return $result;
     }
@@ -320,7 +322,7 @@ class SecuredData
         }
 
         if (
-            \JambageCom\Agency\Request\Parameters::enableAutoLoginOnConfirmation(
+            Parameters::enableAutoLoginOnConfirmation(
                 $conf,
                 $cmdKey
             )

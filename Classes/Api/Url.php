@@ -2,6 +2,7 @@
 
 namespace JambageCom\Agency\Api;
 
+use TYPO3\CMS\Core\SingletonInterface;
 /***************************************************************
 *  Copyright notice
 *
@@ -41,9 +42,7 @@ namespace JambageCom\Agency\Api;
  *
  *
  */
-
-
-class Url implements \TYPO3\CMS\Core\SingletonInterface {
+class Url implements SingletonInterface {
     public $cObj;
     private $piVars;
     private $prefixId;

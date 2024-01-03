@@ -39,11 +39,11 @@ namespace JambageCom\Agency\Configuration;
  *
  *
  */
-
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
-class ConfigurationStore implements \TYPO3\CMS\Core\SingletonInterface {
+class ConfigurationStore implements SingletonInterface {
 
     protected $conf = [];
     protected $config = [];

@@ -41,7 +41,21 @@ namespace JambageCom\Agency\Controller;
 *
 *
 */
-
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Api\Url;
+use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Agency\Domain\Tca;
+use JambageCom\Agency\View\Marker;
+use JambageCom\Agency\Domain\Data;
+use JambageCom\Agency\View\Template;
+use JambageCom\Agency\View\CreateView;
+use JambageCom\Agency\View\EditView;
+use JambageCom\Agency\View\DeleteView;
+use JambageCom\Agency\Security\Authentication;
+use JambageCom\Agency\Security\SecuredData;
+use JambageCom\Div2007\Utility\SystemUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Agency\Controller\Email;
@@ -65,24 +79,24 @@ class Setfixed {
     */
     public function process (
         array $conf,
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $languageObj,
-        \JambageCom\Agency\Request\Parameters $controlData,
-        \JambageCom\Agency\Api\Url $url,
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        \JambageCom\Agency\Domain\Tca $tcaObj,
-        \JambageCom\Agency\View\Marker $markerObj,
-        \JambageCom\Agency\Domain\Data $dataObj,
+        ContentObjectRenderer $cObj,
+        Localization $languageObj,
+        Parameters $controlData,
+        Url $url,
+        ConfigurationStore $confObj,
+        Tca $tcaObj,
+        Marker $markerObj,
+        Data $dataObj,
         $theTable,
         $autoLoginKey,
         $prefixId,
         $uid,
         $cmdKey,
         array $markerArray,
-        \JambageCom\Agency\View\Template $template,        
-        \JambageCom\Agency\View\CreateView $displayObj,
-        \JambageCom\Agency\View\EditView $editView,
-        \JambageCom\Agency\View\DeleteView $deleteView,
+        Template $template,        
+        CreateView $displayObj,
+        EditView $editView,
+        DeleteView $deleteView,
         $templateCode,
         array $dataArray,
         array $origArray,
@@ -97,7 +111,7 @@ class Setfixed {
         $row = $currentArray = $origArray;
         $usesPassword = false;
         $enableAutoLoginOnConfirmation =
-            \JambageCom\Agency\Request\Parameters::enableAutoLoginOnConfirmation($conf, $cmdKey);
+            Parameters::enableAutoLoginOnConfirmation($conf, $cmdKey);
         $systemObj = GeneralUtility::makeInstance(System::class);
         $errorContent = '';
         $errorCode = '';
@@ -161,7 +175,7 @@ class Setfixed {
                 );
         }
 
-        $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
+        $authObj = GeneralUtility::makeInstance(Authentication::class);
             // Calculate the setfixed hash from incoming data
         $fieldList = $row['_FIELDLIST'];
         $codeLength = strlen($authObj->getAuthCode());
@@ -364,7 +378,7 @@ class Setfixed {
                         $cryptedPassword = $currentArray['tx_agency_password'];
                         $errorCode = '';
                         $errorMessage = '';
-                        \JambageCom\Agency\Security\SecuredData::getStorageSecurity()
+                        SecuredData::getStorageSecurity()
                             ->decryptPasswordForAutoLogin(
                                 $cryptedPassword,
                                 $errorCode,
@@ -380,7 +394,7 @@ class Setfixed {
                             $modArray
                         );
                     $row = array_merge($row, $modArray);
-                    \JambageCom\Div2007\Utility\SystemUtility::userProcess(
+                    SystemUtility::userProcess(
                         $pObj,
                         $conf['setfixed.'],
                         'userFunc_afterSave',
@@ -422,7 +436,7 @@ class Setfixed {
                 );
 
                 if ($usesPassword) {
-                    \JambageCom\Agency\Security\SecuredData::getTransmissionSecurity()
+                    SecuredData::getTransmissionSecurity()
                         ->getMarkers(
                             $markerArray,
                             $extensionKey, 
@@ -856,14 +870,14 @@ class Setfixed {
         $conf,
         $prefixId,
         $cObj,
-        \JambageCom\Agency\Api\Localization $languageObj,
-        \JambageCom\Agency\Request\Parameters $controlData,
-        \JambageCom\Agency\Api\Url $url,
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
+        Localization $languageObj,
+        Parameters $controlData,
+        Url $url,
+        ConfigurationStore $confObj,
         $tcaObj,
         $markerObj,
         $dataObj,
-        \JambageCom\Agency\View\Template $template,
+        Template $template,
         $templateCode,
         $theTable,
         $dataArray,
@@ -884,11 +898,9 @@ class Setfixed {
 
         $markerArray['###BACK_URL###'] =
             (
-                $controlData->getBackURL() ?
-                    $controlData->getBackURL() :
-                    $cObj->getTypoLink_URL(
-                        $conf['loginPID'] . ',' . $GLOBALS['TSFE']->type
-                    )
+                $controlData->getBackURL() ?: $cObj->getTypoLink_URL(
+                    $conf['loginPID'] . ',' . $GLOBALS['TSFE']->type
+                )
             );
         $subpartMarker = '###TEMPLATE_' . $setFixedKey . '_PREVIEW###';
         $content = $template->getPlainTemplate(

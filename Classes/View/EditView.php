@@ -41,7 +41,18 @@ namespace JambageCom\Agency\View;
 *
 *
 */
-
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Agency\Domain\Tca;
+use JambageCom\Agency\Domain\Data;
+use JambageCom\Div2007\Utility\HtmlUtility;
+use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
+use JambageCom\Agency\Security\SecuredData;
+use JambageCom\Agency\Security\Authentication;
+use JambageCom\Agency\Api\Javascript;
+use JambageCom\Div2007\Utility\CompatibilityUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Div2007\Utility\FrontendUtility;
@@ -65,14 +76,14 @@ class EditView {
         array &$markerArray,
         array $conf,
         $prefixId,
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $languageObj,
-        \JambageCom\Agency\Request\Parameters $controlData,
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        \JambageCom\Agency\Domain\Tca $tcaObj,
-        \JambageCom\Agency\View\Marker $markerObj,
-        \JambageCom\Agency\Domain\Data $dataObj,
-        \JambageCom\Agency\View\Template $template,
+        ContentObjectRenderer $cObj,
+        Localization $languageObj,
+        Parameters $controlData,
+        ConfigurationStore $confObj,
+        Tca $tcaObj,
+        Marker $markerObj,
+        Data $dataObj,
+        Template $template,
         $theTable,
         array $dataArray,
         array $origArray,
@@ -84,8 +95,8 @@ class EditView {
         $token
     )
     {
-        $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
-        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
+        $xhtmlFix = HtmlUtility::determineXhtmlFix();
+        $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         if (isset($dataArray) && is_array($dataArray)) {
             $currentArray = array_merge($origArray, $dataArray);
         } else {
@@ -127,7 +138,7 @@ class EditView {
         }
 
         if ($controlData->getTable() == 'fe_users') {
-            \JambageCom\Agency\Security\SecuredData::getTransmissionSecurity()
+            SecuredData::getTransmissionSecurity()
                 ->getMarkers(
                     $markerArray,
                     $controlData->getExtensionKey(),
@@ -245,7 +256,7 @@ class EditView {
             chr(10) . '<input type="hidden" name="FE[' . $theTable . '][uid]" value="' . $currentArray['uid'] . '"' . $xhtmlFix . '>';
 
         if ($theTable != 'fe_users') {
-            $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
+            $authObj = GeneralUtility::makeInstance(Authentication::class);
             $markerArray['###HIDDENFIELDS###'] .=
                 chr(10) . '<input type="hidden" name="' . $prefixId . '[aC]" value="' .
                     $authObj->generateAuthCode(
@@ -294,7 +305,7 @@ class EditView {
                 );
             $fields = $dataObj->getFieldList() . ',' . $dataObj->getAdditionalUpdateFields();
             $fields = implode(',', array_intersect(explode(',', $fields), GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)));
-            $fields = \JambageCom\Agency\Security\SecuredData::getOpenFields($fields);
+            $fields = SecuredData::getOpenFields($fields);
             $form = $controlData->determineFormId();
             $updateJS =
                 FrontendUtility::getUpdateJS(
@@ -305,14 +316,14 @@ class EditView {
                 );
             $content .= $updateJS;
             $finalJavaScript = '';
-            \JambageCom\Agency\Security\SecuredData::getTransmissionSecurity()->
+            SecuredData::getTransmissionSecurity()->
                 getJavaScript(
                     $finalJavaScript,
                     $controlData->getExtensionKey(),
                     $form,
                     $controlData->getUsePasswordAgain()
                 );
-            \JambageCom\Agency\Api\Javascript::getOnSubmitHooks($finalJavaScript, $this);
+            Javascript::getOnSubmitHooks($finalJavaScript, $this);
             $content .= $finalJavaScript;
         }
 
@@ -332,14 +343,14 @@ class EditView {
         &$errorCode,
         array &$markerArray,
         $conf,
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $languageObj,
-        \JambageCom\Agency\Request\Parameters $controlData,
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
+        ContentObjectRenderer $cObj,
+        Localization $languageObj,
+        Parameters $controlData,
+        ConfigurationStore $confObj,
         $tcaObj,
         $markerObj,
         $dataObj,
-        \JambageCom\Agency\View\Template $template,
+        Template $template,
         $theTable,
         $prefixId,
         $dataArray,
@@ -363,7 +374,7 @@ class EditView {
 
             // If editing is enabled
         if ($conf['edit']) {
-            $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
+            $authObj = GeneralUtility::makeInstance(Authentication::class);
 
             if(
                 $theTable != 'fe_users' &&
@@ -394,7 +405,7 @@ class EditView {
             if (
                 is_array($origArray) &&
                 (
-                    ($theTable == 'fe_users' && \JambageCom\Div2007\Utility\CompatibilityUtility::isLoggedIn()) ||
+                    ($theTable == 'fe_users' && CompatibilityUtility::isLoggedIn()) ||
                     $aCAuth ||
                     (
                         $theAuthCode != '' &&

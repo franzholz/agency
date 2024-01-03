@@ -41,7 +41,15 @@ namespace JambageCom\Agency\View;
 *
 *
 */
-
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Agency\Domain\Tca;
+use JambageCom\Agency\Domain\Data;
+use JambageCom\Div2007\Utility\HtmlUtility;
+use JambageCom\Agency\Security\Authentication;
+use JambageCom\Div2007\Utility\CompatibilityUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -62,14 +70,14 @@ class DeleteView {
         $conf,
         $prefixId,
         $extensionKey,
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $languageObj,
-        \JambageCom\Agency\Request\Parameters $controlData,
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        \JambageCom\Agency\Domain\Tca $tcaObj,
-        \JambageCom\Agency\View\Marker $markerObj,
-        \JambageCom\Agency\Domain\Data $dataObj,
-        \JambageCom\Agency\View\Template $template,
+        ContentObjectRenderer $cObj,
+        Localization $languageObj,
+        Parameters $controlData,
+        ConfigurationStore $confObj,
+        Tca $tcaObj,
+        Marker $markerObj,
+        Data $dataObj,
+        Template $template,
         $theTable,
         array $dataArray,
         array $origArray,
@@ -80,14 +88,14 @@ class DeleteView {
     )
     {
         $aCAuth = false;
-        $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
+        $xhtmlFix = HtmlUtility::determineXhtmlFix();
 
         if ($conf['delete']) {
             if (!isset($markerArray['###HIDDENFIELDS###'])) {
                 $markerArray['###HIDDENFIELDS###'] = '';
             }
             $templateCode = $dataObj->getTemplateCode();
-            $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
+            $authObj = GeneralUtility::makeInstance(Authentication::class);
 
             // If deleting is enabled
             $origArray =
@@ -105,7 +113,7 @@ class DeleteView {
             }
 
             if (
-                ($theTable == 'fe_users' && \JambageCom\Div2007\Utility\CompatibilityUtility::isLoggedIn()) ||
+                ($theTable == 'fe_users' && CompatibilityUtility::isLoggedIn()) ||
                 $aCAuth
             ) {
                 // Must be logged in OR be authenticated by the aC code in order to delete
@@ -133,11 +141,9 @@ class DeleteView {
                         $tokenParameter = $controlData->getTokenParameter();
                         $markerArray['###BACK_URL###'] =
                             (
-                                $controlData->getBackURL() ?
-                                    $controlData->getBackURL() :
-                                    $cObj->getTypoLink_URL(
-                                        $conf['loginPID'] . ',' . $GLOBALS['TSFE']->type
-                                    )
+                                $controlData->getBackURL() ?: $cObj->getTypoLink_URL(
+                                    $conf['loginPID'] . ',' . $GLOBALS['TSFE']->type
+                                )
                             ) . $tokenParameter;
                         $markerObj->addGeneralHiddenFieldsMarkers(
                             $markerArray,

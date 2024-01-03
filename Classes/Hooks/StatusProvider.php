@@ -14,14 +14,14 @@ namespace JambageCom\Agency\Hooks;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
+use JambageCom\Div2007\Base\StatusProviderBase;
 use JambageCom\Agency\Constants\Extension;
 
 
 /**
  * Hook into the backend module "Reports" checking the configuration required for agency
  */
-class StatusProvider extends \JambageCom\Div2007\Base\StatusProviderBase
+class StatusProvider extends StatusProviderBase
 {
     /**
     * @var string Extension key

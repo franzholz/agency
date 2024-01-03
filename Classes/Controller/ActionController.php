@@ -41,7 +41,26 @@ namespace JambageCom\Agency\Controller;
 *
 *
 */
-
+use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Agency\Api\Localization;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Api\Url;
+use JambageCom\Div2007\Utility\ConfigUtility;
+use JambageCom\Agency\Domain\Data;
+use JambageCom\Agency\Domain\Tca;
+use JambageCom\Agency\Domain\Tables;
+use JambageCom\Div2007\Utility\TableUtility;
+use JambageCom\Agency\View\Template;
+use JambageCom\Agency\View\CreateView;
+use JambageCom\Agency\View\EditView;
+use JambageCom\Agency\View\DeleteView;
+use JambageCom\Agency\View\Marker;
+use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
+use JambageCom\Div2007\Utility\CompatibilityUtility;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+use JambageCom\Agency\Api\CustomerNumber;
+use JambageCom\Agency\View\AfterSaveView;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
@@ -65,11 +84,11 @@ class ActionController {
 
 
     public function init (
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        \JambageCom\Agency\Api\Localization $languageObj,
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Request\Parameters $controlData,
-        \JambageCom\Agency\Api\Url $urlObj
+        ConfigurationStore $confObj,
+        Localization $languageObj,
+        ContentObjectRenderer $cObj,
+        Parameters $controlData,
+        Url $urlObj
     )
     {
         $conf = $confObj->getConf();
@@ -83,7 +102,7 @@ class ActionController {
         if ($cmd == '') {
                 // Check the flexform
             $cObj->data['pi_flexform'] = GeneralUtility::xml2array($cObj->data['pi_flexform']);
-            $cmd = \JambageCom\Div2007\Utility\ConfigUtility::getSetupOrFFvalue(
+            $cmd = ConfigUtility::getSetupOrFFvalue(
                 $languageObj,
                 '',
                 '',
@@ -100,19 +119,19 @@ class ActionController {
 
     /* write the global $conf only here */
     public function init2 (
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
+        ConfigurationStore $confObj,
         $staticInfoObj,
         $theTable,
-        \JambageCom\Agency\Request\Parameters $controlData,
-        \JambageCom\Agency\Domain\Data &$dataObj,
-        \JambageCom\Agency\Domain\Tca $tcaObj,
+        Parameters $controlData,
+        Data &$dataObj,
+        Tca $tcaObj,
         &$adminFieldList,
         array &$origArray,
         &$errorMessage
     )
     {
         $conf = $confObj->getConf();
-        $tablesObj = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tables::class);
+        $tablesObj = GeneralUtility::makeInstance(Tables::class);
         $addressObj = $tablesObj->get('address');
         $extensionKey = $controlData->getExtensionKey();
         $cmd = $controlData->getCmd();
@@ -141,7 +160,7 @@ class ActionController {
         $dataObj->setDataArray($dataArray);
 
         $fieldlist =
-            implode(',', \JambageCom\Div2007\Utility\TableUtility::getFields($theTable));
+            implode(',', TableUtility::getFields($theTable));
 
         // new
         if ($cmd == 'password') {
@@ -492,18 +511,18 @@ class ActionController {
     * @return string  text to display
     */
     public function doProcessing (
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
+        ContentObjectRenderer $cObj,
+        ConfigurationStore $confObj,
         $setfixedObj,
-        \JambageCom\Agency\Api\Localization $languageObj,
-        \JambageCom\Agency\View\Template $template,
-        \JambageCom\Agency\View\CreateView $displayObj,
-        \JambageCom\Agency\View\EditView $editView,
-        \JambageCom\Agency\View\DeleteView $deleteView,
-        \JambageCom\Agency\Request\Parameters $controlData,
-        \JambageCom\Agency\Domain\Data $dataObj,
-        \JambageCom\Agency\Domain\Tca $tcaObj,
-        \JambageCom\Agency\View\Marker $markerObj,
+        Localization $languageObj,
+        Template $template,
+        CreateView $displayObj,
+        EditView $editView,
+        DeleteView $deleteView,
+        Parameters $controlData,
+        Data $dataObj,
+        Tca $tcaObj,
+        Marker $markerObj,
         $staticInfoObj,
         $theTable,
         $cmd,
@@ -515,7 +534,7 @@ class ActionController {
     {
         $dataArray = $dataObj->getDataArray();
         $conf = $confObj->getConf();
-        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
+        $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         $fD = [];
         $bSubmit = false;
         $extensionKey = $controlData->getExtensionKey();
@@ -541,7 +560,7 @@ class ActionController {
             (
                 $theTable == 'fe_users' &&
                 (
-                    !\JambageCom\Div2007\Utility\CompatibilityUtility::isLoggedIn() ||
+                    !CompatibilityUtility::isLoggedIn() ||
                     ($uid > 0 && $GLOBALS['TSFE']->fe_user->user['uid'] != $uid)
                 ) &&
                 !in_array($cmd, $this->noLoginCommands)
@@ -557,7 +576,7 @@ class ActionController {
                 $securedArray = SecuredData::readSecuredArray($extensionKey);
             }
             $finalDataArray = $dataArray;
-            \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
+            ArrayUtility::mergeRecursiveWithOverrule(
                 $finalDataArray,
                 $securedArray
             );
@@ -599,7 +618,7 @@ class ActionController {
             if (
                 $conf[$cmdKey . '.']['generateCustomerNumber']
             ) {
-                $customerNumberApi = GeneralUtility::makeInstance(\JambageCom\Agency\Api\CustomerNumber::class);
+                $customerNumberApi = GeneralUtility::makeInstance(CustomerNumber::class);
                 $customerNumber =
                     $customerNumberApi->generate(
                         $theTable,
@@ -912,7 +931,7 @@ class ActionController {
                     $bCreateReview
                 );
 
-            $afterSave = GeneralUtility::makeInstance(\JambageCom\Agency\View\AfterSaveView::class);
+            $afterSave = GeneralUtility::makeInstance(AfterSaveView::class);
             $errorContent =
                 $afterSave->render(
                     $conf,
@@ -950,7 +969,7 @@ class ActionController {
                     $bDefaultMode &&
                     !$bCustomerConfirmsMode
                 ) {
-                    $email = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\Email::class);
+                    $email = GeneralUtility::makeInstance(Email::class);
                         // Send admin the confirmation email
                         // The user will not confirm in this mode
                     $bEmailSent = $email->compile(
@@ -993,7 +1012,7 @@ class ActionController {
                         ) ?
                         $finalDataArray[$emailField] :
                         $origArray[$emailField];
-                    $email = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\Email::class);
+                    $email = GeneralUtility::makeInstance(Email::class);
 
                     // Send email message(s)
                     $bEmailSent = $email->compile(
@@ -1054,9 +1073,7 @@ class ActionController {
                 ) {
                     $destUrl =
                         (
-                            $controlData->getBackURL() ?
-                                $controlData->getBackURL() :
-                                $cObj->getTypoLink_URL($conf['linkToPID'] . ',' . $GLOBALS['TSFE']->type)
+                            $controlData->getBackURL() ?: $cObj->getTypoLink_URL($conf['linkToPID'] . ',' . $GLOBALS['TSFE']->type)
                         );
                     header('Location: '.GeneralUtility::locationHeaderUrl($destUrl));
                     exit;
@@ -1191,7 +1208,7 @@ class ActionController {
 
                     if (isset($fetch) && !empty($fetch)) {
                         $pages = ($cObj->data['pages'] ? $cObj->data['pages'] . ',' : '') . $controlData->getPid();                        
-                        $allPages = \JambageCom\Div2007\Utility\TableUtility::getAllSubPages($pages);
+                        $allPages = TableUtility::getAllSubPages($pages);
                         $pidLock = 'AND pid IN (' . implode(',', $allPages) . ')';
                     }
 

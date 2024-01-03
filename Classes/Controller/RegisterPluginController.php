@@ -41,7 +41,7 @@ namespace JambageCom\Agency\Controller;
 *
 *
 */
-
+use TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Agency\Constants\Extension;
@@ -51,7 +51,7 @@ use JambageCom\Agency\Utility\LocalizationUtility;
 
 
 
-class RegisterPluginController extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
+class RegisterPluginController extends AbstractPlugin {
 
         // Plugin initialization variables
     public $prefixId = Extension::KEY;
@@ -111,7 +111,7 @@ class RegisterPluginController extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
             // If no error content, proceed
         if ($content == '') {
-            $mainObj = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\InitializationController::class);
+            $mainObj = GeneralUtility::makeInstance(InitializationController::class);
             $content =
                 $mainObj->main(
                     $this,

@@ -40,7 +40,28 @@ namespace JambageCom\Agency\Controller;
 *
 *
 */
-
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Div2007\Utility\HtmlUtility;
+use JambageCom\Agency\Domain\Tca;
+use JambageCom\Agency\Domain\Tables;
+use JambageCom\Agency\Security\Authentication;
+use JambageCom\Agency\Request\Parameters;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use SJBR\StaticInfoTables\PiBaseApi;
+use JambageCom\Agency\Api\Url;
+use JambageCom\Div2007\Database\CoreQuery;
+use JambageCom\Agency\Domain\Data;
+use JambageCom\Agency\View\Marker;
+use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Utility\LocalizationUtility;
+use JambageCom\Agency\View\CreateView;
+use JambageCom\Agency\View\EditView;
+use JambageCom\Agency\View\DeleteView;
+use JambageCom\Agency\View\Template;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
 
@@ -48,7 +69,7 @@ use JambageCom\Agency\Constants\Extension;
 
 
 
-class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
+class InitializationController implements SingletonInterface {
 
 
     /**
@@ -72,9 +93,9 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         &$languageObj,
         &$markerObj,
         &$errorMessage,
-        \TYPO3\CMS\Frontend\Plugin\AbstractPlugin $pibaseObj,
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
+        AbstractPlugin $pibaseObj,
+        ContentObjectRenderer $cObj,
+        ConfigurationStore $confObj,
         $conf,
         $theTable,
         $adminFieldList,
@@ -84,16 +105,16 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
     {
 
         $result = true;
-        \JambageCom\Div2007\Utility\HtmlUtility::generateXhtmlFix();
+        HtmlUtility::generateXhtmlFix();
 
-        $tcaObj = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tca::class);
+        $tcaObj = GeneralUtility::makeInstance(Tca::class);
         $confObj->init($conf);
         $tcaObj->init($pibaseObj->extKey, $theTable);
-        $tablesObj = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tables::class);
+        $tablesObj = GeneralUtility::makeInstance(Tables::class);
         $tablesObj->init($theTable);
-        $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
+        $authObj = GeneralUtility::makeInstance(Authentication::class);
         $authObj->init($confObj); // config is changed
-        $controlData = GeneralUtility::makeInstance(\JambageCom\Agency\Request\Parameters::class);
+        $controlData = GeneralUtility::makeInstance(Parameters::class);
         $controlData->init(
             $confObj,
             $pibaseObj->prefixId,
@@ -103,13 +124,13 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         );
 
         if (
-            \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded(
+            ExtensionManagementUtility::isLoaded(
                 STATIC_INFO_TABLES_EXT
             )
         ) {
                 // Initialise static info library
             if (class_exists('SJBR\\StaticInfoTables\\PiBaseApi')) {
-                $staticInfoObj = GeneralUtility::makeInstance(\SJBR\StaticInfoTables\PiBaseApi::class);
+                $staticInfoObj = GeneralUtility::makeInstance(PiBaseApi::class);
             }
 
             if (
@@ -123,20 +144,20 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
             }
         }
 
-        $urlObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Url::class);
+        $urlObj = GeneralUtility::makeInstance(Url::class);
         $coreQuery = GeneralUtility::makeInstance(
-                \JambageCom\Div2007\Database\CoreQuery::class,
+                CoreQuery::class,
                 $this->getTypoScriptFrontendController()
             );
         $dataObj =
             GeneralUtility::makeInstance(
-                \JambageCom\Agency\Domain\Data::class,
+                Data::class,
                 $coreQuery
             );
-        $markerObj = GeneralUtility::makeInstance(\JambageCom\Agency\View\Marker::class);
-        $actionController = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\ActionController::class);
+        $markerObj = GeneralUtility::makeInstance(Marker::class);
+        $actionController = GeneralUtility::makeInstance(ActionController::class);
 
-        $languageObj = GeneralUtility::makeInstance(\JambageCom\Agency\Api\Localization::class);
+        $languageObj = GeneralUtility::makeInstance(Localization::class);
         $languageObj->init(
             Extension::KEY,
             $conf['_LOCAL_LANG.'] ?? ''
@@ -159,7 +180,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
 
         if ($result !== false) {
             if ($pibaseObj->extKey != Extension::KEY) {
-                $filename = \JambageCom\Agency\Utility\LocalizationUtility::getFilename();
+                $filename = LocalizationUtility::getFilename();
                 $filename = 'EXT:' . $pibaseObj->extKey . $filename;
 
                     // Static Methods for Extensions for fetching the texts of agency
@@ -252,8 +273,8 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
 
 
     public function main (
-        \TYPO3\CMS\Frontend\Plugin\AbstractPlugin $pibaseObj,
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
+        AbstractPlugin $pibaseObj,
+        ContentObjectRenderer $cObj,
         $content,
         $conf,
         $theTable,
@@ -264,7 +285,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
     {
         $staticInfoObj = null;
         $dataObj = null; // object of type tx_agency_data
-        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
+        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $errorMessage = '';
         $origArray = [];
 
@@ -292,11 +313,11 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         $templateCode = $dataObj->getTemplateCode();
 
         if ($success) {
-            $setfixedObj = GeneralUtility::makeInstance(\JambageCom\Agency\Controller\Setfixed::class);
-            $displayObj = GeneralUtility::makeInstance(\JambageCom\Agency\View\CreateView::class);
-            $editView = GeneralUtility::makeInstance(\JambageCom\Agency\View\EditView::class);
-            $deleteView = GeneralUtility::makeInstance(\JambageCom\Agency\View\DeleteView::class);
-            $template = GeneralUtility::makeInstance(\JambageCom\Agency\View\Template::class);
+            $setfixedObj = GeneralUtility::makeInstance(Setfixed::class);
+            $displayObj = GeneralUtility::makeInstance(CreateView::class);
+            $editView = GeneralUtility::makeInstance(EditView::class);
+            $deleteView = GeneralUtility::makeInstance(DeleteView::class);
+            $template = GeneralUtility::makeInstance(Template::class);
             $content = $actionController->doProcessing(
                 $cObj,
                 $confObj,
@@ -323,7 +344,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
         if ($errorMessage) {
             $content = $errorMessage;
         } else if ($success === false) {
-            $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
+            $xhtmlFix = HtmlUtility::determineXhtmlFix();
             $content = '<em>Internal error in ' . $pibaseObj->extKey . '!</em><br ' . $xhtmlFix . '> Maybe you forgot to include the basic template file under "include statics from extensions".';
         }
 
@@ -338,7 +359,7 @@ class InitializationController implements \TYPO3\CMS\Core\SingletonInterface {
 
 
     /**
-     * @return \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
+     * @return TypoScriptFrontendController
      */
     static protected function getTypoScriptFrontendController ()
     {

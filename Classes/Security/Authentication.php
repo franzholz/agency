@@ -42,16 +42,17 @@ namespace JambageCom\Agency\Security;
 *
 *
 */
-
+use TYPO3\CMS\Core\SingletonInterface;
+use JambageCom\Agency\Configuration\ConfigurationStore;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
-class Authentication implements \TYPO3\CMS\Core\SingletonInterface {
+class Authentication implements SingletonInterface {
     public $conf = [];
     public $config = [];
     protected $authCode;
 
-    public function init (\JambageCom\Agency\Configuration\ConfigurationStore $confObj)
+    public function init (ConfigurationStore $confObj)
     {
         $this->conf = $confObj->getConf();
         $this->config = $confObj->getConfig();
@@ -105,7 +106,7 @@ class Authentication implements \TYPO3\CMS\Core\SingletonInterface {
     )
     {
         if ($codeLength == 0) {
-            $codeLength = intval($this->config['codeLength']) ? intval($this->config['codeLength']) : 8;
+            $codeLength = intval($this->config['codeLength']) ?: 8;
         }
         $recordCopy = [];
 

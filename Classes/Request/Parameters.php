@@ -39,7 +39,13 @@ namespace JambageCom\Agency\Request;
  *
  *
  */
-
+use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Agency\Security\Authentication;
+use JambageCom\Div2007\Utility\ControlUtility;
+use JambageCom\Agency\Constants\Field;
+use JambageCom\Div2007\Captcha\CaptchaManager;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use JambageCom\Div2007\Utility\FrontendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
@@ -92,7 +98,7 @@ class Parameters
 
 
     public function init (
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
+        ConfigurationStore $confObj,
         $prefixId,
         $extensionKey,
         $piVars,
@@ -123,7 +129,7 @@ class Parameters
         $this->setExtensionKey($extensionKey);
         $this->piVars = $piVars;
         $this->setTable($theTable);
-        $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
+        $authObj = GeneralUtility::makeInstance(Authentication::class);
 
         $this->sys_language_content = intval($GLOBALS['TSFE']->config['config']['sys_language_uid'] ?? 0);
 
@@ -202,7 +208,7 @@ class Parameters
 
                     foreach ($getVars as $k => $v ) {
                         // restore former GET values for the url
-                        \JambageCom\Div2007\Utility\ControlUtility::_GETset($v, $k);
+                        ControlUtility::_GETset($v, $k);
                     }
 
                     if (
@@ -403,7 +409,7 @@ class Parameters
         $cmdKey
     )
     {
-        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
+        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
         $extensionKey = $this->getExtensionKey();
 
@@ -412,14 +418,14 @@ class Parameters
             isset($conf[$cmdKey . '.']['fields']) &&
             GeneralUtility::inList(
                 $conf[$cmdKey . '.']['fields'],  
-                \JambageCom\Agency\Constants\Field::CAPTCHA
+                Field::CAPTCHA
             ) &&
             isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha']) &&
             isset($conf[$cmdKey . '.']['evalValues.']) &&
             is_object(
-                $captcha = \JambageCom\Div2007\Captcha\CaptchaManager::getCaptcha(
+                $captcha = CaptchaManager::getCaptcha(
                     $extensionKey,
-                    $conf[$cmdKey . '.']['evalValues.'][\JambageCom\Agency\Constants\Field::CAPTCHA]
+                    $conf[$cmdKey . '.']['evalValues.'][Field::CAPTCHA]
                 )
             );
 
@@ -437,7 +443,7 @@ class Parameters
     {
         $context = GeneralUtility::makeInstance(Context::class);
         $context->setAspect('language', new LanguageAspect($sys_language_uid));
-        $pidRecord = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Domain\Repository\PageRepository::class, $context);
+        $pidRecord = GeneralUtility::makeInstance(PageRepository::class, $context);
         $row = $pidRecord->getPage((int) $this->getPid());
         $this->thePidTitle = trim($conf['pidTitleOverride']) ?: $row['title'];
     }
@@ -910,10 +916,10 @@ class Parameters
     {
         $this->fD = $fD;
     }
-    
+
     public function determineFormId ($suffix = '_form')
     {
-        $result = \JambageCom\Div2007\Utility\FrontendUtility::getClassName(
+        $result = FrontendUtility::getClassName(
             $this->getTable() . $suffix,
             $this->getPrefixId()
         );
@@ -941,7 +947,7 @@ class Parameters
     public function isPreview ()
     {
         $result = '';
-        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
+        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
         $cmdKey = $this->getCmdKey();
 
@@ -1009,7 +1015,7 @@ class Parameters
     public function cleanShortUrlCache ()
     {
 
-        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
+        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
         $shortUrlLife = intval($conf['shortUrlLife']) ? strval(intval($conf['shortUrlLife'])) : '30';

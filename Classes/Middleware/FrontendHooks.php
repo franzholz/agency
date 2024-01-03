@@ -14,7 +14,8 @@ namespace JambageCom\Agency\Middleware;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
+use JambageCom\Div2007\Captcha\Captcha;
+use JambageCom\Div2007\Captcha\Freecap;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -50,8 +51,8 @@ class FrontendHooks implements MiddlewareInterface
             !is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha'])
         ) {
             $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha'] = [];
-            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha'][] = \JambageCom\Div2007\Captcha\Captcha::class;
-            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha'][] = \JambageCom\Div2007\Captcha\Freecap::class;
+            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha'][] = Captcha::class;
+            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha'][] = Freecap::class;
         }
         return $handler->handle($request);
     }

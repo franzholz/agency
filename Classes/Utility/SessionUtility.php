@@ -2,6 +2,7 @@
 
 namespace JambageCom\Agency\Utility;
 
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 /***************************************************************
 *  Copyright notice
 *
@@ -39,8 +40,6 @@ namespace JambageCom\Agency\Utility;
 *
 *
 */
-
-
 class SessionUtility {
     /*************************************
     * FE USER SESSION DATA HANDLING
@@ -116,7 +115,7 @@ class SessionUtility {
                     unset($allSessionData[$extensionKey][$key]);
                 }
             }
-            \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
+            ArrayUtility::mergeRecursiveWithOverrule(
                 $allSessionData[$extensionKey],
                 $data
             );

@@ -39,14 +39,16 @@ namespace JambageCom\Agency\Domain;
  *
  *
  */
-
+use TYPO3\CMS\Core\SingletonInterface;
+use JambageCom\Agency\Domain\Table\FeUsers;
+use JambageCom\Agency\Domain\Table\Setfixed;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 use JambageCom\Agency\Constants\Extension;
 
 
-class Tables implements \TYPO3\CMS\Core\SingletonInterface {
+class Tables implements SingletonInterface {
 
     public $tableClassArray = [];
     public $tablename;
@@ -55,9 +57,9 @@ class Tables implements \TYPO3\CMS\Core\SingletonInterface {
     {
         $this->tablename = $tablename;
         if ($tablename == 'fe_users') {
-            $this->tableClassArray['address'] = \JambageCom\Agency\Domain\Table\FeUsers::class;
+            $this->tableClassArray['address'] = FeUsers::class;
         } else {
-            $this->tableClassArray['address'] = \JambageCom\Agency\Domain\Table\Setfixed::class;
+            $this->tableClassArray['address'] = Setfixed::class;
         }
     }   // init
 

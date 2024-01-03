@@ -39,7 +39,19 @@ namespace JambageCom\Agency\Domain;
  *
  *
  */
-
+use TYPO3\CMS\Core\SingletonInterface;
+use JambageCom\Agency\Request\Parameters;
+use TYPO3\CMS\Core\Utility\File\BasicFileUtility;
+use JambageCom\Div2007\Captcha\CaptchaManager;
+use JambageCom\Agency\Constants\Field;
+use JambageCom\Div2007\Utility\FrontendUtility;
+use JambageCom\Agency\Configuration\ConfigurationStore;
+use TYPO3\CMS\Core\Core\Environment;
+use JambageCom\Div2007\Utility\HtmlUtility;
+use JambageCom\Agency\Security\Authentication;
+use JambageCom\Div2007\Utility\CompatibilityUtility;
+use JambageCom\Agency\Security\SecuredData;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
@@ -49,7 +61,7 @@ use JambageCom\Div2007\Utility\SystemUtility;
 use JambageCom\Div2007\Utility\TableUtility;
 
 
-class Data implements \TYPO3\CMS\Core\SingletonInterface {
+class Data implements SingletonInterface {
     public $lang;
     public $tca;
     public $freeCap; // object of type tx_srfreecap_pi2
@@ -94,7 +106,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $control,
         $theTable,
         $templateCode,
-        \JambageCom\Agency\Request\Parameters $controlData,
+        Parameters $controlData,
         $staticInfoObj
     )
     {
@@ -102,17 +114,17 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $this->tca = $tca;
         $this->control = $control;
         $this->controlData = $controlData;
-        $this->fileFunc = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Utility\File\BasicFileUtility::class);
+        $this->fileFunc = GeneralUtility::makeInstance(BasicFileUtility::class);
 
             // Fetching the template file
         $this->setTemplateCode($templateCode);
 
         if (
-            \JambageCom\Div2007\Captcha\CaptchaManager::isLoaded(
+            CaptchaManager::isLoaded(
                 $controlData->getExtensionKey()
             )
         ) {
-            $this->setSpecialFieldList(\JambageCom\Agency\Constants\Field::CAPTCHA);
+            $this->setSpecialFieldList(Field::CAPTCHA);
         }
 
             // Get POST parameters
@@ -305,7 +317,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $conf
     )
     {
-        $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
+        $cObj = FrontendUtility::getContentObjectRenderer();
         $overrideFieldArray = [];
 
         // Addition of overriding values
@@ -405,7 +417,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     */
     public function readDefaultValues ($cmdKey)
     {
-        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
+        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
         $dataArray = [];
 
@@ -439,7 +451,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $bInternal = false
     )
     {
-        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
+        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
         if (
@@ -480,7 +492,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 if ($theRule) {
                     $labelname = 'evalErrors_' . $theRule . '_' . $theField . $internalPostfix;
                     $failureLabel = $this->lang->getLabel($labelname);
-                    $failureLabel = $failureLabel ? $failureLabel : $this->lang->getLabel('evalErrors_' . $theRule . $internalPostfix);
+                    $failureLabel = $failureLabel ?: $this->lang->getLabel('evalErrors_' . $theRule . $internalPostfix);
                 }
 
                 if (!$failureLabel) { // this remains only for compatibility reasons
@@ -504,7 +516,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     * @return void  on return, the ControlData failure will contain the list of fields which were not ok
     */
     public function evalValues (
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
+        ConfigurationStore $confObj,
         $staticInfoObj,
         $theTable,
         array &$dataArray,
@@ -522,9 +534,9 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         if (
             $captcha instanceof CaptchaInterface
         ) {
-            $displayFieldArray[] = \JambageCom\Agency\Constants\Field::CAPTCHA;
+            $displayFieldArray[] = Field::CAPTCHA;
         }
-        $pathSite = \TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/';
+        $pathSite = Environment::getPublicPath() . '/';
 
         // Check required, set failure if not ok.
         $failureArray = [];
@@ -568,7 +580,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                 $bRecordExists = ($recordTestPid != 0);
             } else {
                 $thePid = $this->controlData->getPid();
-                $recordTestPid = ($thePid ? $thePid : MathUtility::convertToPositiveInteger($pid));
+                $recordTestPid = ($thePid ?: MathUtility::convertToPositiveInteger($pid));
             }
             $countArray = [];
             $countArray['hook'] = [];
@@ -751,10 +763,10 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             case 'inBranch':
                                 $pars = explode(';', $cmdParts[1]);
                                 if (intval($pars[0])) {
-                                    $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
+                                    $cObj = FrontendUtility::getContentObjectRenderer();
                                     $pid_list = $cObj->getTreeList(
                                         intval($pars[0]),
-                                        intval($pars[1]) ? intval($pars[1]) : 999,
+                                        intval($pars[1]) ?: 999,
                                         intval($pars[2])
                                     );
 
@@ -1051,7 +1063,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                                 }
 
                                 if (
-                                    $theField == \JambageCom\Agency\Constants\Field::CAPTCHA &&
+                                    $theField == Field::CAPTCHA &&
                                     $captcha instanceof CaptchaInterface
                                 ) {
                                     $errorField = '';
@@ -1105,7 +1117,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             !empty($failureMsg[$theField]['0'])
                         )
                     ) {
-                        $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
+                        $xhtmlFix = HtmlUtility::determineXhtmlFix();
                         $markerOut = $markContentArray['###EVAL_ERROR_saved###'] ?? '';
                         $markerOut .= '<br' . $xhtmlFix . '>';
                         $errorMsg = implode('<br' . $xhtmlFix . '>', $failureMsg[$theField]);
@@ -1159,7 +1171,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     )
     {
         $result = true;
-        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
+        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
         if (is_array($conf['parseValues.'])) {
@@ -1195,7 +1207,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
                             break;
                             case 'lower':
                             case 'upper':
-                                $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
+                                $cObj = FrontendUtility::getContentObjectRenderer();
                                 $dataValue = $cObj->caseshift($dataValue, $theCmd);
                             break;
                             case 'nospace':
@@ -1402,7 +1414,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
             $uploadPath = $GLOBALS['TCA'][$theTable]['columns'][$theField]['config']['uploadfolder'];
         }
         $fileNameArray = [];
-        $pathSite = \TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/';
+        $pathSite = Environment::getPublicPath() . '/';
 
         if ($uploadPath) {
             if (count($fieldDataArray)) {
@@ -1477,7 +1489,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $hookClassArray
     )
     {
-        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
+        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
         $result = 0;
 
@@ -1486,13 +1498,13 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
             case 'password':
                 $theUid = $dataArray['uid'];
                 $result = $theUid;
-                $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
+                $authObj = GeneralUtility::makeInstance(Authentication::class);
                 $aCAuth = $authObj->aCAuth($origArray, $conf['setfixed.']['EDIT.']['_FIELDLIST'] ?? '');
 
                     // Fetch the original record to check permissions
                 if (
                     $conf['edit'] &&
-                    (\JambageCom\Div2007\Utility\CompatibilityUtility::isLoggedIn() || $aCAuth)
+                    (CompatibilityUtility::isLoggedIn() || $aCAuth)
                 ) {
                         // Must be logged in in order to edit  (OR be validated by email)
                     $newFieldList =
@@ -1797,23 +1809,23 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     * @return void  sets $this->saved
     */
     public function deleteRecord (
-        \JambageCom\Agency\Request\Parameters $controlDataObj,
+        Parameters $controlDataObj,
         $theTable,
         array $origArray,
         array &$dataArray
     )
     {
-        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
+        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
         if ($conf['delete']) {
             // If deleting is enabled
             if (!empty($origArray)) {
 
-                $authObj = GeneralUtility::makeInstance(\JambageCom\Agency\Security\Authentication::class);
+                $authObj = GeneralUtility::makeInstance(Authentication::class);
                 $aCAuth = $authObj->aCAuth($origArray, $conf['setfixed.']['DELETE.']['_FIELDLIST']);
 
-                if (\JambageCom\Div2007\Utility\CompatibilityUtility::isLoggedIn() || $aCAuth) {
+                if (CompatibilityUtility::isLoggedIn() || $aCAuth) {
                     // Must be logged in OR be authenticated by the aC code in order to delete
                     // If the recUid selects a record.... (no check here)
 
@@ -1896,7 +1908,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
     )
     {
         $updateFields = [];
-        $pathSite = \TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/';
+        $pathSite = Environment::getPublicPath() . '/';
         foreach($GLOBALS['TCA'][$theTable]['columns'] as $field => $conf) {
             if (
                 $conf['config']['type'] == 'group' &&
@@ -1939,7 +1951,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $dateFormat
     )
     {
-        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
+        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
         $resultArray = ['m' => '', 'd' => '', 'y' => ''];
@@ -2163,7 +2175,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
             $inputArr[$theField] = $value;
         }
 
-        \JambageCom\Agency\Security\SecuredData::secureInput($inputArr, true);
+        SecuredData::secureInput($inputArr, true);
 
         return $inputArr;
     }   // modifyDataArrForFormUpdate
@@ -2182,7 +2194,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $theTable
     )
     {
-        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
+        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
         if (
@@ -2195,7 +2207,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
             $nameFormat = '';
             if (
                 $theTable == 'tt_address' &&
-                \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tt_address') &&
+                ExtensionManagementUtility::isLoaded('tt_address') &&
                 isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address'])
             ) {
                 $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address']);
@@ -2230,7 +2242,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $cmdKey
     )
     {
-        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
+        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
         if (
@@ -2252,7 +2264,7 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         $bUnsetZero = true
     )
     {
-        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
+        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
         $parsedArray = [];
@@ -2307,12 +2319,12 @@ class Data implements \TYPO3\CMS\Core\SingletonInterface {
         array $origArray
     )
     {
-        $tablesObj = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tables::class);
+        $tablesObj = GeneralUtility::makeInstance(Tables::class);
         $addressObj = $tablesObj->get('address');
-        $confObj = GeneralUtility::makeInstance(\JambageCom\Agency\Configuration\ConfigurationStore::class);
+        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
         $parsedArray = $dataArray;
-        $pathSite = \TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/';
+        $pathSite = Environment::getPublicPath() . '/';
 
         if (is_array($conf['parseToDBValues.'])) {
 

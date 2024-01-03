@@ -39,7 +39,13 @@ namespace JambageCom\Agency\Api;
  *
  *
  */
-
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Div2007\Utility\SystemUtility;
+use TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordService;
+use TYPO3\CMS\Core\Context\UserAspect;
+use TYPO3\CMS\Core\Context\Context;
+use JambageCom\Agency\Domain\Data;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
@@ -59,10 +65,10 @@ class System implements LoggerAwareInterface {
     * @return boolean true, if login was successful, false otherwise
     */
     public function login (
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $languageObj,
-        \JambageCom\Agency\Request\Parameters $controlData,
-        \JambageCom\Agency\Api\Url $url,
+        ContentObjectRenderer $cObj,
+        Localization $languageObj,
+        Parameters $controlData,
+        Url $url,
         $conf,
         $username,
         $cryptedPassword,
@@ -87,7 +93,7 @@ class System implements LoggerAwareInterface {
         $GLOBALS['TSFE']->fe_user->checkPid = true;
         $pageIds = ($cObj->data['pages'] ? $cObj->data['pages'] . ',' : '') . $controlData->getPid();
         $GLOBALS['TSFE']->fe_user->checkPid_value =
-            \JambageCom\Div2007\Utility\SystemUtility::getRecursivePids(
+            SystemUtility::getRecursivePids(
                 $pageIds,
                 $cObj->data['recursive']
             );
@@ -107,8 +113,8 @@ class System implements LoggerAwareInterface {
                 $ok = false;
                 $serviceKeyArray = [];
 
-                if (class_exists(\TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordService::class)) {
-                    $serviceKeyArray[] = \TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordService::class;
+                if (class_exists(SaltedPasswordService::class)) {
+                    $serviceKeyArray[] = SaltedPasswordService::class;
                 } else if (class_exists(\TYPO3\CMS\Saltedpasswords\SaltedPasswordService::class)) {
                     $serviceKeyArray[] = \TYPO3\CMS\Saltedpasswords\SaltedPasswordService::class;
                 }
@@ -151,8 +157,8 @@ class System implements LoggerAwareInterface {
                 $GLOBALS['TSFE']->fe_user->setAndSaveSessionData('dummy', true);
                 $GLOBALS['TSFE']->initUserGroups();
                 $GLOBALS['TSFE']->fe_user->user = $GLOBALS['TSFE']->fe_user->fetchUserSession();
-                $aspect = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Context\UserAspect::class, $GLOBALS['TSFE']->fe_user);
-                $context = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Context\Context::class);
+                $aspect = GeneralUtility::makeInstance(UserAspect::class, $GLOBALS['TSFE']->fe_user);
+                $context = GeneralUtility::makeInstance(Context::class);
                 $context->setAspect('frontend.user', $aspect);
             } else if (
                 is_object($authServiceObj) &&
@@ -212,7 +218,7 @@ class System implements LoggerAwareInterface {
     }
 
     public function removePasswordAdditions (
-        \JambageCom\Agency\Domain\Data $dataObj,
+        Data $dataObj,
         $theTable,
         $uid,
         $row

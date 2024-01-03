@@ -39,7 +39,12 @@ namespace JambageCom\Agency\Domain;
  *
  *
  */
-
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Div2007\Utility\HtmlUtility;
+use JambageCom\Div2007\Api\Css;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Div2007\Utility\FrontendUtility;
@@ -48,7 +53,7 @@ use JambageCom\Agency\Constants\Mode;
 
 use JambageCom\Div2007\Utility\TableUtility;
 
-class Tca implements \TYPO3\CMS\Core\SingletonInterface {
+class Tca implements SingletonInterface {
 
     public function init ($extKey, $theTable)
     {
@@ -65,7 +70,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
     {
         if (
             $theTable == 'tt_address' &&
-            \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tt_address') &&
+            ExtensionManagementUtility::isLoaded('tt_address') &&
             isset($GLOBALS['TCA']['tt_address']['feInterface']['fe_admin_fieldList'])
         ) {
             $fieldArray = array_unique(GeneralUtility::trimExplode(',', $GLOBALS['TCA']['tt_address']['feInterface']['fe_admin_fieldList'], 1));
@@ -166,7 +171,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
             return false;
         }
 
-        
+
         $dataFieldList = array_keys($dataArray);
         foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
             $colConfig = $colSettings['config'];
@@ -319,7 +324,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
 
         return $whereClause;
     }
-    
+
     protected function mergeItems(
         $itemArray,
         $labelItemArray
@@ -366,8 +371,8 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
     public function addMarkers (
         &$markerArray,
         $conf,
-        \JambageCom\Agency\Api\Localization $languageObj,
-        \JambageCom\Agency\Request\Parameters $controlData,
+        Localization $languageObj,
+        Parameters $controlData,
         $row,
         $origRow,
         $cmd,
@@ -380,10 +385,10 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
         $HSC = true
     )
     {
-        $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
-        $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
-        $useXHTML = \JambageCom\Div2007\Utility\HtmlUtility::useXHTML();
-        $css = GeneralUtility::makeInstance(\JambageCom\Div2007\Api\Css::class);
+        $cObj = FrontendUtility::getContentObjectRenderer();
+        $xhtmlFix = HtmlUtility::determineXhtmlFix();
+        $useXHTML = HtmlUtility::useXHTML();
+        $css = GeneralUtility::makeInstance(Css::class);
 
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
@@ -398,7 +403,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
         }
 
         $mode = $controlData->getMode();
-        $tablesObj = GeneralUtility::makeInstance(\JambageCom\Agency\Domain\Tables::class);
+        $tablesObj = GeneralUtility::makeInstance(Tables::class);
         $addressObj = $tablesObj->get('address');
 
         if ($bChangesOnly && is_array($origRow)) {
@@ -740,7 +745,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                 'class="' . $css->getClassName($colName, 'input') . '" ' .
                                 'type="input" name="FE[' . $theTable . '][' . $colName . ']"' .
                                     ' title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($colName, 'upper') . '###"' .
-                                    ' size="' . ($colConfig['size'] ? $colConfig['size'] : 30) . '"';
+                                    ' size="' . ($colConfig['size'] ?: 30) . '"';
                                 if ($colConfig['max']) {
                                     $colContent .= ' maxlength="' . $colConfig['max'] . '"';
                                 }
@@ -763,8 +768,8 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
                                     '" class="' . $css->getClassName($colName, 'input') .
                                     '" name="FE[' . $theTable . '][' . $colName . ']"' .
                                     ' title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($colName, 'upper') . '###"' .
-                                    ' cols="' . ($colConfig['cols'] ? $colConfig['cols'] : 30) . '"' .
-                                    ' rows="' . ($colConfig['rows'] ? $colConfig['rows'] : 5) . '"' .
+                                    ' cols="' . ($colConfig['cols'] ?: 30) . '"' .
+                                    ' rows="' . ($colConfig['rows'] ?: 5) . '"' .
                                     '>' . $label . '</textarea>';
                                 break;
 
@@ -1254,7 +1259,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
     */
     public function getUsergroupOverlay (
         $conf,
-        \JambageCom\Agency\Request\Parameters $controlData,
+        Parameters $controlData,
         $usergroup,
         $languageUid = ''
     )
@@ -1285,7 +1290,7 @@ class Tca implements \TYPO3\CMS\Core\SingletonInterface {
             }
 
             if (count($fieldArr)) {
-                $cObj = \JambageCom\Div2007\Utility\FrontendUtility::getContentObjectRenderer();
+                $cObj = FrontendUtility::getContentObjectRenderer();
 
                 $whereClause = 'fe_group=' . intval($fe_groups_uid) . ' ' .
                     'AND sys_language_uid=' . intval($languageUid) . ' ' .

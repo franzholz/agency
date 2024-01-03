@@ -39,8 +39,7 @@ namespace JambageCom\Agency\Utility;
 *
 *
 */
-
-
+use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Agency\Constants\Extension;
 
 
@@ -68,7 +67,7 @@ class LocalizationUtility {
         $filename = self::getFilename($filename);
 
         $result =
-            \JambageCom\Div2007\Utility\FrontendUtility::translate(
+            FrontendUtility::translate(
                 Extension::KEY,
                 $filename,
                 $key

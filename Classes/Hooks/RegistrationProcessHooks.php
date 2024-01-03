@@ -68,8 +68,8 @@ class RegistrationProcessHooks
             $name = trim($dataArray['name']);
             if ((!$firstName || !$lastName) && $name) {
                 $nameArray = GeneralUtility::trimExplode(' ', $name);
-                $firstName = ($firstName ? $firstName : $nameArray[0]);
-                $lastName = ($lastName ? $lastName : $nameArray[1]);
+                $firstName = ($firstName ?: $nameArray[0]);
+                $lastName = ($lastName ?: $nameArray[1]);
             }
             $dataArray['username'] = substr(strtolower($firstName), 0, 5) . substr(strtolower($lastName), 0, 5);
             $DBrows = $GLOBALS['TSFE']->sys_page->getRecordsByField($theTable, 'username', $dataArray['username'], 'LIMIT 1');

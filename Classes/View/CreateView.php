@@ -41,7 +41,16 @@ namespace JambageCom\Agency\View;
 *
 *
 */
-
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Agency\Domain\Tca;
+use JambageCom\Agency\Domain\Data;
+use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
+use JambageCom\Div2007\Utility\CompatibilityUtility;
+use JambageCom\Agency\Security\SecuredData;
+use JambageCom\Agency\Api\Javascript;
 use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -68,14 +77,14 @@ class CreateView {
         $conf,
         $prefixId,
         $extensionKey,
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $languageObj,
-        \JambageCom\Agency\Request\Parameters $controlData,
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        \JambageCom\Agency\Domain\Tca $tcaObj,
-        \JambageCom\Agency\View\Marker $markerObj,
-        \JambageCom\Agency\Domain\Data $dataObj,
-        \JambageCom\Agency\View\Template $template,
+        ContentObjectRenderer $cObj,
+        Localization $languageObj,
+        Parameters $controlData,
+        ConfigurationStore $confObj,
+        Tca $tcaObj,
+        Marker $markerObj,
+        Data $dataObj,
+        Template $template,
         $cmd,
         $cmdKey,
         $mode,
@@ -95,7 +104,7 @@ class CreateView {
             return false;
         }
 
-        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
+        $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         $templateCode = $dataObj->getTemplateCode();
         $currentArray = array_merge($origArray, $dataArray);
 
@@ -140,7 +149,7 @@ class CreateView {
                 $subpartKey = '###TEMPLATE_' . $key . $markerObj->getPreviewLabel() . '###';
             } else {
                 $bNeedUpdateJS = false;
-                if (\JambageCom\Div2007\Utility\CompatibilityUtility::isLoggedIn()) {
+                if (CompatibilityUtility::isLoggedIn()) {
                     $subpartKey = '###TEMPLATE_CREATE_LOGIN###';
                 } else {
                     $subpartKey = '###TEMPLATE_AUTH###';
@@ -151,7 +160,7 @@ class CreateView {
                 $bNeedUpdateJS &&
                 $controlData->getTable() == 'fe_users'
             ) {
-                \JambageCom\Agency\Security\SecuredData::getTransmissionSecurity()
+                SecuredData::getTransmissionSecurity()
                     ->getMarkers(
                         $markerArray,
                         $controlData->getExtensionKey(),
@@ -319,7 +328,7 @@ class CreateView {
                             )
                         )
                     );
-                $fields = \JambageCom\Agency\Security\SecuredData::getOpenFields($fields);
+                $fields = SecuredData::getOpenFields($fields);
                 $modData =
                     $dataObj->modifyDataArrForFormUpdate(
                         $conf,
@@ -336,7 +345,7 @@ class CreateView {
                     );
                 $content .= $updateJS;
                 $securityJavaScript = '';
-                \JambageCom\Agency\Security\SecuredData::getTransmissionSecurity()->
+                SecuredData::getTransmissionSecurity()->
                     getJavaScript(
                         $securityJavaScript,
                         $extensionKey,
@@ -348,7 +357,7 @@ class CreateView {
 //                 $GLOBALS['TSFE']->setJS('agency-security', $securityJavaScript);
 
                 $finalJavaScript = '';
-                \JambageCom\Agency\Api\Javascript::getOnSubmitHooks(
+                Javascript::getOnSubmitHooks(
                     $finalJavaScript,
                     $this
                 );

@@ -1,9 +1,10 @@
 <?php
 
+use JambageCom\Agency\Middleware\FrontendHooks;
 return [
     'frontend' => [
         'jambagecom/agency/preprocessing' => [
-            'target' => \JambageCom\Agency\Middleware\FrontendHooks::class,
+            'target' => FrontendHooks::class,
             'description' => 'Initialisation of global variables for hooks',
             'after' => [
                 'typo3/cms-frontend/tsfe'
@@ -14,4 +15,3 @@ return [
         ]
     ]
 ];
-

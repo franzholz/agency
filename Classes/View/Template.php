@@ -41,7 +41,14 @@ namespace JambageCom\Agency\View;
 *
 *
 */
-
+use JambageCom\Agency\Configuration\ConfigurationStore;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use JambageCom\Agency\Request\Parameters;
+use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
+use JambageCom\Agency\Constants\Field;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Domain\Tca;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -64,9 +71,9 @@ class Template {
     * @return string  the template with susbstituted parts
     */
     public function removeRequired (
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Request\Parameters $controlData,
+        ConfigurationStore $confObj,
+        ContentObjectRenderer $cObj,
+        Parameters $controlData,
         $dataObj,
         $theTable,
         $cmdKey,
@@ -76,7 +83,7 @@ class Template {
         $failure = ''
     )
     {
-        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
+        $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         $conf = $confObj->getConf();
         $requiredArray = $controlData->getRequiredArray();
         $includedFields = $confObj->getIncludedFields($cmdKey);
@@ -126,7 +133,7 @@ class Template {
             $templateCode =
                 $templateService->substituteSubpart(
                     $templateCode,
-                    '###SUB_INCLUDED_FIELD_' . \JambageCom\Agency\Constants\Field::CAPTCHA . '###',
+                    '###SUB_INCLUDED_FIELD_' . Field::CAPTCHA . '###',
                     ''
                 );
         }
@@ -134,7 +141,7 @@ class Template {
         // Honour Address List (tt_address) configuration setting
         if (
             $controlData->getTable() == 'tt_address' &&
-            \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tt_address') &&
+            ExtensionManagementUtility::isLoaded('tt_address') &&
             isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address'])
         ) {
             $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address']);
@@ -312,11 +319,11 @@ class Template {
     public function getPlainTemplate (
         &$errorCode,
         $conf,
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        \JambageCom\Agency\Api\Localization $languageObj,
-        \JambageCom\Agency\Request\Parameters $controlData,
-        \JambageCom\Agency\Configuration\ConfigurationStore $confObj,
-        \JambageCom\Agency\Domain\Tca $tcaObj,
+        ContentObjectRenderer $cObj,
+        Localization $languageObj,
+        Parameters $controlData,
+        ConfigurationStore $confObj,
+        Tca $tcaObj,
         $markerObj,
         $dataObj,
         $templateCode,
@@ -332,7 +339,7 @@ class Template {
     )
     {
         $useAdditionalFields = false;
-        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
+        $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
             !is_array($GLOBALS['TCA'][$theTable]['columns'])
@@ -451,7 +458,7 @@ class Template {
     public function getSimpleTemplate (
         $conf,
         $cObj,
-        \JambageCom\Agency\Api\Localization $languageObj,
+        Localization $languageObj,
         $markerObj,
         $templateCode,
         $subpartMarker,
@@ -459,7 +466,7 @@ class Template {
         $bCheckEmpty = true
     )
     {
-        $templateService = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
+        $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         $templateCode = $templateService->getSubpart($templateCode, $subpartMarker);
 
         if ($templateCode != '') {

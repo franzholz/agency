@@ -2,6 +2,8 @@
 
 namespace JambageCom\Agency\Api;
 
+use JambageCom\Div2007\Base\TranslationBase;
+use TYPO3\CMS\Core\SingletonInterface;
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -14,8 +16,7 @@ namespace JambageCom\Agency\Api;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
-class Localization extends \JambageCom\Div2007\Base\TranslationBase implements \TYPO3\CMS\Core\SingletonInterface {
+class Localization extends TranslationBase implements SingletonInterface {
     public $allowedSuffixes = ['', 'formal', 'informal']; // list of allowed suffixes
     protected $salutation = '';
 

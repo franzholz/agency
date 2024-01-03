@@ -38,7 +38,9 @@ namespace JambageCom\Agency\Configuration;
 *
 *
 */
-
+use TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordsUtility;
+use TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory;
+use JambageCom\Agency\View\Marker;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
@@ -124,7 +126,7 @@ class ConfigurationCheck implements LoggerAwareInterface {
         if ($extensionKey == Extension::KEY) {
                 // Check if salted passwords are enabled in front end
             if (                
-                class_exists(\TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordsUtility::class) ||
+                class_exists(SaltedPasswordsUtility::class) ||
                 class_exists(\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::class)
             ) {
                 if (
@@ -136,7 +138,7 @@ class ConfigurationCheck implements LoggerAwareInterface {
                     $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
                 } else {
                         // Check if we can get a salting instance
-                    $objSalt = \TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::getSaltingInstance(null);
+                    $objSalt = PasswordHashFactory::getSaltingInstance(null);
 
                     if (!is_object($objSalt)) {
                             // Could not get a salting instance from saltedpasswords
@@ -164,7 +166,7 @@ class ConfigurationCheck implements LoggerAwareInterface {
         $content = '';
         $templateCode = FrontendUtility::fileResource($conf['templateFile']);
         $messages =
-            \JambageCom\Agency\View\Marker::checkDeprecatedMarkers(
+            Marker::checkDeprecatedMarkers(
                 $templateCode,
                 $extensionKey,
                 $conf['templateFile']
