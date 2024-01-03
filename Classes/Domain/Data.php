@@ -1199,7 +1199,7 @@ class Data implements SingletonInterface {
                         ) {
                             $bValueAssigned = false;
                         }
-                        $dataValue = (isset($dataArray[$theField]) ? $dataArray[$theField] : $origArray[$theField]);
+                        $dataValue = ($dataArray[$theField] ?? $origArray[$theField]);
 
                         switch($theCmd) {
                             case 'int':

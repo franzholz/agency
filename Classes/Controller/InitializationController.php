@@ -147,7 +147,7 @@ class InitializationController implements SingletonInterface {
         $urlObj = GeneralUtility::makeInstance(Url::class);
         $coreQuery = GeneralUtility::makeInstance(
                 CoreQuery::class,
-                $this->getTypoScriptFrontendController()
+                static::getTypoScriptFrontendController()
             );
         $dataObj =
             GeneralUtility::makeInstance(
