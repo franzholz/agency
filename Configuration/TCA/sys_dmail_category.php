@@ -74,6 +74,7 @@ if ($tableExists) {
                 'label' => $languageLglPath . 'l18n_parent',
                 'config' => [
                     'type' => 'select',
+                    'renderType' => 'selectSingle',
                     'items' => [
                         ['', 0],
                     ],
