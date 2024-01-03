@@ -64,7 +64,7 @@ class LocalizationUtility {
 
     static public function translate ($key)
     {
-        $filename = self::getFilename($filename);
+        $filename = self::getFilename();
 
         $result =
             FrontendUtility::translate(

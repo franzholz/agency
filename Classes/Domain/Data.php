@@ -1719,10 +1719,10 @@ class Data implements SingletonInterface {
                         if (isset($GLOBALS['TCA'][$theTable]['ctrl']['fe_crgroup_id'])) {
                             $field = $GLOBALS['TCA'][$theTable]['ctrl']['fe_crgroup_id'];
                             if (is_array($dataArray['usergroup'])) {
-                                list($tmpDataArray[$field]) = $dataArray['usergroup'];
+                                [$tmpDataArray[$field]] = $dataArray['usergroup'];
                             } else {
                                 $tmpArray = explode(',', $dataArray['usergroup']);
-                                list($tmpDataArray[$field]) = $tmpArray;
+                                [$tmpDataArray[$field]] = $tmpArray;
                             }
                             $tmpDataArray[$field] = intval($tmpDataArray[$field]);
                             $extraList .= ',' . $field;

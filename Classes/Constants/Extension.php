@@ -20,7 +20,7 @@ namespace JambageCom\Agency\Constants;
  */
 class Extension
 {
-    const KEY           = 'agency';
+    public const KEY           = 'agency';
 
 }
 

@@ -576,7 +576,7 @@ class Tca implements SingletonInterface {
 
                                     if (isset($conf['mergeLabels']) || !count($labelItemArray)) {
                                         if (isset($colConfig['itemsProcFunc'])) {
-                                            $itemArray = GeneralUtility::callUserFunction($colConfig['itemsProcFunc'], $colConfig, $this, '');
+                                            $itemArray = GeneralUtility::callUserFunction($colConfig['itemsProcFunc'], $colConfig, $this);
                                         }
                                         $itemArray = $colConfig['items'];
                                         if (isset($conf['mergeLabels'])) {
@@ -619,7 +619,7 @@ class Tca implements SingletonInterface {
 
                                     if (isset($conf['mergeLabels']) || !count($labelItemArray)) {
                                         if (isset($colConfig['itemsProcFunc'])) {
-                                            $itemArray = GeneralUtility::callUserFunction($colConfig['itemsProcFunc'], $colConfig, $this, '');
+                                            $itemArray = GeneralUtility::callUserFunction($colConfig['itemsProcFunc'], $colConfig, $this);
                                         }
                                         $itemArray = $colConfig['items'] ?? [];
                                         if (isset($conf['mergeLabels'])) {
@@ -727,7 +727,7 @@ class Tca implements SingletonInterface {
 
                             if ($conf['mergeLabels'] || !count($labelItemArray)) {
                                 if (isset($colConfig['itemsProcFunc'])) {
-                                    $itemArray = GeneralUtility::callUserFunction($colConfig['itemsProcFunc'], $colConfig, $this, '');
+                                    $itemArray = GeneralUtility::callUserFunction($colConfig['itemsProcFunc'], $colConfig, $this);
                                 }
                                 $itemArray = $colConfig['items'] ?? [];
                                 if (isset($conf['mergeLabels'])) {
@@ -868,7 +868,7 @@ class Tca implements SingletonInterface {
 
                                 if (empty($startVal) && isset($colConfig['items'])) {
                                     reset($colConfig['items']);
-                                    list($startConf) = $colConfig['items'];
+                                    [$startConf] = $colConfig['items'];
                                     $startVal = $startConf['value'];
                                 }
 

@@ -20,7 +20,7 @@ namespace JambageCom\Agency\Constants;
  */
 class Field
 {
-    const CAPTCHA        = 'captcha_response';
+    public const CAPTCHA        = 'captcha_response';
 
 }
 

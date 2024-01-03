@@ -107,7 +107,7 @@ class Tables implements SingletonInterface {
                 if (strpos($className, ':') === false) {
                     // nothing
                 } else {
-                    list($extKey, $className) = GeneralUtility::trimExplode(':', $className, true);
+                    [$extKey, $className] = GeneralUtility::trimExplode(':', $className, true);
 
                     if (!ExtensionManagementUtility::isLoaded($extKey)) {
                         debug('Error in ' . Extension::KEY . '. No extension "' . $extKey . '" has been loaded to use class class.' . $className . '.','internal error'); // keep this

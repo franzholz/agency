@@ -482,8 +482,7 @@ class Setfixed {
                             $securedArray,
                             $cmdKey,
                             $setFixedKey,
-                            $fD,
-                            $token
+                            $fD
                         );
                         // $errorContent
                     if (!empty($errorCode)) {

@@ -20,8 +20,8 @@ namespace JambageCom\Agency\Constants;
  */
 class Mode
 {
-    const NORMAL        = '0';
-    const PREVIEW       = '1';
+    public const NORMAL        = '0';
+    public const PREVIEW       = '1';
 
 }
 

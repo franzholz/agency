@@ -58,7 +58,7 @@ class Javascript {
             $_params = [];
             $out = '';
             foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs'] as $funcRef) {
-                list($onSubmit, $hiddenFields) =
+                [$onSubmit, $hiddenFields] =
                     GeneralUtility::callUserFunction(
                         $funcRef,
                         $_params,
