@@ -53,9 +53,8 @@ use JambageCom\Agency\Domain\Tca;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
-class Template {
-
+class Template
+{
     /**
     * Removes required and error sub-parts when there are no errors
     *
@@ -71,7 +70,7 @@ class Template {
     * @param string  $failure: the list of fields with errors
     * @return string  the template with susbstituted parts
     */
-    public function removeRequired (
+    public function removeRequired(
         ConfigurationStore $confObj,
         ContentObjectRenderer $cObj,
         Parameters $controlData,
@@ -82,8 +81,7 @@ class Template {
         $useAdditionalFields = true,
         $errorFieldArray = [],
         $failure = ''
-    )
-    {
+    ) {
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         $conf = $confObj->getConf();
         $requiredArray = $controlData->getRequiredArray();
@@ -167,7 +165,7 @@ class Template {
                 continue;
             }
 
-                // Remove field required subpart, if field is not required
+            // Remove field required subpart, if field is not required
             if (
                 in_array($theField, $requiredArray) ||
                 in_array($theField, $specialFields)
@@ -185,7 +183,7 @@ class Template {
                             '###SUB_ERROR_FIELD_' . $theField . '###',
                             ''
                         );
-                } else if (!$errorFieldArray[$theField]) {
+                } elseif (!$errorFieldArray[$theField]) {
                     $templateCode =
                         $templateService->substituteSubpart(
                             $templateCode,
@@ -194,7 +192,7 @@ class Template {
                         );
                 }
             } else {
-                    // Remove field included subpart, if field is not included and is not in failure list
+                // Remove field included subpart, if field is not included and is not in failure list
 
                 if (
                     !in_array($theField, $includedFields) &&
@@ -245,7 +243,7 @@ class Template {
                                                 );
                                         }
                                     }
-                                break;
+                                    break;
                             }
                         }
                     }
@@ -262,7 +260,7 @@ class Template {
     * @param string $content: the input content
     * @return string the input content with HTML comment removed
     */
-    public function removeHTMLComments ($content)
+    public function removeHTMLComments($content)
     {
         $result = preg_replace('/<!(?:--[\s\S]*?--\s*)?>[\t\v\n\r\f]*/', '', $content);
         return $result;
@@ -274,7 +272,7 @@ class Template {
     * @param string $content: the input content
     * @return string the input content with HTML br tags replaced
     */
-    public function replaceHTMLBr ($content)
+    public function replaceHTMLBr($content)
     {
         $result = preg_replace('/<br\s?\/?>/', LF, $content);
         return $result;
@@ -286,9 +284,9 @@ class Template {
     * @param string $content: the input content
     * @return string the input content with HTML tags removed
     */
-    public function removeHtmlTags ($content)
+    public function removeHtmlTags($content)
     {
-            // Preserve <http://...> constructs
+        // Preserve <http://...> constructs
         $result = str_replace('<http', '###http', $content);
         $result = strip_tags($result);
         $result = str_replace('###http', '<http', $result);
@@ -301,7 +299,7 @@ class Template {
     * @param string $content: the input content
     * @return string the input content with superfluous fine feeds removed
     */
-    public function removeSuperfluousLineFeeds ($content)
+    public function removeSuperfluousLineFeeds($content)
     {
         $result = preg_replace('/[' . preg_quote(LF) . ']{3,}/', LF . LF, $content);
         return $result;
@@ -317,7 +315,7 @@ class Template {
     * @param array  $row: the data array or empty array
     * @return string  the template with substituted parts and markers
     */
-    public function getPlainTemplate (
+    public function getPlainTemplate(
         &$errorCode,
         $conf,
         ContentObjectRenderer $cObj,
@@ -337,8 +335,7 @@ class Template {
         $securedArray,
         $bCheckEmpty = true,
         $failure = ''
-    )
-    {
+    ) {
         $useAdditionalFields = false;
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         if (
@@ -352,7 +349,7 @@ class Template {
         $templateCode = $templateService->getSubpart($templateCode, $subpartMarker);
 
         if ($templateCode != '') {
-                // Remove non-included fields
+            // Remove non-included fields
             $templateCode =
                 $this->removeRequired(
                     $confObj,
@@ -424,7 +421,7 @@ class Template {
                     $markerArray
                 );
 
-                // Avoid cleartext password in HTML source
+            // Avoid cleartext password in HTML source
             $markerArray['###FIELD_password###'] = '';
             $markerArray['###FIELD_password_again###'] = '';
             $deleteUnusedMarkers = true;
@@ -437,7 +434,7 @@ class Template {
                     false,
                     $deleteUnusedMarkers
                 );
-        } else if ($bCheckEmpty) {
+        } elseif ($bCheckEmpty) {
             $errorCode['0'] = 'internal_no_subtemplate';
             $errorCode['1'] = $subpartMarker;
             $result = false;
@@ -456,7 +453,7 @@ class Template {
     * @param array  $row: the data array or empty array
     * @return string  the template with substituted parts and markers
     */
-    public function getSimpleTemplate (
+    public function getSimpleTemplate(
         $conf,
         $cObj,
         Localization $languageObj,
@@ -465,8 +462,7 @@ class Template {
         $subpartMarker,
         array $markerArray,
         $bCheckEmpty = true
-    )
-    {
+    ) {
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         $templateCode = $templateService->getSubpart($templateCode, $subpartMarker);
 
@@ -487,7 +483,7 @@ class Template {
                     false,
                     $deleteUnusedMarkers
                 );
-        } else if ($bCheckEmpty) {
+        } elseif ($bCheckEmpty) {
             $errorText = $languageObj->getLabel('internal_no_subtemplate');
             $result = sprintf($errorText, $subpartMarker);
         }
@@ -518,14 +514,13 @@ class Template {
     *			$conf['enableAdminReview']
     * @return boolean or string
     */
-    public function getKeyAfterSave (
+    public function getKeyAfterSave(
         $cmd,
         $cmdKey,
         $bCustomerConfirmsMode,
         $bSetfixed,
         $bCreateReview
-    )
-    {
+    ) {
         $result = false;
         switch ($cmd) {
             case 'delete':
@@ -542,12 +537,12 @@ class Template {
             default:
                 if ($cmdKey == 'edit') {
                     $result = 'EDIT' . SAVED_SUFFIX;
-                } else if ($bSetfixed) {
+                } elseif ($bSetfixed) {
                     $result = SETFIXED_PREFIX . 'CREATE';
 
                     if ($bCreateReview) {
                         $result = 'CREATE' . SAVED_SUFFIX . '_REVIEW';
-                    } else if ($bCustomerConfirmsMode) {
+                    } elseif ($bCustomerConfirmsMode) {
                         $result .= '_REVIEW';
                     }
                 } else {
@@ -558,4 +553,3 @@ class Template {
         return $result;
     }
 }
-

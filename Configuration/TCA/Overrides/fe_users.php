@@ -1,10 +1,10 @@
 <?php
+
 defined('TYPO3') || die('Access denied.');
 
 use JambageCom\Agency\Constants\Extension;
 
-call_user_func(function($extensionKey, $table): void
-{
+call_user_func(function ($extensionKey, $table): void {
     $table = 'fe_users';
     $languageSubpath = '/Resources/Private/Language/';
 
@@ -218,7 +218,7 @@ call_user_func(function($extensionKey, $table): void
                     ]
                 ],
             'module_sys_dmail_category' => [
-                'label'=>'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.module_sys_dmail_category',
+                'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.module_sys_dmail_category',
                 'exclude' => '1',
                 'config' => [
                     'type' => 'select',
@@ -240,7 +240,7 @@ call_user_func(function($extensionKey, $table): void
                 'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.module_sys_dmail_html',
                 'exclude' => '1',
                 'config' => [
-                    'type'=>'check',
+                    'type' => 'check',
                     'default' => '0'
                 ]
             ]
@@ -304,19 +304,21 @@ call_user_func(function($extensionKey, $table): void
     if (isset($GLOBALS['TCA'][$table]['interface']['showRecordFieldList'])) {
         $GLOBALS['TCA'][$table]['interface']['showRecordFieldList'] =
             preg_replace(
-                '/(^|,)\s*country\s*(,|$)/', '$1' .  implode(',', $validColumns) . '$2',
+                '/(^|,)\s*country\s*(,|$)/',
+                '$1' .  implode(',', $validColumns) . '$2',
                 $GLOBALS['TCA'][$table]['interface']['showRecordFieldList']
             );
     }
 
     $GLOBALS['TCA'][$table]['types']['0']['showitem'] =
         preg_replace(
-            '/(^|,)\s*country\s*(,|$)/', '$1 ' .  implode(',', $validColumns) . '$2',
+            '/(^|,)\s*country\s*(,|$)/',
+            '$1 ' .  implode(',', $validColumns) . '$2',
             $GLOBALS['TCA'][$table]['types']['0']['showitem']
         );
-            
+
     $temporaryColumns['title'] = '';
-        
+
     $columns = ['gender', 'status', 'date_of_birth', 'house_no', 'title'];
     $validColumns = [];
     foreach ($columns as $column) {
@@ -357,4 +359,3 @@ call_user_func(function($extensionKey, $table): void
     $searchFields = array_unique($searchFields);
     $GLOBALS['TCA'][$table]['ctrl']['searchFields'] = implode(',', $searchFields);
 }, Extension::KEY, basename(__FILE__, '.php'));
-

@@ -52,9 +52,8 @@ use JambageCom\Agency\Security\SecuredData;
 use JambageCom\Agency\Setfixed\SetfixedUrls;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
-class AfterSaveView {
-
+class AfterSaveView
+{
     /**
     * Displaying the page here that says, the record has been saved.
     * You're able to include the saved values by markers.
@@ -69,7 +68,7 @@ class AfterSaveView {
     * @param array  $errorFieldArray: array of field with errors (former $this->data->inError[$theField])
     * @return string  the template with substituted parts and markers
     */
-    public function render (
+    public function render(
         $conf,
         ContentObjectRenderer $cObj,
         Localization $languageObj,
@@ -93,18 +92,17 @@ class AfterSaveView {
         &$markerArray,
         $errorFieldArray,
         &$content
-    )
-    {
+    ) {
         $useAdditionalFields = true;
         $errorContent = '';
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
 
-            // Display confirmation message
+        // Display confirmation message
         $subpartMarker = '###TEMPLATE_' . $key . '###';
         $templateCode = $templateService->getSubpart($templateCode, $subpartMarker);
 
         if ($templateCode) {
-                // Remove non-included fields
+            // Remove non-included fields
             $templateCode =
                 $template->removeRequired(
                     $confObj,
@@ -221,4 +219,3 @@ class AfterSaveView {
         return $errorContent;
     }
 }
-

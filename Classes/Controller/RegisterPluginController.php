@@ -48,40 +48,36 @@ use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Configuration\ConfigurationCheck;
 use JambageCom\Agency\Utility\LocalizationUtility;
 
-
-
-
-class RegisterPluginController extends AbstractPlugin {
-
-        // Plugin initialization variables
+class RegisterPluginController extends AbstractPlugin
+{
+    // Plugin initialization variables
     public $prefixId = Extension::KEY;
     public $scriptRelPath = 'Classes/Controller/RegisterPluginController.php'; // Path to this script relative to the extension dir.
     public $extKey = Extension::KEY;		// Extension key.
 
-    public function main (
+    public function main(
         $content,
         $conf
-    )
-    {
+    ) {
         $this->pi_setPiVarDefaults();
         $this->conf = $conf;
         LocalizationUtility::init();
         $configurationCheck = GeneralUtility::makeInstance(ConfigurationCheck::class);
 
-            // Check installation requirements
+        // Check installation requirements
         $content =
             $configurationCheck->checkRequirements(
                 $conf,
                 $this->extKey
             );
 
-            // Check installation security settings
+        // Check installation security settings
         $content .=
             $configurationCheck->checkSecuritySettings(
                 $this->extKey
             );
 
-            // Check presence of deprecated markers
+        // Check presence of deprecated markers
         $content .=
             $configurationCheck->checkDeprecatedMarkers(
                 $this->cObj,
@@ -109,7 +105,7 @@ class RegisterPluginController extends AbstractPlugin {
             $content = sprintf($errorText, $theTable);
         }
 
-            // If no error content, proceed
+        // If no error content, proceed
         if ($content == '') {
             $mainObj = GeneralUtility::makeInstance(InitializationController::class);
             $content =
@@ -125,4 +121,3 @@ class RegisterPluginController extends AbstractPlugin {
         return $content;
     }
 }
-

@@ -1,6 +1,7 @@
 <?php
 
 use JambageCom\Agency\Middleware\FrontendHooks;
+
 return [
     'frontend' => [
         'jambagecom/agency/preprocessing' => [

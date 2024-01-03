@@ -1,4 +1,5 @@
 <?php
+
 namespace JambageCom\Agency\Hooks;
 
 /*
@@ -37,13 +38,14 @@ class RegistrationProcessHooks
 {
     protected $hasBeenInitialised = false;
 
-    public function init (
+    public function init(
         Data $dataObject
     ): void {
         $this->hasBeenInitialised = true;
     }
 
-    public function needsInit () {
+    public function needsInit()
+    {
         return !$this->hasBeenInitialised;
     }
 
@@ -51,7 +53,7 @@ class RegistrationProcessHooks
     * @param string $cmdKey: the cmd being processed
     * @param array $conf: the plugin configuration
     */
-    public function registrationProcess_beforeConfirmCreate (
+    public function registrationProcess_beforeConfirmCreate(
         $theTable,
         array $dataArray,
         Parameters $parameters,
@@ -84,7 +86,7 @@ class RegistrationProcessHooks
         }
     }
 
-    public function registrationProcess_afterSaveEdit (
+    public function registrationProcess_afterSaveEdit(
         $theTable,
         array $dataArray,
         array $origArray,
@@ -95,17 +97,17 @@ class RegistrationProcessHooks
         $pid,
         $fieldList,
         Data $pObj
-    ): void
-    {}
+    ): void {
+    }
 
-    public function registrationProcess_beforeSaveDelete (
+    public function registrationProcess_beforeSaveDelete(
         Parameters $parameters,
         $origArray,
         Data $pObj
-    ): void
-    {}
+    ): void {
+    }
 
-    public function registrationProcess_afterSaveCreate (
+    public function registrationProcess_afterSaveCreate(
         Parameters $parameters,
         $theTable,
         array $dataArray,
@@ -117,31 +119,29 @@ class RegistrationProcessHooks
         $pid,
         $extraList,
         Data $pObj
-    ): void
-    {}
+    ): void {
+    }
 
-    public function confirmRegistrationClass_preProcess (
+    public function confirmRegistrationClass_preProcess(
         Parameters $parameters,
         $theTable,
         array $row,
         $newFieldList,
         SetFixed $pObj,
         &$errorCode
-    ): void
-    {
+    ): void {
         // in the case of this hook, the record array is passed by reference
         // you may not see this echo if the page is redirected to auto-login
     }
 
-    public function confirmRegistrationClass_postProcess (
+    public function confirmRegistrationClass_postProcess(
         Parameters $parameters,
         $theTable,
         array $row,
         array $currArr,
         array $origArray,
         SetFixed $pObj
-    ): void
-    {
+    ): void {
         // you may not see this echo if the page is redirected to auto-login
     }
 
@@ -153,13 +153,12 @@ class RegistrationProcessHooks
     * @param array $confObj: the plugin configuration object
     * @param Marker invoking marker object
     */
-    public function addGlobalMarkers (
+    public function addGlobalMarkers(
         array &$markerArray,
         Parameters $controlData,
         ConfigurationStore $confObj,
         Marker $markerObject
-    ): void
-    {
+    ): void {
         // add your global markers to the $markerArray here
     }
 }

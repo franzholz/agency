@@ -40,25 +40,30 @@ namespace JambageCom\Agency\Domain\Field;
  */
 
 
-class Base {
+class Base
+{
     public $hasBeenInitialised = false;
 
-    public function init (): void {
+    public function init(): void
+    {
         $this->hasBeenInitialised = true;
     }
 
-    public function needsInit () {
+    public function needsInit()
+    {
         return !$this->hasBeenInitialised;
     }
 
-    public function modifyConf (&$conf, $cmdKey): void {
+    public function modifyConf(&$conf, $cmdKey): void
+    {
     }
 
-    public function get ($row, $fieldname) {
+    public function get($row, $fieldname)
+    {
         return $row[$fieldname];
     }
 
-    public function parseOutgoingData (
+    public function parseOutgoingData(
         $theTable,
         $fieldname,
         $foreignTable,

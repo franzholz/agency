@@ -62,8 +62,8 @@ use JambageCom\Div2007\Captcha\CaptchaInterface;
 use JambageCom\Div2007\Utility\SystemUtility;
 use JambageCom\Div2007\Utility\TableUtility;
 
-
-class Data implements SingletonInterface {
+class Data implements SingletonInterface
+{
     public $lang;
     public $tca;
     public $freeCap; // object of type tx_srfreecap_pi2
@@ -102,7 +102,7 @@ class Data implements SingletonInterface {
         $this->coreQuery = $coreQuery;
     }
 
-    public function init (
+    public function init(
         $lang,
         $tca,
         $control,
@@ -110,15 +110,14 @@ class Data implements SingletonInterface {
         $templateCode,
         Parameters $controlData,
         $staticInfoObj
-    ): void
-    {
+    ): void {
         $this->lang = $lang;
         $this->tca = $tca;
         $this->control = $control;
         $this->controlData = $controlData;
         $this->fileFunc = GeneralUtility::makeInstance(BasicFileUtility::class);
 
-            // Fetching the template file
+        // Fetching the template file
         $this->setTemplateCode($templateCode);
 
         if (
@@ -129,7 +128,7 @@ class Data implements SingletonInterface {
             $this->setSpecialFieldList(Field::CAPTCHA);
         }
 
-            // Get POST parameters
+        // Get POST parameters
         $fe = GeneralUtility::_GP('FE');
 
         if (
@@ -142,32 +141,32 @@ class Data implements SingletonInterface {
         }
     }
 
-    public function getCoreQuery ()
+    public function getCoreQuery()
     {
         return $this->coreQuery;
     }
 
-    public function setError ($error): void
+    public function setError($error): void
     {
         $this->error = $error;
     }
 
-    public function getError ()
+    public function getError()
     {
         return $this->error;
     }
 
-    public function setSaved ($value): void
+    public function setSaved($value): void
     {
         $this->saved = $value;
     }
 
-    public function getSaved ()
+    public function getSaved()
     {
         return $this->saved;
     }
 
-    public function getTemplateCode ()
+    public function getTemplateCode()
     {
         return $this->templateCode;
     }
@@ -178,95 +177,94 @@ class Data implements SingletonInterface {
      * @param string $templateCode: the source code
      * @return void
      */
-    public function setTemplateCode ($templateCode): void
+    public function setTemplateCode($templateCode): void
     {
         $this->templateCode = $templateCode;
     }
 
-    public function getFieldList ()
+    public function getFieldList()
     {
         return $this->fieldList;
     }
 
-    public function setFieldList ($fieldList): void
+    public function setFieldList($fieldList): void
     {
         $this->fieldList = $fieldList;
     }
 
-    public function setSpecialFieldList ($specialfieldlist): void
+    public function setSpecialFieldList($specialfieldlist): void
     {
         $this->specialfieldlist = $specialfieldlist;
     }
 
-    public function getSpecialFieldList ()
+    public function getSpecialFieldList()
     {
         return $this->specialfieldlist;
     }
 
-    public function getAdminFieldList ()
+    public function getAdminFieldList()
     {
         return $this->adminFieldList;
     }
 
-    public function setAdminFieldList ($adminFieldList): void
+    public function setAdminFieldList($adminFieldList): void
     {
         $this->adminFieldList = $adminFieldList;
     }
 
-    public function getAdditionalUpdateFields ()
+    public function getAdditionalUpdateFields()
     {
         return $this->additionalUpdateFields;
     }
 
-    public function setAdditionalUpdateFields ($additionalUpdateFields): void
+    public function setAdditionalUpdateFields($additionalUpdateFields): void
     {
         $this->additionalUpdateFields = $additionalUpdateFields;
     }
 
-    public function getAdditionalOverrideFields ()
+    public function getAdditionalOverrideFields()
     {
         return $this->additionalOverrideFields;
     }
 
-    public function setAdditionalOverrideFields ($fields): void
+    public function setAdditionalOverrideFields($fields): void
     {
         $this->additionalOverrideFields = $fields;
     }
 
-    public function getAdditionalIncludedFields ()
+    public function getAdditionalIncludedFields()
     {
         return $this->additionalIncludedFields;
     }
 
-    public function setAdditionalIncludedFields ($fields): void
+    public function setAdditionalIncludedFields($fields): void
     {
         $this->additionalIncludedFields = $fields;
     }
 
-    public function setRecUid ($uid): void
+    public function setRecUid($uid): void
     {
         $this->recUid = intval($uid);
     }
 
-    public function getRecUid ()
+    public function getRecUid()
     {
         return $this->recUid;
     }
 
-    public function getAddTableArray ()
+    public function getAddTableArray()
     {
         return $this->addTableArray;
     }
 
-    public function addTableArray ($table): void
+    public function addTableArray($table): void
     {
         if (!in_array($table, $this->addTableArray)) {
             $this->addTableArray[] = $table;
         }
     }
 
-    public function setDataArray
-    (
+    public function setDataArray(
         array $dataArray
     ): void {
         $this->dataArray = $dataArray;
@@ -275,7 +273,7 @@ class Data implements SingletonInterface {
         }
     }
 
-    public function getDataArray ($k = 0)
+    public function getDataArray($k = 0)
     {
         if ($k) {
             $result = $this->dataArray[$k];
@@ -286,22 +284,22 @@ class Data implements SingletonInterface {
         return $result;
     }
 
-    public function resetDataArray (): void
+    public function resetDataArray(): void
     {
         $this->dataArray = [];
     }
 
-    public function setOrigArray (array $origArray): void
+    public function setOrigArray(array $origArray): void
     {
         $this->origArray = $origArray;
     }
 
-    public function getOrigArray ()
+    public function getOrigArray()
     {
         return $this->origArray;
     }
 
-    public function bNewAvailable ()
+    public function bNewAvailable()
     {
         $dataArray = $this->getDataArray();
         $result = (!empty($dataArray['username']) || !empty($dataArray['email']));
@@ -313,12 +311,11 @@ class Data implements SingletonInterface {
     *
     * @return void  all overriding done directly on array $this->dataArray
     */
-    public function overrideValues (
+    public function overrideValues(
         array &$dataArray,
         $cmdKey,
         $conf
-    ): void
-    {
+    ): void {
         $cObj = FrontendUtility::getContentObjectRenderer();
         $overrideFieldArray = [];
 
@@ -379,7 +376,7 @@ class Data implements SingletonInterface {
                             }
                         }
                     }
-                } else if (
+                } elseif (
                     $theField == 'usergroup' &&
                     $this->controlData->getTable() == 'fe_users' &&
                     !empty($conf['allowUserGroupSelection'])
@@ -417,7 +414,7 @@ class Data implements SingletonInterface {
     * @param array  Array with key/values being marker-strings/substitution values.
     * @return array the data row with key/value pairs
     */
-    public function readDefaultValues ($cmdKey)
+    public function readDefaultValues($cmdKey)
     {
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
@@ -443,7 +440,7 @@ class Data implements SingletonInterface {
     * @param boolean $bInternal: if the bug is caused by an internal problem
     * @return string  the error message to be displayed
     */
-    public function getFailureText (
+    public function getFailureText(
         $dataArray,
         $theField,
         $theRule,
@@ -451,8 +448,7 @@ class Data implements SingletonInterface {
         $orderNo = '',
         $param = '',
         $bInternal = false
-    )
-    {
+    ) {
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
@@ -471,7 +467,7 @@ class Data implements SingletonInterface {
                         $failureLabel = $v;
                         break;
                     }
-                } else if ($bKIsInt) {
+                } elseif ($bKIsInt) {
                     $count++;
 
                     if ($count == $orderNo) {
@@ -489,7 +485,7 @@ class Data implements SingletonInterface {
             ) {
                 $failureLabel = $conf['evalErrors.'][$theField . '.'][$theRule];
             } else {
-                $failureLabel='';
+                $failureLabel = '';
                 $internalPostfix = ($bInternal ? '_internal' : '');
                 if ($theRule) {
                     $labelname = 'evalErrors_' . $theRule . '_' . $theField . $internalPostfix;
@@ -517,7 +513,7 @@ class Data implements SingletonInterface {
     * @param array  Array with key/values being marker-strings/substitution values.
     * @return void  on return, the ControlData failure will contain the list of fields which were not ok
     */
-    public function evalValues (
+    public function evalValues(
         ConfigurationStore $confObj,
         $staticInfoObj,
         $theTable,
@@ -528,8 +524,7 @@ class Data implements SingletonInterface {
         array $requiredArray,
         array $checkFieldArray,
         $captcha
-    )
-    {
+    ) {
         $conf = $confObj->getConf();
         $failureMsg = [];
         $displayFieldArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1);
@@ -573,9 +568,9 @@ class Data implements SingletonInterface {
             $cmd = $this->controlData->getCmd();
             if ($cmd == 'edit' || $cmdKey == 'edit') {
                 if ($pid) {
-                        // This may be tricked if the input has the pid-field set but the edit-field list does NOT allow the pid to be edited. Then the pid may be false.
+                    // This may be tricked if the input has the pid-field set but the edit-field list does NOT allow the pid to be edited. Then the pid may be false.
                     $recordTestPid = $pid;
-                } else if (!empty($dataArray['uid'])) {
+                } elseif (!empty($dataArray['uid'])) {
                     $tempRecArr = $GLOBALS['TSFE']->sys_page->getRawRecord($this->controlData->getTable(), $dataArray['uid']);
                     $recordTestPid = intval($tempRecArr['pid']);
                 }
@@ -598,7 +593,7 @@ class Data implements SingletonInterface {
                 $this->evalErrors[$theField] = [];
                 $failureMsg[$theField] = [];
                 $listOfCommands = GeneralUtility::trimExplode(',', $theValue, 1);
-                    // Unset the incoming value is empty and unsetEmpty is specified
+                // Unset the incoming value is empty and unsetEmpty is specified
                 if (array_search('unsetEmpty', $listOfCommands) !== false) {
                     if (
                         isset($dataArray[$theField]) &&
@@ -666,7 +661,7 @@ class Data implements SingletonInterface {
                                             );
                                     }
                                 }
-                            break;
+                                break;
                             case 'twice':
                                 $fieldValue = strval($dataArray[$theField] ?? '');
                                 $fieldAgainValue = strval($dataArray[$theField . '_again'] ?? '');
@@ -682,7 +677,7 @@ class Data implements SingletonInterface {
                                             'evalErrors_same_twice'
                                         );
                                 }
-                            break;
+                                break;
                             case 'email':
                                 if (
                                     !is_array($dataArray[$theField]) &&
@@ -700,7 +695,7 @@ class Data implements SingletonInterface {
                                             'evalErrors_valid_email'
                                         );
                                 }
-                            break;
+                                break;
                             case 'required':
                                 if (
                                     empty($dataArray[$theField]) &&
@@ -717,7 +712,7 @@ class Data implements SingletonInterface {
                                             'evalErrors_required'
                                         );
                                 }
-                            break;
+                                break;
                             case 'atLeast':
                                 $chars = intval($cmdParts[1]);
 
@@ -740,7 +735,7 @@ class Data implements SingletonInterface {
                                             $chars
                                         );
                                 }
-                            break;
+                                break;
                             case 'atMost':
                                 $chars = intval($cmdParts[1]);
                                 if (
@@ -761,7 +756,7 @@ class Data implements SingletonInterface {
                                             $chars
                                         );
                                 }
-                            break;
+                                break;
                             case 'inBranch':
                                 $pars = explode(';', $cmdParts[1]);
                                 if (intval($pars[0])) {
@@ -782,12 +777,13 @@ class Data implements SingletonInterface {
                                                     $dataArray,
                                                     $theField,
                                                     $theCmd,
-                                                    'evalErrors_unvalid_list'),
-                                                    $pid_list
-                                                );
+                                                    'evalErrors_unvalid_list'
+                                                ),
+                                                $pid_list
+                                            );
                                     }
                                 }
-                            break;
+                                break;
                             case 'upload':
                                 if (
                                     isset($dataArray[$theField]) &&
@@ -835,8 +831,8 @@ class Data implements SingletonInterface {
                                                                         'max_size',
                                                                         'evalErrors_size_too_large'
                                                                     ),
-                                                                $maxSize
-                                                            );
+                                                                    $maxSize
+                                                                );
                                                             $failureArray[] = $theField;
                                                             $this->inError[$theField] = true;
                                                             if (@is_file($pathSite . $uploadPath . '/' . $filename)) {
@@ -882,8 +878,9 @@ class Data implements SingletonInterface {
                                                                 $dataArray,
                                                                 $theField,
                                                                 'allowed',
-                                                                'evalErrors_file_extension'),
-                                                                $fileExtension
+                                                                'evalErrors_file_extension'
+                                                            ),
+                                                            $fileExtension
                                                         );
                                                     $failureArray[] = $theField;
                                                     $this->inError[$theField] = true;
@@ -897,7 +894,7 @@ class Data implements SingletonInterface {
                                         }
                                     }
                                 }
-                            break;
+                                break;
                             case 'wwwURL':
                                 if ($dataArray[$theField]) {
                                     $urlParts = parse_url($dataArray[$theField]);
@@ -920,7 +917,7 @@ class Data implements SingletonInterface {
                                             );
                                     }
                                 }
-                            break;
+                                break;
                             case 'date':
                                 if (
                                     !is_array($dataArray[$theField]) &&
@@ -941,7 +938,7 @@ class Data implements SingletonInterface {
                                             'evalErrors_unvalid_date'
                                         );
                                 }
-                            break;
+                                break;
                             case 'preg':
                                 if (
                                     !is_array($dataArray[$theField]) &&
@@ -976,7 +973,7 @@ class Data implements SingletonInterface {
                                             );
                                     }
                                 }
-                            break;
+                                break;
                             case 'hook':
                             default:
                                 if (isset($countArray['hook'][$theCmd])) {
@@ -1100,7 +1097,7 @@ class Data implements SingletonInterface {
                                         }
                                     }
                                 }
-                            break;
+                                break;
                         }
                     }
                 }
@@ -1165,13 +1162,12 @@ class Data implements SingletonInterface {
     *
     * @return boolean  all parsing done directly on input and output array $dataArray
     */
-    public function parseValues (
+    public function parseValues(
         $theTable,
         array &$dataArray,
         array $origArray,
         $cmdKey
-    )
-    {
+    ) {
         $result = true;
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
@@ -1206,39 +1202,39 @@ class Data implements SingletonInterface {
                         switch($theCmd) {
                             case 'int':
                                 $dataValue = intval($dataValue);
-                            break;
+                                break;
                             case 'lower':
                             case 'upper':
                                 $cObj = FrontendUtility::getContentObjectRenderer();
                                 $dataValue = $cObj->caseshift($dataValue, $theCmd);
-                            break;
+                                break;
                             case 'nospace':
                                 $dataValue = str_replace(' ', '', $dataValue);
-                            break;
+                                break;
                             case 'alpha':
                                 $dataValue = preg_replace('/[^a-zA-Z' . preg_quote($parameter) . ']/', '', $dataValue);
-                            break;
+                                break;
                             case 'num':
                                 $dataValue = preg_replace('/[^0-9]/', '', $dataValue);
-                            break;
+                                break;
                             case 'alphanum':
                                 $dataValue = preg_replace('/[^a-zA-Z0-9' . preg_quote($parameter) . ']/', '', $dataValue);
-                            break;
+                                break;
                             case 'alphanum_x':
                                 $dataValue = preg_replace('/[^a-zA-Z0-9_\\-' . preg_quote($parameter) . ']/', '', $dataValue);
-                            break;
+                                break;
                             case 'trim':
                                 $dataValue = trim($dataValue);
-                            break;
+                                break;
                             case 'random':
                                 $dataValue = substr(md5(uniqid(microtime(), 1)), 0, intval($cmdParts[1]));
-                            break;
+                                break;
                             case 'files':
                                 $fieldDataArray = [];
                                 if (!empty($dataValue)) {
                                     if (is_array($dataValue)) {
                                         $fieldDataArray = $dataValue;
-                                    } else if (is_string($dataValue) && $dataValue) {
+                                    } elseif (is_string($dataValue) && $dataValue) {
                                         $fieldDataArray = GeneralUtility::trimExplode(',', $dataValue, 1);
                                     }
                                 }
@@ -1254,7 +1250,7 @@ class Data implements SingletonInterface {
                                 if ($fileDeleted) {
                                     $result = false;
                                 }
-                            break;
+                                break;
                             case 'multiple':
                                 $fieldDataArray = [];
                                 if (
@@ -1266,7 +1262,7 @@ class Data implements SingletonInterface {
                                 ) {
                                     if (is_array($dataArray[$theField])) {
                                         $fieldDataArray = $dataArray[$theField];
-                                    } else if (
+                                    } elseif (
                                         is_string($dataArray[$theField])
                                     ) {
                                         $fieldDataArray =
@@ -1278,7 +1274,7 @@ class Data implements SingletonInterface {
                                     }
                                 }
                                 $dataValue = $fieldDataArray;
-                            break;
+                                break;
                             case 'checkArray':
                                 if (is_array($dataValue)) {
                                     $newDataValue = 0;
@@ -1291,13 +1287,13 @@ class Data implements SingletonInterface {
 
                                         if ($kk <= 30) {
                                             if ($vv) {
-                                                $newDataValue|= pow(2, $kk);
+                                                $newDataValue |= pow(2, $kk);
                                             }
                                         }
                                     }
                                     $dataValue = $newDataValue;
                                 }
-                            break;
+                                break;
                             case 'uniqueHashInt':
                                 $otherFields = GeneralUtility::trimExplode(';', $cmdParts[1], 1);
                                 $hashArray = [];
@@ -1309,7 +1305,7 @@ class Data implements SingletonInterface {
                                     $hashArray[] = $vv;
                                 }
                                 $dataValue = hexdec(substr(md5(serialize($hashArray)), 0, 8));
-                            break;
+                                break;
                             case 'wwwURL':
                                 if ($dataValue) {
                                     $urlParts = parse_url($dataValue);
@@ -1327,8 +1323,8 @@ class Data implements SingletonInterface {
                                         }
                                     }
                                 }
-                            break;
-                            case 'date':                        
+                                break;
+                            case 'date':
                                 if (
                                     $dataValue &&
                                     $this->evalDate(
@@ -1349,15 +1345,15 @@ class Data implements SingletonInterface {
                                     $searchArray = array_keys($translateArray);
                                     $replaceArray = array_values($translateArray);
                                     $dataValue = str_replace($searchArray, $replaceArray, $conf['dateFormat']);
-                                } else if (!isset($dataArray[$theField])) {
+                                } elseif (!isset($dataArray[$theField])) {
                                     $bValueAssigned = false;
-                                } else if (!$dataValue) {
+                                } elseif (!$dataValue) {
                                     $dataValue = '0';
                                 }
-                            break;
+                                break;
                             default:
                                 $bValueAssigned = false;
-                            break;
+                                break;
                         }
 
                         if ($bValueAssigned) {
@@ -1377,7 +1373,7 @@ class Data implements SingletonInterface {
     * @param string  $filename: the name of the file
     * @return void
     */
-    public function checkFilename ($filename)
+    public function checkFilename($filename)
     {
         $result = true;
 
@@ -1403,7 +1399,7 @@ class Data implements SingletonInterface {
     * @param string  $theField: the name of the field
     * @return array file names
     */
-    public function processFiles (
+    public function processFiles(
         $theTable,
         $theField,
         array $fieldDataArray,
@@ -1424,12 +1420,12 @@ class Data implements SingletonInterface {
                     if (is_array($file)) {
                         if ($this->checkFilename($file['name'])) {
                             if ($file['submit_delete']) {
-//                              if ($cmdKey != 'edit') {
-                                    if (@is_file($pathSite . $uploadPath . '/' . $file['name'])) {
-                                        @unlink($pathSite . $uploadPath . '/' . $file['name']);
-                                        $deleted = true;
-                                    }
-//                              }
+                                //                              if ($cmdKey != 'edit') {
+                                if (@is_file($pathSite . $uploadPath . '/' . $file['name'])) {
+                                    @unlink($pathSite . $uploadPath . '/' . $file['name']);
+                                    $deleted = true;
+                                }
+                                //                              }
                             } else {
                                 $fileNameArray[] = $file['name'];
                             }
@@ -1476,7 +1472,7 @@ class Data implements SingletonInterface {
     *
     * @return void  sets $this->saved
     */
-    public function save (
+    public function save(
         $staticInfoObj,
         $theTable,
         array $dataArray,
@@ -1489,8 +1485,7 @@ class Data implements SingletonInterface {
         $password,
         $extraFields,
         $hookClassArray
-    )
-    {
+    ) {
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
         $result = 0;
@@ -1503,12 +1498,12 @@ class Data implements SingletonInterface {
                 $authObj = GeneralUtility::makeInstance(Authentication::class);
                 $aCAuth = $authObj->aCAuth($origArray, $conf['setfixed.']['EDIT.']['_FIELDLIST'] ?? '');
 
-                    // Fetch the original record to check permissions
+                // Fetch the original record to check permissions
                 if (
                     $conf['edit'] &&
                     (CompatibilityUtility::isLoggedIn() || $aCAuth)
                 ) {
-                        // Must be logged in in order to edit  (OR be validated by email)
+                    // Must be logged in in order to edit  (OR be validated by email)
                     $newFieldList =
                         implode(
                             ',',
@@ -1527,7 +1522,7 @@ class Data implements SingletonInterface {
                         );
                     $fieldArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1);
 
-                        // Do not reset the name if we have no new value
+                    // Do not reset the name if we have no new value
                     if (
                         !in_array('name', $fieldArray) &&
                         !in_array('first_name', $fieldArray) &&
@@ -1535,7 +1530,7 @@ class Data implements SingletonInterface {
                     ) {
                         $newFieldArray = array_diff($newFieldArray, ['name']);
                     }
-                        // Do not reset the username if we have no new value
+                    // Do not reset the username if we have no new value
                     if (!in_array('username', $fieldArray) && empty($dataArray['username'])) {
                         $newFieldArray = array_diff($newFieldArray, ['username']);
                     }
@@ -1561,14 +1556,14 @@ class Data implements SingletonInterface {
                             );
 
                         if ($theTable == 'fe_users' && isset($dataArray['password'])) {
-                                // Do not set the outgoing password if the incoming password was unset
+                            // Do not set the outgoing password if the incoming password was unset
                             $outGoingData['password'] = $password;
                         }
                         $newFieldList = implode(',', $newFieldArray);
                         if (isset($GLOBALS['TCA'][$theTable]['ctrl']['token'])) {
-                                // Save token in record
+                            // Save token in record
                             $outGoingData['token'] = $token;
-                                // Could be set conditional to adminReview or user confirm
+                            // Could be set conditional to adminReview or user confirm
                             $newFieldList .= ',token';
                         }
                         $res =
@@ -1630,7 +1625,7 @@ class Data implements SingletonInterface {
                         $this->setError('###TEMPLATE_NO_PERMISSIONS###');
                     }
                 }
-            break;
+                break;
             default:
                 if (is_array($conf[$cmdKey . '.'])) {
 
@@ -1704,7 +1699,7 @@ class Data implements SingletonInterface {
                     $newId = $GLOBALS['TYPO3_DB']->sql_insert_id();
                     $result = $newId;
 
-                        // Enable users to own themselves.
+                    // Enable users to own themselves.
                     if (
                         $theTable == 'fe_users' &&
                         !empty($conf['fe_userOwnSelf'])
@@ -1747,7 +1742,7 @@ class Data implements SingletonInterface {
                     $newRow = $GLOBALS['TSFE']->sys_page->getRawRecord($theTable, $newId);
 
                     if (is_array($newRow)) {
-                            // Post-create processing: call user functions and hooks
+                        // Post-create processing: call user functions and hooks
                         $newRow = $this->parseIncomingData($newRow);
                         $this->tca->modifyRow(
                             $staticInfoObj,
@@ -1765,7 +1760,7 @@ class Data implements SingletonInterface {
                         );
 
                         // Call all afterSaveCreate hooks after the record has been created and saved
-                        if (is_array ($hookClassArray)) {
+                        if (is_array($hookClassArray)) {
                             foreach ($hookClassArray as $classRef) {
                                 $hookObj = GeneralUtility::makeInstance($classRef);
                                 if (method_exists($hookObj, 'registrationProcess_afterSaveCreate')) {
@@ -1799,7 +1794,7 @@ class Data implements SingletonInterface {
                         $result = false;
                     }
                 }
-            break;
+                break;
         }
 
         return $result;
@@ -1810,13 +1805,12 @@ class Data implements SingletonInterface {
     *
     * @return void  sets $this->saved
     */
-    public function deleteRecord (
+    public function deleteRecord(
         Parameters $controlDataObj,
         $theTable,
         array $origArray,
         array &$dataArray
-    ): void
-    {
+    ): void {
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
@@ -1841,11 +1835,11 @@ class Data implements SingletonInterface {
                             $conf['fe_userEditSelf'] ?? ''
                         )
                     ) {
-                            // Delete the record and display form, if access granted.
+                        // Delete the record and display form, if access granted.
                         $extKey = $controlDataObj->getExtensionKey();
 
-                            // <Ries van Twisk added registrationProcess hooks>
-                            // Call all beforeSaveDelete hooks BEFORE the record is deleted
+                        // <Ries van Twisk added registrationProcess hooks>
+                        // Call all beforeSaveDelete hooks BEFORE the record is deleted
                         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'])) {
                             foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'] as $classRef) {
                                 $hookObj = GeneralUtility::makeInstance($classRef);
@@ -1870,7 +1864,7 @@ class Data implements SingletonInterface {
                             empty($GLOBALS['TCA'][$theTable]['ctrl']['delete']) ||
                             !empty($conf['forceFileDelete'])
                         ) {
-                                // If the record is being fully deleted... then remove the images or files attached.
+                            // If the record is being fully deleted... then remove the images or files attached.
                             $this->deleteFilesFromRecord($theTable, $origArray);
                         }
                         $res =
@@ -1904,11 +1898,10 @@ class Data implements SingletonInterface {
      * @param string  $uid: record id
      * @return void
      */
-    public function deleteFilesFromRecord (
+    public function deleteFilesFromRecord(
         $theTable,
         $row
-    ): void
-    {
+    ): void {
         $updateFields = [];
         $pathSite = Environment::getPublicPath() . '/';
         foreach($GLOBALS['TCA'][$theTable]['columns'] as $field => $conf) {
@@ -1948,11 +1941,10 @@ class Data implements SingletonInterface {
     *
     *  Check if the value is a correct date in format yyyy-mm-dd
     */
-    public function fetchDate (
+    public function fetchDate(
         $value,
         $dateFormat
-    )
-    {
+    ) {
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
@@ -1968,7 +1960,7 @@ class Data implements SingletonInterface {
 
         $max = sizeof($dateFormatArray);
         $yearOffset = 0;
-        for ($i=0; $i < $max; $i++) {
+        for ($i = 0; $i < $max; $i++) {
 
             switch($dateFormatArray[$i]) {
                 // day
@@ -1977,24 +1969,24 @@ class Data implements SingletonInterface {
                 case 'd':
                 case 'j':
                     $resultArray['d'] = intval($dateValueArray[$i]);
-                break;
-                // month
-                // m - month; i.e. "01" to "12"
-                // n - month without leading zeros; i.e. "1" to "12"
+                    break;
+                    // month
+                    // m - month; i.e. "01" to "12"
+                    // n - month without leading zeros; i.e. "1" to "12"
                 case 'm':
                 case 'n':
                     $resultArray['m'] = intval($dateValueArray[$i]);
-                break;
-                // M - month, textual, 3 letters; e.g. "Jan"
-                // F - month, textual, long; e.g. "January"
-                // case 'M','F': ...to be written ;break;
-                // year
+                    break;
+                    // M - month, textual, 3 letters; e.g. "Jan"
+                    // F - month, textual, long; e.g. "January"
+                    // case 'M','F': ...to be written ;break;
+                    // year
 
-                // Y - year, 4 digits; e.g. "1999"
+                    // Y - year, 4 digits; e.g. "1999"
                 case 'Y':
                     $resultArray['y'] = intval($dateValueArray[$i]);
-                break;
-                // y - year, 2 digits; e.g. "99"
+                    break;
+                    // y - year, 2 digits; e.g. "99"
                 case 'y':
                     $yearVal = intval($dateValueArray[$i]);
                     if($yearVal <= 11) {
@@ -2002,7 +1994,7 @@ class Data implements SingletonInterface {
                     } else {
                         $resultArray['y'] = '19' . $yearVal;
                     }
-                break;
+                    break;
             }
         }
         return $resultArray;
@@ -2012,12 +2004,11 @@ class Data implements SingletonInterface {
      *
      *  Check if the value is a correct date in format yyyy-mm-dd
      */
-    public function evalDate (
+    public function evalDate(
         $value,
         $dateFormat
-    )
-    {
-        if( !$value) {
+    ) {
+        if(!$value) {
             return false;
         }
         $dateArray = $this->fetchDate($value, $dateFormat);
@@ -2035,11 +2026,11 @@ class Data implements SingletonInterface {
     *
     * @return void
     */
-    public function updateMMRelations (
+    public function updateMMRelations(
         $theTable,
         array $row
     ): void {
-            // update the MM relation
+        // update the MM relation
         $fieldsList = array_keys($row);
         foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
 
@@ -2078,13 +2069,12 @@ class Data implements SingletonInterface {
     *
     * @return void
     */
-    public function deleteMMRelations (
+    public function deleteMMRelations(
         $theTable,
         $uid,
         array $row = []
-    ): void
-    {
-            // update the MM relation
+    ): void {
+        // update the MM relation
         $fieldsList = array_keys($row);
         foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
             if (
@@ -2092,7 +2082,7 @@ class Data implements SingletonInterface {
                 $colSettings['config']['type'] == 'select' &&
                 isset($colSettings['config']['MM'])
             ) {
-                $res = 
+                $res =
                     $GLOBALS['TYPO3_DB']->exec_DELETEquery(
                         $colSettings['config']['MM'],
                         'uid_local=' . intval($uid)
@@ -2107,12 +2097,11 @@ class Data implements SingletonInterface {
     * @param array  $inputArr: new values
     * @return array  updated array
     */
-    public function modifyDataArrForFormUpdate (
+    public function modifyDataArrForFormUpdate(
         array $conf,
         array $inputArr,
         $cmdKey
-    )
-    {
+    ) {
         if (is_array($conf[$cmdKey.'.']['evalValues.'])) {
             foreach($conf[$cmdKey.'.']['evalValues.'] as $theField => $theValue) {
                 $listOfCommands = GeneralUtility::trimExplode(',', $theValue, 1);
@@ -2121,13 +2110,13 @@ class Data implements SingletonInterface {
                     $theCmd = trim($cmdParts[0]);
                     switch($theCmd) {
                         case 'twice':
-                        if (isset($inputArr[$theField])) {
-                            if (!isset($inputArr[$theField . '_again'])) {
-                                $inputArr[$theField . '_again'] = $inputArr[$theField];
+                            if (isset($inputArr[$theField])) {
+                                if (!isset($inputArr[$theField . '_again'])) {
+                                    $inputArr[$theField . '_again'] = $inputArr[$theField];
+                                }
+                                $this->setAdditionalUpdateFields($this->getAdditionalUpdateFields() . ',' . $theField . '_again');
                             }
-                            $this->setAdditionalUpdateFields($this->getAdditionalUpdateFields() . ',' . $theField . '_again');
-                        }
-                        break;
+                            break;
                     }
                 }
             }
@@ -2141,21 +2130,21 @@ class Data implements SingletonInterface {
                     $theCmd = trim($cmdParts[0]);
                     switch($theCmd) {
                         case 'multiple':
-                        if (isset($inputArr[$theField])) {
-                            unset($inputArr[$theField]);
-                        }
-                        break;
+                            if (isset($inputArr[$theField])) {
+                                unset($inputArr[$theField]);
+                            }
+                            break;
                         case 'checkArray':
-                        if ($inputArr[$theField] && !$this->controlData->isPreview()) {
-                            for($a = 0; $a <= 50; $a++) {
-                                if ($inputArr[$theField] & pow(2, $a)) {
-                                    $alt_theField = $theField . '][' . $a;
-                                    $inputArr[$alt_theField] = 1;
-                                    $this->setAdditionalUpdateFields($this->getAdditionalUpdateFields() . ',' . $alt_theField);
+                            if ($inputArr[$theField] && !$this->controlData->isPreview()) {
+                                for($a = 0; $a <= 50; $a++) {
+                                    if ($inputArr[$theField] & pow(2, $a)) {
+                                        $alt_theField = $theField . '][' . $a;
+                                        $inputArr[$alt_theField] = 1;
+                                        $this->setAdditionalUpdateFields($this->getAdditionalUpdateFields() . ',' . $alt_theField);
+                                    }
                                 }
                             }
-                        }
-                        break;
+                            break;
                     }
                 }
             }
@@ -2190,12 +2179,11 @@ class Data implements SingletonInterface {
     * @param string $theTable: the table in use
     * @return void  done directly on $dataArray passed by reference
     */
-    public function setName (
+    public function setName(
         array &$dataArray,
         $cmdKey,
         $theTable
-    ): void
-    {
+    ): void {
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
@@ -2205,7 +2193,7 @@ class Data implements SingletonInterface {
             in_array('first_name', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)) &&
             in_array('last_name', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1))
         ) {
-                // Honour Address List (tt_address) configuration settings
+            // Honour Address List (tt_address) configuration settings
             $nameFormat = '';
             if (
                 $theTable == 'tt_address' &&
@@ -2227,7 +2215,7 @@ class Data implements SingletonInterface {
                 );
             } else {
                 $dataArray['name'] = trim(trim($dataArray['first_name'] ?? '')
-                    . ((in_array('middle_name', GeneralUtility::trimExplode(',', ($conf[$cmdKey . '.']['fields'] ?? ''), 1)) && !empty($dataArray['middle_name'])) ? ' ' . trim($dataArray['middle_name']) : '' )
+                    . ((in_array('middle_name', GeneralUtility::trimExplode(',', ($conf[$cmdKey . '.']['fields'] ?? ''), 1)) && !empty($dataArray['middle_name'])) ? ' ' . trim($dataArray['middle_name']) : '')
                     . ' ' . trim($dataArray['last_name'] ?? ''));
             }
         }
@@ -2238,12 +2226,11 @@ class Data implements SingletonInterface {
     *
     * @return void  done directly on array $this->dataArray
     */
-    public function setUsername (
+    public function setUsername(
         $theTable,
         array &$dataArray,
         $cmdKey
-    ): void
-    {
+    ): void {
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
@@ -2261,11 +2248,10 @@ class Data implements SingletonInterface {
     *
     * @return parsedArray
     */
-    public function parseIncomingData (
+    public function parseIncomingData(
         array $origArray,
         $bUnsetZero = true
-    )
-    {
+    ) {
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
@@ -2294,7 +2280,7 @@ class Data implements SingletonInterface {
                                         $parsedArray[$theField] = '';
                                     }
                                 }
-                            break;
+                                break;
                         }
                     }
                 }
@@ -2312,15 +2298,14 @@ class Data implements SingletonInterface {
      *
      * @return parsedArray
      */
-    public function parseOutgoingData (
+    public function parseOutgoingData(
         $theTable,
         $cmdKey,
         $pid,
         $conf,
         array $dataArray,
         array $origArray
-    )
-    {
+    ) {
         $tablesObj = GeneralUtility::makeInstance(Tables::class);
         $addressObj = $tablesObj->get('address');
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
@@ -2382,13 +2367,13 @@ class Data implements SingletonInterface {
                                 $origFiles = [];
                                 if (is_array($origArray[$theField])) {
                                     $origFiles = $origArray[$theField];
-                                } else if ($origArray[$theField]) {
+                                } elseif ($origArray[$theField]) {
                                     $origFiles = GeneralUtility::trimExplode(',', $origArray[$theField], 1);
                                 }
                                 $updatedFiles = [];
                                 if (is_array($dataArray[$theField])) {
                                     $updatedFiles = $dataArray[$theField];
-                                } else if ($dataArray[$theField]) {
+                                } elseif ($dataArray[$theField]) {
                                     $updatedFiles = GeneralUtility::trimExplode(',', $dataArray[$theField], 1);
                                 }
                                 $unReferencedFiles = array_diff($origFiles, $updatedFiles);
@@ -2404,7 +2389,7 @@ class Data implements SingletonInterface {
             }
         }
 
-            // update the MM relation count field
+        // update the MM relation count field
         $fieldsList = array_keys($parsedArray);
         foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
             if (isset($parsedArray[$colName])) {
@@ -2443,7 +2428,7 @@ class Data implements SingletonInterface {
                         } else {
                             $parsedArray[$colName] = '';
                         }
-                    } else if (
+                    } elseif (
                         isset($colSettings['config']['type']) &&
                         $colSettings['config']['type'] == 'check'
                     ) {
@@ -2454,7 +2439,7 @@ class Data implements SingletonInterface {
                         $parsedArray[$colName] = $value;
                     } else {
                         $parsedArray[$colName] =
-                            implode (',', $parsedArray[$colName]);
+                            implode(',', $parsedArray[$colName]);
                     }
                 }
             }
@@ -2469,10 +2454,9 @@ class Data implements SingletonInterface {
     * @param string  $error_code: the error code
     * @return boolean  true if ok
     */
-    public function evalFileError (
+    public function evalFileError(
         $error_code
-    )
-    {
+    ) {
         $result = false;
         if ($error_code == '0') {
             $result = true;
@@ -2491,7 +2475,7 @@ class Data implements SingletonInterface {
         return $result;
     }   // evalFileError
 
-    public function getInError ()
+    public function getInError()
     {
         return $this->inError;
     }
@@ -2505,12 +2489,11 @@ class Data implements SingletonInterface {
      * @param array $dataArray: the incoming data array
      * @return void
      */
-    protected function setEmptyIfAbsent (
+    protected function setEmptyIfAbsent(
         $theTable,
         $theField,
         array &$dataArray
-    )
-    {
+    ) {
         if (!isset($dataArray[$theField])) {
             $fieldConfig = $GLOBALS['TCA'][$theTable]['columns'][$theField]['config'];
             if (is_array($fieldConfig)) {
@@ -2545,4 +2528,3 @@ class Data implements SingletonInterface {
         }
     }
 }
-

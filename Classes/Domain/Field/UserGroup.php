@@ -42,9 +42,8 @@ namespace JambageCom\Agency\Domain\Field;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
-
-class UserGroup extends Base {
-
+class UserGroup extends Base
+{
     protected $savedReservedValues = [];
 
     /*
@@ -54,10 +53,10 @@ class UserGroup extends Base {
     * @param string $cmdKey: the command key
     * @return void
     */
-    public function modifyConf (&$conf, $cmdKey): void
+    public function modifyConf(&$conf, $cmdKey): void
     {
-            // Add usergroup to the list of fields and required fields if the user is allowed to select user groups
-            // Except when only updating password
+        // Add usergroup to the list of fields and required fields if the user is allowed to select user groups
+        // Except when only updating password
         if (
             !empty($cmdKey) &&
             $cmdKey != 'password' &&
@@ -67,12 +66,12 @@ class UserGroup extends Base {
                 $conf[$cmdKey . '.']['fields'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',usergroup', 1)));
                 $conf[$cmdKey . '.']['required'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',usergroup', 1)));
             } else {
-                    // Remove usergroup from the list of fields and required fields if the user is not allowed to select user groups
+                // Remove usergroup from the list of fields and required fields if the user is not allowed to select user groups
                 $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['usergroup']));
                 $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), ['usergroup']));
             }
         }
-            // If inviting and administrative review is enabled, save original reserved user groups
+        // If inviting and administrative review is enabled, save original reserved user groups
         if ($cmdKey == 'invite' && $conf['enableAdminReview']) {
             $this->savedReservedValues = $this->getReservedValues($conf);
         }
@@ -85,14 +84,13 @@ class UserGroup extends Base {
     * @param string $cmdKey: the command key
     * @return void
     */
-    public function getAllowedValues (
+    public function getAllowedValues(
         $conf,
         $cmdKey,
         &$allowedUserGroupArray,
         &$allowedSubgroupArray,
         &$deniedUserGroupArray
-    ): void
-    {
+    ): void {
         $allowedUserGroupArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['allowedUserGroups'], 1);
         $allowedSubgroupArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['allowedSubgroups'], 1);
         $deniedUserGroupArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['deniedUserGroups'], 1);
@@ -103,7 +101,7 @@ class UserGroup extends Base {
     *
     * @return array the reserved user groups
     */
-    public function getReservedValues ($conf)
+    public function getReservedValues($conf)
     {
         $result = array_merge(
             GeneralUtility::trimExplode(',', $conf['create.']['overrideValues.']['usergroup'], 1),
@@ -118,30 +116,28 @@ class UserGroup extends Base {
         return $result;
     }
 
-    public function removeInvalidValues (
+    public function removeInvalidValues(
         $conf,
         $cmdKey,
         &$row
-    ): void
-    {
+    ): void {
         if (
             isset($row['usergroup']) &&
             $conf[$cmdKey . '.']['allowUserGroupSelection']
         ) {
-// nothing
+            // nothing
         } else {
             $row['usergroup'] = ''; // the setting of the usergropus has not been allowed
         }
     }
 
-    public function getAllowedWhereClause (
+    public function getAllowedWhereClause(
         $theTable,
         $pid,
         $conf,
         $cmdKey,
         $bAllow = true
-    )
-    {
+    ) {
         $whereClause = '';
         $subgroupWhereClauseArray = [];
         $subgroupWhereClause = '';
@@ -201,7 +197,7 @@ class UserGroup extends Base {
         return $whereClause;
     }
 
-    public function parseOutgoingData (
+    public function parseOutgoingData(
         $theTable,
         $fieldname,
         $foreignTable,
@@ -211,8 +207,7 @@ class UserGroup extends Base {
         $dataArray,
         $origArray,
         &$parsedArray
-    ): void
-    {
+    ): void {
         if (
             isset($dataArray) &&
             is_array($dataArray) &&
@@ -268,7 +263,7 @@ class UserGroup extends Base {
         }
     }
 
-    public function getExtendedValue ($extKey, $value, $config, $row)
+    public function getExtendedValue($extKey, $value, $config, $row)
     {
         if (isset($config) && is_array($config) && isset($row['cnum'])) {
             foreach ($config as $key => $lineConfig) {
@@ -328,7 +323,7 @@ class UserGroup extends Base {
                                             $cnumInput != '' &&
                                             $cnumInput == $cnumXml
                                         ) {
-                                            $textArray = 
+                                            $textArray =
                                                 [$row['last_name'], $xmlRow['last_name']];
                                             $nameArray = [];
                                             foreach ($textArray as $text) {
@@ -341,7 +336,7 @@ class UserGroup extends Base {
 
                                             if ($row['email'] == $xmlRow['email']) {
                                                 $bRowFits = true;
-                                            } else if (
+                                            } elseif (
                                                 $nameArray['0'] == $nameArray['1'] &&
                                                 $row['zip'] == $xmlRow['zip']
                                             ) {
@@ -372,4 +367,3 @@ class UserGroup extends Base {
         return $value;
     }
 }
-

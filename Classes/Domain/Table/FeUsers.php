@@ -3,6 +3,7 @@
 namespace JambageCom\Agency\Domain\Table;
 
 use JambageCom\Agency\Domain\Field\UserGroup;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -39,7 +40,7 @@ use JambageCom\Agency\Domain\Field\UserGroup;
  * @subpackage agency
  *
  */
-class FeUsers extends Base {
+class FeUsers extends Base
+{
     public $fieldClassArray = ['usergroup' => UserGroup::class];
 }
-

@@ -62,26 +62,25 @@ use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\MailUtility;
 use JambageCom\Div2007\Utility\TableUtility;
 
-
-
-class Email implements SingletonInterface {
-	public $infomailPrefix = 'INFOMAIL_';
-	public $emailMarkPrefix = 'EMAIL_TEMPLATE_';
-	public $emailMarkAdminSuffix = '_ADMIN';
-	public $emailMarkHTMLSuffix = '_HTML';
+class Email implements SingletonInterface
+{
+    public $infomailPrefix = 'INFOMAIL_';
+    public $emailMarkPrefix = 'EMAIL_TEMPLATE_';
+    public $emailMarkAdminSuffix = '_ADMIN';
+    public $emailMarkHTMLSuffix = '_HTML';
     protected $extensionKey = '';
 
-    public function getExtensionKey ()
+    public function getExtensionKey()
     {
         return $this->extensionKey;
     }
 
-    public function setExtensionKey ($extensionKey): void
+    public function setExtensionKey($extensionKey): void
     {
         $this->extensionKey = $extensionKey;
     }
 
-    public function isHTMLMailEnabled ($conf)
+    public function isHTMLMailEnabled($conf)
     {
         $result = true;
         if (
@@ -99,7 +98,7 @@ class Email implements SingletonInterface {
     * @return	string		HTML content message
     * @see init(),compile(), send()
     */
-    public function processInfo (
+    public function processInfo(
         ContentObjectRenderer $cObj,
         Localization $languageObj,
         Parameters $controlData,
@@ -121,8 +120,7 @@ class Email implements SingletonInterface {
         $templateCode,
         $failure,
         &$errorCode
-    )
-    {
+    ) {
         $content = false;
         $conf = $confObj->getConf();
 
@@ -130,8 +128,8 @@ class Email implements SingletonInterface {
 
             if (!empty($pidLock) && !$failure) {
                 $enable = TableUtility::enableFields($theTable);
-                    // Getting records
-                    // $conf['email.']['field'] must be a valid field in the table!
+                // Getting records
+                // $conf['email.']['field'] must be a valid field in the table!
                 $DBrows = PageRepository::getRecordsByField(
                     $theTable,
                     $conf['email.']['field'],
@@ -145,7 +143,7 @@ class Email implements SingletonInterface {
                 $errorContent = '';
                 $emailHasBeenSent = false;
 
-                    // Processing records
+                // Processing records
                 if (is_array($DBrows)) {
 
                     $key = 'INFOMAIL';
@@ -227,7 +225,7 @@ class Email implements SingletonInterface {
                 if (
                     !$emailHasBeenSent &&
                     is_array($errorCode)
-                ){
+                ) {
                     $errorText = $languageObj->getLabel($errorCode['0'], $dummy, '', false, true);
                     $errorContent = sprintf($errorText, $errorCode['1']);
                 }
@@ -237,7 +235,7 @@ class Email implements SingletonInterface {
                 } else {
                     $subpartkey = '###TEMPLATE_' . $this->infomailPrefix . 'SENT###';
                     if ($key == 'INFOMAIL_NORECORD') {
-                        $subpartkey = '###TEMPLATE_' . $this->infomailPrefix . 'NORECORD_SENT###';                        
+                        $subpartkey = '###TEMPLATE_' . $this->infomailPrefix . 'NORECORD_SENT###';
                     }
                     $content =
                         $template->getPlainTemplate(
@@ -317,7 +315,7 @@ class Email implements SingletonInterface {
     * @param array  $errorCode: array of error indices
     * @return boolean : false in case of error. The $errorCode will be filled in.
     */
-    public function compile (
+    public function compile(
         $key,
         ContentObjectRenderer $cObj,
         Localization $languageObj,
@@ -341,8 +339,7 @@ class Email implements SingletonInterface {
         array $errorFieldArray,
         array $setFixedConfig,
         &$errorCode
-    )
-    {
+    ) {
         $errorCode = '';
         $conf = $confObj->getConf();
         $useAdditionalFields = true;
@@ -377,7 +374,7 @@ class Email implements SingletonInterface {
             $useHtml = false;
         }
 
-            // Setting CSS style markers if required
+        // Setting CSS style markers if required
         if ($useHtml) {
             $this->addCSSStyleMarkers($markerArray, $conf, $cObj);
         }
@@ -445,7 +442,7 @@ class Email implements SingletonInterface {
 
             if ($useHtml) {
                 $subpartMarker = '###' . $this->emailMarkPrefix . $key . $this->emailMarkHTMLSuffix . '###';
-                $content['userhtml']['all'] = trim($templateService->getSubpart($templateCode,  $subpartMarker));
+                $content['userhtml']['all'] = trim($templateService->getSubpart($templateCode, $subpartMarker));
 
                 if ($content['userhtml']['all'] == '') {
                     $missingSubpartArray[] = $subpartMarker;
@@ -482,7 +479,7 @@ class Email implements SingletonInterface {
                 );
 
             if ($content['admin']['all'] == '') {
-                    $missingSubpartArray[] = $subpartMarker;
+                $missingSubpartArray[] = $subpartMarker;
             } else {
                 $content['admin']['all'] =
                     $template->removeRequired(
@@ -534,19 +531,19 @@ class Email implements SingletonInterface {
         $contentIndexArray['html'] = [];
 
         if ($content['user']['all']) {
-            $content['user']['rec'] = $templateService->getSubpart($content['user']['all'],  '###SUB_RECORD###');
+            $content['user']['rec'] = $templateService->getSubpart($content['user']['all'], '###SUB_RECORD###');
             $contentIndexArray['text'][] = 'user';
         }
         if ($content['userhtml']['all']) {
-            $content['userhtml']['rec'] = $templateService->getSubpart($content['userhtml']['all'],  '###SUB_RECORD###');
+            $content['userhtml']['rec'] = $templateService->getSubpart($content['userhtml']['all'], '###SUB_RECORD###');
             $contentIndexArray['html'][] = 'userhtml';
         }
         if ($content['admin']['all']) {
-            $content['admin']['rec'] = $templateService->getSubpart($content['admin']['all'],  '###SUB_RECORD###');
+            $content['admin']['rec'] = $templateService->getSubpart($content['admin']['all'], '###SUB_RECORD###');
             $contentIndexArray['text'][] = 'admin';
         }
         if ($content['adminhtml']['all']) {
-            $content['adminhtml']['rec'] = $templateService->getSubpart($content['adminhtml']['all'],  '###SUB_RECORD###');
+            $content['adminhtml']['rec'] = $templateService->getSubpart($content['adminhtml']['all'], '###SUB_RECORD###');
             $contentIndexArray['html'][] = 'adminhtml';
         }
         $bChangesOnly = ($conf['email.']['EDIT_SAVED'] == '2' && $cmd == 'edit');
@@ -771,7 +768,7 @@ class Email implements SingletonInterface {
             }
         }
 
-            // Substitute the markers and eliminate HTML markup from plain text versions
+        // Substitute the markers and eliminate HTML markup from plain text versions
         if ($content['user']['all']) {
             $content['user']['final'] =
                 $templateService->substituteSubpart(
@@ -795,7 +792,7 @@ class Email implements SingletonInterface {
                 $template->removeSuperfluousLineFeeds(
                     $content['user']['final']
                 );
-                // Remove erroneous \n from locallang file
+            // Remove erroneous \n from locallang file
             $content['user']['final'] = str_replace('\n', '', $content['user']['final']);
         }
 
@@ -810,16 +807,18 @@ class Email implements SingletonInterface {
                         $extKey
                     )
                 );
-                // Remove HTML comments
+            // Remove HTML comments
             $content['userhtml']['final'] = $template->removeHTMLComments($content['userhtml']['final']);
-                // Remove erroneous \n from locallang file
+            // Remove erroneous \n from locallang file
             $content['userhtml']['final'] = str_replace('\n', '', $content['userhtml']['final']);
         }
 
         if ($content['admin']['all']) {
             $content['admin']['final'] =
                 $templateService->substituteSubpart(
-                    $content['admin']['all'], '###SUB_RECORD###', $content['admin']['accum']
+                    $content['admin']['all'],
+                    '###SUB_RECORD###',
+                    $content['admin']['accum']
                 );
             $content['admin']['final'] =
                 $template->removeHTMLComments($content['admin']['final']);
@@ -829,7 +828,7 @@ class Email implements SingletonInterface {
                 $template->removeHtmlTags($content['admin']['final']);
             $content['admin']['final'] =
                 $template->removeSuperfluousLineFeeds($content['admin']['final']);
-                // Remove erroneous \n from locallang file
+            // Remove erroneous \n from locallang file
             $content['admin']['final'] =
                 str_replace('\n', '', $content['admin']['final']);
         }
@@ -845,9 +844,9 @@ class Email implements SingletonInterface {
                         $extKey
                     )
                 );
-                // Remove HTML comments
+            // Remove HTML comments
             $content['adminhtml']['final'] = $template->removeHTMLComments($content['adminhtml']['final']);
-                // Remove erroneous \n from locallang file
+            // Remove erroneous \n from locallang file
             $content['adminhtml']['final'] = str_replace('\n', '', $content['adminhtml']['final']);
         }
 
@@ -859,7 +858,7 @@ class Email implements SingletonInterface {
         }
         $file = '';
 
-            // Check if we need to add an attachment
+        // Check if we need to add an attachment
         if (
             $conf['addAttachment'] &&
             $conf['addAttachment.']['cmd'] == $cmd &&
@@ -868,7 +867,7 @@ class Email implements SingletonInterface {
             $file = $conf['addAttachment.']['file'];
         }
 
-            // SETFIXED_REVIEW will be sent to user only if the admin part is present
+        // SETFIXED_REVIEW will be sent to user only if the admin part is present
         if (
             ($userSubpartsFound + $adminSubpartsFound >= 1) &&
             (
@@ -920,7 +919,7 @@ class Email implements SingletonInterface {
     * @param string  $fileAttachment: file name
     * @return void
     */
-    public function send (
+    public function send(
         $conf,
         $recipient,
         $admin,
@@ -929,8 +928,7 @@ class Email implements SingletonInterface {
         $adminContent = '',
         $adminContentHTML = '',
         $fileAttachment = ''
-    )
-    {
+    ) {
         $result = false;
 
         // Send mail to admin
@@ -990,12 +988,11 @@ class Email implements SingletonInterface {
     * @param array  $markerArray: the input marker array
     * @return void
     */
-    public function addCSSStyleMarkers (
+    public function addCSSStyleMarkers(
         array &$markerArray,
         $conf,
         ContentObjectRenderer $cObj
-    )
-    {
+    ) {
         $markerArray['###CSS_STYLES###'] = '	/*<![CDATA[*/
 ';
         $fileResource = FrontendUtility::fileResource($conf['email.']['HTMLMailCSS']);
@@ -1018,7 +1015,7 @@ class Email implements SingletonInterface {
     * @param string  $fileAttachment: file name
     * @return void
     */
-    public function sendHTML (
+    public function sendHTML(
         $HTMLContent,
         $PLAINContent,
         $recipient,
@@ -1026,8 +1023,7 @@ class Email implements SingletonInterface {
         $fromName,
         $replyTo = '',
         $fileAttachment = ''
-    )
-    {
+    ) {
         $result = false;
 
         if (
@@ -1059,4 +1055,3 @@ class Email implements SingletonInterface {
         return $result;
     }
 }
-

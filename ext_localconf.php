@@ -1,11 +1,10 @@
 <?php
+
 defined('TYPO3') || die('Access denied.');
 
 use JambageCom\Agency\Constants\Extension;
 
-
-call_user_func(function($extensionKey): void
-{
+call_user_func(function ($extensionKey): void {
     $languageSubpath = '/Resources/Private/Language/';
     $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
         \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
@@ -25,15 +24,15 @@ call_user_func(function($extensionKey): void
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['forceGender'] = $extensionConfiguration['forceGender'] ?: 0;
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['endtimeYear'] = $extensionConfiguration['endtimeYear'] ?: 2030;
 
-        /* Example of configuration of hooks */
+    /* Example of configuration of hooks */
     // $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['confirmRegistrationClass'][] = \MyWebsiteCom\MyExtension\Hooks\Handler::class;
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['registrationProcess'][] = \JambageCom\Agency\Hooks\RegistrationProcessHooks::class;
 
     $EM_CONF = [];
     $_EXTKEY = $extensionKey;
 
-        // Take note of conflicting extensions
-        // Save extension version and constraints
+    // Take note of conflicting extensions
+    // Save extension version and constraints
     include \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extensionKey) . 'ext_emconf.php';
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['version'] = $EM_CONF[$extensionKey]['version'];
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['constraints'] = $EM_CONF[$extensionKey]['constraints'];
@@ -46,7 +45,7 @@ call_user_func(function($extensionKey): void
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha'][] = \JambageCom\Div2007\Captcha\Freecap::class;
     }
 
-        // Scheduler hook
+    // Scheduler hook
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['tx_agency_feusergroup_scheduler'] = [
         'extension' => $extensionKey,
         'title' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db_layout.xlf:feUserGroupScheduler.name',

@@ -3,6 +3,7 @@
 namespace JambageCom\Agency\Utility;
 
 use TYPO3\CMS\Core\Utility\ArrayUtility;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -40,7 +41,8 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 *
 *
 */
-class SessionUtility {
+class SessionUtility
+{
     /*************************************
     * FE USER SESSION DATA HANDLING
     *************************************/
@@ -50,7 +52,7 @@ class SessionUtility {
     * @param    boolean $readAll: whether to retrieve all session data or only data for this extension key
     * @return   array   session data
     */
-    static public function readData ($extensionKey, $readAll = false)
+    public static function readData($extensionKey, $readAll = false)
     {
         $sessionData = [];
         $allSessionData = $GLOBALS['TSFE']->fe_user->getKey('ses', 'feuser');
@@ -61,7 +63,7 @@ class SessionUtility {
         ) {
             if ($readAll) {
                 $sessionData = $allSessionData;
-            } else if (isset($allSessionData[$extensionKey])) {
+            } elseif (isset($allSessionData[$extensionKey])) {
                 $sessionData = $allSessionData[$extensionKey];
             }
         }
@@ -76,15 +78,14 @@ class SessionUtility {
     * @param    boolean $keepRedirectUrl: whether to keep any redirectUrl
     * @return   array   session data
     */
-    static public function writeData (
+    public static function writeData(
         $extensionKey,
         array $data,
         $keepToken = true,
         $keepRedirectUrl = true,
         $token = '', // $this->readToken();
         $redirectUrl = '' // $this->readRedirectUrl()
-    ): void
-    {
+    ): void {
         $clearSession = empty($data);
         if (
             $keepToken &&
@@ -102,7 +103,7 @@ class SessionUtility {
             $data['redirect_url'] = $redirectUrl;
         }
 
-            // Read all session data
+        // Read all session data
         $allSessionData = static::readData(true);
 
         if (
@@ -124,7 +125,7 @@ class SessionUtility {
         }
 
         $GLOBALS['TSFE']->fe_user->setKey('ses', 'feuser', $allSessionData);
-            // The feuser session data shall not get lost when coming back from external scripts
+        // The feuser session data shall not get lost when coming back from external scripts
         $GLOBALS['TSFE']->fe_user->storeSessionData();
     }
 
@@ -134,13 +135,12 @@ class SessionUtility {
     * @param    boolean $keepRedirectUrl: whether to keep any redirectUrl
     * @return   void
     */
-    static public function clearData (
+    public static function clearData(
         $extensionKey,
         $keepRedirectUrl = true,
         $token = '',
-        $redirectUrl = '' 
-    ): void
-    {
+        $redirectUrl = ''
+    ): void {
         $data = [];
         static::writeData(
             $extensionKey,
@@ -152,4 +152,3 @@ class SessionUtility {
         );
     }
 }
-

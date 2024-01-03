@@ -42,27 +42,27 @@ namespace JambageCom\Agency\Utility;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Agency\Constants\Extension;
 
+class LocalizationUtility
+{
+    protected static $filename = '';
 
-class LocalizationUtility {
-    static protected $filename = '';
-
-    static public function init (): void
+    public static function init(): void
     {
         $filename = DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf';
         self::setFilename($filename);
     }
 
-    static public function setFilename ($filename): void
+    public static function setFilename($filename): void
     {
         self::$filename = $filename;
     }
 
-    static public function getFilename ()
+    public static function getFilename()
     {
         return self::$filename;
     }
 
-    static public function translate ($key)
+    public static function translate($key)
     {
         $filename = self::getFilename();
 
@@ -75,4 +75,3 @@ class LocalizationUtility {
         return $result;
     }
 }
-

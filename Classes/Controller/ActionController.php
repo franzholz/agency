@@ -73,35 +73,34 @@ use JambageCom\Agency\Controller\Email;
 use JambageCom\Agency\Security\SecuredData;
 use JambageCom\Agency\Utility\SessionUtility;
 
-
-class ActionController {
+class ActionController
+{
     public $urlObj;
     public $auth;
     public $email;
     public $requiredArray; // List of required fields
     public $controlData;
-        // Commands that may be processed when no user is logged in
+    // Commands that may be processed when no user is logged in
     public $noLoginCommands = ['create', 'invite', 'setfixed', 'infomail', 'login'];
 
 
-    public function init (
+    public function init(
         ConfigurationStore $confObj,
         Localization $languageObj,
         ContentObjectRenderer $cObj,
         Parameters $controlData,
         Url $urlObj
-    ): void
-    {
+    ): void {
         $conf = $confObj->getConf();
         $this->urlObj = $urlObj;
-            // Retrieve the extension key
+        // Retrieve the extension key
         $extensionKey = $controlData->getExtensionKey();
-            // Get the command as set in piVars
+        // Get the command as set in piVars
         $cmd = $controlData->getCmd();
 
-            // If not set, get the command from the flexform
+        // If not set, get the command from the flexform
         if ($cmd == '') {
-                // Check the flexform
+            // Check the flexform
             $cObj->data['pi_flexform'] = GeneralUtility::xml2array($cObj->data['pi_flexform']);
             $cmd = ConfigUtility::getSetupOrFFvalue(
                 $languageObj,
@@ -119,7 +118,7 @@ class ActionController {
 
 
     /* write the global $conf only here */
-    public function init2 (
+    public function init2(
         ConfigurationStore $confObj,
         $staticInfoObj,
         $theTable,
@@ -129,8 +128,7 @@ class ActionController {
         &$adminFieldList,
         array &$origArray,
         &$errorMessage
-    )
-    {
+    ) {
         $conf = $confObj->getConf();
         $tablesObj = GeneralUtility::makeInstance(Tables::class);
         $addressObj = $tablesObj->get('address');
@@ -191,13 +189,13 @@ class ActionController {
 
         if (is_array($dataArray) && !empty($dataArray['uid'])) {
             $theUid = $dataArray['uid'];
-        } else if (is_array($feUserdata) && !empty($feUserdata['rU'])) {
+        } elseif (is_array($feUserdata) && !empty($feUserdata['rU'])) {
             $theUid = $feUserdata['rU'];
 
             if ($cmd == 'setfixed') {
                 $setFixedUid = true;
             }
-        } else if (
+        } elseif (
             !in_array($cmd, $this->noLoginCommands) &&
             isset($GLOBALS['TSFE']->fe_user) &&
             isset($GLOBALS['TSFE']->fe_user->user) &&
@@ -225,7 +223,7 @@ class ActionController {
                 $origArray = $newOrigArray;
             }
         }
-            // Set the command key
+        // Set the command key
         $cmdKey = '';
 
         if (
@@ -234,7 +232,7 @@ class ActionController {
             $cmd == 'infomail'
         ) {
             $cmdKey = $cmd;
-        } else if (
+        } elseif (
             isset($origArray['uid']) &&
             (
                 $theTable != 'fe_users' ||
@@ -251,7 +249,7 @@ class ActionController {
                 )
             ) {
                 $cmdKey = 'edit';
-            } else if (
+            } elseif (
                 $cmd == 'delete'
             ) {
                 $cmdKey = 'delete';
@@ -291,7 +289,7 @@ class ActionController {
             if (
                 ExtensionManagementUtility::isLoaded('direct_mail')
             ) {
-                $conf[$cmdKey.'.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1),['module_sys_dmail_category,module_sys_dmail_newsletter']));
+                $conf[$cmdKey.'.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['module_sys_dmail_category,module_sys_dmail_newsletter']));
                 $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), ['module_sys_dmail_category, module_sys_dmail_newsletter']));
             }
 
@@ -299,7 +297,7 @@ class ActionController {
             foreach ($fieldConfArray as $k => $v) {
                 // make it ready for GeneralUtility::inList which does not yet allow blanks
                 if (isset($conf[$cmdKey . '.'][$v])) {
-                    $conf[$cmdKey . '.'][$v] = implode(',',  array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.'][$v])));
+                    $conf[$cmdKey . '.'][$v] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.'][$v])));
                 }
             }
         }
@@ -317,7 +315,7 @@ class ActionController {
                 if (!isset($conf[$cmdKey . '.']['required'])) {
                     $conf[$cmdKey . '.']['required'] = '';
                 }
-                    // When not in edit mode, add username to lists of fields and required fields unless explicitly disabled
+                // When not in edit mode, add username to lists of fields and required fields unless explicitly disabled
                 if (!empty($conf[$cmdKey.'.']['doNotEnforceUsername'])) {
                     $element = 'username';
                     $conf[$cmdKey . '.']['fields'] = implode(',', array_filter(explode(',', $conf[$cmdKey . '.']['fields']), function ($item) use ($element) {
@@ -405,7 +403,7 @@ class ActionController {
                 }
             }
         }
-            // Honour Address List (tt_address) configuration setting
+        // Honour Address List (tt_address) configuration setting
         if (
             $theTable == 'tt_address' &&
             ExtensionManagementUtility::isLoaded('tt_address') &&
@@ -420,17 +418,17 @@ class ActionController {
             }
         }
 
-            // Adjust some evaluation settings
+        // Adjust some evaluation settings
         if (
             !empty($cmdKey) &&
             isset($conf[$cmdKey . '.']['evalValues.']
-        )) {
-        // TODO: Fix scope issue: unsetting $conf entry here has no effect
-                // Do not evaluate any password when inviting
+            )) {
+            // TODO: Fix scope issue: unsetting $conf entry here has no effect
+            // Do not evaluate any password when inviting
             if ($cmdKey == 'invite') {
                 unset($conf[$cmdKey . '.']['evalValues.']['password']);
             }
-                // Do not evaluate the username if it is generated or if email is used
+            // Do not evaluate the username if it is generated or if email is used
             if (
                 !empty($conf[$cmdKey . '.']['useEmailAsUsername']) ||
                 (
@@ -455,7 +453,7 @@ class ActionController {
             !empty($cmdKey) &&
             isset($conf[$cmdKey . '.']['required'])
         ) {
-                // Setting requiredArray to the fields in "required" fields list intersected with the total field list in order to remove invalid fields.
+            // Setting requiredArray to the fields in "required" fields list intersected with the total field list in order to remove invalid fields.
             $requiredArray = array_intersect(
                 GeneralUtility::trimExplode(
                     ',',
@@ -476,7 +474,7 @@ class ActionController {
         $fieldArray = GeneralUtility::trimExplode(',', $fieldList, 1);
         $additionalFields = $dataObj->getAdditionalIncludedFields();
 
-        if ($theTable == 'fe_users' &&!empty($cmdKey)) {
+        if ($theTable == 'fe_users' && !empty($cmdKey)) {
 
             if (
                 !empty($conf[$cmdKey . '.']['useEmailAsUsername']) ||
@@ -519,7 +517,7 @@ class ActionController {
     * @param string message if an error has occurred
     * @return string  text to display
     */
-    public function doProcessing (
+    public function doProcessing(
         ContentObjectRenderer $cObj,
         ConfigurationStore $confObj,
         $setfixedObj,
@@ -539,8 +537,7 @@ class ActionController {
         array $origArray,
         $templateCode,
         &$errorMessage
-    )
-    {
+    ) {
         $dataArray = $dataObj->getDataArray();
         $conf = $confObj->getConf();
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
@@ -559,11 +556,11 @@ class ActionController {
         $parseResult = true;
         $bDoNotSave = false;
 
-            // Commands with which the data will not be saved by $dataObj->save
+        // Commands with which the data will not be saved by $dataObj->save
         $noSaveCommands = ['infomail', 'login', 'delete'];
         $uid = $dataObj->getRecUid();
         $securedArray = [];
-            // Check for valid token
+        // Check for valid token
         if (
             !$controlData->isTokenValid() ||
             (
@@ -580,7 +577,7 @@ class ActionController {
             $dataObj->setOrigArray($origArray);
             $dataObj->resetDataArray();
             $finalDataArray = $dataArray;
-        } else if ($dataObj->bNewAvailable()) {
+        } elseif ($dataObj->bNewAvailable()) {
             if ($theTable == 'fe_users') {
                 $securedArray = SecuredData::readSecuredArray($extensionKey);
             }
@@ -618,7 +615,7 @@ class ActionController {
 
         $markerArray = $markerObj->getArray();
 
-            // Evaluate incoming data
+        // Evaluate incoming data
         if (
             is_array($finalDataArray) &&
             count($finalDataArray) &&
@@ -664,7 +661,7 @@ class ActionController {
                     $controlData->getFeUserData('linkToPID')
                 )
             ) {
-                    // A button was clicked on
+                // A button was clicked on
                 $evalErrors = $dataObj->evalValues(
                     $confObj,
                     $staticInfoObj,
@@ -678,7 +675,7 @@ class ActionController {
                     $controlData->getCaptcha()
                 );
 
-                    // If the two password fields are not equal, clear session data
+                // If the two password fields are not equal, clear session data
                 if (
                     isset($evalErrors['password']) &&
                     is_array($evalErrors['password']) &&
@@ -713,9 +710,9 @@ class ActionController {
                     $checkFieldArray = ['password']; // only check for the password field on creation
                 }
 
-                    // This is either a country change submitted through the onchange event or a file deletion already processed by the parsing function
-                    // You come here after a click on the text "Not a member yet? click here to register."
-                    // We are going to redisplay
+                // This is either a country change submitted through the onchange event or a file deletion already processed by the parsing function
+                // You come here after a click on the text "Not a member yet? click here to register."
+                // We are going to redisplay
                 $evalErrors = $dataObj->evalValues(
                     $confObj,
                     $staticInfoObj,
@@ -729,7 +726,7 @@ class ActionController {
                     $controlData->getCaptcha()
                 );
 
-                     // If the two password fields are not equal, clear session data
+                // If the two password fields are not equal, clear session data
                 if (
                     isset($evalErrors['password']) &&
                     is_array($evalErrors['password']) &&
@@ -807,7 +804,7 @@ class ActionController {
                 }
 
                 if ($dataObj->getSaved()) {
-                        // if auto login on create
+                    // if auto login on create
                     if (
                         $theTable == 'fe_users' &&
                         $cmd == 'create' &&
@@ -826,7 +823,7 @@ class ActionController {
                     }
                 }
             }
-        } else if ($cmd == 'infomail') {
+        } elseif ($cmd == 'infomail') {
             if ($bSubmit) {
                 $fetch = $controlData->getFeUserData('fetch');
                 $finalDataArray['email'] = $fetch;
@@ -858,7 +855,7 @@ class ActionController {
             $controlData->getFailure() != '' ||
             !$parseResult
         ) {
-                // No preview flag if an evaluation failure has occurred
+            // No preview flag if an evaluation failure has occurred
             $controlData->setFeUserData(0, 'preview');
         }
 
@@ -868,7 +865,7 @@ class ActionController {
         }
 
         $content = '';
-            // If data is submitted, we take care of it here.
+        // If data is submitted, we take care of it here.
         if (
             $cmd == 'delete' &&
             !$controlData->getFeUserData('preview') &&
@@ -900,7 +897,7 @@ class ActionController {
         $errorContent = '';
         $deleteRegHash = false;
 
-            // Display forms
+        // Display forms
         if ($dataObj->getSaved()) {
 
             $bCustomerConfirmsMode = false;
@@ -919,14 +916,14 @@ class ActionController {
             ) {
                 $bCustomerConfirmsMode = true;
             }
-                // This is the case where the user or admin has to confirm
-                // $conf['enableEmailConfirmation'] ||
-                // ($this->theTable == 'fe_users' && $conf['enableAdminReview']) ||
-                // $conf['setfixed']
+            // This is the case where the user or admin has to confirm
+            // $conf['enableEmailConfirmation'] ||
+            // ($this->theTable == 'fe_users' && $conf['enableAdminReview']) ||
+            // $conf['setfixed']
             $bSetfixed = $controlData->getSetfixedEnabled();
-                // This is the case where the user does not have to confirm, but has to wait for admin review
-                // This applies only on create ($bDefaultMode) and to fe_users
-                // $bCreateReview implies $bSetfixed
+            // This is the case where the user does not have to confirm, but has to wait for admin review
+            // This applies only on create ($bDefaultMode) and to fe_users
+            // $bCreateReview implies $bSetfixed
             $bCreateReview =
                 ($theTable == 'fe_users') &&
                 !$conf['enableEmailConfirmation'] &&
@@ -979,8 +976,8 @@ class ActionController {
                     !$bCustomerConfirmsMode
                 ) {
                     $email = GeneralUtility::makeInstance(Email::class);
-                        // Send admin the confirmation email
-                        // The user will not confirm in this mode
+                    // Send admin the confirmation email
+                    // The user will not confirm in this mode
                     $bEmailSent = $email->compile(
                         SETFIXED_PREFIX . 'REVIEW',
                         $cObj,
@@ -1006,7 +1003,7 @@ class ActionController {
                         $conf['setfixed.'],
                         $errorCode
                     );
-                } else if (
+                } elseif (
                     $cmdKey == 'create' ||
                     $cmdKey == 'invite' ||
                     $conf['email.']['EDIT_SAVED'] ||
@@ -1064,8 +1061,8 @@ class ActionController {
                 $origGetFeUserData = GeneralUtility::_GET($prefixId);
                 $deleteRegHash = true;
 
-                    // Link to on edit save
-                    // backURL may link back to referring process
+                // Link to on edit save
+                // backURL may link back to referring process
                 if (
                     $theTable == 'fe_users' &&
                     ($cmd == 'edit' || $cmd == 'password') &&
@@ -1088,7 +1085,7 @@ class ActionController {
                     exit;
                 }
 
-                    // Auto login on create
+                // Auto login on create
                 if (
                     $theTable == 'fe_users' &&
                     $cmd == 'create' &&
@@ -1113,20 +1110,20 @@ class ActionController {
                         );
 
                     if ($loginSuccess) {
-                            // Login was successful
+                        // Login was successful
                         exit;
                     } else {
-                            // Login failed... should not happen...
-                            // If it does, a login form will be displayed as if auto-login was not configured
+                        // Login failed... should not happen...
+                        // If it does, a login form will be displayed as if auto-login was not configured
                         $content = '';
                     }
                 }
             } else { // error case
                 $content = $errorContent;
             }
-        } else if ($dataObj->getError()) {
+        } elseif ($dataObj->getError()) {
 
-                // If there was an error, we return the template-subpart with the error message
+            // If there was an error, we return the template-subpart with the error message
             $templateCode = $templateService->getSubpart($templateCode, $dataObj->getError());
 
             $markerObj->addLabelMarkers(
@@ -1148,9 +1145,9 @@ class ActionController {
             );
             $markerObj->setArray($markerArray);
             $content = $templateService->substituteMarkerArray($templateCode, $markerArray);
-        } else if ($content == '') {
-                // Finally, there has been no attempt to save.
-                // That is either preview or just displaying an empty or not correctly filled form
+        } elseif ($content == '') {
+            // Finally, there has been no attempt to save.
+            // That is either preview or just displaying an empty or not correctly filled form
             $markerObj->setArray($markerArray);
             $token = $controlData->readToken();
 
@@ -1216,7 +1213,7 @@ class ActionController {
                     $pidLock = '';
 
                     if (isset($fetch) && !empty($fetch)) {
-                        $pages = ($cObj->data['pages'] ? $cObj->data['pages'] . ',' : '') . $controlData->getPid();                        
+                        $pages = ($cObj->data['pages'] ? $cObj->data['pages'] . ',' : '') . $controlData->getPid();
                         $allPages = TableUtility::getAllSubPages($pages);
                         $pidLock = 'AND pid IN (' . implode(',', $allPages) . ')';
                     }
@@ -1425,4 +1422,3 @@ class ActionController {
         return $content;
     }
 }
-

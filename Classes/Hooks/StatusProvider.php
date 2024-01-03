@@ -1,6 +1,6 @@
 <?php
-namespace JambageCom\Agency\Hooks;
 
+namespace JambageCom\Agency\Hooks;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -17,7 +17,6 @@ namespace JambageCom\Agency\Hooks;
 use JambageCom\Div2007\Base\StatusProviderBase;
 use JambageCom\Agency\Constants\Extension;
 
-
 /**
  * Hook into the backend module "Reports" checking the configuration required for agency
  */
@@ -33,4 +32,3 @@ class StatusProvider extends StatusProviderBase
     */
     protected $extensionName = 'Agency Registration (' . Extension::KEY . ')';
 }
-

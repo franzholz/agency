@@ -4,6 +4,7 @@ namespace JambageCom\Agency\Api;
 
 use JambageCom\Div2007\Base\TranslationBase;
 use TYPO3\CMS\Core\SingletonInterface;
+
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -16,11 +17,12 @@ use TYPO3\CMS\Core\SingletonInterface;
  *
  * The TYPO3 project - inspiring people to share!
  */
-class Localization extends TranslationBase implements SingletonInterface {
+class Localization extends TranslationBase implements SingletonInterface
+{
     public $allowedSuffixes = ['', 'formal', 'informal']; // list of allowed suffixes
     protected $salutation = '';
 
-    public function init (
+    public function init(
         $extensionKey = '',
         $confLocalLang = [], // you must pass only the $conf['_LOCAL_LANG.'] part of the setup of the caller
         $scriptRelPath = '',
@@ -37,7 +39,8 @@ class Localization extends TranslationBase implements SingletonInterface {
         );
     }
 
-    public function setSalutation ($salutation): void {
+    public function setSalutation($salutation): void
+    {
         if (
             in_array($salutation, $this->allowedSuffixes, 1)
         ) {
@@ -45,15 +48,15 @@ class Localization extends TranslationBase implements SingletonInterface {
         }
     }
 
-    public function getSalutation () {
+    public function getSalutation()
+    {
         return $this->salutation;
     }
 
-    public function getLabelFromString (
+    public function getLabelFromString(
         $string,
         $force = true
-    )
-    {
+    ) {
         $result = '';
         $arr = explode(':', $string);
 
@@ -76,12 +79,11 @@ class Localization extends TranslationBase implements SingletonInterface {
     * @param string  name of the field
     * @return array array of selectable items
     */
-    public function getItemsLL (
+    public function getItemsLL(
         $textSchema,
         $bAll = true,
         $valuesArray = []
-    )
-    {
+    ) {
         $result = [];
         if ($bAll) {
             for ($i = 0; $i < 999; ++$i) {
@@ -119,20 +121,19 @@ class Localization extends TranslationBase implements SingletonInterface {
     * @param boolean If true then an error text will be generated with the information that no text for the key could be found..
     * @return  string      The value from LOCAL_LANG. false in error case
     */
-    public function getLabel (
+    public function getLabel(
         $key,
         &$usedLang = '',
         $alternativeLabel = '',
         $hsc = false,
         $showError = false
-    )
-    {
-            // If the suffix is allowed and we have a localized string for the desired salutation, we'll take that.
+    ) {
+        // If the suffix is allowed and we have a localized string for the desired salutation, we'll take that.
         $localizedLabel = '';
         $usedLang = '';
         $salutation = $this->getSalutation();
 
-            // Check for an allowed salutation suffix and, if configured, try to localize
+        // Check for an allowed salutation suffix and, if configured, try to localize
         if (
             $salutation != ''
         ) {
@@ -146,7 +147,7 @@ class Localization extends TranslationBase implements SingletonInterface {
                 );
         }
 
-            // No allowed salutation suffix and fall back
+        // No allowed salutation suffix and fall back
         if (
             $localizedLabel == '' ||
             $localizedLabel == $alternativeLabel ||
@@ -169,4 +170,3 @@ class Localization extends TranslationBase implements SingletonInterface {
         return $localizedLabel;
     }
 }
-

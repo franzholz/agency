@@ -53,9 +53,8 @@ use JambageCom\Div2007\Utility\CompatibilityUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
-class DeleteView {
-
+class DeleteView
+{
     /**
     * This is basically the preview display of delete
     *
@@ -64,7 +63,7 @@ class DeleteView {
     * @param array $controlData: the object of the control data
     * @return string  the template with substituted markers
     */
-    public function render (
+    public function render(
         &$errorCode,
         array $markerArray,
         $conf,
@@ -85,8 +84,7 @@ class DeleteView {
         $token,
         $setFixedKey,
         array $fD
-    )
-    {
+    ) {
         $aCAuth = false;
         $xhtmlFix = HtmlUtility::determineXhtmlFix();
 
@@ -130,7 +128,7 @@ class DeleteView {
                         );
 
                     if ($aCAuth || $bMayEdit) {
-//                         $markerArray = $markerObj->getArray();
+                        //                         $markerArray = $markerObj->getArray();
                         // Display the form, if access granted.
 
                         $markerArray['###HIDDENFIELDS###'] .=
@@ -197,7 +195,7 @@ class DeleteView {
                 }
             } else {
                 // Finally this is if there is no login user. This must tell that you must login. Perhaps link to a page with create-user or login information.
-                if ( $theTable == 'fe_users' ) {
+                if ($theTable == 'fe_users') {
                     $content = $template->getPlainTemplate(
                         $errorCode,
                         $conf,
@@ -245,4 +243,3 @@ class DeleteView {
         return $content;
     }	// render
 }
-

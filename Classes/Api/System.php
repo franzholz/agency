@@ -53,8 +53,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Agency\Utility\SessionUtility;
 
-
-class System implements LoggerAwareInterface {
+class System implements LoggerAwareInterface
+{
     use LoggerAwareTrait;
 
 
@@ -64,7 +64,7 @@ class System implements LoggerAwareInterface {
     * @param boolen $redirect: whether to redirect after login or not. If true, then you must immediately call exit after this call
     * @return boolean true, if login was successful, false otherwise
     */
-    public function login (
+    public function login(
         ContentObjectRenderer $cObj,
         Localization $languageObj,
         Parameters $controlData,
@@ -74,14 +74,13 @@ class System implements LoggerAwareInterface {
         $cryptedPassword,
         $requiresAuthorization = true,
         $redirect = true
-    )
-    {
+    ) {
         $result = true;
         $ok = true;
         $message = '';
         $authServiceObj = null;
 
-            // Log the user in
+        // Log the user in
         $loginData = [
             'uname' => $username,
             'uident' => $cryptedPassword,
@@ -98,10 +97,10 @@ class System implements LoggerAwareInterface {
                 $cObj->data['recursive']
             );
 
-            // Get authentication info array
+        // Get authentication info array
         $authInfo = $GLOBALS['TSFE']->fe_user->getAuthInfoArray();
 
-            // Get user info
+        // Get user info
         $user =
             $GLOBALS['TSFE']->fe_user->fetchUserRecord(
                 $authInfo['db_user'],
@@ -146,29 +145,29 @@ class System implements LoggerAwareInterface {
             }
 
             if ($ok) {
-                    // Login successfull: create user session
+                // Login successfull: create user session
                 $GLOBALS['TSFE']->fe_user->createUserSession($user);
-                    // Enforce session so we get a FE cookie. Otherwise autologin might not work (TYPO3 6.2.5+) :
+                // Enforce session so we get a FE cookie. Otherwise autologin might not work (TYPO3 6.2.5+) :
                 $GLOBALS['TSFE']->fe_user->setAndSaveSessionData('dummy', true);
                 $GLOBALS['TSFE']->initUserGroups();
                 $GLOBALS['TSFE']->fe_user->user = $GLOBALS['TSFE']->fe_user->fetchUserSession();
                 $aspect = GeneralUtility::makeInstance(UserAspect::class, $GLOBALS['TSFE']->fe_user);
                 $context = GeneralUtility::makeInstance(Context::class);
                 $context->setAspect('frontend.user', $aspect);
-            } else if (
+            } elseif (
                 is_object($authServiceObj) &&
                 in_array(get_class($authServiceObj), $serviceKeyArray)
             ) {
-                    // auto login failed...
+                // auto login failed...
                 $message = $languageObj->getLabel('internal_auto_login_failed');
                 $result = false;
             } else {
-                    // Required authentication service not available
+                // Required authentication service not available
                 $message = $languageObj->getLabel('internal_required_authentication_service_not_available');
                 $result = false;
             }
 
-                // Delete regHash
+            // Delete regHash
             if (
                 $controlData->getValidRegHash()
             ) {
@@ -176,7 +175,7 @@ class System implements LoggerAwareInterface {
                 $controlData->deleteShortUrl($regHash);
             }
         } else {
-                // No enabled user of the given name
+            // No enabled user of the given name
             $message = sprintf($languageObj->getLabel('internal_no_enabled_user'), $loginData['uname']);
             $result = false;
         }
@@ -192,7 +191,7 @@ class System implements LoggerAwareInterface {
             $ok &&
             $redirect
         ) {
-                // Redirect to configured page, if any
+            // Redirect to configured page, if any
             $redirectUrl = $controlData->readRedirectUrl();
             if (!$redirectUrl && $result == true) {
                 $redirectUrl = trim($conf['autoLoginRedirect_url']);
@@ -212,13 +211,12 @@ class System implements LoggerAwareInterface {
         return $result;
     }
 
-    public function removePasswordAdditions (
+    public function removePasswordAdditions(
         Data $dataObj,
         $theTable,
         $uid,
         $row
-    ): void
-    {
+    ): void {
         $deleteFields = [
             'lost_password',
             'tx_agency_password'
@@ -227,7 +225,7 @@ class System implements LoggerAwareInterface {
             $row[$field] = '';
         }
         $newFieldList = implode(',', $deleteFields);
-                        
+
         $res = $dataObj->getCoreQuery()->DBgetUpdate(
             $theTable,
             $uid,
@@ -237,4 +235,3 @@ class System implements LoggerAwareInterface {
         );
     }
 }
-

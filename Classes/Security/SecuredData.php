@@ -2,7 +2,6 @@
 
 namespace JambageCom\Agency\Security;
 
-
 /***************************************************************
 *  Copyright notice
 *
@@ -49,7 +48,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Agency\Utility\SessionUtility;
 
-
 /**
 * Secured data handling
 */
@@ -60,14 +58,15 @@ class SecuredData
     *
     * @var array
     */
-    static protected $securedFields = ['password', 'password_again', 'tx_agency_password'];
+    protected static $securedFields = ['password', 'password_again', 'tx_agency_password'];
 
     /**
      * Gets the transmission security object
      *
      * @return tx_agency_transmission_security the transmission security object
      */
-    static public function getTransmissionSecurity () {
+    public static function getTransmissionSecurity()
+    {
         $result = GeneralUtility::makeInstance(
             TransmissionSecurity::class
         );
@@ -79,7 +78,8 @@ class SecuredData
      *
      * @return tx_agency_transmission_security the storage security object
      */
-    static public function getStorageSecurity () {
+    public static function getStorageSecurity()
+    {
         $result = GeneralUtility::makeInstance(
             StorageSecurity::class
         );
@@ -91,7 +91,7 @@ class SecuredData
     *
     * @return array names of secured fields
     */
-    static public function getSecuredFields ()
+    public static function getSecuredFields()
     {
         return self::$securedFields;
     }
@@ -102,7 +102,7 @@ class SecuredData
     * @param array $fields: initial list of field names
     * @return array new list of field names
     */
-    static public function getOpenFields ($fields)
+    public static function getOpenFields($fields)
     {
         $securedFieldArray = self::getSecuredFields();
         $fieldArray = array_unique(GeneralUtility::trimExplode(',', $fields));
@@ -123,11 +123,10 @@ class SecuredData
     * @param bool $htmlSpecial: whether to apply htmlspecialchars to the values
     * @return void
     */
-    static public function secureInput (
+    public static function secureInput(
         &$dataArray,
         $htmlSpecial = true
-    ): void
-    {
+    ): void {
         foreach ($dataArray as $key => $value) {
             if (is_array($value)) {
                 foreach ($value as $key2 => $value2) {
@@ -153,17 +152,18 @@ class SecuredData
     * @param bool $htmlSpecial: whether to apply htmlspecialchars to the value
     * @return string secured value
     */
-    static public function getSecuredValue (
+    public static function getSecuredValue(
         $field,
         $value,
         $htmlSpecial = true
-    )
-    {
+    ) {
         $securedValue = $value;
         if (
             !empty($securedValue) &&
-            !in_array($field, self::getSecuredFields()
-        )) {
+            !in_array(
+                $field,
+                self::getSecuredFields()
+            )) {
             $securedValue = htmlspecialchars_decode($securedValue);
             if ($htmlSpecial) {
                 $securedValue = htmlspecialchars($securedValue);
@@ -179,14 +179,14 @@ class SecuredData
     *
     * @return void
     */
-    static public function securePassword (
+    public static function securePassword(
         $extensionKey,
         array &$row,
         &$errorMessage
     ) {
         $result = true;
         $data = [];
-            // Decrypt incoming password (and eventually other encrypted fields)
+        // Decrypt incoming password (and eventually other encrypted fields)
         $passwordRow = ['password' => self::readPassword($extensionKey)];
         $errorCode = '';
         $errorMessage = '';
@@ -197,14 +197,14 @@ class SecuredData
                 $errorMessage
             );
 
-            // Collect secured fields
+        // Collect secured fields
         if ($passwordDecrypted !== false) {
             self::writePassword(
                 $extensionKey,
                 $passwordRow['password'],
                 $passwordRow['password']
             );
-        } else if ($errorMessage == '') {
+        } elseif ($errorMessage == '') {
             self::writePassword(
                 $extensionKey,
                 $passwordRow['password'],
@@ -222,7 +222,7 @@ class SecuredData
     * @param    string  $password: the password
     * @return   void
     */
-    static public function writePassword (
+    public static function writePassword(
         $extensionKey,
         $password,
         $passwordAgain = '',
@@ -259,7 +259,8 @@ class SecuredData
     * @return   string  the encrypted password
     *           boolean false in case of an error
     */
-    static public function readPasswordForStorage ($extensionKey) {
+    public static function readPasswordForStorage($extensionKey)
+    {
         $result = false;
         $password = self::readPassword($extensionKey);
         if ($password != '') {
@@ -274,7 +275,8 @@ class SecuredData
     *
     * @return   string  the password
     */
-    static public function readPassword ($extensionKey) {
+    public static function readPassword($extensionKey)
+    {
         $result = '';
         $securedArray = self::readSecuredArray($extensionKey);
         if ($securedArray['password']) {
@@ -290,7 +292,7 @@ class SecuredData
     * @param    array   $dataArray: incoming array
     * @return   void
     */
-    static public function generatePassword (
+    public static function generatePassword(
         $extensionKey,
         $cmdKey,
         array $conf,
@@ -352,7 +354,7 @@ class SecuredData
     *
     * @return   array   secured FE user session data
     */
-    static public function readSecuredArray (
+    public static function readSecuredArray(
         $extensionKey
     ) {
         $securedArray = [];
@@ -365,4 +367,4 @@ class SecuredData
         }
         return $securedArray;
     }
-} 
+}

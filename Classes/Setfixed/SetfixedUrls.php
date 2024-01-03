@@ -49,9 +49,8 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 
 use JambageCom\Div2007\Utility\FrontendUtility;
 
-
-class SetFixedUrls {
-
+class SetFixedUrls
+{
     /**
     * Computes the setfixed url's
     *
@@ -62,7 +61,7 @@ class SetFixedUrls {
     * @param array $autoLoginKey: the auto-login key
     * @return void
     */
-    static public function compute (
+    public static function compute(
         $nextCmd,
         $prefixId,
         $cObj,
@@ -76,8 +75,7 @@ class SetFixedUrls {
         $editSetfixed,
         $autoLoginKey,
         $confirmType
-    ): void
-    {
+    ): void {
         if ($controlData->getSetfixedEnabled() && is_array($setfixed)) {
             $authObj = GeneralUtility::makeInstance(Authentication::class);
 
@@ -163,7 +161,7 @@ class SetFixedUrls {
                 }
                 $setfixedpiVars[$prefixId . '%5Bcmd%5D'] = $theCmd;
 
-                if (is_array($data) ) {
+                if (is_array($data)) {
                     foreach($data as $fieldname => $fieldValue) {
                         if (strpos($fieldname, '.') !== false) {
                             continue;
@@ -208,13 +206,13 @@ class SetFixedUrls {
     /**
     *  Store the setfixed vars and return a replacement hash
     */
-    static public function storeFixedPiVars (array $params)
+    public static function storeFixedPiVars(array $params)
     {
         $hashCalculator = GeneralUtility::makeInstance(CacheHashCalculator::class);
-        $calc = $hashCalculator->calculateCacheHash($params); 
+        $calc = $hashCalculator->calculateCacheHash($params);
         $regHash_calc = substr($calc, 0, 20);
 
-            // and store it with a serialized version of the array in the DB
+        // and store it with a serialized version of the array in the DB
         $res =
             $GLOBALS['TYPO3_DB']->exec_SELECTquery(
                 'md5hash',
@@ -224,7 +222,7 @@ class SetFixedUrls {
                         $regHash_calc,
                         'cache_md5params'
                     )
-                );
+            );
 
         if (!$GLOBALS['TYPO3_DB']->sql_num_rows($res)) {
             $insertFields = ['md5hash' => $regHash_calc, 'tstamp' => time(), 'type' => 99, 'params' => serialize($params)];
@@ -239,4 +237,3 @@ class SetFixedUrls {
         return $regHash_calc;
     }
 }
-

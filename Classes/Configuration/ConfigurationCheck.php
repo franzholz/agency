@@ -52,8 +52,8 @@ use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Utility\LocalizationUtility;
 
-
-class ConfigurationCheck implements LoggerAwareInterface {
+class ConfigurationCheck implements LoggerAwareInterface
+{
     use LoggerAwareTrait;
 
 
@@ -61,16 +61,15 @@ class ConfigurationCheck implements LoggerAwareInterface {
     *
     * @return string Error message, if error found, empty string otherwise
     */
-    public function checkRequirements (
+    public function checkRequirements(
         $conf,
         $extensionKey
-    )
-    {
+    ) {
         $content = '';
         $requiredExtensions = [];
         $requiredExtensions[] = 'typo3db_legacy';
 
-            // Check if all required extensions are available
+        // Check if all required extensions are available
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['constraints']['depends'])) {
             $requiredExtensions =
                 array_diff(
@@ -92,7 +91,7 @@ class ConfigurationCheck implements LoggerAwareInterface {
             }
         }
 
-            // Check if any conflicting extension is available
+        // Check if any conflicting extension is available
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['constraints']['conflicts'])) {
             $conflictingExtensions =
                 array_keys($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['constraints']['conflicts']);
@@ -120,12 +119,12 @@ class ConfigurationCheck implements LoggerAwareInterface {
     * @param string $extensionKey the extension key
     * @return string Error message, if error found, empty string otherwise
     */
-    public function checkSecuritySettings ($extensionKey)
+    public function checkSecuritySettings($extensionKey)
     {
         $content = '';
         if ($extensionKey == Extension::KEY) {
-                // Check if salted passwords are enabled in front end
-            if (                
+            // Check if salted passwords are enabled in front end
+            if (
                 class_exists(SaltedPasswordsUtility::class)
             ) {
                 if (
@@ -135,11 +134,11 @@ class ConfigurationCheck implements LoggerAwareInterface {
                     $this->logger->critical($message);
                     $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
                 } else {
-                        // Check if we can get a salting instance
+                    // Check if we can get a salting instance
                     $objSalt = PasswordHashFactory::getSaltingInstance(null);
 
                     if (!is_object($objSalt)) {
-                            // Could not get a salting instance from saltedpasswords
+                        // Could not get a salting instance from saltedpasswords
                         $message = LocalizationUtility::translate('internal_salted_passwords_no_instance');
                         $this->logger->critical($message);
                         $content .= sprintf(LocalizationUtility::translate('internal_check_requirements_frontend'), $message);
@@ -155,12 +154,11 @@ class ConfigurationCheck implements LoggerAwareInterface {
     *
     * @return string Error message, if error found, empty string otherwise
     */
-    public function checkDeprecatedMarkers (
+    public function checkDeprecatedMarkers(
         $cObj,
         array $conf,
         $extensionKey
-    )
-    {
+    ) {
         $content = '';
         $templateCode = FrontendUtility::fileResource($conf['templateFile']);
         $messages =
@@ -178,4 +176,3 @@ class ConfigurationCheck implements LoggerAwareInterface {
         return $content;
     }
 }
-

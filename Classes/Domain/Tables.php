@@ -47,13 +47,12 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 use JambageCom\Agency\Constants\Extension;
 
-
-class Tables implements SingletonInterface {
-
+class Tables implements SingletonInterface
+{
     public $tableClassArray = [];
     public $tablename;
 
-    public function init ($tablename): void
+    public function init($tablename): void
     {
         $this->tablename = $tablename;
         if ($tablename == 'fe_users') {
@@ -63,20 +62,20 @@ class Tables implements SingletonInterface {
         }
     }   // init
 
-    public function getTableClassArray ()
+    public function getTableClassArray()
     {
         return $this->tableClassArray;
     }
 
-    public function setTableClassArray ($tableClassArray): void
+    public function setTableClassArray($tableClassArray): void
     {
         $this->tableClassArray = $tableClassArray;
     }
 
-    public function getTableClass (
+    public function getTableClass(
         $functablename,
-        $bView = false)
-    {
+        $bView = false
+    ) {
         $result = '';
         if ($functablename) {
             $result = $this->tableClassArray[$functablename] . ($bView ? '_view' : '');
@@ -84,11 +83,10 @@ class Tables implements SingletonInterface {
         return $result;
     }
 
-    public function get (
+    public function get(
         $functablename,
         $bView = false
-    )
-    {
+    ) {
         $classNameArray = [];
         $tableObjArray = [];
 
@@ -110,7 +108,7 @@ class Tables implements SingletonInterface {
                     [$extKey, $className] = GeneralUtility::trimExplode(':', $className, true);
 
                     if (!ExtensionManagementUtility::isLoaded($extKey)) {
-                        debug('Error in ' . Extension::KEY . '. No extension "' . $extKey . '" has been loaded to use class class.' . $className . '.','internal error'); // keep this
+                        debug('Error in ' . Extension::KEY . '. No extension "' . $extKey . '" has been loaded to use class class.' . $className . '.', 'internal error'); // keep this
                         continue;
                     }
                 }
@@ -141,4 +139,3 @@ class Tables implements SingletonInterface {
         return ($bView ? $tableObj['view'] : $tableObj['model']);
     }
 }
-

@@ -42,23 +42,21 @@ namespace JambageCom\Agency\Configuration;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
-class ConfigurationStore implements SingletonInterface {
-
+class ConfigurationStore implements SingletonInterface
+{
     protected $conf = [];
     protected $config = [];
 
-    public function init ($conf): void
+    public function init($conf): void
     {
         $this->conf = $conf;
         $this->config = [];
     }
 
-    public function setConf (
+    public function setConf(
         array $dataArray,
         $k = ''
-    ): void
-    {
+    ): void {
         if ($k) {
             $this->conf[$k] = $dataArray;
         } else {
@@ -66,7 +64,7 @@ class ConfigurationStore implements SingletonInterface {
         }
     }
 
-    public function getConf ($key = '')
+    public function getConf($key = '')
     {
         $result = '';
         if ($key != '') {
@@ -79,11 +77,10 @@ class ConfigurationStore implements SingletonInterface {
         return $result;
     }
 
-    public function setConfig (
+    public function setConfig(
         array $dataArray,
         $k = ''
-    ): void
-    {
+    ): void {
         if ($k) {
             $this->config[$k] = $dataArray;
         } else {
@@ -91,13 +88,13 @@ class ConfigurationStore implements SingletonInterface {
         }
     }
 
-    public function getConfig ()
+    public function getConfig()
     {
         return $this->config;
     }
-    
 
-    public function getIncludedFields (
+
+    public function getIncludedFields(
         $cmdKey
     ) {
         $result = [];
@@ -117,4 +114,3 @@ class ConfigurationStore implements SingletonInterface {
         return $result;
     }
 }
-

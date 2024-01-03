@@ -67,11 +67,8 @@ use JambageCom\Div2007\Utility\FrontendUtility;
 
 use JambageCom\Agency\Constants\Extension;
 
-
-
-class InitializationController implements SingletonInterface {
-
-
+class InitializationController implements SingletonInterface
+{
     /**
     * Creates and initializes all component classes
     *
@@ -83,7 +80,7 @@ class InitializationController implements SingletonInterface {
     * @param string $otherLabelsList: a list of other label names
     * @return boolean true, if initialization was successful, false otherwise
     */
-    public function init (
+    public function init(
         &$controlData,
         array &$origArray,
         &$staticInfoObj,
@@ -101,8 +98,7 @@ class InitializationController implements SingletonInterface {
         $adminFieldList,
         $buttonLabelsList,
         $otherLabelsList
-    )
-    {
+    ) {
 
         $result = true;
         HtmlUtility::generateXhtmlFix();
@@ -128,7 +124,7 @@ class InitializationController implements SingletonInterface {
                 STATIC_INFO_TABLES_EXT
             )
         ) {
-                // Initialise static info library
+            // Initialise static info library
             if (class_exists('SJBR\\StaticInfoTables\\PiBaseApi')) {
                 $staticInfoObj = GeneralUtility::makeInstance(PiBaseApi::class);
             }
@@ -146,9 +142,9 @@ class InitializationController implements SingletonInterface {
 
         $urlObj = GeneralUtility::makeInstance(Url::class);
         $coreQuery = GeneralUtility::makeInstance(
-                CoreQuery::class,
-                static::getTypoScriptFrontendController()
-            );
+            CoreQuery::class,
+            static::getTypoScriptFrontendController()
+        );
         $dataObj =
             GeneralUtility::makeInstance(
                 Data::class,
@@ -165,7 +161,7 @@ class InitializationController implements SingletonInterface {
         $languageObj->loadLocalLang(
             'EXT:' . Extension::KEY . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf',
             false
-        );        
+        );
         $tmpText = $languageObj->getLabel('unsupported');
         if ($tmpText == '') {
             $result = false;
@@ -183,7 +179,7 @@ class InitializationController implements SingletonInterface {
                 $filename = LocalizationUtility::getFilename();
                 $filename = 'EXT:' . $pibaseObj->extKey . $filename;
 
-                    // Static Methods for Extensions for fetching the texts of agency
+                // Static Methods for Extensions for fetching the texts of agency
                 $languageObj->loadLocalLang(
                     $filename,
                     false
@@ -196,8 +192,8 @@ class InitializationController implements SingletonInterface {
                 (!$templateFile || empty($templateCode))
             ) {
                 $errorText = $languageObj->getLabel(
-                        'internal_no_template'
-                    );
+                    'internal_no_template'
+                );
                 $errorMessage = sprintf($errorText, $templateFile, 'plugin.tx_' . $pibaseObj->extKey . '.templateFile');
             }
 
@@ -272,7 +268,7 @@ class InitializationController implements SingletonInterface {
     } // init
 
 
-    public function main (
+    public function main(
         AbstractPlugin $pibaseObj,
         ContentObjectRenderer $cObj,
         $content,
@@ -281,8 +277,7 @@ class InitializationController implements SingletonInterface {
         $adminFieldList = 'username,password,name,disable,usergroup,by_invitation,tx_agency_password,lost_password',
         $buttonLabelsList = '',
         $otherLabelsList = ''
-    )
-    {
+    ) {
         $staticInfoObj = null;
         $dataObj = null; // object of type tx_agency_data
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
@@ -343,7 +338,7 @@ class InitializationController implements SingletonInterface {
 
         if ($errorMessage) {
             $content = $errorMessage;
-        } else if ($success === false) {
+        } elseif ($success === false) {
             $xhtmlFix = HtmlUtility::determineXhtmlFix();
             $content = '<em>Internal error in ' . $pibaseObj->extKey . '!</em><br ' . $xhtmlFix . '> Maybe you forgot to include the basic template file under "include statics from extensions".';
         }
@@ -361,9 +356,8 @@ class InitializationController implements SingletonInterface {
     /**
      * @return TypoScriptFrontendController
      */
-    static protected function getTypoScriptFrontendController ()
+    protected static function getTypoScriptFrontendController()
     {
         return $GLOBALS['TSFE'];
     }
 }
-

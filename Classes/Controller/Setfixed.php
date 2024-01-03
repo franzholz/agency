@@ -63,8 +63,8 @@ use JambageCom\Agency\Controller\Email;
 use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Agency\Api\System;
 
-class Setfixed {
-
+class Setfixed
+{
     /**
     * Process the front end user reply to the confirmation request
     *
@@ -77,7 +77,7 @@ class Setfixed {
     * @param array  Array with key/values being marker-strings/substitution values.
     * @return string  the template with substituted markers
     */
-    public function process (
+    public function process(
         array $conf,
         ContentObjectRenderer $cObj,
         Localization $languageObj,
@@ -93,7 +93,7 @@ class Setfixed {
         $uid,
         $cmdKey,
         array $markerArray,
-        Template $template,        
+        Template $template,
         CreateView $displayObj,
         EditView $editView,
         DeleteView $deleteView,
@@ -104,8 +104,7 @@ class Setfixed {
         $pObj,
         $token,
         &$hasError
-    )
-    {
+    ) {
         $email = GeneralUtility::makeInstance(Email::class);
         $content = false;
         $row = $currentArray = $origArray;
@@ -167,7 +166,7 @@ class Setfixed {
 
         $autoLoginKey = '';
         if ($theTable == 'fe_users') {
-                // Determine if auto-login is requested
+            // Determine if auto-login is requested
             $autoLoginIsRequested =
                 $this->getAutoLoginIsRequested(
                     $controlData->getFeUserData(),
@@ -176,12 +175,12 @@ class Setfixed {
         }
 
         $authObj = GeneralUtility::makeInstance(Authentication::class);
-            // Calculate the setfixed hash from incoming data
+        // Calculate the setfixed hash from incoming data
         $fieldList = $row['_FIELDLIST'];
         $codeLength = strlen($authObj->getAuthCode());
         $theAuthCode = '';
 
-            // Let's try with a code length of 8 in case this link is coming from direct mail
+        // Let's try with a code length of 8 in case this link is coming from direct mail
         if (
             $codeLength == 8 &&
             in_array($setFixedKey, $controlData->getSetfixedOptions())
@@ -231,7 +230,7 @@ class Setfixed {
                     $dataObj->getInError(),
                     $token
                 );
-            } else if (
+            } elseif (
                 $setFixedKey == 'DELETE' ||
                 $setFixedKey == 'REFUSE'
             ) {
@@ -286,7 +285,7 @@ class Setfixed {
                     );
                 }
             } else { // APPROVE, CREATE
-                // neu: If 
+                // neu: If
                 $newFieldList = '';
 
                 if (
@@ -307,13 +306,14 @@ class Setfixed {
                             $remainingGroups = array_diff($originalGroups, $overwriteGroups);
                             $groupsToAdd = GeneralUtility::trimExplode(',', $setfixedUsergroup, true);
                             $finalGroups = array_merge(
-                                $remainingGroups, $groupsToAdd
+                                $remainingGroups,
+                                $groupsToAdd
                             );
                             $row['usergroup'] = implode(',', array_unique($finalGroups));
                         }
                     }
 
-                        // Hook: first we initialize the hooks
+                    // Hook: first we initialize the hooks
                     $hookObjectsArray = [];
                     if (
                         isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['confirmRegistrationClass']) &&
@@ -337,7 +337,7 @@ class Setfixed {
                         GeneralUtility::trimExplode(',', implode(',', $fieldArray), 1)
                     ));
 
-                        // Hook: confirmRegistrationClass_preProcess
+                    // Hook: confirmRegistrationClass_preProcess
                     foreach($hookObjectsArray as $hookObj) {
                         if (method_exists($hookObj, 'confirmRegistrationClass_preProcess')) {
                             $hookObj->confirmRegistrationClass_preProcess(
@@ -404,7 +404,7 @@ class Setfixed {
                         ]
                     );
 
-                        // Hook: confirmRegistrationClass_postProcess
+                    // Hook: confirmRegistrationClass_postProcess
                     foreach($hookObjectsArray as $hookObj) {
                         if (method_exists($hookObj, 'confirmRegistrationClass_postProcess')) {
                             $hookObj->confirmRegistrationClass_postProcess(
@@ -420,7 +420,7 @@ class Setfixed {
                 }
             } // neu Ende
 
-                // Outputting template
+            // Outputting template
             if (
                 $theTable == 'fe_users' &&
                 in_array($setFixedKey, ['APPROVE', 'ENTER', 'LOGIN'])
@@ -439,7 +439,7 @@ class Setfixed {
                     SecuredData::getTransmissionSecurity()
                         ->getMarkers(
                             $markerArray,
-                            $extensionKey, 
+                            $extensionKey,
                             $controlData->getUsePasswordAgain(),
                             true
                         );
@@ -484,7 +484,7 @@ class Setfixed {
                             $setFixedKey,
                             $fD
                         );
-                        // $errorContent
+                    // $errorContent
                     if (!empty($errorCode)) {
                         $hasError = true;
                     }
@@ -504,7 +504,7 @@ class Setfixed {
                     ) &&
                     !$usesPassword
                 ) {
-                        // Auto-login
+                    // Auto-login
                     $loginSuccess =
                         $systemObj->login(
                             $cObj,
@@ -547,7 +547,7 @@ class Setfixed {
                                 $token
                             );
                     } else {
-                            // Login failed
+                        // Login failed
                         $content =
                             $template->getPlainTemplate(
                                 $errorCode,
@@ -605,7 +605,7 @@ class Setfixed {
                             $securedArray,
                             false
                         );
-                        $sendExecutionEmail = true;
+                    $sendExecutionEmail = true;
                 }
 
                 if (
@@ -647,7 +647,7 @@ class Setfixed {
                     )
                 ) {
                     $errorCode = '';
-                        // Compiling email
+                    // Compiling email
                     $emailResult = $email->compile(
                         SETFIXED_PREFIX . $setfixedSuffix,
                         $cObj,
@@ -682,11 +682,11 @@ class Setfixed {
                         $languageObj->getLabel($errorCode['0'], $dummy, '', false, true);
                     $errorContent = sprintf($errorText, $errorCode['1']);
                     $content = $errorContent;
-                } else if (
+                } elseif (
                     $emailResult &&
                     $theTable == 'fe_users'
                 ) {
-                        // If applicable, send admin a request to review the registration request
+                    // If applicable, send admin a request to review the registration request
                     if (
                         $conf['enableAdminReview'] &&
                         $setFixedKey == 'APPROVE' &&
@@ -721,7 +721,7 @@ class Setfixed {
 
                         if (
                             is_array($errorCode)
-                        ){
+                        ) {
                             $errorText =
                                 $languageObj->getLabel($errorCode['0'], $dummy, '', false, true);
                             if (isset($errorCode['1'])) {
@@ -734,7 +734,7 @@ class Setfixed {
 
                     if ($errorContent) {
                         $content = $errorContent;
-                    } else if (
+                    } elseif (
                         !$hasError &&
                         !$content &&
                             // Auto-login on confirmation
@@ -771,10 +771,10 @@ class Setfixed {
                         );
 
                         if ($loginSuccess) {
-                                // Login was successful
+                            // Login was successful
                             exit;
                         } else {
-                                // Login failed
+                            // Login failed
                             $content = $template->getPlainTemplate(
                                 $errorCode,
                                 $conf,
@@ -801,7 +801,7 @@ class Setfixed {
                     }
                 }
             }
-        } else if (
+        } elseif (
             strcmp($authObj->getAuthCode(), $theAuthCode) ||  // Do not create an error in case of APPROVE after a redirect from a password set and autologin form
             !count($origArray) ||
             $origArray['disable'] == 1
@@ -826,7 +826,7 @@ class Setfixed {
                 ''
             );
             // TODO: Your registration has been confirmed .
-        } 
+        }
         return $content;
     }	// processSetFixed
 
@@ -836,12 +836,11 @@ class Setfixed {
     * @param array $feuData: incoming fe_users parameters
     * @param string &$autoLoginKey: returns auto-login key
     * @return boolean true, if auto-login should be attempted
-    */  
-    public function getAutoLoginIsRequested (
+    */
+    public function getAutoLoginIsRequested(
         array $feuserData,
         &$autoLoginKey
-    )
-    {
+    ) {
         $autoLoginIsRequested = false;
         if (
             isset($feuserData['key']) &&
@@ -863,7 +862,7 @@ class Setfixed {
     * @param array  $errorFieldArray: array of field with errors (former $this->data->inError[$theField])
     * @return string  the template with substituted markers
     */
-    public function confirmationScreen (
+    public function confirmationScreen(
         &$errorCode,
         $markerArray,
         $conf,
@@ -885,9 +884,8 @@ class Setfixed {
         $cmdKey,
         $setFixedKey,
         $fD
-    )
-    {
-    // Display the form, if access granted.
+    ) {
+        // Display the form, if access granted.
         $xhtmlFix = HtmlUtility::getXhtmlFix();
         $markerArray['###HIDDENFIELDS###'] .=
             '<input type="hidden" name="' .
@@ -925,4 +923,3 @@ class Setfixed {
         return $content;
     }
 }
-

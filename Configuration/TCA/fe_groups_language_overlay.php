@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3') || die('Access denied.');
 
 use JambageCom\Agency\Constants\Extension;
@@ -9,7 +10,7 @@ $tableExists = true;
 $table = 'fe_groups_language_overlay';
 $languageSubpath = '/Resources/Private/Language/';
 $languageLglPath = 'LLL:EXT:core' . $languageSubpath . 'locallang_general.xlf:LGL.';
-        
+
 if (is_object($GLOBALS['TYPO3_DB'])) {
     $queryResult =
         $GLOBALS['TYPO3_DB']->admin_query(
@@ -107,4 +108,3 @@ $result = [
 ];
 
 return $result;
-

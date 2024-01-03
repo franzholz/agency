@@ -53,9 +53,9 @@ use JambageCom\Agency\Constants\Mode;
 
 use JambageCom\Div2007\Utility\TableUtility;
 
-class Tca implements SingletonInterface {
-
-    public function init ($extKey, $theTable): void
+class Tca implements SingletonInterface
+{
+    public function init($extKey, $theTable): void
     {
         // nothing
     }
@@ -66,7 +66,7 @@ class Tca implements SingletonInterface {
      *
      * @return void
      */
-    protected function fixAddressFeAdminFieldList ($theTable)
+    protected function fixAddressFeAdminFieldList($theTable)
     {
         if (
             $theTable == 'tt_address' &&
@@ -81,7 +81,8 @@ class Tca implements SingletonInterface {
         }
     }
 
-    public function getForeignTable ($theTable, $colName) {
+    public function getForeignTable($theTable, $colName)
+    {
 
         $result = false;
 
@@ -105,12 +106,11 @@ class Tca implements SingletonInterface {
     * @param array  $dataArray: the record array
     * @return array  the modified data array
     */
-    public function modifyTcaMMfields (
+    public function modifyTcaMMfields(
         $theTable,
         $dataArray,
         &$modArray
-    )
-    {
+    ) {
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
             !is_array($GLOBALS['TCA'][$theTable]['columns'])
@@ -155,14 +155,13 @@ class Tca implements SingletonInterface {
     * @param array  $dataArray: the input data array will be changed
     * @return void
     */
-    public function modifyRow (
+    public function modifyRow(
         $staticInfoObj,
         $theTable,
         &$dataArray,
         $fieldList,
         $bColumnIsCount = true
-    ): bool
-    {
+    ): bool {
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
             !is_array($GLOBALS['TCA'][$theTable]['columns']) ||
@@ -209,7 +208,7 @@ class Tca implements SingletonInterface {
                     ) {
                         if ($value == '' || is_array($value)) {
                             // the value contains the count of elements from a mm table
-                        } else if ($bColumnIsCount) {
+                        } elseif ($bColumnIsCount) {
                             $valuesArray = [];
                             $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
                                 'uid_local,uid_foreign,sorting',
@@ -224,7 +223,7 @@ class Tca implements SingletonInterface {
                             $dataArray[$colName] = $valuesArray;
                         } else {
                             // the values from the mm table are already available as an array
-                            $dataArray[$colName] = GeneralUtility::trimExplode (',', $value, 1);
+                            $dataArray[$colName] = GeneralUtility::trimExplode(',', $value, 1);
                         }
                     }
                     break;
@@ -263,7 +262,7 @@ class Tca implements SingletonInterface {
                 $value = $dataArray[$colName] ?? '';
 
                 if (!empty($value) && !is_array($value)) {
-                    $dataArray[$colName] = GeneralUtility::trimExplode (',', $value, 1);
+                    $dataArray[$colName] = GeneralUtility::trimExplode(',', $value, 1);
                 }
             }
         }
@@ -272,7 +271,7 @@ class Tca implements SingletonInterface {
             is_object($staticInfoObj) &&
             !empty($dataArray['static_info_country'])
         ) {
-                // empty zone if it does not fit to the provided country
+            // empty zone if it does not fit to the provided country
             $zoneArray = $staticInfoObj->initCountrySubdivisions($dataArray['static_info_country']);
             if (!isset($zoneArray[$dataArray['zone']])) {
                 $dataArray['zone'] = '';
@@ -288,11 +287,10 @@ class Tca implements SingletonInterface {
     * @param array  $colConfig: $TCA column configuration
     * @return string    foreign table where clause with replaced markers
     */
-    public function replaceForeignWhereMarker (
+    public function replaceForeignWhereMarker(
         $whereClause,
         $colConfig
-    )
-    {
+    ) {
         $foreignWhere = $colConfig['foreign_table_where'] ?? '';
 
         if ($foreignWhere) {
@@ -301,7 +299,7 @@ class Tca implements SingletonInterface {
 
             if ($TSconfig) {
 
-                    // substitute whereClause
+                // substitute whereClause
                 $foreignWhere = str_replace('###PAGE_TSCONFIG_ID###', intval($TSconfig['PAGE_TSCONFIG_ID']), $foreignWhere);
                 $foreignWhere =
                     str_replace(
@@ -332,7 +330,7 @@ class Tca implements SingletonInterface {
         $result = [];
         if (empty($itemArray)) {
             $result = $labelItemArray;
-        } else if (empty($labelItemArray)) {
+        } elseif (empty($labelItemArray)) {
             $result = $itemArray;
         } else {
             $keyArray = [];
@@ -368,7 +366,7 @@ class Tca implements SingletonInterface {
     * @param boolean $HSC: whether content should be htmlspecialchar'ed or not
     * @return void . $markerArray is filled with new markers
     */
-    public function addMarkers (
+    public function addMarkers(
         &$markerArray,
         $conf,
         Localization $languageObj,
@@ -383,8 +381,7 @@ class Tca implements SingletonInterface {
         $activity = '',
         $bChangesOnly = false,
         $HSC = true
-    )
-    {
+    ) {
         $cObj = FrontendUtility::getContentObjectRenderer();
         $xhtmlFix = HtmlUtility::determineXhtmlFix();
         $useXHTML = HtmlUtility::useXHTML();
@@ -427,7 +424,7 @@ class Tca implements SingletonInterface {
             if ($activity == '') {
                 $activity = 'preview';
             }
-        } else if (!$viewOnly && $activity != 'email') {
+        } elseif (!$viewOnly && $activity != 'email') {
             $activity = 'input';
         }
 
@@ -543,7 +540,7 @@ class Tca implements SingletonInterface {
                                                     htmlspecialchars($label);
                                             }
                                             $label = ($checked ? $label : '');
-                                            $colContent .= ((!$bNotLast || $checkedCount < count($bCheckedArray)) ?  $cObj->stdWrap($label, $stdWrap) : $label);
+                                            $colContent .= ((!$bNotLast || $checkedCount < count($bCheckedArray)) ? $cObj->stdWrap($label, $stdWrap) : $label);
                                         }
                                     }
                                     $colContent = $cObj->stdWrap($colContent, $listWrap);
@@ -593,12 +590,12 @@ class Tca implements SingletonInterface {
                                             $stdWrap['wrap'] = '| ';
                                         }
 
-                                        for ($i = 0; $i < count ($valuesArray); $i++) {
+                                        for ($i = 0; $i < count($valuesArray); $i++) {
                                             $label = $languageObj->getLabelFromString($itemKeyArray[$valuesArray[$i]]['label']);
                                             if ($HSC) {
                                                 $label = htmlspecialchars($label);
                                             }
-                                            $colContent .= ((!$bNotLast || $i < count($valuesArray) - 1 ) ?  $cObj->stdWrap($label, $stdWrap) : $label);
+                                            $colContent .= ((!$bNotLast || $i < count($valuesArray) - 1) ? $cObj->stdWrap($label, $stdWrap) : $label);
                                         }
                                     }
                                 }
@@ -644,7 +641,7 @@ class Tca implements SingletonInterface {
                                             if ($HSC) {
                                                 $label = htmlspecialchars($label);
                                             }
-                                            $colContent .= ((!$bNotLast || $i < count($valuesArray) - 1 ) ?  $cObj->stdWrap($label,$stdWrap) : $label);
+                                            $colContent .= ((!$bNotLast || $i < count($valuesArray) - 1) ? $cObj->stdWrap($label, $stdWrap) : $label);
                                         }
                                     }
 
@@ -680,7 +677,7 @@ class Tca implements SingletonInterface {
                                                 for ($i = 0; $i < count($foreignRows); $i++) {
                                                     if ($theTable == 'fe_users' && $colName == 'usergroup') {
                                                         $foreignRows[$i] = $this->getUsergroupOverlay($conf, $controlData, $foreignRows[$i]);
-                                                    } else if ($localizedRow = $GLOBALS['TSFE']->sys_page->getRecordOverlay($colConfig['foreign_table'], $foreignRows[$i], $languageUid)) {
+                                                    } elseif ($localizedRow = $GLOBALS['TSFE']->sys_page->getRecordOverlay($colConfig['foreign_table'], $foreignRows[$i], $languageUid)) {
                                                         $foreignRows[$i] = $localizedRow;
                                                     }
                                                     $text = $foreignRows[$i][$titleField];
@@ -689,7 +686,8 @@ class Tca implements SingletonInterface {
                                                     }
 
                                                     $colContent .=
-                                                        (($bNotLast || $i < count($foreignRows) - 1 ) ?
+                                                        (
+                                                            ($bNotLast || $i < count($foreignRows) - 1) ?
                                                             $cObj->stdWrap($text, $stdWrap) :
                                                             $text
                                                         );
@@ -703,7 +701,7 @@ class Tca implements SingletonInterface {
                             default:
                                 // unsupported input type
                                 $label = $languageObj->getLabel('unsupported');
-                                if ($HSC)   {
+                                if ($HSC) {
                                     $label = htmlspecialchars($label);
                                 }
                                 $colContent .= $colConfig['type'] . ':' . $label;
@@ -722,7 +720,7 @@ class Tca implements SingletonInterface {
                             if (empty($valuesArray['0']) && isset($colConfig['default'])) {
                                 $valuesArray[] = $colConfig['default'];
                             }
-                            $textSchema = $theTable . '.' . $colName . '.I.';                            
+                            $textSchema = $theTable . '.' . $colName . '.I.';
                             $labelItemArray = $languageObj->getItemsLL($textSchema, true);
 
                             if ($conf['mergeLabels'] || !count($labelItemArray)) {
@@ -760,7 +758,7 @@ class Tca implements SingletonInterface {
                             case 'text':
                                 $label = (isset($colConfig['default']) ? $languageObj->getLabelFromString($colConfig['default']) : '');
                                 $label = htmlspecialchars($label);
-                                $colContent = '<textarea id="' .                                    
+                                $colContent = '<textarea id="' .
                                     FrontendUtility::getClassName(
                                         $colName,
                                         $prefixId
@@ -890,7 +888,7 @@ class Tca implements SingletonInterface {
                                             $colName,
                                             $prefixId
                                         ) .
-                                        '-' . $i . 
+                                        '-' . $i .
                                         '" class="' . $css->getClassName($colName, 'input') .
                                         '" name="FE[' . $theTable . '][' . $colName . ']"' .
                                             ' value="' . $value . '" ' . ($value == $startVal ? $checkedHtml : '') . $xhtmlFix . '>' .
@@ -902,7 +900,7 @@ class Tca implements SingletonInterface {
                                             '-' . $i . '">' . $label . '</label>';
                                         $i++;
                                         $colContent .=
-                                            ((!$bNotLast || $i < count($itemArray) - 1 ) ?
+                                            ((!$bNotLast || $i < count($itemArray) - 1) ?
                                             $cObj->stdWrap($itemOut, $stdWrap) :
                                             $itemOut);
                                     }
@@ -910,7 +908,7 @@ class Tca implements SingletonInterface {
                                 break;
 
                             case 'select':
-                                $colContent ='';
+                                $colContent = '';
                                 $attributeMultiple = '';
                                 $attributeClassName = '';
                                 $checkedHtml =  ($useXHTML ? ' checked="checked"' : ' checked');
@@ -1011,7 +1009,7 @@ class Tca implements SingletonInterface {
                                             ) .
                                             '-' . $i . '" name="FE[' . $theTable . '][' . $colName . '][' . $k . ']" value="' . $k .
                                             '" type="checkbox"  ' . (in_array($k, $valuesArray) ? $checkedHtml : '') . $xhtmlFix . '></div>' .
-                                                '<div class="viewLabel ' . $css->getClassName($colName, 'divLabel') . '">' . 
+                                                '<div class="viewLabel ' . $css->getClassName($colName, 'divLabel') . '">' .
                                                 '<label for="' .
                                                 FrontendUtility::getClassName(
                                                     $colName,
@@ -1090,7 +1088,7 @@ class Tca implements SingletonInterface {
                                         $whereClause .= ' AND sys_dmail_category.pid IN (' . implode(',', $pidArray) . ')' . ($conf['useLocalization'] ? ' AND sys_language_uid=' . intval($languageUid) : '');
                                     }
                                     $whereClause .= TableUtility::enableFields($colConfig['foreign_table']);
-                                    $whereClause = $this->replaceForeignWhereMarker($whereClause,  $colConfig);
+                                    $whereClause = $this->replaceForeignWhereMarker($whereClause, $colConfig);
                                     $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $colConfig['foreign_table'], $whereClause, '', $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['sortby'] ?? '');
 
                                     if (
@@ -1114,7 +1112,7 @@ class Tca implements SingletonInterface {
 
                                     while ($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
                                         $i++;
-                                            // Handle usergroup case
+                                        // Handle usergroup case
                                         if (
                                             $colName == 'usergroup' &&
                                             isset($userGroupObj) &&
@@ -1130,7 +1128,7 @@ class Tca implements SingletonInterface {
                                                 ) {
                                                     $selected = '';
                                                 }
-                                                $selectedValue = ($selected ? true: $selectedValue);
+                                                $selectedValue = ($selected ? true : $selectedValue);
 
                                                 if (
                                                     isset($colConfig['renderMode']) &&
@@ -1150,7 +1148,7 @@ class Tca implements SingletonInterface {
                                                     FrontendUtility::getClassName(
                                                         $colName,
                                                         $prefixId
-                                                    ) . '-' . $row2['uid'] . 
+                                                    ) . '-' . $row2['uid'] .
                                                     '" class="' . $css->getClassName($colName, 'label') . '">' . $titleText . '</label></div>';
                                                 } else {
                                                     $colContent .= '<option value="' . $row2['uid'] . '"' . $selected . '>' . $titleText . '</option>';
@@ -1178,13 +1176,13 @@ class Tca implements SingletonInterface {
                                                 $colContent .= '<input class="' .
                                                 $css->getClassName(
                                                     'checkbox'
-                                                ) . 
+                                                ) .
                                                 '" id="'.
                                                 FrontendUtility::getClassName(
                                                     $colName,
                                                     $prefixId
                                                 ) .
-                                                '-' . $row2['uid'] . '" name="FE[' . $theTable . '][' .  $colName . '][' . $row2['uid'] . ']" value="' . $row2['uid'] . '" type="checkbox"' . (in_array($row2['uid'],  $valuesArray) ? $checkedHtml : '') . $xhtmlFix . '></div>' .
+                                                '-' . $row2['uid'] . '" name="FE[' . $theTable . '][' .  $colName . '][' . $row2['uid'] . ']" value="' . $row2['uid'] . '" type="checkbox"' . (in_array($row2['uid'], $valuesArray) ? $checkedHtml : '') . $xhtmlFix . '></div>' .
                                                 '<div class="viewLabel ' . $css->getClassName($colName, 'divLabel-' . $i) . '"><label for="' .
                                                 FrontendUtility::getClassName(
                                                     $colName,
@@ -1235,7 +1233,7 @@ class Tca implements SingletonInterface {
     * @param    array   array of selectable items like found in TCA
     * @ return  array   array of selectable items with correct key
     */
-    public function getItemKeyArray ($itemArray)
+    public function getItemKeyArray($itemArray)
     {
         $rc = [];
 
@@ -1257,13 +1255,12 @@ class Tca implements SingletonInterface {
     * @param    integer     Language UID if you want to set an alternative value to $this->controlData->sys_language_content which is default. Should be >=0
     * @return   array       usergroup row which is overlayed with language_overlay record (or the overlay record alone)
     */
-    public function getUsergroupOverlay (
+    public function getUsergroupOverlay(
         $conf,
         Parameters $controlData,
         $usergroup,
         $languageUid = ''
-    )
-    {
+    ) {
         $row = false;
 
         // Initialize:
@@ -1302,7 +1299,7 @@ class Tca implements SingletonInterface {
             }
         }
 
-            // Create output:
+        // Create output:
         if (is_array($usergroup)) {
             return is_array($row) ? array_merge($usergroup, $row) : $usergroup;
             // If the input was an array, simply overlay the newfound array and return...
@@ -1311,5 +1308,3 @@ class Tca implements SingletonInterface {
         }
     }   // getUsergroupOverlay
 }
-
-

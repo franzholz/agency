@@ -42,14 +42,12 @@ namespace JambageCom\Agency\Api;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
-class CustomerNumber implements SingletonInterface {
-
-    static public function generate (
+class CustomerNumber implements SingletonInterface
+{
+    public static function generate(
         $theTable,
         $config
-    )
-    {
+    ) {
         $prefix = $config['prefix'];
         $result = $prefix . '1';
 
@@ -88,4 +86,3 @@ class CustomerNumber implements SingletonInterface {
         return $result;
     }
 }
-

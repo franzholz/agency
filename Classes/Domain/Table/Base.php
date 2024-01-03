@@ -41,26 +41,26 @@ namespace JambageCom\Agency\Domain\Table;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
-class Base {
+class Base
+{
     public $functablename;
     public $tablename;
     public $fieldClassArray = []; // must be overridden
     public $hasBeenInitialised = false;
 
-    public function init ($functablename, $tablename): void
+    public function init($functablename, $tablename): void
     {
         $this->setFuncTablename($functablename);
         $this->setTablename($tablename);
         $this->hasBeenInitialised = true;
     }
 
-    public function needsInit ()
+    public function needsInit()
     {
         return !$this->hasBeenInitialised;
     }
 
-    public function getFieldClass ($fieldname)
+    public function getFieldClass($fieldname)
     {
         $class = '';
         $tablename = $this->getTablename();
@@ -77,7 +77,7 @@ class Base {
         return $class;
     }
 
-    public function getFieldObj ($fieldname)
+    public function getFieldObj($fieldname)
     {
         $result = null;
         $class = $this->getFieldClass($fieldname);
@@ -88,7 +88,7 @@ class Base {
         return $result;
     }
 
-    public function getObj ($className)
+    public function getObj($className)
     {
         $fieldObj = GeneralUtility::makeInstance($className);	// fetch and store it as persistent object
         if ($fieldObj->needsInit()) {
@@ -98,24 +98,23 @@ class Base {
         return $fieldObj;
     }
 
-    public function getFuncTablename ()
+    public function getFuncTablename()
     {
         return $this->functablename;
     }
 
-    public function setFuncTablename ($tablename): void
+    public function setFuncTablename($tablename): void
     {
         $this->functablename = $tablename;
     }
 
-    public function getTablename ()
+    public function getTablename()
     {
         return $this->tablename;
     }
 
-    public function setTablename ($tablename): void
+    public function setTablename($tablename): void
     {
         $this->tablename = $tablename;
     }
 }
-

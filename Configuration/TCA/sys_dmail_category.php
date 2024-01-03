@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3') || die('Access denied.');
 
 use JambageCom\Agency\Constants\Extension;

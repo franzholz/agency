@@ -59,9 +59,8 @@ use JambageCom\Div2007\Utility\FrontendUtility;
 
 use JambageCom\Agency\Constants\Mode;
 
-
-class EditView {
-
+class EditView
+{
     /**
     * Displays the record update form
     *
@@ -72,7 +71,7 @@ class EditView {
     * @param array  $errorFieldArray: array of field with errors (former $dataObj->inError[$theField])
     * @return string  the template with substituted markers
     */
-    protected function renderForm (
+    protected function renderForm(
         array &$markerArray,
         array $conf,
         $prefixId,
@@ -93,8 +92,7 @@ class EditView {
         $mode,
         $errorFieldArray,
         $token
-    )
-    {
+    ) {
         $xhtmlFix = HtmlUtility::determineXhtmlFix();
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         if (isset($dataArray) && is_array($dataArray)) {
@@ -282,7 +280,7 @@ class EditView {
             $currentArray
         );
 
-            // Avoid cleartext password in HTML source
+        // Avoid cleartext password in HTML source
         $markerArray['###FIELD_password###'] = '';
         $markerArray['###FIELD_password_again###'] = '';
         $deleteUnusedMarkers = true;
@@ -339,7 +337,7 @@ class EditView {
     * @param array  $errorFieldArray: array of field with errors (former $this->data->inError[$theField])
     * @return string  the template with substituted markers
     */
-    public function render (
+    public function render(
         &$errorCode,
         array &$markerArray,
         $conf,
@@ -361,8 +359,7 @@ class EditView {
         $mode,
         $errorFieldArray,
         $token
-    )
-    {
+    ) {
         $theAuthCode = '';
 
         if (
@@ -372,7 +369,7 @@ class EditView {
             return false;
         }
 
-            // If editing is enabled
+        // If editing is enabled
         if ($conf['edit']) {
             $authObj = GeneralUtility::makeInstance(Authentication::class);
 
@@ -502,4 +499,3 @@ class EditView {
         return $content;
     }	// render
 }
-

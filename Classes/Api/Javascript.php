@@ -42,14 +42,12 @@ namespace JambageCom\Agency\Api;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
-class Javascript {
-
-    static public function getOnSubmitHooks (
+class Javascript
+{
+    public static function getOnSubmitHooks(
         &$javaScript,
         $pObj
-    ): void
-    {
+    ): void {
         if (
             isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']) &&
             isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs']) &&
@@ -73,4 +71,3 @@ class Javascript {
         }
     }
 }
-

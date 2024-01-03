@@ -26,8 +26,6 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 use JambageCom\Agency\Constants\Extension;
 
-
- 
 /**
  * Stores the original request for an Ajax call before processing a request for the TYPO3 Frontend.
  *
@@ -57,4 +55,3 @@ class FrontendHooks implements MiddlewareInterface
         return $handler->handle($request);
     }
 }
-

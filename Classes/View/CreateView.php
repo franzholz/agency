@@ -58,10 +58,8 @@ use JambageCom\Div2007\Utility\FrontendUtility;
 
 use JambageCom\Agency\Constants\Mode;
 
-
-class CreateView {
-
-
+class CreateView
+{
     /**
     * Generates the record creation form
     * or the first link display to create or edit someone's data
@@ -72,7 +70,7 @@ class CreateView {
     * @param array  $errorFieldArray: array of field with errors (former $this->data->inError[$theField])
     * @return string  the template with substituted markers
     */
-    public function render (
+    public function render(
         &$markerArray,
         $conf,
         $prefixId,
@@ -95,8 +93,7 @@ class CreateView {
         $infoFields,
         $errorFieldArray,
         $token
-    )
-    {
+    ) {
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
             !is_array($GLOBALS['TCA'][$theTable]['columns'])
@@ -117,7 +114,7 @@ class CreateView {
 
         if ($conf['create']) {
 
-                // Call all beforeConfirmCreate hooks before the record has been shown and confirmed
+            // Call all beforeConfirmCreate hooks before the record has been shown and confirmed
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['registrationProcess'])) {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['registrationProcess'] as $classRef) {
                     $hookObj = GeneralUtility::makeInstance($classRef);
@@ -142,7 +139,7 @@ class CreateView {
                 }
             }
             $currentArray = array_merge($currentArray, $dataArray);
-            $key = ($cmd == 'invite') ? 'INVITE': 'CREATE';
+            $key = ($cmd == 'invite') ? 'INVITE' : 'CREATE';
             $bNeedUpdateJS = true;
 
             if ($cmd == 'create' || $cmd == 'invite') {
@@ -295,7 +292,7 @@ class CreateView {
                     in_array('privacy_policy_acknowledged', $includedFields)
             );
 
-                // Avoid cleartext password in HTML source
+            // Avoid cleartext password in HTML source
             $markerArray['###FIELD_password###'] = '';
             $markerArray['###FIELD_password_again###'] = '';
             $deleteUnusedMarkers = true;
@@ -315,19 +312,19 @@ class CreateView {
             ) {
                 $fields = $dataObj->getFieldList() . ',' . $dataObj->getAdditionalUpdateFields();
                 $fields = implode(
-                        ',',
-                        array_intersect(
-                            explode(
-                                ',',
-                                $fields
-                            ),
-                            GeneralUtility::trimExplode(
-                                ',',
-                                $conf[$cmdKey . '.']['fields'],
-                                1
-                            )
+                    ',',
+                    array_intersect(
+                        explode(
+                            ',',
+                            $fields
+                        ),
+                        GeneralUtility::trimExplode(
+                            ',',
+                            $conf[$cmdKey . '.']['fields'],
+                            1
                         )
-                    );
+                    )
+                );
                 $fields = SecuredData::getOpenFields($fields);
                 $modData =
                     $dataObj->modifyDataArrForFormUpdate(
@@ -354,7 +351,7 @@ class CreateView {
                     );
                 GeneralUtility::makeInstance(AssetCollector::class)
                     ->addJavaScript('agency-security', $securityJavaScript);
-//                 $GLOBALS['TSFE']->setJS('agency-security', $securityJavaScript);
+                //                 $GLOBALS['TSFE']->setJS('agency-security', $securityJavaScript);
 
                 $finalJavaScript = '';
                 Javascript::getOnSubmitHooks(
@@ -368,4 +365,3 @@ class CreateView {
         return $content;
     } // render
 }
-

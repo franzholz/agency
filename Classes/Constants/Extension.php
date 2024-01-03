@@ -15,12 +15,11 @@ namespace JambageCom\Agency\Constants;
  * The TYPO3 project - inspiring people to share!
  */
 
- /**
- * Constants for the fields
- */
+/**
+* Constants for the fields
+*/
 class Extension
 {
     public const KEY           = 'agency';
 
 }
-

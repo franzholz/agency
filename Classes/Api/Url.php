@@ -4,6 +4,7 @@ namespace JambageCom\Agency\Api;
 
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Core\SingletonInterface;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -43,18 +44,18 @@ use TYPO3\CMS\Core\SingletonInterface;
  *
  *
  */
-class Url implements SingletonInterface {
+class Url implements SingletonInterface
+{
     protected $cObj;
     private $piVars;
     private $prefixId;
 
 
-    public function init (
+    public function init(
         $cObj,
         $piVars,
         $prefixId
-    ): void
-    {
+    ): void {
         $this->cObj = $cObj;
         $this->piVars = $piVars;
         $this->prefixId = $prefixId;
@@ -70,14 +71,13 @@ class Url implements SingletonInterface {
     * @param boolean  $usePiVars: if set, input vars and incoming piVars arrays are merge
     * @return string  generated link or url
     */
-    public function get (
+    public function get(
         $id,
         $tag = '',
         $vars = [],
         $unsetVars = [],
         $usePiVars = true
-    )
-    {
+    ) {
         $result = '';
         $piVars = [];
         $vars = (array) $vars;
@@ -113,4 +113,3 @@ class Url implements SingletonInterface {
         $this->cObj = $cObj;
     }
 }
-

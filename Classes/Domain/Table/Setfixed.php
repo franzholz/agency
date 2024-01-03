@@ -37,7 +37,6 @@ namespace JambageCom\Agency\Domain\Table;
  * @subpackage agency
  *
  */
-class Setfixed extends Base {
-
+class Setfixed extends Base
+{
 }
-
