@@ -126,12 +126,10 @@ class ConfigurationCheck implements LoggerAwareInterface {
         if ($extensionKey == Extension::KEY) {
                 // Check if salted passwords are enabled in front end
             if (                
-                class_exists(SaltedPasswordsUtility::class) ||
-                class_exists(\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::class)
+                class_exists(SaltedPasswordsUtility::class)
             ) {
                 if (
-                    class_exists(\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::class) &&
-                    !\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::isUsageEnabled('FE')
+                    !SaltedPasswordsUtility::isUsageEnabled('FE')
                 ) {
                     $message = LocalizationUtility::translate('internal_salted_passwords_disabled');
                     $this->logger->critical($message);

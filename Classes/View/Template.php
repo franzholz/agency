@@ -41,6 +41,7 @@ namespace JambageCom\Agency\View;
 *
 *
 */
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use JambageCom\Agency\Configuration\ConfigurationStore;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use JambageCom\Agency\Request\Parameters;
@@ -142,9 +143,9 @@ class Template {
         if (
             $controlData->getTable() == 'tt_address' &&
             ExtensionManagementUtility::isLoaded('tt_address') &&
-            isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address'])
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tt_address'])
         ) {
-            $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address']);
+            $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('tt_address');
             if (
                 is_array($extConf) &&
                 $extConf['disableCombinedNameField'] == '1'

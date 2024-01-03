@@ -39,6 +39,7 @@ namespace JambageCom\Agency\Domain;
  *
  *
  */
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\SingletonInterface;
 use JambageCom\Agency\Request\Parameters;
 use TYPO3\CMS\Core\Utility\File\BasicFileUtility;
@@ -2208,9 +2209,9 @@ class Data implements SingletonInterface {
             if (
                 $theTable == 'tt_address' &&
                 ExtensionManagementUtility::isLoaded('tt_address') &&
-                isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address'])
+                isset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tt_address'])
             ) {
-                $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address']);
+                $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('tt_address');
                 if (is_array($extConf) && isset($extConf['backwardsCompatFormat'])) {
                     $nameFormat = $extConf['backwardsCompatFormat'];
                 }

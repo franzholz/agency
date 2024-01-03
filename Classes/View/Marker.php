@@ -41,6 +41,7 @@ namespace JambageCom\Agency\View;
 *
 *
 */
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Domain\Data;
 use JambageCom\Agency\Domain\Tca;
@@ -515,8 +516,8 @@ class Marker {
             $name = $row['first_name'];
         } else {
                 // Honour Address List (tt_address) configuration settings
-            if ($theTable == 'tt_address' && ExtensionManagementUtility::isLoaded('tt_address') && isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address'])) {
-                $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address']);
+            if ($theTable == 'tt_address' && ExtensionManagementUtility::isLoaded('tt_address') && isset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tt_address'])) {
+                $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('tt_address');
                 if (is_array($extConf)) {
                     $nameFormat = '';
 

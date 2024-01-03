@@ -112,12 +112,7 @@ class System implements LoggerAwareInterface {
             if ($requiresAuthorization) {
                 $ok = false;
                 $serviceKeyArray = [];
-
-                if (class_exists(SaltedPasswordService::class)) {
-                    $serviceKeyArray[] = SaltedPasswordService::class;
-                } else if (class_exists(\TYPO3\CMS\Saltedpasswords\SaltedPasswordService::class)) {
-                    $serviceKeyArray[] = \TYPO3\CMS\Saltedpasswords\SaltedPasswordService::class;
-                }
+                $serviceKeyArray[] = SaltedPasswordService::class;
 
                 if (
                     $conf['authServiceClass'] != '' &&

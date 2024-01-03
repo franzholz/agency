@@ -41,6 +41,7 @@ namespace JambageCom\Agency\Controller;
 *
 *
 */
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Api\Localization;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
@@ -403,9 +404,9 @@ class ActionController {
         if (
             $theTable == 'tt_address' &&
             ExtensionManagementUtility::isLoaded('tt_address') &&
-            isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address'])
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['tt_address'])
         ) {
-            $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['tt_address']);
+            $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('tt_address');
             if (is_array($extConf) && $extConf['disableCombinedNameField'] == '1') {
                 $conf[$cmdKey . '.']['fields'] = GeneralUtility::rmFromList('name', $conf[$cmdKey . '.']['fields']);
             }
