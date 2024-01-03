@@ -161,7 +161,7 @@ class Tca implements SingletonInterface {
         &$dataArray,
         $fieldList,
         $bColumnIsCount = true
-    )
+    ): bool
     {
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
