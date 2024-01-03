@@ -126,7 +126,7 @@ class SecuredData
     static public function secureInput (
         &$dataArray,
         $htmlSpecial = true
-    )
+    ): void
     {
         foreach ($dataArray as $key => $value) {
             if (is_array($value)) {
@@ -228,7 +228,7 @@ class SecuredData
         $passwordAgain = '',
         $token = '',
         $redirectUrl = ''
-    ) {
+    ): void {
         $sessionData = SessionUtility::readData($extensionKey);
         if ($password == '') {
             $sessionData['password'] = '__UNSET';
@@ -297,7 +297,7 @@ class SecuredData
         array $cmdConf,
         array &$dataArray,
         &$autoLoginKey
-    ) {
+    ): void {
         // We generate an interim password in the case of an invitation
         if (
             $cmdConf['generatePassword']

@@ -89,7 +89,7 @@ class ActionController {
         ContentObjectRenderer $cObj,
         Parameters $controlData,
         Url $urlObj
-    )
+    ): void
     {
         $conf = $confObj->getConf();
         $this->urlObj = $urlObj;

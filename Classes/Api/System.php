@@ -222,7 +222,7 @@ class System implements LoggerAwareInterface {
         $theTable,
         $uid,
         $row
-    )
+    ): void
     {
         $deleteFields = [
             'lost_password',

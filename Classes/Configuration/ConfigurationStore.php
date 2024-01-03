@@ -48,7 +48,7 @@ class ConfigurationStore implements SingletonInterface {
     protected $conf = [];
     protected $config = [];
 
-    public function init ($conf)
+    public function init ($conf): void
     {
         $this->conf = $conf;
         $this->config = [];
@@ -57,7 +57,7 @@ class ConfigurationStore implements SingletonInterface {
     public function setConf (
         array $dataArray,
         $k = ''
-    )
+    ): void
     {
         if ($k) {
             $this->conf[$k] = $dataArray;
@@ -82,7 +82,7 @@ class ConfigurationStore implements SingletonInterface {
     public function setConfig (
         array $dataArray,
         $k = ''
-    )
+    ): void
     {
         if ($k) {
             $this->config[$k] = $dataArray;

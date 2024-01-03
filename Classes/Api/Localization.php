@@ -26,7 +26,7 @@ class Localization extends TranslationBase implements SingletonInterface {
         $scriptRelPath = '',
         $lookupFilename = 'locallang.xlf',
         $useDiv2007Language = true
-    ) {
+    ): void {
         $scriptRelPath = DIV2007_LANGUAGE_SUBPATH;
         parent::init(
             $extensionKey,
@@ -37,7 +37,7 @@ class Localization extends TranslationBase implements SingletonInterface {
         );
     }
 
-    public function setSalutation ($salutation) {
+    public function setSalutation ($salutation): void {
         if (
             in_array($salutation, $this->allowedSuffixes, 1)
         ) {

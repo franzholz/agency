@@ -46,13 +46,13 @@ use JambageCom\Agency\Constants\Extension;
 class LocalizationUtility {
     static protected $filename = '';
 
-    static public function init ()
+    static public function init (): void
     {
         $filename = DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf';
         self::setFilename($filename);
     }
 
-    static public function setFilename ($filename)
+    static public function setFilename ($filename): void
     {
         self::$filename = $filename;
     }

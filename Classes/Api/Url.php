@@ -52,7 +52,7 @@ class Url implements SingletonInterface {
         $cObj,
         $piVars,
         $prefixId
-    )
+    ): void
     {
         $this->cObj = $cObj;
         $this->piVars = $piVars;

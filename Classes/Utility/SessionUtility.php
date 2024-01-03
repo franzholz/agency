@@ -83,7 +83,7 @@ class SessionUtility {
         $keepRedirectUrl = true,
         $token = '', // $this->readToken();
         $redirectUrl = '' // $this->readRedirectUrl()
-    )
+    ): void
     {
         $clearSession = empty($data);
         if (
@@ -139,7 +139,7 @@ class SessionUtility {
         $keepRedirectUrl = true,
         $token = '',
         $redirectUrl = '' 
-    )
+    ): void
     {
         $data = [];
         static::writeData(

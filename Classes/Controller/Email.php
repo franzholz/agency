@@ -76,7 +76,7 @@ class Email implements SingletonInterface {
         return $this->extensionKey;
     }
 
-    public function setExtensionKey ($extensionKey)
+    public function setExtensionKey ($extensionKey): void
     {
         $this->extensionKey = $extensionKey;
     }

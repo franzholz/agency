@@ -3,7 +3,7 @@ defined('TYPO3') || die('Access denied.');
 
 use JambageCom\Agency\Constants\Extension;
 
-call_user_func(function($extensionKey, $table)
+call_user_func(function($extensionKey, $table): void
 {
     $table = 'fe_users';
     $languageSubpath = '/Resources/Private/Language/';

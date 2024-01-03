@@ -54,7 +54,7 @@ class UserGroup extends Base {
     * @param string $cmdKey: the command key
     * @return void
     */
-    public function modifyConf (&$conf, $cmdKey)
+    public function modifyConf (&$conf, $cmdKey): void
     {
             // Add usergroup to the list of fields and required fields if the user is allowed to select user groups
             // Except when only updating password
@@ -91,7 +91,7 @@ class UserGroup extends Base {
         &$allowedUserGroupArray,
         &$allowedSubgroupArray,
         &$deniedUserGroupArray
-    )
+    ): void
     {
         $allowedUserGroupArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['allowedUserGroups'], 1);
         $allowedSubgroupArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['allowedSubgroups'], 1);
@@ -122,7 +122,7 @@ class UserGroup extends Base {
         $conf,
         $cmdKey,
         &$row
-    )
+    ): void
     {
         if (
             isset($row['usergroup']) &&
@@ -211,7 +211,7 @@ class UserGroup extends Base {
         $dataArray,
         $origArray,
         &$parsedArray
-    )
+    ): void
     {
         if (
             isset($dataArray) &&

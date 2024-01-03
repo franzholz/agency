@@ -55,7 +55,7 @@ use JambageCom\Div2007\Utility\TableUtility;
 
 class Tca implements SingletonInterface {
 
-    public function init ($extKey, $theTable)
+    public function init ($extKey, $theTable): void
     {
         // nothing
     }

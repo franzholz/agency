@@ -48,7 +48,7 @@ class Base {
     public $fieldClassArray = []; // must be overridden
     public $hasBeenInitialised = false;
 
-    public function init ($functablename, $tablename)
+    public function init ($functablename, $tablename): void
     {
         $this->setFuncTablename($functablename);
         $this->setTablename($tablename);
@@ -103,7 +103,7 @@ class Base {
         return $this->functablename;
     }
 
-    public function setFuncTablename ($tablename)
+    public function setFuncTablename ($tablename): void
     {
         $this->functablename = $tablename;
     }
@@ -113,7 +113,7 @@ class Base {
         return $this->tablename;
     }
 
-    public function setTablename ($tablename)
+    public function setTablename ($tablename): void
     {
         $this->tablename = $tablename;
     }

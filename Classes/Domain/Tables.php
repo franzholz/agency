@@ -53,7 +53,7 @@ class Tables implements SingletonInterface {
     public $tableClassArray = [];
     public $tablename;
 
-    public function init ($tablename)
+    public function init ($tablename): void
     {
         $this->tablename = $tablename;
         if ($tablename == 'fe_users') {
@@ -68,7 +68,7 @@ class Tables implements SingletonInterface {
         return $this->tableClassArray;
     }
 
-    public function setTableClassArray ($tableClassArray)
+    public function setTableClassArray ($tableClassArray): void
     {
         $this->tableClassArray = $tableClassArray;
     }

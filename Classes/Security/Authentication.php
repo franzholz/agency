@@ -52,7 +52,7 @@ class Authentication implements SingletonInterface {
     public $config = [];
     protected $authCode;
 
-    public function init (ConfigurationStore $confObj)
+    public function init (ConfigurationStore $confObj): void
     {
         $this->conf = $confObj->getConf();
         $this->config = $confObj->getConfig();
@@ -76,7 +76,7 @@ class Authentication implements SingletonInterface {
         }
     }
 
-    public function setAuthCode ($code)
+    public function setAuthCode ($code): void
     {
         $this->authCode = $code;
     }

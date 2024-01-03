@@ -98,7 +98,7 @@ class Marker {
         $staticInfoObj,
         $uid,
         $token
-    )
+    ): void
     {
         $this->conf = $confObj->getConf();
         $this->data = $data;
@@ -172,7 +172,7 @@ class Marker {
         return $this->buttonLabelsList;
     }
 
-    public function setButtonLabelsList ($buttonLabelsList)
+    public function setButtonLabelsList ($buttonLabelsList): void
     {
         $this->buttonLabelsList = $buttonLabelsList;
     }
@@ -182,12 +182,12 @@ class Marker {
         return $this->otherLabelsList;
     }
 
-    public function setOtherLabelsList ($otherLabelsList)
+    public function setOtherLabelsList ($otherLabelsList): void
     {
         $this->otherLabelsList = $otherLabelsList;
     }
 
-    public function addOtherLabelsList ($otherLabelsList)
+    public function addOtherLabelsList ($otherLabelsList): void
     {
         if ($otherLabelsList != '') {
 
@@ -208,7 +208,7 @@ class Marker {
         return $this->markerArray;
     }
 
-    public function setArray ($param, $value = '')
+    public function setArray ($param, $value = ''): void
     {
         if (is_array($param)) {
             $this->markerArray = $param;
@@ -222,7 +222,7 @@ class Marker {
         return $this->previewLabel;
     }
 
-    public function setPreviewLabel ($label)
+    public function setPreviewLabel ($label): void
     {
         $this->previewLabel = $label;
     }
@@ -285,7 +285,7 @@ class Marker {
         return $result;
     }
 
-    public function setReplaceData ($data)
+    public function setReplaceData ($data): void
     {
         $this->dataArray['row'] = $data['row'];
     }
@@ -305,7 +305,7 @@ class Marker {
     public function setNoError (
         $cmdKey,
         &$markContentArray
-    )
+    ): void
     {
         if (
             !empty($cmdKey) &&
@@ -366,7 +366,7 @@ class Marker {
         $tcaColumns,
         $activity = '',
         $bChangesOnly = false
-    )
+    ): void
     {
         $bUseMissingFields = false;
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
@@ -611,7 +611,7 @@ class Marker {
         $name = '',
         $outputArray = '',
         $genderLabelArray = ''
-    )
+    ): void
     {
         if (!is_array($outputArray)) {
             $outputArray = ['username' => '', 'email' => '', 'password' => ''];
@@ -648,7 +648,7 @@ class Marker {
         }
     }  // addOtherLabelMarkers
 
-    public function setRow ($row)
+    public function setRow ($row): void
     {
         $this->row = $row;
     }
@@ -789,7 +789,7 @@ class Marker {
         return $markerArray;
     }
 
-    public function setUrlMarkerArray ($markerArray)
+    public function setUrlMarkerArray ($markerArray): void
     {
         $this->urlMarkerArray = $markerArray;
     }
@@ -812,7 +812,7 @@ class Marker {
         $token,
         $setFixedKey,
         array $fD
-    )
+    ): void
     {
         $localMarkerArray = [];
         $authObj = GeneralUtility::makeInstance(Authentication::class);
@@ -859,7 +859,7 @@ class Marker {
         $prefixId,
         $row = '',
         $viewOnly = false
-    )
+    ): void
     {
         if (is_object($this->staticInfoObj)) {
             $css = GeneralUtility::makeInstance(Css::class);
@@ -1100,7 +1100,7 @@ var submitFile = function(id){
         $viewOnly = false,
         $activity = '',
         $bHtml = true
-    )
+    ): void
     {
         $filenameArray = [];
 
@@ -1153,7 +1153,7 @@ var submitFile = function(id){
         $token,
         $extKey,
         $prefixId
-    )
+    ): void
     {
         $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="' . $prefixId . '[token]" value="' . $token . '"' . HtmlUtility::getXhtmlFix() . '>';
     }
@@ -1170,7 +1170,7 @@ var submitFile = function(id){
         $enableEmailConfirmation,
         $cmdKeyFields,
         $dataArray = []
-    )
+    ): void
     {
         if ($this->conf[$cmdKey . '.']['preview'] && $mode != Mode::PREVIEW) {
             $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="' . $prefixId .  '[preview]" value="1"' . HtmlUtility::getXhtmlFix() . '>';
@@ -1235,7 +1235,7 @@ var submitFile = function(id){
         $theTable,
         array $dataArray,
         $usePrivacyPolicy
-    ) 
+    ): void 
     {
         $markerArray['###BUTTON_DISABLED###'] = '';
 
@@ -1377,7 +1377,7 @@ var submitFile = function(id){
     static public function fillInCaptchaMarker (
         &$markerArray,
         $captcha
-    )
+    ): void
     {
         if (
             $captcha instanceof CaptchaInterface

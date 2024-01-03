@@ -108,7 +108,7 @@ class Data implements SingletonInterface {
         $templateCode,
         Parameters $controlData,
         $staticInfoObj
-    )
+    ): void
     {
         $this->lang = $lang;
         $this->tca = $tca;
@@ -145,7 +145,7 @@ class Data implements SingletonInterface {
         return $this->coreQuery;
     }
 
-    public function setError ($error)
+    public function setError ($error): void
     {
         $this->error = $error;
     }
@@ -155,7 +155,7 @@ class Data implements SingletonInterface {
         return $this->error;
     }
 
-    public function setSaved ($value)
+    public function setSaved ($value): void
     {
         $this->saved = $value;
     }
@@ -176,7 +176,7 @@ class Data implements SingletonInterface {
      * @param string $templateCode: the source code
      * @return void
      */
-    public function setTemplateCode ($templateCode)
+    public function setTemplateCode ($templateCode): void
     {
         $this->templateCode = $templateCode;
     }
@@ -186,12 +186,12 @@ class Data implements SingletonInterface {
         return $this->fieldList;
     }
 
-    public function setFieldList ($fieldList)
+    public function setFieldList ($fieldList): void
     {
         $this->fieldList = $fieldList;
     }
 
-    public function setSpecialFieldList ($specialfieldlist)
+    public function setSpecialFieldList ($specialfieldlist): void
     {
         $this->specialfieldlist = $specialfieldlist;
     }
@@ -206,7 +206,7 @@ class Data implements SingletonInterface {
         return $this->adminFieldList;
     }
 
-    public function setAdminFieldList ($adminFieldList)
+    public function setAdminFieldList ($adminFieldList): void
     {
         $this->adminFieldList = $adminFieldList;
     }
@@ -216,7 +216,7 @@ class Data implements SingletonInterface {
         return $this->additionalUpdateFields;
     }
 
-    public function setAdditionalUpdateFields ($additionalUpdateFields)
+    public function setAdditionalUpdateFields ($additionalUpdateFields): void
     {
         $this->additionalUpdateFields = $additionalUpdateFields;
     }
@@ -226,7 +226,7 @@ class Data implements SingletonInterface {
         return $this->additionalOverrideFields;
     }
 
-    public function setAdditionalOverrideFields ($fields)
+    public function setAdditionalOverrideFields ($fields): void
     {
         $this->additionalOverrideFields = $fields;
     }
@@ -236,12 +236,12 @@ class Data implements SingletonInterface {
         return $this->additionalIncludedFields;
     }
 
-    public function setAdditionalIncludedFields ($fields)
+    public function setAdditionalIncludedFields ($fields): void
     {
         $this->additionalIncludedFields = $fields;
     }
 
-    public function setRecUid ($uid)
+    public function setRecUid ($uid): void
     {
         $this->recUid = intval($uid);
     }
@@ -256,7 +256,7 @@ class Data implements SingletonInterface {
         return $this->addTableArray;
     }
 
-    public function addTableArray ($table)
+    public function addTableArray ($table): void
     {
         if (!in_array($table, $this->addTableArray)) {
             $this->addTableArray[] = $table;
@@ -266,7 +266,7 @@ class Data implements SingletonInterface {
     public function setDataArray
     (
         array $dataArray
-    ) {
+    ): void {
         $this->dataArray = $dataArray;
         if (isset($this->dataArray['uid'])) {
             $this->dataArray['uid'] = intval($this->dataArray['uid']);
@@ -284,12 +284,12 @@ class Data implements SingletonInterface {
         return $result;
     }
 
-    public function resetDataArray ()
+    public function resetDataArray (): void
     {
         $this->dataArray = [];
     }
 
-    public function setOrigArray (array $origArray)
+    public function setOrigArray (array $origArray): void
     {
         $this->origArray = $origArray;
     }
@@ -315,7 +315,7 @@ class Data implements SingletonInterface {
         array &$dataArray,
         $cmdKey,
         $conf
-    )
+    ): void
     {
         $cObj = FrontendUtility::getContentObjectRenderer();
         $overrideFieldArray = [];
@@ -1813,7 +1813,7 @@ class Data implements SingletonInterface {
         $theTable,
         array $origArray,
         array &$dataArray
-    )
+    ): void
     {
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
@@ -1905,7 +1905,7 @@ class Data implements SingletonInterface {
     public function deleteFilesFromRecord (
         $theTable,
         $row
-    )
+    ): void
     {
         $updateFields = [];
         $pathSite = Environment::getPublicPath() . '/';
@@ -2036,7 +2036,7 @@ class Data implements SingletonInterface {
     public function updateMMRelations (
         $theTable,
         array $row
-    ) {
+    ): void {
             // update the MM relation
         $fieldsList = array_keys($row);
         foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
@@ -2080,7 +2080,7 @@ class Data implements SingletonInterface {
         $theTable,
         $uid,
         array $row = []
-    )
+    ): void
     {
             // update the MM relation
         $fieldsList = array_keys($row);
@@ -2192,7 +2192,7 @@ class Data implements SingletonInterface {
         array &$dataArray,
         $cmdKey,
         $theTable
-    )
+    ): void
     {
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
@@ -2240,7 +2240,7 @@ class Data implements SingletonInterface {
         $theTable,
         array &$dataArray,
         $cmdKey
-    )
+    ): void
     {
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();

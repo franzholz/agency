@@ -103,7 +103,7 @@ class Parameters
         $extensionKey,
         $piVars,
         $theTable
-    )
+    ): void
     {
         $fdArray = [];
         $conf = $confObj->getConf();
@@ -407,7 +407,7 @@ class Parameters
 
     public function initCaptcha (
         $cmdKey
-    )
+    ): void
     {
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
@@ -454,7 +454,7 @@ class Parameters
         return $result;
     }
 
-    public function initPasswordField ($conf)
+    public function initPasswordField ($conf): void
     {
         $this->usePassword = false;
         $this->usePasswordAgain = false;
@@ -482,7 +482,7 @@ class Parameters
         return $this->usePasswordAgain;
     }
 
-    public function setDefaultPid ($pid)
+    public function setDefaultPid ($pid): void
     {
 
         $bPidIsInt = MathUtility::canBeInterpretedAsInteger($pid);
@@ -494,7 +494,7 @@ class Parameters
         return $this->defaultPid;
     }
 
-    public function setRegHash ($regHash)
+    public function setRegHash ($regHash): void
     {
         $this->regHash = $regHash;
     }
@@ -504,7 +504,7 @@ class Parameters
         return $this->regHash;
     }
 
-    public function setValidRegHash ($bValidRegHash)
+    public function setValidRegHash ($bValidRegHash): void
     {
         $this->bValidRegHash = $bValidRegHash;
     }
@@ -687,7 +687,7 @@ class Parameters
         return $this->prefixId;
     }
 
-    public function setPrefixId ($prefixId)
+    public function setPrefixId ($prefixId): void
     {
         $this->prefixId = $prefixId;
     }
@@ -697,7 +697,7 @@ class Parameters
         return $this->extensionKey;
     }
 
-    public function setExtensionKey ($extensionKey)
+    public function setExtensionKey ($extensionKey): void
     {
         $this->extensionKey = $extensionKey;
     }
@@ -707,7 +707,7 @@ class Parameters
         return $this->piVars;
     }
 
-    public function setPiVars ($piVars)
+    public function setPiVars ($piVars): void
     {
         $this->piVars = $piVars;
     }
@@ -717,7 +717,7 @@ class Parameters
         return $this->cmd;
     }
 
-    public function setCmd ($cmd)
+    public function setCmd ($cmd): void
     {
         $this->cmd = $cmd;
     }
@@ -727,7 +727,7 @@ class Parameters
         return $this->cmdKey;
     }
 
-    public function setCmdKey ($cmdKey)
+    public function setCmdKey ($cmdKey): void
     {
         $this->cmdKey = $cmdKey;
     }
@@ -761,7 +761,7 @@ class Parameters
      * @param string $key: the key for which the value should be set
      * @return void
      */
-    public function setFeUserData ($value, $key = '')
+    public function setFeUserData ($value, $key = ''): void
     {
         if ($key != '') {
             $this->feUserData[$key] = $value;
@@ -770,7 +770,7 @@ class Parameters
         }
     }
 
-    public function setCaptcha (CaptchaInterface $captcha)
+    public function setCaptcha (CaptchaInterface $captcha): void
     {
         $this->captcha = $captcha;
     }
@@ -780,7 +780,7 @@ class Parameters
         return $this->captcha;
     }
 
-    public function setFailure ($failure)
+    public function setFailure ($failure): void
     {
         $this->failure = $failure;
     }
@@ -790,7 +790,7 @@ class Parameters
         return $this->failure;
     }
 
-    public function setSubmit ($submit)
+    public function setSubmit ($submit): void
     {
         $this->submit = $submit;
     }
@@ -800,7 +800,7 @@ class Parameters
         return $this->submit;
     }
 
-    public function setDoNotSave ($bParam)
+    public function setDoNotSave ($bParam): void
     {
         $this->bDoNotSave = $bParam;
     }
@@ -825,7 +825,7 @@ class Parameters
         return $result;
     }
 
-    public function setPid ($type, $pid)
+    public function setPid ($type, $pid): void
     {
         if (!intval($pid)) {
             switch ($type) {
@@ -852,7 +852,7 @@ class Parameters
         return $this->mode;
     }
 
-    public function setMode ($mode)
+    public function setMode ($mode): void
     {
         $this->mode = $mode;
     }
@@ -862,7 +862,7 @@ class Parameters
         return $this->theTable;
     }
 
-    public function setTable ($theTable)
+    public function setTable ($theTable): void
     {
         $this->theTable = $theTable;
     }
@@ -872,7 +872,7 @@ class Parameters
         return $this->requiredArray;
     }
 
-    public function setRequiredArray ($requiredArray)
+    public function setRequiredArray ($requiredArray): void
     {
         $this->requiredArray = $requiredArray;
     }
@@ -882,7 +882,7 @@ class Parameters
         return $this->setfixedEnabled;
     }
 
-    public function setSetfixedEnabled ($setfixedEnabled)
+    public function setSetfixedEnabled ($setfixedEnabled): void
     {
         $this->setfixedEnabled = $setfixedEnabled;
     }
@@ -892,7 +892,7 @@ class Parameters
         return $this->setFixedOptions;
     }
 
-    public function setSetfixedOptions ($setFixedOptions)
+    public function setSetfixedOptions ($setFixedOptions): void
     {
         $this->setFixedOptions = $setFixedOptions;
     }
@@ -902,7 +902,7 @@ class Parameters
         return $this->setFixedParameters;
     }
 
-    public function setSetfixedParameters ($setFixedParameters)
+    public function setSetfixedParameters ($setFixedParameters): void
     {
         $this->setFixedParameters = $setFixedParameters;
     }
@@ -912,7 +912,7 @@ class Parameters
         return $this->fD;
     }
 
-    public function setFd ($fD)
+    public function setFd ($fD): void
     {
         $this->fD = $fD;
     }
@@ -998,7 +998,7 @@ class Parameters
     /**
     *  Get the stored variables using the hash value to access the database
     */
-    public function deleteShortUrl ($regHash)
+    public function deleteShortUrl ($regHash): void
     {
         if ($regHash != '') {
             // get the serialised array from the DB based on the passed hash value
@@ -1012,7 +1012,7 @@ class Parameters
     /**
     *  Clears obsolete hashes used for short url's
     */
-    public function cleanShortUrlCache ()
+    public function cleanShortUrlCache (): void
     {
 
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);

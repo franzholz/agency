@@ -43,7 +43,7 @@ namespace JambageCom\Agency\Domain\Field;
 class Base {
     public $hasBeenInitialised = false;
 
-    public function init () {
+    public function init (): void {
         $this->hasBeenInitialised = true;
     }
 
@@ -51,7 +51,7 @@ class Base {
         return !$this->hasBeenInitialised;
     }
 
-    public function modifyConf (&$conf, $cmdKey) {
+    public function modifyConf (&$conf, $cmdKey): void {
     }
 
     public function get ($row, $fieldname) {
@@ -68,7 +68,7 @@ class Base {
         $dataArray,
         $origArray,
         &$parsedArr
-    ) {
+    ): void {
         $parsedArr[$fieldname] = $dataArray[$fieldname];	// just copied the original value
     }
 }

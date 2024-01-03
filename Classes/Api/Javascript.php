@@ -48,7 +48,7 @@ class Javascript {
     static public function getOnSubmitHooks (
         &$javaScript,
         $pObj
-    )
+    ): void
     {
         if (
             isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']) &&

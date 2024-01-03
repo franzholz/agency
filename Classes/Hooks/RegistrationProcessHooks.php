@@ -39,7 +39,7 @@ class RegistrationProcessHooks
 
     public function init (
         Data $dataObject
-    ) {
+    ): void {
         $this->hasBeenInitialised = true;
     }
 
@@ -57,7 +57,7 @@ class RegistrationProcessHooks
         Parameters $parameters,
         $cmdKey,
         ConfigurationStore $confObj
-    ) {
+    ): void {
         $conf = $confObj->getConf();
 
         // in the case of this hook, the record array is passed by reference
@@ -95,14 +95,14 @@ class RegistrationProcessHooks
         $pid,
         $fieldList,
         Data $pObj
-    )
+    ): void
     {}
 
     public function registrationProcess_beforeSaveDelete (
         Parameters $parameters,
         $origArray,
         Data $pObj
-    )
+    ): void
     {}
 
     public function registrationProcess_afterSaveCreate (
@@ -117,7 +117,7 @@ class RegistrationProcessHooks
         $pid,
         $extraList,
         Data $pObj
-    )
+    ): void
     {}
 
     public function confirmRegistrationClass_preProcess (
@@ -127,7 +127,7 @@ class RegistrationProcessHooks
         $newFieldList,
         SetFixed $pObj,
         &$errorCode
-    )
+    ): void
     {
         // in the case of this hook, the record array is passed by reference
         // you may not see this echo if the page is redirected to auto-login
@@ -140,7 +140,7 @@ class RegistrationProcessHooks
         array $currArr,
         array $origArray,
         SetFixed $pObj
-    )
+    ): void
     {
         // you may not see this echo if the page is redirected to auto-login
     }
@@ -158,7 +158,7 @@ class RegistrationProcessHooks
         Parameters $controlData,
         ConfigurationStore $confObj,
         Marker $markerObject
-    )
+    ): void
     {
         // add your global markers to the $markerArray here
     }

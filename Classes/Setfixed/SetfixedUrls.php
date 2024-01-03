@@ -76,7 +76,7 @@ class SetFixedUrls {
         $editSetfixed,
         $autoLoginKey,
         $confirmType
-    )
+    ): void
     {
         if ($controlData->getSetfixedEnabled() && is_array($setfixed)) {
             $authObj = GeneralUtility::makeInstance(Authentication::class);
