@@ -39,6 +39,7 @@ namespace JambageCom\Agency\Domain;
  *
  *
  */
+use TYPO3\CMS\Core\Resource\Security\FileNameValidator;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\SingletonInterface;
 use JambageCom\Agency\Request\Parameters;
@@ -1454,7 +1455,7 @@ class Data implements SingletonInterface {
                     ) {
                         $fI = pathinfo($filename);
 
-                        if (GeneralUtility::verifyFilenameAgainstDenyPattern($fI['name'])) {
+                        if (GeneralUtility::makeInstance(FileNameValidator::class)->isValid($fI['name'])) {
                             $tmpFilename = basename($filename, '.' . $fI['extension']) . '_' . GeneralUtility::shortmd5(uniqid($filename)) . '.' . $fI['extension'];
                             $cleanFilename = $this->fileFunc->cleanFileName($tmpFilename);
                             $theDestFile = $this->fileFunc->getUniqueName($cleanFilename, $pathSite . $uploadPath . '/');

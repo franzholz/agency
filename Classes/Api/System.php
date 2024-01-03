@@ -130,7 +130,7 @@ class System implements LoggerAwareInterface {
                             GeneralUtility::makeInstanceService(
                                 'auth',
                                 'authUserFE',
-                                $serviceChain
+                                GeneralUtility::trimExplode(',', $serviceChain, true)
                             )
                     )
                 ) {
