@@ -2,6 +2,7 @@
 
 namespace JambageCom\Agency\Api;
 
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Core\SingletonInterface;
 /***************************************************************
 *  Copyright notice
@@ -43,7 +44,7 @@ use TYPO3\CMS\Core\SingletonInterface;
  *
  */
 class Url implements SingletonInterface {
-    public $cObj;
+    protected $cObj;
     private $piVars;
     private $prefixId;
 
@@ -103,6 +104,13 @@ class Url implements SingletonInterface {
         }
         $result = str_replace(['[', ']'], ['%5B', '%5D'], $result);
         return $result;
-    }	// get_url
+    }
+    // get_url
+
+    // get_url
+    public function setContentObjectRenderer(ContentObjectRenderer $cObj): void
+    {
+        $this->cObj = $cObj;
+    }
 }
 

@@ -41,6 +41,7 @@ namespace JambageCom\Agency\View;
 *
 *
 */
+use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Domain\Data;
@@ -196,7 +197,7 @@ class Marker {
 
             if ($formerOtherLabelsList != '') {
                 $newOtherLabelsList = $formerOtherLabelsList . ',' . $otherLabelsList;
-                $newOtherLabelsList = GeneralUtility::uniqueList($newOtherLabelsList);
+                $newOtherLabelsList = StringUtility::uniqueList($newOtherLabelsList);
                 $this->setOtherLabelsList($newOtherLabelsList);
             } else {
                 $this->setOtherLabelsList($otherLabelsList);

@@ -1456,7 +1456,7 @@ class Data implements SingletonInterface {
                         $fI = pathinfo($filename);
 
                         if (GeneralUtility::makeInstance(FileNameValidator::class)->isValid($fI['name'])) {
-                            $tmpFilename = basename($filename, '.' . $fI['extension']) . '_' . GeneralUtility::shortmd5(uniqid($filename)) . '.' . $fI['extension'];
+                            $tmpFilename = basename($filename, '.' . $fI['extension']) . '_' . substr(md5(uniqid($filename)), 0, 10) . '.' . $fI['extension'];
                             $cleanFilename = $this->fileFunc->cleanFileName($tmpFilename);
                             $theDestFile = $this->fileFunc->getUniqueName($cleanFilename, $pathSite . $uploadPath . '/');
                             $result = GeneralUtility::upload_copy_move($_FILES['FE']['tmp_name'][$theTable][$theField][$i], $theDestFile);

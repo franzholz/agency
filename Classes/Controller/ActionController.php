@@ -319,8 +319,13 @@ class ActionController {
                 }
                     // When not in edit mode, add username to lists of fields and required fields unless explicitly disabled
                 if (!empty($conf[$cmdKey.'.']['doNotEnforceUsername'])) {
-                    $conf[$cmdKey . '.']['fields'] = GeneralUtility::rmFromList('username', $conf[$cmdKey . '.']['fields']);
-                    $conf[$cmdKey . '.']['required'] = GeneralUtility::rmFromList('username', $conf[$cmdKey . '.']['required']);
+                    $element = 'username';
+                    $conf[$cmdKey . '.']['fields'] = implode(',', array_filter(explode(',', $conf[$cmdKey . '.']['fields']), function ($item) use ($element) {
+                        return $element == $item;
+                    }));
+                    $conf[$cmdKey . '.']['required'] = implode(',', array_filter(explode(',', $conf[$cmdKey . '.']['required']), function ($item) use ($element) {
+                        return $element == $item;
+                    }));
                 } else {
                     $conf[$cmdKey . '.']['fields'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',username', 1)));
                     $conf[$cmdKey . '.']['required'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',username', 1)));
@@ -408,7 +413,10 @@ class ActionController {
         ) {
             $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('tt_address');
             if (is_array($extConf) && $extConf['disableCombinedNameField'] == '1') {
-                $conf[$cmdKey . '.']['fields'] = GeneralUtility::rmFromList('name', $conf[$cmdKey . '.']['fields']);
+                $element = 'name';
+                $conf[$cmdKey . '.']['fields'] = implode(',', array_filter(explode(',', $conf[$cmdKey . '.']['fields']), function ($item) use ($element) {
+                    return $element == $item;
+                }));
             }
         }
 

@@ -36,17 +36,23 @@
  *
  *
  */
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use JambageCom\Agency\Controller\RegisterPluginController;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class tx_agency {
-    public $cObj;
+    protected $cObj;
 
     public function main ($content, $conf) {
         $pibaseObj = GeneralUtility::makeInstance(RegisterPluginController::class);
         $pibaseObj->cObj = $this->cObj;
         $content = $pibaseObj->main($content, $conf);
         return $content;
+    }
+
+    public function setContentObjectRenderer(ContentObjectRenderer $cObj): void
+    {
+        $this->cObj = $cObj;
     }
 }
 
