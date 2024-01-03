@@ -227,12 +227,7 @@ class SetFixedUrls {
                 );
 
         if (!$GLOBALS['TYPO3_DB']->sql_num_rows($res)) {
-            $insertFields = array (
-                'md5hash' => $regHash_calc,
-                'tstamp' => time(),
-                'type' => 99,
-                'params' => serialize($params)
-            );
+            $insertFields = ['md5hash' => $regHash_calc, 'tstamp' => time(), 'type' => 99, 'params' => serialize($params)];
 
             $GLOBALS['TYPO3_DB']->exec_INSERTquery(
                 'cache_md5params',

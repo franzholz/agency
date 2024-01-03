@@ -40,8 +40,6 @@ use JambageCom\Agency\Domain\Field\UserGroup;
  *
  */
 class FeUsers extends Base {
-    public $fieldClassArray = array (
-        'usergroup' => UserGroup::class
-    );
+    public $fieldClassArray = ['usergroup' => UserGroup::class];
 }
 

@@ -423,7 +423,7 @@ class Setfixed {
                 // Outputting template
             if (
                 $theTable == 'fe_users' &&
-                in_array($setFixedKey, array('APPROVE', 'ENTER', 'LOGIN'))
+                in_array($setFixedKey, ['APPROVE', 'ENTER', 'LOGIN'])
             ) {
                 $markerObj->addGeneralHiddenFieldsMarkers(
                     $markerArray,
