@@ -1477,6 +1477,7 @@ class Data implements SingletonInterface
         $theTable,
         array $dataArray,
         array $origArray,
+        $feUser,
         $token,
         array &$newRow,
         $cmd,
@@ -1486,6 +1487,7 @@ class Data implements SingletonInterface
         $extraFields,
         $hookClassArray
     ) {
+        debug ($password, 'save $password');
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
         $result = 0;
@@ -1520,6 +1522,7 @@ class Data implements SingletonInterface
                                 $this->getAdditionalOverrideFields()
                             )
                         );
+                    debug ($newFieldArray, '$newFieldArray');
                     $fieldArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1);
 
                     // Do not reset the name if we have no new value
@@ -1540,7 +1543,7 @@ class Data implements SingletonInterface
                         $this->coreQuery->DBmayFEUserEdit(
                             $theTable,
                             $origArray,
-                            $GLOBALS['TSFE']->fe_user->user,
+                            $feUser,
                             $conf['allowedGroups'] ?? '',
                             $conf['fe_userEditSelf'] ?? ''
                         )
@@ -1554,15 +1557,18 @@ class Data implements SingletonInterface
                                 $dataArray,
                                 $origArray
                             );
+                            debug ($outGoingData, '$outGoingData');
 
                         if ($theTable == 'fe_users' && isset($dataArray['password'])) {
                             // Do not set the outgoing password if the incoming password was unset
                             $outGoingData['password'] = $password;
+                            debug ($outGoingData['password'], '$outGoingData[\'password\']');
                         }
                         $newFieldList = implode(',', $newFieldArray);
                         if (isset($GLOBALS['TCA'][$theTable]['ctrl']['token'])) {
                             // Save token in record
                             $outGoingData['token'] = $token;
+                            debug ($outGoingData['token'], '$outGoingData[\'token\']');
                             // Could be set conditional to adminReview or user confirm
                             $newFieldList .= ',token';
                         }
@@ -1621,6 +1627,7 @@ class Data implements SingletonInterface
                                 }
                             }
                         }
+                        debug ($newRow, '$newRow');
                     } else {
                         $this->setError('###TEMPLATE_NO_PERMISSIONS###');
                     }
@@ -1680,14 +1687,15 @@ class Data implements SingletonInterface
 
                     if ($theTable == 'fe_users') {
                         $parsedArray['password'] = $password;
+                        debug ($parsedArray['password'], '$parsedArray[\'password\']');
                     }
-
+                    
                     if (isset($GLOBALS['TCA'][$theTable]['ctrl']['token'])) {
 
                         $parsedArray['token'] = $token;
                         $newFieldList  .= ',token';
                     }
-
+                    debug ($parsedArray, '$parsedArray vor DBgetInsert');
                     $res =
                         $this->coreQuery->DBgetInsert(
                             $theTable,
@@ -1726,6 +1734,7 @@ class Data implements SingletonInterface
                         }
 
                         if (count($tmpDataArray)) {
+                            debug ($tmpDataArray, '$tmpDataArray vor DBgetUpdate');
                             $res =
                                 $this->coreQuery->DBgetUpdate(
                                     $theTable,
@@ -1809,7 +1818,8 @@ class Data implements SingletonInterface
         Parameters $controlDataObj,
         $theTable,
         array $origArray,
-        array &$dataArray
+        array &$dataArray,
+        array $feUser
     ): void {
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
@@ -1830,7 +1840,7 @@ class Data implements SingletonInterface
                         $this->coreQuery->DBmayFEUserEdit(
                             $theTable,
                             $origArray,
-                            $GLOBALS['TSFE']->fe_user->user,
+                            $feUser,
                             $conf['allowedGroups'] ?? '',
                             $conf['fe_userEditSelf'] ?? ''
                         )

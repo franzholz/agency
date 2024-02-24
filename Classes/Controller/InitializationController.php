@@ -30,9 +30,6 @@ namespace JambageCom\Agency\Controller;
 *
 * Part of the agency (Agency Registration) extension.
 *
-* Front End creating/editing/deleting records authenticated by fe_user login.
-* A variant restricted to front end user self-registration and profile maintenance, with a number of enhancements (see the manual).
-*
 * @author   Kasper Skårhøj <kasperYYYY@typo3.com>
 * @author   Stanislas Rolland <typo3(arobas)sjbr.ca>
 * @author   Franz Holzinger <franz@ttproducts.de>
@@ -40,6 +37,9 @@ namespace JambageCom\Agency\Controller;
 *
 *
 */
+
+use Psr\Http\Message\ServerRequestInterface;
+
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
@@ -90,6 +90,7 @@ class InitializationController implements SingletonInterface
         &$languageObj,
         &$markerObj,
         &$errorMessage,
+        ServerRequestInterface $request,
         AbstractPlugin $pibaseObj,
         ContentObjectRenderer $cObj,
         ConfigurationStore $confObj,
@@ -99,7 +100,7 @@ class InitializationController implements SingletonInterface
         $buttonLabelsList,
         $otherLabelsList
     ) {
-
+        debug ('B');
         $result = true;
         HtmlUtility::generateXhtmlFix();
 
@@ -113,6 +114,7 @@ class InitializationController implements SingletonInterface
         $controlData = GeneralUtility::makeInstance(Parameters::class);
         $controlData->init(
             $confObj,
+            $request,
             $pibaseObj->prefixId,
             $pibaseObj->extKey,
             $pibaseObj->piVars,
@@ -173,6 +175,7 @@ class InitializationController implements SingletonInterface
             $controlData->getPiVars(),
             $controlData->getPrefixId()
         );
+        debug ($result, '$result');
 
         if ($result !== false) {
             if ($pibaseObj->extKey != Extension::KEY) {
@@ -259,17 +262,20 @@ class InitializationController implements SingletonInterface
             } else {
                 $result = false;
                 $errorMessage = $languageObj->getLabel('internal_invalid_token');
+                debug ($errorMessage, '$errorMessage');
             }
         } else {
             $errorMessage = $languageObj->getLabel('internal_init_language');
         }
-
+        debug ('E');
+        
         return $result;
     } // init
 
 
     public function main(
         AbstractPlugin $pibaseObj,
+        ServerRequestInterface $request,
         ContentObjectRenderer $cObj,
         $content,
         $conf,
@@ -278,6 +284,8 @@ class InitializationController implements SingletonInterface
         $buttonLabelsList = '',
         $otherLabelsList = ''
     ) {
+        debug ('B');
+        
         $staticInfoObj = null;
         $dataObj = null; // object of type tx_agency_data
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
@@ -294,6 +302,7 @@ class InitializationController implements SingletonInterface
             $languageObj,
             $markerObj,
             $errorMessage,
+            $request,
             $pibaseObj,
             $cObj,
             $confObj,
@@ -349,6 +358,8 @@ class InitializationController implements SingletonInterface
                 $pibaseObj->prefixId,
                 $pibaseObj->extKey
             );
+        debug ('E');
+            
         return $content;
     }
 

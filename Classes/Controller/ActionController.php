@@ -42,36 +42,38 @@ namespace JambageCom\Agency\Controller;
 *
 */
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use JambageCom\Agency\Configuration\ConfigurationStore;
-use JambageCom\Agency\Api\Localization;
+use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use JambageCom\Agency\Request\Parameters;
-use JambageCom\Agency\Api\Url;
+
+use JambageCom\Div2007\Utility\CompatibilityUtility;
 use JambageCom\Div2007\Utility\ConfigUtility;
+use JambageCom\Div2007\Utility\SystemUtility;
+use JambageCom\Div2007\Utility\TableUtility;
+
+use JambageCom\Agency\Api\CustomerNumber;
+use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Api\System;
+use JambageCom\Agency\Api\Url;
+use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Agency\Constants\Mode;
+use JambageCom\Agency\Controller\Email;
 use JambageCom\Agency\Domain\Data;
 use JambageCom\Agency\Domain\Tca;
 use JambageCom\Agency\Domain\Tables;
-use JambageCom\Div2007\Utility\TableUtility;
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Security\SecuredData;
+use JambageCom\Agency\Utility\SessionUtility;
 use JambageCom\Agency\View\Template;
 use JambageCom\Agency\View\CreateView;
 use JambageCom\Agency\View\EditView;
 use JambageCom\Agency\View\DeleteView;
 use JambageCom\Agency\View\Marker;
-use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
-use JambageCom\Div2007\Utility\CompatibilityUtility;
-use TYPO3\CMS\Core\Utility\ArrayUtility;
-use JambageCom\Agency\Api\CustomerNumber;
 use JambageCom\Agency\View\AfterSaveView;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
-use JambageCom\Div2007\Utility\SystemUtility;
 
-use JambageCom\Agency\Api\System;
-use JambageCom\Agency\Constants\Mode;
-use JambageCom\Agency\Controller\Email;
-use JambageCom\Agency\Security\SecuredData;
-use JambageCom\Agency\Utility\SessionUtility;
 
 class ActionController
 {
@@ -135,8 +137,11 @@ class ActionController
         $extensionKey = $controlData->getExtensionKey();
         $cmd = $controlData->getCmd();
         $dataArray = $dataObj->getDataArray();
+        debug ($dataArray, '$dataArray');
         $fieldlist = '';
         $modifyPassword = false;
+        $request = $controlData->getRequest();
+        $frontendUser = $request->getAttribute('frontend.user');
 
         $bHtmlSpecialChars = false;
         SecuredData::secureInput($dataArray, $bHtmlSpecialChars);
@@ -147,6 +152,7 @@ class ActionController
         ) {
             $modifyPassword =
                 SecuredData::securePassword(
+                    $frontendUser,
                     $extensionKey,
                     $dataArray,
                     $errorMessage
@@ -161,7 +167,6 @@ class ActionController
         $fieldlist =
             implode(',', TableUtility::getFields($theTable));
 
-        // new
         if ($cmd == 'password') {
             $fieldlist = implode(',', array_keys($dataArray));
             if ($modifyPassword) {
@@ -184,24 +189,26 @@ class ActionController
             );
         }
         $feUserdata = $controlData->getFeUserData();
+        debug ($feUserdata, '$feUserdata');
         $theUid = 0;
         $setFixedUid = false;
 
         if (is_array($dataArray) && !empty($dataArray['uid'])) {
             $theUid = $dataArray['uid'];
+            debug ($theUid, '$theUid');
         } elseif (is_array($feUserdata) && !empty($feUserdata['rU'])) {
             $theUid = $feUserdata['rU'];
+            debug ($theUid, '$theUid');
 
             if ($cmd == 'setfixed') {
                 $setFixedUid = true;
             }
         } elseif (
             !in_array($cmd, $this->noLoginCommands) &&
-            isset($GLOBALS['TSFE']->fe_user) &&
-            isset($GLOBALS['TSFE']->fe_user->user) &&
-            isset($GLOBALS['TSFE']->fe_user->user['uid'])
+            isset($frontendUser->user['uid'])
         ) {
-            $theUid = $GLOBALS['TSFE']->fe_user->user['uid'];
+            $theUid = $frontendUser->user['uid'];
+            debug ($theUid, '$theUid');
         }
 
         if ($theUid) {
@@ -211,7 +218,7 @@ class ActionController
                     $theTable,
                     $theUid
                 );
-
+debug ($newOrigArray, '$newOrigArray');
             if (isset($newOrigArray) && is_array($newOrigArray)) {
                 $tcaObj->modifyRow(
                     $staticInfoObj,
@@ -223,6 +230,7 @@ class ActionController
                 $origArray = $newOrigArray;
             }
         }
+        debug ($origArray, '$origArray');
         // Set the command key
         $cmdKey = '';
 
@@ -232,12 +240,13 @@ class ActionController
             $cmd == 'infomail'
         ) {
             $cmdKey = $cmd;
+            debug ($cmdKey, '$cmdKey');
         } elseif (
             isset($origArray['uid']) &&
             (
                 $theTable != 'fe_users' ||
-                isset($GLOBALS['TSFE']->fe_user->user['uid']) &&
-                $theUid == $GLOBALS['TSFE']->fe_user->user['uid'] || // for security reason: do not allow the change of other user records
+                isset($frontendUser->user['uid']) &&
+                $theUid == $frontendUser->user['uid'] || // for security reason: do not allow the change of other user records
                 $origArray['disable'] // needed for setfixed after INVITE
             )
         ) {
@@ -249,12 +258,15 @@ class ActionController
                 )
             ) {
                 $cmdKey = 'edit';
+                debug ($cmdKey, '$cmdKey');
             } elseif (
                 $cmd == 'delete'
             ) {
                 $cmdKey = 'delete';
+                debug ($cmdKey, '$cmdKey');
             }
         }
+        debug ($cmdKey, '$cmdKey');
 
         if (
             $cmdKey == '' &&
@@ -263,6 +275,7 @@ class ActionController
             $origArray = []; // do not use the read in original array
             $cmdKey = 'create';
         }
+        debug ($cmdKey, '$cmdKey Pos 2');
 
         $controlData->setCmdKey($cmdKey);
 
@@ -329,7 +342,7 @@ class ActionController
                     $conf[$cmdKey . '.']['required'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',username', 1)));
                 }
             }
-
+debug ($cmdKey, '$cmdKey');
             // When in edit mode, remove password from required fields
             if ($cmdKey == 'edit') {
                 $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), ['password']));
@@ -473,6 +486,7 @@ class ActionController
         $fieldList = $dataObj->getFieldList();
         $fieldArray = GeneralUtility::trimExplode(',', $fieldList, 1);
         $additionalFields = $dataObj->getAdditionalIncludedFields();
+        debug ($cmdKey, '$cmdKey');
 
         if ($theTable == 'fe_users' && !empty($cmdKey)) {
 
@@ -538,9 +552,13 @@ class ActionController
         $templateCode,
         &$errorMessage
     ) {
+        debug ($cmd, 'doProcessing $cmd');
+        debug ($cmdKey, 'doProcessing $cmdKey');
         $dataArray = $dataObj->getDataArray();
         $conf = $confObj->getConf();
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
+        $request = $controlData->getRequest();
+        $frontendUser = $request->getAttribute('frontend.user');
         $fD = [];
         $bSubmit = false;
         $extensionKey = $controlData->getExtensionKey();
@@ -567,7 +585,7 @@ class ActionController
                 $theTable == 'fe_users' &&
                 (
                     !CompatibilityUtility::isLoggedIn() ||
-                    ($uid > 0 && $GLOBALS['TSFE']->fe_user->user['uid'] != $uid)
+                    ($uid > 0 && $frontendUser->user['uid'] != $uid)
                 ) &&
                 !in_array($cmd, $this->noLoginCommands)
             )
@@ -579,7 +597,11 @@ class ActionController
             $finalDataArray = $dataArray;
         } elseif ($dataObj->bNewAvailable()) {
             if ($theTable == 'fe_users') {
-                $securedArray = SecuredData::readSecuredArray($extensionKey);
+                $securedArray =
+                    SecuredData::readSecuredArray(
+                        $frontendUser,
+                        $extensionKey
+                    );
             }
             $finalDataArray = $dataArray;
             ArrayUtility::mergeRecursiveWithOverrule(
@@ -606,6 +628,7 @@ class ActionController
             $bDoNotSave = true;
             $controlData->setDoNotSave(true);
             SessionUtility::clearData(
+                $frontendUser,
                 $extensionKey,
                 true,
                 $controlData->readToken(),
@@ -682,6 +705,7 @@ class ActionController
                     in_array('twice', $evalErrors['password'])
                 ) {
                     SessionUtility::clearData(
+                        $frontendUser,
                         $extensionKey,
                         true,
                         $controlData->readToken(),
@@ -733,6 +757,7 @@ class ActionController
                     in_array('twice', $evalErrors['password'])
                 ) {
                     SessionUtility::clearData(
+                        $frontendUser,
                         $extensionKey,
                         true,
                         $controlData->readToken(),
@@ -748,6 +773,8 @@ class ActionController
             }
             $dataObj->setUsername($theTable, $finalDataArray, $cmdKey);
             $dataObj->setDataArray($finalDataArray);
+            debug ($bDoNotSave, '$bDoNotSave');
+            debug ($bDoNotSave, '$bDoNotSave');
 
             if (
                 $parseResult &&
@@ -755,12 +782,14 @@ class ActionController
                 !$controlData->getFeUserData('preview') &&
                 !$bDoNotSave
             ) {
+                debug ($theTable, '$theTable vor save password');
                 if ($theTable == 'fe_users') {
                     if (
                         $cmdKey == 'invite' ||
                         $cmdKey == 'create'
                     ) {
                         SecuredData::generatePassword(
+                            $frontendUser,
                             $extensionKey,
                             $cmdKey,
                             $conf,
@@ -768,10 +797,16 @@ class ActionController
                             $finalDataArray,
                             $autoLoginKey
                         );
+                        debug ($autoLoginKey, '$autoLoginKey nach generatePassword +++');
                     }
 
                     // If inviting or if auto-login will be required on confirmation, we store an encrypted version of the password
-                    $savePassword = SecuredData::readPasswordForStorage($extensionKey);
+                    $savePassword =
+                        SecuredData::readPasswordForStorage(
+                            $frontendUser,
+                            $extensionKey
+                        );
+                    debug ($savePassword, '$savePassword Pos 3');
                 }
                 $extraFields = '';
                 if (
@@ -782,6 +817,7 @@ class ActionController
                     $finalDataArray['privacy_policy_date'] = SystemUtility::createTime();
                     $extraFields = 'privacy_policy_date';
                 }
+                debug ($frontendUser, '$frontendUser');
 
                 $newDataArray = [];
                 $theUid = $dataObj->save(
@@ -789,6 +825,7 @@ class ActionController
                     $theTable,
                     $finalDataArray,
                     $origArray,
+                    $frontendUser->user,
                     $controlData->readToken(),
                     $newDataArray,
                     $cmd,
@@ -815,6 +852,7 @@ class ActionController
                         // conserve the session for the following auto login
                     } else {
                         SessionUtility::clearData(
+                            $frontendUser,
                             $extensionKey,
                             true,
                             $controlData->readToken(),
@@ -890,7 +928,8 @@ class ActionController
                     $controlData,
                     $theTable,
                     $origArray,
-                    $dataArray
+                    $dataArray,
+                    $frontendUser->user
                 );
             }
         }
@@ -1052,8 +1091,8 @@ class ActionController
                     !$bEmailSent &&
                     is_array($errorCode)
                 ) {
-                    $errorText = $languageObj->getLabel($errorCode['0'], $dummy, '', false, true);
-                    $errorContent = sprintf($errorText, $errorCode['1']);
+                    $errorText = $languageObj->getLabel($errorCode[0], $dummy, '', false, true);
+                    $errorContent = sprintf($errorText, $errorCode[1]);
                 }
             }
 
@@ -1084,6 +1123,7 @@ class ActionController
                     header('Location: '.GeneralUtility::locationHeaderUrl($destUrl));
                     exit;
                 }
+                debug ($cmd, '$cmd +++ vor login');
 
                 // Auto login on create
                 if (
@@ -1094,13 +1134,21 @@ class ActionController
                 ) {
                     $autoLoginKey = '';
                     $loginSuccess = false;
-                    $password = SecuredData::readPassword($extensionKey);
-                    $systemObj = GeneralUtility::makeInstance(System::class);
+                    $password =
+                        SecuredData::readPassword(
+                            $frontendUser,
+                            $extensionKey
+                        );
+                    debug ($password, '$password');
+                    $systemObj =
+                        GeneralUtility::makeInstance(
+                            System::class,
+                            $controlData
+                        );
                     $loginSuccess =
                         $systemObj->login(
                             $cObj,
                             $languageObj,
-                            $controlData,
                             $this->urlObj,
                             $conf,
                             $dataArray['username'],
@@ -1108,6 +1156,7 @@ class ActionController
                             true,
                             true
                         );
+                    debug ($loginSuccess, 'AUTOLOGIN $loginSuccess +++');
 
                     if ($loginSuccess) {
                         // Login was successful
@@ -1150,6 +1199,8 @@ class ActionController
             // That is either preview or just displaying an empty or not correctly filled form
             $markerObj->setArray($markerArray);
             $token = $controlData->readToken();
+            debug ($cmdKey, '$cmdKey');
+            debug ($cmd, 'doProcessing $cmd vorher');
 
             if (
                 $cmd == '' &&
@@ -1157,8 +1208,11 @@ class ActionController
             ) {
                 $cmd = $cmdKey;
             }
+debug ($cmd, 'doProcessing $cmd');
 
             switch ($cmd) {
+                case 'login':
+                    // Login is done in the Setfixed class. The login can instead happen in a separate login extension.
                 case 'setfixed':
                     if ($conf['infomail']) {
                         $controlData->setSetfixedEnabled(1);
@@ -1246,7 +1300,7 @@ class ActionController
                         $content == '' &&
                         is_array($errorCode)
                     ) {
-                        $content = $languageObj->getLabel($errorCode['0']);
+                        $content = $languageObj->getLabel($errorCode[0]);
                     }
                     break;
                 case 'delete':
@@ -1274,6 +1328,7 @@ class ActionController
                         $theTable,
                         $finalDataArray,
                         $origArray,
+                        $frontendUser->user,
                         $securedArray,
                         $token,
                         '',
@@ -1348,9 +1403,6 @@ class ActionController
                         $token
                     );
                     break;
-                case 'login':
-                    // nothing. The login parameters are processed by TYPO3 Core
-                    break;
                 default:
                     $markerObj->addGeneralHiddenFieldsMarkers(
                         $markerArray,
@@ -1390,9 +1442,9 @@ class ActionController
                 isset($errorCode) &&
                 is_array($errorCode)
             ) {
-                $errorText = $languageObj->getLabel($errorCode['0']);
-                if (isset($errorCode['1'])) {
-                    $errorContent = sprintf($errorText, $errorCode['1']);
+                $errorText = $languageObj->getLabel($errorCode[0]);
+                if (isset($errorCode[1])) {
+                    $errorContent = sprintf($errorText, $errorCode[1]);
                 } else {
                     $errorContent = $errorText;
                 }

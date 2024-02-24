@@ -226,8 +226,8 @@ class Email implements SingletonInterface
                     !$emailHasBeenSent &&
                     is_array($errorCode)
                 ) {
-                    $errorText = $languageObj->getLabel($errorCode['0'], $dummy, '', false, true);
-                    $errorContent = sprintf($errorText, $errorCode['1']);
+                    $errorText = $languageObj->getLabel($errorCode[0], $dummy, '', false, true);
+                    $errorContent = sprintf($errorText, $errorCode[1]);
                 }
 
                 if ($errorContent != '') {
@@ -291,7 +291,7 @@ class Email implements SingletonInterface
             }
         } else {
             $errorCode = [];
-            $errorCode['0'] = 'internal_infomail_configuration';
+            $errorCode[0] = 'internal_infomail_configuration';
         }
 
         return $content;
@@ -340,6 +340,7 @@ class Email implements SingletonInterface
         array $setFixedConfig,
         &$errorCode
     ) {
+        debug ($key, 'compile +++ $key');
         $errorCode = '';
         $conf = $confObj->getConf();
         $useAdditionalFields = true;
@@ -889,8 +890,8 @@ class Email implements SingletonInterface
             $result = false;
             if (!empty($missingSubpartArray)) { // $conf['notify.'][$key]
                 $errorCode = [];
-                $errorCode['0'] = 'internal_no_subtemplate';
-                $errorCode['1'] = $missingSubpartArray['0'];
+                $errorCode[0] = 'internal_no_subtemplate';
+                $errorCode[1] = $missingSubpartArray[0];
             }
         }
 
@@ -900,8 +901,8 @@ class Email implements SingletonInterface
             empty($errorCode)
         ) {
             $errorCode = [];
-            $errorCode['0'] = 'internal_email_not_sent';
-            $errorCode['1'] = $recipient;
+            $errorCode[0] = 'internal_email_not_sent';
+            $errorCode[1] = $recipient;
         }
 
         return $result;
@@ -930,7 +931,11 @@ class Email implements SingletonInterface
         $fileAttachment = ''
     ) {
         $result = false;
-
+        debug ($content, 'send $content');
+        debug ($contentHTML, 'send $contentHTML');
+        debug ($adminContent, 'send $adminContent');
+        debug ($adminContentHTML, 'send $adminContentHTML');
+        
         // Send mail to admin
         if (
             $admin &&
@@ -1033,6 +1038,8 @@ class Email implements SingletonInterface
                 trim($PLAINContent)
             )
         ) {
+            debug ($HTMLContent, 'sendHTML $HTMLContent');
+
             $defaultSubject = 'Agency Registration';
             $result = MailUtility::send(
                 $recipient,

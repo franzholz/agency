@@ -168,20 +168,6 @@ class AfterSaveView
             );
 
             if (
-                $cmdKey == 'create' &&
-                $controlData->getTable() == 'fe_users' &&
-                !$conf['enableEmailConfirmation'] &&
-                !$controlData->enableAutoLoginOnCreate($conf)
-            ) {
-                SecuredData::getTransmissionSecurity()
-                    ->getMarkers(
-                        $markerArray,
-                        $controlData->getExtensionKey(),
-                        $controlData->getUsePasswordAgain()
-                    );
-            }
-
-            if (
                 isset($conf[$cmdKey . '.']['marker.']) &&
                 isset($conf[$cmdKey . '.']['marker.']['computeUrl']) &&
                 $conf[$cmdKey . '.']['marker.']['computeUrl'] == '1'

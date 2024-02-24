@@ -31,9 +31,6 @@ namespace JambageCom\Agency\Controller;
 *
 * Part of the agency (Agency Registration) extension.
 *
-* Front End creating/editing/deleting records authenticated by fe_user login.
-* A variant restricted to front end user self-registration and profile maintenance, with a number of enhancements (see the manual).
-*
 * @author   Kasper Skårhøj <kasperYYYY@typo3.com>
 * @author   Stanislas Rolland <typo3(arobas)sjbr.ca>
 * @author   Franz Holzinger <franz@ttproducts.de>
@@ -41,12 +38,16 @@ namespace JambageCom\Agency\Controller;
 *
 *
 */
+
+use Psr\Http\Message\ServerRequestInterface;
+
 use TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Configuration\ConfigurationCheck;
 use JambageCom\Agency\Utility\LocalizationUtility;
+
 
 class RegisterPluginController extends AbstractPlugin
 {
@@ -57,7 +58,8 @@ class RegisterPluginController extends AbstractPlugin
 
     public function main(
         $content,
-        $conf
+        $conf,
+        ServerRequestInterface $request
     ) {
         $this->pi_setPiVarDefaults();
         $this->conf = $conf;
@@ -111,6 +113,7 @@ class RegisterPluginController extends AbstractPlugin
             $content =
                 $mainObj->main(
                     $this,
+                    $request,
                     $this->cObj,
                     $content,
                     $conf,

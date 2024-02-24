@@ -1,4 +1,12 @@
+    Deprecation no. 87193: function compareUident removed
+    Breaking no. 87193: TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordService has been removed.
 
+2024-01-24 Franz Holzinger  <franz@ttproducts.de>
+    Deprecation no.81852: - Remove usage of classes
+    JambageCom\Div2007\Security\TransmissionSecurity and
+    JambageCom\Div2007\Security\StorageSecurity
+
+    Deprecation no.88740: Replace hooks for felogin by events
 
 2023-11-22 Franz Holzinger  <franz@ttproducts.de>
     compatibility 12: replace CmsBackend->pmDrawItem by PageContentPreviewRenderingListener listener

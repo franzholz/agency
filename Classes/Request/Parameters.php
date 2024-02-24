@@ -40,6 +40,9 @@ namespace JambageCom\Agency\Request;
  *
  *
  */
+
+use Psr\Http\Message\ServerRequestInterface;
+
 use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Security\Authentication;
 use JambageCom\Div2007\Utility\ControlUtility;
@@ -58,6 +61,7 @@ use JambageCom\Agency\Utility\SessionUtility;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspect;
 
+
 /**
  * Request parameters
  */
@@ -72,6 +76,8 @@ class Parameters
     protected $site_url;
     protected $prefixId;
     protected $piVars;
+    protected $request;
+    protected $frontendUser;
     protected $extensionKey;
     protected $cmd = '';
     protected $cmdKey = '';
@@ -99,13 +105,19 @@ class Parameters
 
     public function init(
         ConfigurationStore $confObj,
+        ServerRequestInterface $request,
         $prefixId,
         $extensionKey,
         $piVars,
         $theTable
     ): void {
+        debug ($prefixId, 'init $prefixId');
         $fdArray = [];
         $conf = $confObj->getConf();
+        $shortUrls = $conf['useShortUrls'] ?? false;
+        debug ($shortUrls, '$shortUrls');
+        $this->setRequest($request);
+        $this->setFrontendUser($request->getAttribute('frontend.user'));
         if ($theTable == 'fe_users') {
             $this->initPasswordField($conf);
         }
@@ -152,6 +164,7 @@ class Parameters
 
         // Get hash variable if provided and if short url feature is enabled
         $feUserData = GeneralUtility::_GP($prefixId);
+        debug ($feUserData, '$feUserData Pos 1');
         $bSecureStartCmd =
             (
                 is_array($feUserData) &&
@@ -161,9 +174,10 @@ class Parameters
             );
         $bValidRegHash = false;
 
-        if (!empty($conf['useShortUrls'])) {
+        if ($shortUrls) {
             $regHash = false;
 
+            // delete outdated short urls
             $this->cleanShortUrlCache();
             if (
                 isset($feUserData) &&
@@ -172,6 +186,7 @@ class Parameters
             ) {
                 $regHash = $feUserData['regHash'];
             }
+            debug ($regHash, '$regHash shortUrls');
 
             if (!$regHash) {
                 $getData = GeneralUtility::_GET($prefixId);
@@ -188,6 +203,7 @@ class Parameters
             // Check and process for short URL if the regHash GET parameter exists
             if ($regHash) {
                 $getVars = $this->getShortUrl($regHash);
+                debug ($getVars, '$getVars aus getShortUrl');
 
                 if (
                     isset($getVars) &&
@@ -234,25 +250,29 @@ class Parameters
                     } else {
                         $feUserData = $origFeuserData;
                     }
-
+debug ($regHash, '$regHash');
                     $this->setRegHash($regHash);
                 }
             }
         }
 
         if (isset($feUserData) && is_array($feUserData)) {
+            debug ($feUserData, 'setFeUserData $feUserData');
             $this->setFeUserData($feUserData);
         }
 
         // Establishing compatibility with the extension Direct Mail
         $piVarArray = $this->getSetfixedParameters();
+        debug ($piVarArray, '$piVarArray');
 
         foreach ($piVarArray as $pivar) {
             $value = GeneralUtility::_GP($pivar);
             if ($value != '') {
+                debug ($value, '$pivar');
                 $this->setFeUserData($value, $pivar);
             }
         }
+        debug ($this->getFeUserData(), '$feUserData Pos 2');
 
         $aC = $this->getFeUserData('aC');
         $authObj->setAuthCode($aC);
@@ -279,8 +299,10 @@ class Parameters
         if ($this->getUsePassword()) {
             // Establishing compatibility with the extension Felogin
             $value = $this->getFormPassword();
+            debug ($value, '$value password +++');
             if ($value !== null) {
                 SecuredData::writePassword(
+                    $this->getFrontendUser(),
                     $extensionKey,
                     $value,
                     '',
@@ -332,35 +354,47 @@ class Parameters
         } else {
             // Get the latest token from the session data
             $token = $this->readToken();
+            debug ($token, '$token');
         }
+        debug ($feUserData, '$feUserData');
+        debug ($cmd, '$cmd');
 
         if (
             is_array($feUserData) &&
             (
                 !count($feUserData) ||
                 $bSecureStartCmd ||
-                (!empty($token) && $feUserData['token'] == $token) ||
-                (empty($token) && !empty($feUserData['token']) && $cmd == 'create')
+                (
+                    !empty($feUserData['token']) &&
+                    (
+                        (
+                            !empty($token) && $feUserData['token'] == $token
+                        ) ||
+                        (
+                            empty($token) && $cmd == 'create'
+                        )
+                    )
+                )
                 // Allow always the creation of a new user. No session data exists in this case.
             )
         ) {
             $this->setTokenValid(true);
         } elseif (
             $bRuIsInt &&
-                // When processing a setfixed link from other extensions,
-                // there might no token and no short url regHash, but there might be an authCode
+                // When processing a setfixed link from third party extensions,
+                // there might be no token and no short url regHash, but there might be an authCode
             (
                 $bValidRegHash ||
-                !$conf['useShortUrls'] ||
+                !$shortUrls ||
                 ($authObj->getAuthCode($aC) && !$bSecureStartCmd)
             )
         ) {
+            debug ($fdArray, '$fdArray Pos hier');
             if (
-                isset($fdArray) &&
-                is_array($fdArray) &&
-                isset($origArray) &&
-                is_array($origArray)
+                !empty($fdArray) &&
+                !empty($origArray)
             ) {
+                debug ($origArray, '$origArray');
                 // Calculate the setfixed hash from incoming data
                 $fieldList = rawurldecode($fdArray['_FIELDLIST']);
                 $setFixedArray = array_merge($origArray, $fdArray);
@@ -394,6 +428,7 @@ class Parameters
             $this->setFeUserData([]);
             // Erase any stored password
             SecuredData::writePassword(
+                $this->getFrontendUser(),
                 $extensionKey,
                 ''
             );
@@ -433,7 +468,7 @@ class Parameters
     }
 
     /**
-     * Set the title of the page of the records
+     * Set the title of the page o  f the records
      *
      * @return void
      */
@@ -564,6 +599,7 @@ class Parameters
     */
     protected function setTokenValid($valid)
     {
+        debug ($valid, 'setTokenValid $valid');
         $this->tokenValid = $valid;
     }
 
@@ -576,7 +612,7 @@ class Parameters
     {
         $token = '';
         $extensionKey = $this->getExtensionKey();
-        $sessionData = SessionUtility::readData($extensionKey);
+        $sessionData = SessionUtility::readData($this->getFrontendUser(), $extensionKey);
 
         if (isset($sessionData['token'])) {
             $token = $sessionData['token'];
@@ -593,13 +629,14 @@ class Parameters
     protected function writeToken($token)
     {
         $extensionKey = $this->getExtensionKey();
-        $sessionData = SessionUtility::readData($extensionKey);
+        $sessionData = SessionUtility::readData($this->getFrontendUser(), $extensionKey);
         if ($token == '') {
             $sessionData['token'] = '__UNSET';
         } else {
             $sessionData['token'] = $token;
         }
         SessionUtility::writeData(
+            $this->getFrontendUser(),
             $extensionKey,
             $sessionData,
             false,
@@ -618,7 +655,7 @@ class Parameters
     {
         $redirectUrl = '';
         $extensionKey = $this->getExtensionKey();
-        $sessionData = SessionUtility::readData($extensionKey);
+        $sessionData = SessionUtility::readData($this->getFrontendUser(), $extensionKey);
         if (isset($sessionData['redirect_url'])) {
             $redirectUrl = $sessionData['redirect_url'];
         }
@@ -638,6 +675,7 @@ class Parameters
             $data['redirect_url'] = $redirectUrl;
             $extensionKey = $this->getExtensionKey();
             SessionUtility::writeData(
+                $this->getFrontendUser(),
                 $extensionKey,
                 $data,
                 true,
@@ -667,6 +705,26 @@ class Parameters
             $result = $this->sys_language_content;
         }
         return $result;
+    }
+
+    private function setRequest ($request)
+    {
+        $this->request = $request;
+    }
+
+    public function getRequest ()
+    {
+        return $this->request;
+    }
+
+    private function setFrontendUser ($frontendUser)
+    {
+        $this->frontendUser = $frontendUser;
+    }
+
+    public function getFrontendUser ()
+    {
+        return $this->frontendUser;
     }
 
     public function getPidTitle()
@@ -743,6 +801,7 @@ class Parameters
             $key != ''
         ) {
             if (isset($this->feUserData[$key])) {
+                debug ($this->feUserData[$key], '$this->feUserData['.$key.']');
                 $result = $this->feUserData[$key];
             }
         } else {
@@ -784,6 +843,7 @@ class Parameters
 
     public function getFailure()
     {
+        debug ($this->failure, '$this->failure');
         return $this->failure;
     }
 
@@ -989,6 +1049,7 @@ class Parameters
             }
             eval("\$retArray" . $newkey . "='$val';");
         }
+        debug ($retArray, 'getShortUrl $retArray');
         return $retArray;
     }   // getShortUrl
 
@@ -998,6 +1059,7 @@ class Parameters
     public function deleteShortUrl($regHash): void
     {
         if ($regHash != '') {
+            debug ($regHash, 'deleteShortUrl $regHash');
             // get the serialised array from the DB based on the passed hash value
             $GLOBALS['TYPO3_DB']->exec_DELETEquery(
                 'cache_md5params',
@@ -1011,7 +1073,6 @@ class Parameters
     */
     public function cleanShortUrlCache(): void
     {
-
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
@@ -1024,5 +1085,6 @@ class Parameters
                     'tstamp<' . $max_life . ' AND type=99'
                 );
         }
+        debug ($max_life, 'cleanShortUrlCache $max_life');
     }   // cleanShortUrlCache
 }

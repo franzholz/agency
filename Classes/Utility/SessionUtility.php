@@ -41,6 +41,10 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 *
 *
 */
+
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
+
+
 class SessionUtility
 {
     /*************************************
@@ -52,10 +56,14 @@ class SessionUtility
     * @param    boolean $readAll: whether to retrieve all session data or only data for this extension key
     * @return   array   session data
     */
-    public static function readData($extensionKey, $readAll = false)
+    public static function readData(
+        FrontendUserAuthentication $frontendUser,
+        $extensionKey, 
+        $readAll = false
+    )
     {
         $sessionData = [];
-        $allSessionData = $GLOBALS['TSFE']->fe_user->getKey('ses', 'feuser');
+        $allSessionData = $frontendUser->getKey('ses', 'feuser');
 
         if (
             isset($allSessionData) &&
@@ -79,6 +87,7 @@ class SessionUtility
     * @return   array   session data
     */
     public static function writeData(
+        FrontendUserAuthentication $frontendUser,
         $extensionKey,
         array $data,
         $keepToken = true,
@@ -104,7 +113,7 @@ class SessionUtility
         }
 
         // Read all session data
-        $allSessionData = static::readData(true);
+        $allSessionData = static::readData($frontendUser, true);
 
         if (
             isset($allSessionData[$extensionKey]) &&
@@ -136,6 +145,7 @@ class SessionUtility
     * @return   void
     */
     public static function clearData(
+        FrontendUserAuthentication $frontendUser,
         $extensionKey,
         $keepRedirectUrl = true,
         $token = '',
@@ -143,6 +153,7 @@ class SessionUtility
     ): void {
         $data = [];
         static::writeData(
+            $frontendUser,
             $extensionKey,
             $data,
             true,

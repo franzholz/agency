@@ -33,7 +33,7 @@
         </div>
         <!-- ###SUB_REQUIRED_FIELD_username### -->
         <div class="viewInput divInputUsername">
-            <input id="agency-username" type="text" class="inputUsername" size="40" maxlength="50" title="###TOOLTIP_USERNAME###" name="###NAME_USERNAME###">
+            <input id="agency-username" type="text" class="inputUsername" size="40" maxlength="255" title="###TOOLTIP_USERNAME###" name="###NAME_USERNAME###">
         </div>
     </div>
     <!-- ###SUB_INCLUDED_FIELD_username### -->
@@ -55,7 +55,7 @@
         <!-- ###SUB_REQUIRED_FIELD_password### -->
         <div class="viewInput divInputPassword">
             <input type="password" style="display: none;">
-            <input id="agency-password" type="password" name="###NAME_PASSWORD###" class="inputPassword"###ENCRYPTION### size="10" maxlength="40" title="###TOOLTIP_PASSWORD###" value="" autocomplete="off">
+            <input id="agency-password" type="password" name="###NAME_PASSWORD###" class="inputPassword" size="10" maxlength="255" title="###TOOLTIP_PASSWORD###" value="###ENCRYPTION###" autocomplete="off">
         </div>
     </div>
     <div class="viewLabelInput formRowPasswordAgain">
@@ -63,7 +63,7 @@
             <label for="agency-password_again" class="LabelPasswordAgain">###LABEL_PASSWORD_AGAIN### ###REQUIRED_PASSWORD###</label>
         </div>
         <div class="viewInput divInputPasswordAgain">
-            <input id="agency-password_again" type="password" name="###NAME_PASSWORD_AGAIN###" class="inputPasswordAgain"###ENCRYPTION### size="10" maxlength="40" title="###LABEL_TOOLTIP_PASSWORD_AGAIN###" value="" autocomplete="off">
+            <input id="agency-password_again" type="password" name="###NAME_PASSWORD_AGAIN###" class="inputPasswordAgain"  value="###ENCRYPTION###" size="10" maxlength="255" title="###LABEL_TOOLTIP_PASSWORD_AGAIN###" value="" autocomplete="off">
         </div>
     </div>
     <!-- ###SUB_INCLUDED_FIELD_password### -->
@@ -1119,7 +1119,7 @@
             <label class="labelUsername">###LABEL_USERNAME###</label>
         </div>
         <div class="viewInput divInputUsername">
-            <input type="text" class="inputUsername" name="user" value="###FIELD_username###"  size="40" maxlength="50" title="###TOOLTIP_USERNAME###">
+            <input type="text" class="inputUsername" name="user" value="###FIELD_username###"  size="40" maxlength="255" title="###TOOLTIP_USERNAME###">
         </div>
     </div>
 
@@ -1129,12 +1129,11 @@
         </div>
         <div class="viewInput divInputPassword">
             <input type="password" style="display: none;">
-            <input type="password" name="pass" id="agency-password" class="inputPassword"###ENCRYPTION### size="10" maxlength="40" title="###TOOLTIP_PASSWORD###" value="" autocomplete="off">
+            <input type="password" name="pass" id="agency-password" class="inputPassword" size="10" maxlength="255" title="###TOOLTIP_PASSWORD###" value="###ENCRYPTION###"  autocomplete="off">
         </div>
     </div>
 
     <div class="viewInput divInputHidden">
-        <input type="hidden" name="logintype" value="login">
         <input type="hidden" name="pid" value="###THE_PID###">
         <input type="hidden" name="redirect_url" value="">
         ###HIDDENFIELDS###
@@ -1210,7 +1209,7 @@ The user is informed that a message has been sent to his email address and that 
         </div>
         <!-- ###SUB_REQUIRED_FIELD_username### -->
         <div class="viewInput divInputUsername">
-            <input id="agency-username" type="text" class="inputUsername" size="40" maxlength="50" title="###TOOLTIP_INVITATION_USERNAME###" name="###NAME_USERNAME###">
+            <input id="agency-username" type="text" class="inputUsername" size="40" maxlength="255" title="###TOOLTIP_INVITATION_USERNAME###" name="###NAME_USERNAME###">
         </div>
     </div>
     <!-- ###SUB_INCLUDED_FIELD_username### -->
@@ -2291,7 +2290,7 @@ The user is informed that a message has been sent to the email address and that 
         <!-- ###SUB_REQUIRED_FIELD_password### -->
         <div class="viewInput divInputPassword">
             <input type="password" style="display: none;">
-            <input id="agency-password" type="password" name="pass" class="inputPassword"###ENCRYPTION### size="10" maxlength="40" title="###TOOLTIP_PASSWORD###" value="" autocomplete="off">
+            <input id="agency-password" type="password" name="pass" class="inputPassword"  size="10" maxlength="255" title="###TOOLTIP_PASSWORD###" value="###ENCRYPTION###" autocomplete="off">
         </div>
     </div>
     <div class="viewLabelInput formRowPasswordAgain">
@@ -2299,7 +2298,7 @@ The user is informed that a message has been sent to the email address and that 
             <label for="agency-password_again" class="LabelPasswordAgain">###LABEL_PASSWORD_AGAIN###</label>
         </div>
         <div class="viewInput divInputPasswordAgain">
-            <input id="agency-password_again" type="password" name="###NAME_PASSWORD_AGAIN###" class="inputPasswordAgain"###ENCRYPTION### size="10" maxlength="40" title="###LABEL_TOOLTIP_PASSWORD_AGAIN###" value="" autocomplete="off">
+            <input id="agency-password_again" type="password" name="###NAME_PASSWORD_AGAIN###" class="inputPasswordAgain" size="10" maxlength="255" title="###LABEL_TOOLTIP_PASSWORD_AGAIN###" value="###ENCRYPTION###" autocomplete="off">
         </div>
     </div>
     <!-- ###SUB_INCLUDED_FIELD_password### -->
@@ -3368,7 +3367,7 @@ The user is informed that a message has been sent to the email address and that 
             <label for="agency-username" class="labelUsername">###LABEL_USERNAME### ###REQUIRED_USERNAME###</label>
         </div>
         <div class="viewInput divInputUsername">
-            <input id="agency-username" type="text" class="inputUsername" size="40" maxlength="50" title="###LABEL_TOOLTIP_LOGIN_USERNAME###" name="user" value="###FIELD_username###">
+            <input id="agency-username" type="text" class="inputUsername" size="40" maxlength="255" title="###LABEL_TOOLTIP_LOGIN_USERNAME###" name="user" value="###FIELD_username###">
         </div>
     </div>
 
@@ -3378,7 +3377,7 @@ The user is informed that a message has been sent to the email address and that 
         </div>
         <div class="viewInput divInputPassword">
             <input type="password" style="display: none;">
-            <input id="agency-password" type="password" name="size" class="inputPassword"###ENCRYPTION### size="10" maxlength="40" title="###LABEL_TOOLTIP_LOGIN_PASSWORD###" value="" autocomplete="off">
+            <input id="agency-password" type="password" name="size" class="inputPassword" size="10" maxlength="255" title="###LABEL_TOOLTIP_LOGIN_PASSWORD###" value="###ENCRYPTION###" autocomplete="off">
         </div>
     </div>
 
@@ -3388,7 +3387,6 @@ The user is informed that a message has been sent to the email address and that 
 
     <div class="viewInput divInputSubmit">
         <input type="submit" name="submit" value="###LABEL_BUTTON_ENTER###">
-        <input type="hidden" name="logintype" value="login">
         <input type="hidden" name="pid" value="###THE_PID###">
         <input type="hidden" name="redirect_url" value="">
     </div>
@@ -3436,7 +3434,7 @@ The user is informed that a message has been sent to the email address and that 
             <label for="agency-username" class="labelUsername">###LABEL_USERNAME###</label>
         </div>
         <div class="viewInput divInputUsername">
-            <input id="agency-username" type="text" class="inputUsername" size="40" maxlength="50" title="###LABEL_TOOLTIP_LOGIN_USERNAME###" name="user" value="###FIELD_username###">
+            <input id="agency-username" type="text" class="inputUsername" size="40" maxlength="255" title="###LABEL_TOOLTIP_LOGIN_USERNAME###" name="user" value="###FIELD_username###">
         </div>
     </div>
 
@@ -3446,7 +3444,7 @@ The user is informed that a message has been sent to the email address and that 
         </div>
         <div class="viewInput divInputPassword">
             <input type="password" style="display: none;">
-            <input id="agency-password" type="password" name="pass" class="inputPassword"###ENCRYPTION### size="10" maxlength="40" title="###LABEL_TOOLTIP_LOGIN_PASSWORD###" value="" autocomplete="off">
+            <input id="agency-password" type="password" name="pass" class="inputPassword"  size="10" maxlength="255" title="###LABEL_TOOLTIP_LOGIN_PASSWORD###" value="###ENCRYPTION###" autocomplete="off">
         </div>
     </div>
 
@@ -3455,9 +3453,7 @@ The user is informed that a message has been sent to the email address and that 
     </div>
     <div class="viewInput divInputSubmit">
         <input type="submit" name="submit" value="###LABEL_BUTTON_ENTER###">
-        <input type="hidden" name="logintype" value="login">
         <input type="hidden" name="pid" value="###THE_PID###">
-        <input type="hidden" name="redirect_url" value="">
     </div>
 </form>
 <!-- ###TEMPLATE_SETFIXED_OK_ENTER### end-->
@@ -3488,7 +3484,7 @@ The user is informed that a message has been sent to the email address and that 
         <!-- ###SUB_REQUIRED_FIELD_password### -->
         <div class="viewInput divInputPassword">
             <input type="password" style="display: none;">
-            <input id="agency-password" type="password" name="pass" class="inputPassword"###ENCRYPTION### size="10" maxlength="40" title="###TOOLTIP_PASSWORD###" value="" autocomplete="off">
+            <input id="agency-password" type="password" name="pass" class="inputPassword"  size="10" maxlength="255" title="###TOOLTIP_PASSWORD###" value="###ENCRYPTION###" autocomplete="off">
         </div>
     </div>
     <div class="viewLabelInput formRowPasswordAgain">
@@ -3496,7 +3492,7 @@ The user is informed that a message has been sent to the email address and that 
             <label for="agency-password_again" class="LabelPasswordAgain">###LABEL_PASSWORD_AGAIN###</label>
         </div>
         <div class="viewInput divInputPasswordAgain">
-            <input id="agency-password_again" type="password" name="###NAME_PASSWORD_AGAIN###" class="inputPasswordAgain"###ENCRYPTION### size="10" maxlength="40" title="###LABEL_TOOLTIP_PASSWORD_AGAIN###" value="" autocomplete="off">
+            <input id="agency-password_again" type="password" name="###NAME_PASSWORD_AGAIN###" class="inputPasswordAgain" size="10" maxlength="255" title="###LABEL_TOOLTIP_PASSWORD_AGAIN###" value="###ENCRYPTION###" autocomplete="off">
         </div>
     </div>
     <!-- ###SUB_INCLUDED_FIELD_password### -->

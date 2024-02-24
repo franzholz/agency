@@ -62,10 +62,10 @@ class Url implements SingletonInterface
     }
 
     /**
-    * Generates a pibase-compliant typolink
+    * Generates a AbstractPlugin-compliant typolink
     *
-    * @param string  $tag: string to include within <a>-tags; if empty, only the url is returned
     * @param string  $id: page id (could of the form id,type )
+    * @param string  $tag: string to include within <a>-tags; if empty, only the url is returned
     * @param array  $vars: extension variables to add to the url ($key, $value)
     * @param array  $unsetVars: extension variables (piVars to unset)
     * @param boolean  $usePiVars: if set, input vars and incoming piVars arrays are merge
@@ -103,6 +103,7 @@ class Url implements SingletonInterface
             $result = $this->cObj->getTypoLink_URL($id, $piVars);
         }
         $result = str_replace(['[', ']'], ['%5B', '%5D'], $result);
+        debug ($result, 'get_url ENDE $result');
         return $result;
     }
     // get_url

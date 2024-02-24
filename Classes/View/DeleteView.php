@@ -80,6 +80,7 @@ class DeleteView
         $theTable,
         array $dataArray,
         array $origArray,
+        array $feUser,
         array $securedArray,
         $token,
         $setFixedKey,
@@ -122,7 +123,7 @@ class DeleteView
                         $dataObj->getCoreQuery()->DBmayFEUserEdit(
                             $theTable,
                             $origArray,
-                            $GLOBALS['TSFE']->fe_user->user,
+                            $feUser,
                             $conf['allowedGroups'] ?? '',
                             $conf['fe_userEditSelf'] ?? ''
                         );

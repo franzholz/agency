@@ -71,7 +71,7 @@ class CreateView
     * @return string  the template with substituted markers
     */
     public function render(
-        &$markerArray,
+        array $markerArray,
         $conf,
         $prefixId,
         $extensionKey,
@@ -100,6 +100,7 @@ class CreateView
         ) {
             return false;
         }
+    debug ($prefixId, 'render $prefixId');
 
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         $templateCode = $dataObj->getTemplateCode();
@@ -151,18 +152,7 @@ class CreateView
                 } else {
                     $subpartKey = '###TEMPLATE_AUTH###';
                 }
-            }
-
-            if (
-                $bNeedUpdateJS &&
-                $controlData->getTable() == 'fe_users'
-            ) {
-                SecuredData::getTransmissionSecurity()
-                    ->getMarkers(
-                        $markerArray,
-                        $controlData->getExtensionKey(),
-                        $controlData->getUsePasswordAgain()
-                    );
+                debug ($subpartKey, 'CreateView::render $subpartKey');
             }
 
             $templateCode = $templateService->getSubpart($templateCode, $subpartKey);
@@ -189,7 +179,8 @@ class CreateView
                     $errorFieldArray,
                     $failure
                 );
-
+                debug ($templateCode, 'CreateView::render $templateCode');
+                
             $markerArray =
                 $markerObj->fillInMarkerArray(
                     $markerArray,
@@ -340,27 +331,18 @@ class CreateView
                         'FE[' . $theTable . ']',
                         $fields
                     );
+                debug ($updateJS, '$updateJS');
                 $content .= $updateJS;
-                $securityJavaScript = '';
-                SecuredData::getTransmissionSecurity()->
-                    getJavaScript(
-                        $securityJavaScript,
-                        $extensionKey,
-                        $form,
-                        $controlData->getUsePasswordAgain()
-                    );
-                GeneralUtility::makeInstance(AssetCollector::class)
-                    ->addJavaScript('agency-security', $securityJavaScript);
-                //                 $GLOBALS['TSFE']->setJS('agency-security', $securityJavaScript);
-
-                $finalJavaScript = '';
-                Javascript::getOnSubmitHooks(
-                    $finalJavaScript,
-                    $this
-                );
-                $content .= $finalJavaScript;
+                // $finalJavaScript = '';
+                // Javascript::getOnSubmitHooks(
+                //     $finalJavaScript,
+                //     $this
+                // );
+                // debug ($finalJavaScript, '$finalJavaScript');
+                // $content .= $finalJavaScript;
             }
         }
+debug ($content, 'render END $content +++');
 
         return $content;
     } // render
