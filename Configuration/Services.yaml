@@ -7,6 +7,9 @@ services:
     resource: '../Classes/*'
     exclude: '../Classes/Hooks/*'
 
+  JambageCom\Agency\Controller\RegisterPluginController:
+    public: true
+
   JambageCom\Agency\EventListener\PageContentPreviewRenderingListener:
     tags:
       - name: event.listener
