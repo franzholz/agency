@@ -935,6 +935,7 @@ debug ($cmdKey, '$cmdKey');
         }
         $errorContent = '';
         $deleteRegHash = false;
+        $confirmationEmailSent = false;
 
         // Display forms
         if ($dataObj->getSaved()) {
@@ -1220,6 +1221,8 @@ debug ($cmd, 'doProcessing $cmd');
 
                     $origArray = $dataObj->parseIncomingData($origArray, false);
                     $content = $setfixedObj->process(
+                        $hasError,
+                        $confirmationEmailSent,
                         $conf,
                         $cObj,
                         $languageObj,
@@ -1244,9 +1247,10 @@ debug ($cmd, 'doProcessing $cmd');
                         $origArray,
                         $securedArray,
                         $this,
-                        $token,
-                        $hasError
+                        $token
                     );
+                    debug ($hasError, '$hasError');
+                    debug ($confirmationEmailSent, '$confirmationEmailSent');
                     break;
                 case 'infomail':
                     $markerObj->addGeneralHiddenFieldsMarkers(
@@ -1449,6 +1453,11 @@ debug ($cmd, 'doProcessing $cmd');
                     $errorContent = $errorText;
                 }
             }
+            debug ($errorContent, '$errorContent');
+            debug ($hasError, '$hasError');
+            debug ($cmd, '$cmd');
+            debug ($cmdKey, '$cmdKey');
+            debug ($controlData->isPreview(), '$controlData->isPreview()');
 
             if (
                 (
@@ -1457,12 +1466,14 @@ debug ($cmd, 'doProcessing $cmd');
                 ) &&
                 !$errorContent &&
                 !$hasError &&
+                !$confirmationEmailSent &&
                 !$controlData->isPreview()
             ) {
                 $deleteRegHash = true;
             }
         }
 
+        debug ($deleteRegHash, '$deleteRegHash');
         if (
             $deleteRegHash &&
             $controlData->getValidRegHash()

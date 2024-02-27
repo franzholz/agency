@@ -1,4 +1,12 @@
 services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+  JambageCom\Agency\:
+    resource: '../Classes/*'
+    exclude: '../Classes/Hooks/*'
+
   JambageCom\Agency\EventListener\PageContentPreviewRenderingListener:
     tags:
       - name: event.listener

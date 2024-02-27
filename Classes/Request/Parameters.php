@@ -43,23 +43,25 @@ namespace JambageCom\Agency\Request;
 
 use Psr\Http\Message\ServerRequestInterface;
 
-use JambageCom\Agency\Configuration\ConfigurationStore;
-use JambageCom\Agency\Security\Authentication;
-use JambageCom\Div2007\Utility\ControlUtility;
-use JambageCom\Agency\Constants\Field;
-use JambageCom\Div2007\Captcha\CaptchaManager;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
-use JambageCom\Div2007\Utility\FrontendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 use JambageCom\Div2007\Captcha\CaptchaInterface;
+use JambageCom\Div2007\Captcha\CaptchaManager;
+use JambageCom\Div2007\Utility\ControlUtility;
+use JambageCom\Div2007\Utility\FrontendUtility;
 
+use JambageCom\Agency\Constants\Field;
+use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Agency\Security\Authentication;
 use JambageCom\Agency\Security\SecuredData;
 use JambageCom\Agency\Utility\SessionUtility;
 
-use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Context\LanguageAspect;
+
 
 
 /**
@@ -102,6 +104,17 @@ class Parameters
     protected $setFixedParameters = ['rU', 'aC', 'cmd', 'sFK'];
     protected $fD = [];
 
+    /**
+     * @var TypoScriptFrontendController|null
+     */
+    protected $typoScriptFrontendController;
+
+    protected ?Context $context = null;
+
+    public function injectContext(Context $context)
+    {
+        $this->context = $context;
+    }
 
     public function init(
         ConfigurationStore $confObj,
@@ -112,12 +125,14 @@ class Parameters
         $theTable
     ): void {
         debug ($prefixId, 'init $prefixId');
+        debug (is_object($this->context), '$this->context ist Objekt?');
         $fdArray = [];
         $conf = $confObj->getConf();
         $shortUrls = $conf['useShortUrls'] ?? false;
         debug ($shortUrls, '$shortUrls');
         $this->setRequest($request);
         $this->setFrontendUser($request->getAttribute('frontend.user'));
+
         if ($theTable == 'fe_users') {
             $this->initPasswordField($conf);
         }
@@ -125,15 +140,16 @@ class Parameters
         $this->setDefaultPid($conf['pid']);
 
         $this->site_url = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
+        $tsfe = $this->getTypoScriptFrontendController();
 
-        if ($GLOBALS['TSFE']->absRefPrefix) {
+        if ($tsfe->absRefPrefix) {
             if(
-                strpos($GLOBALS['TSFE']->absRefPrefix, 'http://') === 0 ||
-                strpos($GLOBALS['TSFE']->absRefPrefix, 'https://') === 0
+                strpos($tsfe->absRefPrefix, 'http://') === 0 ||
+                strpos($tsfe->absRefPrefix, 'https://') === 0
             ) {
-                $this->site_url = $GLOBALS['TSFE']->absRefPrefix;
+                $this->site_url = $tsfe->absRefPrefix;
             } else {
-                $this->site_url = $this->site_url . ltrim($GLOBALS['TSFE']->absRefPrefix, '/');
+                $this->site_url = $this->site_url . ltrim($tsfe->absRefPrefix, '/');
             }
         }
         $this->setPrefixId($prefixId);
@@ -142,7 +158,7 @@ class Parameters
         $this->setTable($theTable);
         $authObj = GeneralUtility::makeInstance(Authentication::class);
 
-        $this->sys_language_content = intval($GLOBALS['TSFE']->config['config']['sys_language_uid'] ?? 0);
+        $this->sys_language_content = intval($tsfe->config['config']['sys_language_uid'] ?? 0);
 
         // set the title language overlay
         $this->setPidTitle($conf, $this->sys_language_content);
@@ -299,7 +315,6 @@ debug ($regHash, '$regHash');
         if ($this->getUsePassword()) {
             // Establishing compatibility with the extension Felogin
             $value = $this->getFormPassword();
-            debug ($value, '$value password +++');
             if ($value !== null) {
                 SecuredData::writePassword(
                     $this->getFrontendUser(),
@@ -316,7 +331,7 @@ debug ($regHash, '$regHash');
         $bRuIsInt = MathUtility::canBeInterpretedAsInteger($feUserData['rU'] ?? '');
         if ($bRuIsInt) {
             $theUid = intval($feUserData['rU']);
-            $origArray = $GLOBALS['TSFE']->sys_page->getRawRecord($theTable, $theUid);
+            $origArray = $tsfe->sys_page->getRawRecord($theTable, $theUid);
         }
 
         if (
@@ -519,7 +534,7 @@ debug ($regHash, '$regHash');
     {
 
         $bPidIsInt = MathUtility::canBeInterpretedAsInteger($pid);
-        $this->defaultPid = ($bPidIsInt ? intval($pid) : $GLOBALS['TSFE']->id);
+        $this->defaultPid = ($bPidIsInt ? intval($pid) : $this->getTypoScriptFrontendController()->id);
     }
 
     public function getDefaultPid()
@@ -897,7 +912,7 @@ debug ($regHash, '$regHash');
                     $pid = $this->getPid('password');
                     break;
                 default:
-                    $pid = $GLOBALS['TSFE']->id;
+                    $pid = $this->getTypoScriptFrontendController()->id;
                     break;
             }
         }
@@ -1087,4 +1102,12 @@ debug ($regHash, '$regHash');
         }
         debug ($max_life, 'cleanShortUrlCache $max_life');
     }   // cleanShortUrlCache
+
+    /**
+     * @return TypoScriptFrontendController|null
+     */
+    public function getTypoScriptFrontendController()
+    {
+        return $this->typoScriptFrontendController ?: $GLOBALS['TSFE'] ?? null;
+    }
 }

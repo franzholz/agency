@@ -78,6 +78,8 @@ class Setfixed
     * @return string  the template with substituted markers
     */
     public function process(
+        &$hasError,
+        &$confirmationEmailSent,
         array $conf,
         ContentObjectRenderer $cObj,
         Localization $languageObj,
@@ -102,8 +104,7 @@ class Setfixed
         array $origArray,
         array $securedArray,
         $pObj,
-        $token,
-        &$hasError
+        $token
     ) {
         $email = GeneralUtility::makeInstance(Email::class);
         $content = false;
@@ -534,7 +535,7 @@ debug ($setFixedKey, '$setFixedKey');
                             true,
                             $redirect
                         );
-                    debug ($loginSuccess, '$loginSuccess');
+                    debug ($loginSuccess, '$loginSuccess nach login');
 
                     if ($loginSuccess) {
                         if ($setFixedKey != 'ENTER') {
@@ -767,6 +768,8 @@ debug ($setFixedKey, '$setFixedKey');
                             } else {
                                 $errorContent = $errorText;
                             }
+                        } else if ($emailResult) {
+                            $confirmationEmailSent = true;
                         }
                     }
                     debug ($errorContent, '$errorContent');

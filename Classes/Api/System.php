@@ -226,7 +226,10 @@ class System implements LoggerAwareInterface
                     $frontendUser->getCookieName()
                 );
             $isExistingSession = !$this->userSession->isNew();
+            debug ($isExistingSession, '$isExistingSession');
             $anonymousSession = $isExistingSession && $this->userSession->isAnonymous();
+            debug ($anonymousSession, '$anonymousSession');
+            debug ($this->userSession->getUserId(), '$this->userSession->getUserId()');
 
             // Insert session record if needed
             if (!$isExistingSession
@@ -236,11 +239,13 @@ class System implements LoggerAwareInterface
                 $sessionData = $this->userSession->getData();
                 // Create a new session with a fixated user
                 $this->userSession = $this->createUserSession($user, $frontendUser->userid_column);
+                debug ($this->userSession->getUserId(), '$this->userSession->getUserId() nach createUserSession');
 
                 // Preserve session data on login
                 if ($anonymousSession || $isExistingSession) {
                     debug ($sessionData, 'vor overrideData $sessionData +++');
                     $this->userSession->overrideData($sessionData);
+                    debug ($this->userSession->getUserId(), '$this->userSession->getUserId() nach overrideData');
                 }
 
                 // The login session is started.
@@ -313,7 +318,6 @@ class System implements LoggerAwareInterface
         }
 
         // Delete regHash
-        // Kommentare wieder wegnehmen! +++
         // if (
         //     $this->controlData->getValidRegHash()
         // ) {
@@ -321,13 +325,18 @@ class System implements LoggerAwareInterface
         //     $this->controlData->deleteShortUrl($regHash);
         // }
 
-        if ($result == false) {
+        if ($result == true) {
+            $frontendUser->storeSessionData();
+        } else {
             if (strlen($message)) {
                 debug ($message, '$message +++');
                 $this->logger->critical($message);
             }
             $ok = false;
         }
+
+        $this->context->setAspect('frontend.user', $this->fe_user->createUserAspect());
+
 
         if (
             $ok &&
@@ -350,6 +359,7 @@ class System implements LoggerAwareInterface
 
             header('Location: ' . GeneralUtility::locationHeaderUrl($redirectUrl));
         }
+        debug ($result, 'login ENDE $result');
 
         return $result;
     }
@@ -363,6 +373,7 @@ class System implements LoggerAwareInterface
     public function createUserSession(array &$userRecord, $userid_column): UserSession
     {
         $userRecordId = (int)($userRecord[$userid_column] ?? 0);
+        debug ($userRecordId, 'createUserSession $userRecordId');
         $session =
             $this->userSessionManager->elevateToFixatedUserSession(
                 $this->userSession,
