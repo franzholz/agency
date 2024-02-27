@@ -41,11 +41,19 @@ namespace JambageCom\Agency\Controller;
 *
 *
 */
+
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+
+use JambageCom\Div2007\Utility\HtmlUtility;
+use JambageCom\Div2007\Utility\SystemUtility;
+
 use JambageCom\Agency\Api\Localization;
-use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Api\System;
 use JambageCom\Agency\Api\Url;
 use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Agency\Controller\Email;
 use JambageCom\Agency\Domain\Tca;
 use JambageCom\Agency\View\Marker;
 use JambageCom\Agency\Domain\Data;
@@ -53,17 +61,13 @@ use JambageCom\Agency\View\Template;
 use JambageCom\Agency\View\CreateView;
 use JambageCom\Agency\View\EditView;
 use JambageCom\Agency\View\DeleteView;
+use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Security\Authentication;
 use JambageCom\Agency\Security\SecuredData;
-use JambageCom\Div2007\Utility\SystemUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-use JambageCom\Agency\Controller\Email;
 
-use JambageCom\Div2007\Utility\HtmlUtility;
-use JambageCom\Agency\Api\System;
 
-class Setfixed
+class Setfixed implements SingletonInterface
 {
     /**
     * Process the front end user reply to the confirmation request

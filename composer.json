@@ -24,14 +24,14 @@
   ],
   "require": {
     "php": "^8.0",
-    "typo3/cms-core": "^11.5 || ^12.4",
-    "jambagecom/div2007": "^1.17",
+    "typo3/cms-core": "^12.4",
+    "jambagecom/div2007": "^2.1",
     "friendsoftypo3/rdct": "^2.0",
-    "friendsoftypo3/typo3db-legacy": "^1.1"
+    "friendsoftypo3/typo3db-legacy": "^1.2"
   },
   "suggest": {
-    "typo3/cms-felogin": "^11.5 || ^12.4",
-    "sjbr/static-info-tables": "^11.5 || ^12.4"
+    "typo3/cms-felogin": "^12.4",
+    "sjbr/static-info-tables": "^12.4"
   },
   "autoload": {
     "psr-4": {

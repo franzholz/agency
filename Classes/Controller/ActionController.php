@@ -41,8 +41,11 @@ namespace JambageCom\Agency\Controller;
 *
 *
 */
+
+
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -75,7 +78,7 @@ use JambageCom\Agency\View\AfterSaveView;
 
 
 
-class ActionController
+class ActionController implements SingletonInterface
 {
     public $urlObj;
     public $auth;

@@ -43,6 +43,7 @@ namespace JambageCom\Agency\Request;
 
 use Psr\Http\Message\ServerRequestInterface;
 
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
@@ -67,7 +68,7 @@ use JambageCom\Agency\Utility\SessionUtility;
 /**
  * Request parameters
  */
-class Parameters
+class Parameters implements SingletonInterface
 {
     private $confObj;
     protected $thePid = 0;
@@ -113,7 +114,14 @@ class Parameters
 
     public function injectContext(Context $context)
     {
+        debug ($this->thePid, 'injectContext +++ $this->thePid');
         $this->context = $context;
+    }
+
+    public function getContext()
+    {
+        debug ($this->context, 'getContext $this->context');
+        return $this->context;
     }
 
     public function init(

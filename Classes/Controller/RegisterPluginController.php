@@ -57,12 +57,12 @@ class RegisterPluginController extends AbstractPlugin
     public $scriptRelPath = 'Classes/Controller/RegisterPluginController.php'; // Path to this script relative to the extension dir.
     public $extKey = Extension::KEY;		// Extension key.
     protected ?Context $context = null;
-
+/*
     public function injectContext(Context $context)
     {
         $this->context = $context;
         debug ($this->extKey, 'injectContext +++ $this->extKey');
-    }
+    }*/
 
     public function main(
         $content,

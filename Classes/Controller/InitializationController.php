@@ -38,34 +38,38 @@ namespace JambageCom\Agency\Controller;
 *
 */
 
-use Psr\Http\Message\ServerRequestInterface;
-
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use JambageCom\Agency\Configuration\ConfigurationStore;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use Psr\Http\Message\ServerRequestInterface;
+
+use SJBR\StaticInfoTables\PiBaseApi;
+
 use JambageCom\Div2007\Utility\HtmlUtility;
+use JambageCom\Div2007\Utility\FrontendUtility;
+use JambageCom\Div2007\Database\CoreQuery;
+
+use JambageCom\Agency\Configuration\ConfigurationStore;
+
+use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Api\Url;
+use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Domain\Tca;
 use JambageCom\Agency\Domain\Tables;
+use JambageCom\Agency\Domain\Data;
 use JambageCom\Agency\Security\Authentication;
 use JambageCom\Agency\Request\Parameters;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use SJBR\StaticInfoTables\PiBaseApi;
-use JambageCom\Agency\Api\Url;
-use JambageCom\Div2007\Database\CoreQuery;
-use JambageCom\Agency\Domain\Data;
-use JambageCom\Agency\View\Marker;
-use JambageCom\Agency\Api\Localization;
 use JambageCom\Agency\Utility\LocalizationUtility;
 use JambageCom\Agency\View\CreateView;
 use JambageCom\Agency\View\EditView;
 use JambageCom\Agency\View\DeleteView;
+use JambageCom\Agency\View\Marker;
 use JambageCom\Agency\View\Template;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use JambageCom\Div2007\Utility\FrontendUtility;
 
-use JambageCom\Agency\Constants\Extension;
 
 class InitializationController implements SingletonInterface
 {
@@ -268,7 +272,7 @@ class InitializationController implements SingletonInterface
             $errorMessage = $languageObj->getLabel('internal_init_language');
         }
         debug ('E');
-        
+
         return $result;
     } // init
 
@@ -285,7 +289,7 @@ class InitializationController implements SingletonInterface
         $otherLabelsList = ''
     ) {
         debug ('B');
-        
+
         $staticInfoObj = null;
         $dataObj = null; // object of type tx_agency_data
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
@@ -359,7 +363,7 @@ class InitializationController implements SingletonInterface
                 $pibaseObj->extKey
             );
         debug ('E');
-            
+
         return $content;
     }
 
