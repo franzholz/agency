@@ -5,7 +5,7 @@ services:
     public: false
   JambageCom\Agency\:
     resource: '../Classes/*'
-    exclude: '../Classes/Hooks/*'
+    exclude: '../Classes/Hooks/*,../Classes/Api/*'
 
   JambageCom\Agency\Controller\RegisterPluginController:
     public: true
