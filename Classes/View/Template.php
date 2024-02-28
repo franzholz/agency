@@ -336,7 +336,6 @@ class Template
         $bCheckEmpty = true,
         $failure = ''
     ) {
-        debug ($subpartMarker, 'getPlainTemplate $subpartMarker');
         $useAdditionalFields = false;
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         if (
@@ -347,9 +346,7 @@ class Template
         }
 
         $cmdKey = $controlData->getCmdKey();
-        debug ($subpartMarker, '$subpartMarker');
         $templateCode = $templateService->getSubpart($templateCode, $subpartMarker);
-if (isset($markerArray['###ENCRYPTION###'])) debug ($markerArray['###ENCRYPTION###'], 'getPlainTemplate $markerArray[\'###ENCRYPTION###\']');
 
         if ($templateCode != '') {
             // Remove non-included fields
@@ -441,10 +438,8 @@ if (isset($markerArray['###ENCRYPTION###'])) debug ($markerArray['###ENCRYPTION#
             $errorCode[0] = 'internal_no_subtemplate';
             $errorCode[1] = $subpartMarker;
             $result = false;
-            debug ($errorCode, 'getPlainTemplate $errorCode');
         }
 
-        debug ($result, 'getPlainTemplate $result');
         return $result;
     }	// getPlainTemplate
 

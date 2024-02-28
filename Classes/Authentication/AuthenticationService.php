@@ -33,7 +33,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Authentication services class
  */
 class AuthenticationService extends AbstractAuthenticationService implements MimicServiceInterface
-{    
+{
     /**
      * Process the submitted credentials.
      * In this case hash the clear text password if it has been submitted.
@@ -44,7 +44,6 @@ class AuthenticationService extends AbstractAuthenticationService implements Mim
      */
     public function processLoginData(array &$loginData, $passwordTransmissionStrategy)
     {
-        debug ($loginData, 'processLoginData $loginData');
         $isProcessed = false;
         if ($passwordTransmissionStrategy === 'normal') {
             $loginData = array_map('trim', $loginData);
@@ -53,7 +52,7 @@ class AuthenticationService extends AbstractAuthenticationService implements Mim
         }
         return $isProcessed;
     }
-    
+
     /**
      * Find a user (eg. look up the user record in database when a login is sent)
      *
@@ -73,10 +72,9 @@ class AuthenticationService extends AbstractAuthenticationService implements Mim
                 'ip' => $this->authInfo['REMOTE_ADDR'],
                 'username' => $this->login['uname'],
             ]);
-            debug ('FALSE', 'getUser FALSE');
             return false;
         }
-        
+
         $user = $this->fetchUserRecord($this->login['uname']);
         if (!is_array($user)) {
             // Failed login attempt (no username found)
@@ -91,10 +89,9 @@ class AuthenticationService extends AbstractAuthenticationService implements Mim
                 $this->db_user['username_column'] => $user[$this->db_user['username_column']],
             ]);
         }
-        debug ($user, 'getUser $user');
         return $user;
     }
-    
+
     /**
      * Authenticate a user: Check submitted user credentials against stored hashed password.
      *
@@ -112,24 +109,23 @@ class AuthenticationService extends AbstractAuthenticationService implements Mim
         // Early 100 "not responsible, check other services" if username or password is empty
         if (!isset($this->login['uident_text']) || (string)$this->login['uident_text'] === ''
             || !isset($this->login['uname']) || (string)$this->login['uname'] === '') {
-            debug ('100', 'authUser 100');
 
                 return 100;
             }
-            
+
             if (empty($this->db_user['table'])) {
                 throw new \RuntimeException('User database table not set', 1708536564);
             }
-            
+
             $submittedUsername = (string)$this->login['uname'];
         $submittedPassword = (string)$this->login['uident_text'];
         $passwordHashInDatabase = $user['password'];
         $userDatabaseTable = $this->db_user['table'];
-        
+
         $isReHashNeeded = false;
-        
+
         $saltFactory = GeneralUtility::makeInstance(PasswordHashFactory::class);
-        
+
         // Get a hashed password instance for the hash stored in db of this user
         try {
             $hashInstance = $saltFactory->get($passwordHashInDatabase, $this->pObj->loginType);
@@ -141,14 +137,13 @@ class AuthenticationService extends AbstractAuthenticationService implements Mim
             $this->writeLogMessage($message, $submittedUsername);
             $this->writelog(SystemLogType::LOGIN, SystemLogLoginAction::ATTEMPT, SystemLogErrorClassification::SECURITY_NOTICE, 1, $message, [$submittedUsername]);
             // Not responsible, check other services
-            debug ('100', 'authUser 100');
             return 100;
         }
-        
+
         // An instance of the currently configured salted password mechanism
         // Don't catch InvalidPasswordHashException here: Only install tool should handle those configuration failures
         $defaultHashInstance = $saltFactory->getDefaultHashInstance($this->pObj->loginType);
-        
+
         // We found a hash class that can handle this type of hash
         $isValidPassword = $hashInstance->checkPassword($submittedPassword, $passwordHashInDatabase);
         if ($isValidPassword) {
@@ -160,17 +155,16 @@ class AuthenticationService extends AbstractAuthenticationService implements Mim
                 $isReHashNeeded = true;
             }
         }
-        
+
         if (!$isValidPassword) {
             // Failed login attempt - wrong password
             $message = 'Login-attempt from ###IP###, username \'%s\', password not accepted!';
             $this->writeLogMessage($message, $submittedUsername);
             $this->writelog(SystemLogType::LOGIN, SystemLogLoginAction::ATTEMPT, SystemLogErrorClassification::SECURITY_NOTICE, 1, $message, [$submittedUsername]);
             // Responsible, authentication failed, do NOT check other services
-            debug ('0', 'authUser 0');
             return 0;
         }
-        
+
         if ($isReHashNeeded) {
             // Given password validated but a re-hash is needed. Do so.
             $this->updatePasswordHashInDatabase(
@@ -179,15 +173,13 @@ class AuthenticationService extends AbstractAuthenticationService implements Mim
                 $defaultHashInstance->getHashedPassword($submittedPassword)
             );
         }
-        
+
         // Responsible, authentication ok. Log successful login and return 'auth ok, do NOT check other services'
         $this->writeLogMessage($this->pObj->loginType . ' Authentication successful for username \'%s\'', $submittedUsername);
-        
-        debug ('200', 'authUser 200');
-        
+
         return 200;
     }
-    
+
     /**
      * Mimics password hashing for invalid authentication requests to mitigate
      * @link https://cwe.mitre.org/data/definitions/208.html: CWE-208: Observable Timing Discrepancy
@@ -203,7 +195,7 @@ class AuthenticationService extends AbstractAuthenticationService implements Mim
         }
         return false;
     }
-    
+
     /**
      * Method updates a FE/BE user record - in this case a new password string will be set.
      *
@@ -224,7 +216,7 @@ class AuthenticationService extends AbstractAuthenticationService implements Mim
             'uid' => $uid,
         ]);
     }
-    
+
     /**
      * Writes log message. Destination log depends on the current system mode.
      *

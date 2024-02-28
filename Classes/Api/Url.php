@@ -103,7 +103,6 @@ class Url implements SingletonInterface
             $result = $this->cObj->getTypoLink_URL($id, $piVars);
         }
         $result = str_replace(['[', ']'], ['%5B', '%5D'], $result);
-        debug ($result, 'get_url ENDE $result');
         return $result;
     }
     // get_url

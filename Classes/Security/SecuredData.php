@@ -148,7 +148,7 @@ class SecuredData
         $result = true;
         $data = [];
         // Decrypt incoming password (and eventually other encrypted fields)
-        $passwordRow = 
+        $passwordRow =
             ['password' => self::readPassword($frontendUser, $extensionKey)];
         $errorCode = '';
         $errorMessage = '';
@@ -217,12 +217,10 @@ class SecuredData
     )
     {
         $password = self::readPassword($frontendUser, $extensionKey);
-        debug ($password, 'readPasswordForStorage $password Original');
-        
+
         if ($password != '') {
             $password =
             self::getStorageSecurity()->encryptPasswordForStorage($password);
-            debug ($password, 'readPasswordForStorage $password verschlüsselt');
         }
 
         return $password;
@@ -293,7 +291,6 @@ class SecuredData
             )
         ) {
             $password = self::readPassword($frontendUser, $extensionKey);
-            debug ($password, '$password');
             $cryptedPassword = '';
             $autoLoginKey = '';
             $isEncrypted =
@@ -303,12 +300,9 @@ class SecuredData
                     $cryptedPassword,
                     $autoLoginKey
                 );
-            debug ($autoLoginKey, '$autoLoginKey');
-            debug ($isEncrypted, '$isEncrypted');
+
             if ($isEncrypted) {
-                debug ($cryptedPassword, '$cryptedPassword');
                 $dataArray['tx_agency_password'] = base64_encode($password);
-                debug ($dataArray['tx_agency_password'], '$dataArray[\'tx_agency_password\'] mit base64 +++');
             }
         }
     }

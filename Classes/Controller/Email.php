@@ -340,7 +340,6 @@ class Email implements SingletonInterface
         array $setFixedConfig,
         &$errorCode
     ) {
-        debug ($key, 'compile +++ $key');
         $errorCode = '';
         $conf = $confObj->getConf();
         $useAdditionalFields = true;
@@ -886,7 +885,6 @@ class Email implements SingletonInterface
                 $content['adminhtml']['final'] ?? '',
                 $file
             );
-            debug ($result, '$result');
         } else {
             $result = false;
             if (!empty($missingSubpartArray)) { // $conf['notify.'][$key]
@@ -894,7 +892,6 @@ class Email implements SingletonInterface
                 $errorCode[0] = 'internal_no_subtemplate';
                 $errorCode[1] = $missingSubpartArray[0];
             }
-            debug ($result, '$result Pos 2');
         }
 
         if (
@@ -906,8 +903,6 @@ class Email implements SingletonInterface
             $errorCode[0] = 'internal_email_not_sent';
             $errorCode[1] = $recipient;
         }
-        debug ($result, '$result');
-        debug ($errorCode, '$errorCode');
 
         return $result;
     } // compile
@@ -935,10 +930,6 @@ class Email implements SingletonInterface
         $fileAttachment = ''
     ) {
         $result = false;
-        debug ($content, 'send $content');
-        debug ($contentHTML, 'send $contentHTML');
-        debug ($adminContent, 'send $adminContent');
-        debug ($adminContentHTML, 'send $adminContentHTML');
 
         // Send mail to admin
         if (
@@ -1042,8 +1033,6 @@ class Email implements SingletonInterface
                 trim($PLAINContent)
             )
         ) {
-            debug ($HTMLContent, 'sendHTML $HTMLContent');
-
             $defaultSubject = 'Agency Registration';
             $result = MailUtility::send(
                 $recipient,

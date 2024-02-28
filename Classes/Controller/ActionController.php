@@ -140,12 +140,10 @@ class ActionController implements SingletonInterface
         $extensionKey = $controlData->getExtensionKey();
         $cmd = $controlData->getCmd();
         $dataArray = $dataObj->getDataArray();
-        debug ($dataArray, '$dataArray');
         $fieldlist = '';
         $modifyPassword = false;
         $request = $controlData->getRequest();
         $frontendUser = $request->getAttribute('frontend.user');
-
         $bHtmlSpecialChars = false;
         SecuredData::secureInput($dataArray, $bHtmlSpecialChars);
 
@@ -192,16 +190,13 @@ class ActionController implements SingletonInterface
             );
         }
         $feUserdata = $controlData->getFeUserData();
-        debug ($feUserdata, '$feUserdata');
         $theUid = 0;
         $setFixedUid = false;
 
         if (is_array($dataArray) && !empty($dataArray['uid'])) {
             $theUid = $dataArray['uid'];
-            debug ($theUid, '$theUid');
         } elseif (is_array($feUserdata) && !empty($feUserdata['rU'])) {
             $theUid = $feUserdata['rU'];
-            debug ($theUid, '$theUid');
 
             if ($cmd == 'setfixed') {
                 $setFixedUid = true;
@@ -211,7 +206,6 @@ class ActionController implements SingletonInterface
             isset($frontendUser->user['uid'])
         ) {
             $theUid = $frontendUser->user['uid'];
-            debug ($theUid, '$theUid');
         }
 
         if ($theUid) {
@@ -221,7 +215,7 @@ class ActionController implements SingletonInterface
                     $theTable,
                     $theUid
                 );
-debug ($newOrigArray, '$newOrigArray');
+
             if (isset($newOrigArray) && is_array($newOrigArray)) {
                 $tcaObj->modifyRow(
                     $staticInfoObj,
@@ -233,7 +227,7 @@ debug ($newOrigArray, '$newOrigArray');
                 $origArray = $newOrigArray;
             }
         }
-        debug ($origArray, '$origArray');
+
         // Set the command key
         $cmdKey = '';
 
@@ -243,7 +237,6 @@ debug ($newOrigArray, '$newOrigArray');
             $cmd == 'infomail'
         ) {
             $cmdKey = $cmd;
-            debug ($cmdKey, '$cmdKey');
         } elseif (
             isset($origArray['uid']) &&
             (
@@ -261,15 +254,12 @@ debug ($newOrigArray, '$newOrigArray');
                 )
             ) {
                 $cmdKey = 'edit';
-                debug ($cmdKey, '$cmdKey');
             } elseif (
                 $cmd == 'delete'
             ) {
                 $cmdKey = 'delete';
-                debug ($cmdKey, '$cmdKey');
             }
         }
-        debug ($cmdKey, '$cmdKey');
 
         if (
             $cmdKey == '' &&
@@ -278,7 +268,6 @@ debug ($newOrigArray, '$newOrigArray');
             $origArray = []; // do not use the read in original array
             $cmdKey = 'create';
         }
-        debug ($cmdKey, '$cmdKey Pos 2');
 
         $controlData->setCmdKey($cmdKey);
 
@@ -345,7 +334,7 @@ debug ($newOrigArray, '$newOrigArray');
                     $conf[$cmdKey . '.']['required'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',username', 1)));
                 }
             }
-debug ($cmdKey, '$cmdKey');
+
             // When in edit mode, remove password from required fields
             if ($cmdKey == 'edit') {
                 $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), ['password']));
@@ -489,7 +478,6 @@ debug ($cmdKey, '$cmdKey');
         $fieldList = $dataObj->getFieldList();
         $fieldArray = GeneralUtility::trimExplode(',', $fieldList, 1);
         $additionalFields = $dataObj->getAdditionalIncludedFields();
-        debug ($cmdKey, '$cmdKey');
 
         if ($theTable == 'fe_users' && !empty($cmdKey)) {
 
@@ -555,8 +543,6 @@ debug ($cmdKey, '$cmdKey');
         $templateCode,
         &$errorMessage
     ) {
-        debug ($cmd, 'doProcessing $cmd');
-        debug ($cmdKey, 'doProcessing $cmdKey');
         $dataArray = $dataObj->getDataArray();
         $conf = $confObj->getConf();
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
@@ -587,7 +573,7 @@ debug ($cmdKey, '$cmdKey');
             (
                 $theTable == 'fe_users' &&
                 (
-                    !CompatibilityUtility::isLoggedIn() ||
+                    !$controlData->isLoggedIn() ||
                     ($uid > 0 && $frontendUser->user['uid'] != $uid)
                 ) &&
                 !in_array($cmd, $this->noLoginCommands)
@@ -776,8 +762,6 @@ debug ($cmdKey, '$cmdKey');
             }
             $dataObj->setUsername($theTable, $finalDataArray, $cmdKey);
             $dataObj->setDataArray($finalDataArray);
-            debug ($bDoNotSave, '$bDoNotSave');
-            debug ($bDoNotSave, '$bDoNotSave');
 
             if (
                 $parseResult &&
@@ -785,7 +769,6 @@ debug ($cmdKey, '$cmdKey');
                 !$controlData->getFeUserData('preview') &&
                 !$bDoNotSave
             ) {
-                debug ($theTable, '$theTable vor save password');
                 if ($theTable == 'fe_users') {
                     if (
                         $cmdKey == 'invite' ||
@@ -800,7 +783,6 @@ debug ($cmdKey, '$cmdKey');
                             $finalDataArray,
                             $autoLoginKey
                         );
-                        debug ($autoLoginKey, '$autoLoginKey nach generatePassword +++');
                     }
 
                     // If inviting or if auto-login will be required on confirmation, we store an encrypted version of the password
@@ -809,7 +791,6 @@ debug ($cmdKey, '$cmdKey');
                             $frontendUser,
                             $extensionKey
                         );
-                    debug ($savePassword, '$savePassword Pos 3');
                 }
                 $extraFields = '';
                 if (
@@ -820,11 +801,11 @@ debug ($cmdKey, '$cmdKey');
                     $finalDataArray['privacy_policy_date'] = SystemUtility::createTime();
                     $extraFields = 'privacy_policy_date';
                 }
-                debug ($frontendUser, '$frontendUser');
 
                 $newDataArray = [];
                 $theUid = $dataObj->save(
                     $staticInfoObj,
+                    $controlData,
                     $theTable,
                     $finalDataArray,
                     $origArray,
@@ -1127,7 +1108,6 @@ debug ($cmdKey, '$cmdKey');
                     header('Location: '.GeneralUtility::locationHeaderUrl($destUrl));
                     exit;
                 }
-                debug ($cmd, '$cmd +++ vor login');
 
                 // Auto login on create
                 if (
@@ -1143,7 +1123,6 @@ debug ($cmdKey, '$cmdKey');
                             $frontendUser,
                             $extensionKey
                         );
-                    debug ($password, '$password');
                     $systemObj =
                         GeneralUtility::makeInstance(
                             System::class,
@@ -1160,7 +1139,6 @@ debug ($cmdKey, '$cmdKey');
                             true,
                             true
                         );
-                    debug ($loginSuccess, 'AUTOLOGIN $loginSuccess +++');
 
                     if ($loginSuccess) {
                         // Login was successful
@@ -1203,8 +1181,6 @@ debug ($cmdKey, '$cmdKey');
             // That is either preview or just displaying an empty or not correctly filled form
             $markerObj->setArray($markerArray);
             $token = $controlData->readToken();
-            debug ($cmdKey, '$cmdKey');
-            debug ($cmd, 'doProcessing $cmd vorher');
 
             if (
                 $cmd == '' &&
@@ -1212,7 +1188,6 @@ debug ($cmdKey, '$cmdKey');
             ) {
                 $cmd = $cmdKey;
             }
-debug ($cmd, 'doProcessing $cmd');
 
             switch ($cmd) {
                 case 'login':
@@ -1252,8 +1227,6 @@ debug ($cmd, 'doProcessing $cmd');
                         $this,
                         $token
                     );
-                    debug ($hasError, '$hasError');
-                    debug ($confirmationEmailSent, '$confirmationEmailSent');
                     break;
                 case 'infomail':
                     $markerObj->addGeneralHiddenFieldsMarkers(
@@ -1456,11 +1429,6 @@ debug ($cmd, 'doProcessing $cmd');
                     $errorContent = $errorText;
                 }
             }
-            debug ($errorContent, '$errorContent');
-            debug ($hasError, '$hasError');
-            debug ($cmd, '$cmd');
-            debug ($cmdKey, '$cmdKey');
-            debug ($controlData->isPreview(), '$controlData->isPreview()');
 
             if (
                 (
@@ -1476,7 +1444,6 @@ debug ($cmd, 'doProcessing $cmd');
             }
         }
 
-        debug ($deleteRegHash, '$deleteRegHash');
         if (
             $deleteRegHash &&
             $controlData->getValidRegHash()

@@ -104,7 +104,6 @@ class InitializationController implements SingletonInterface
         $buttonLabelsList,
         $otherLabelsList
     ) {
-        debug ('B');
         $result = true;
         HtmlUtility::generateXhtmlFix();
 
@@ -179,7 +178,6 @@ class InitializationController implements SingletonInterface
             $controlData->getPiVars(),
             $controlData->getPrefixId()
         );
-        debug ($result, '$result');
 
         if ($result !== false) {
             if ($pibaseObj->extKey != Extension::KEY) {
@@ -266,12 +264,10 @@ class InitializationController implements SingletonInterface
             } else {
                 $result = false;
                 $errorMessage = $languageObj->getLabel('internal_invalid_token');
-                debug ($errorMessage, '$errorMessage');
             }
         } else {
             $errorMessage = $languageObj->getLabel('internal_init_language');
         }
-        debug ('E');
 
         return $result;
     } // init
@@ -288,8 +284,6 @@ class InitializationController implements SingletonInterface
         $buttonLabelsList = '',
         $otherLabelsList = ''
     ) {
-        debug ('B');
-
         $staticInfoObj = null;
         $dataObj = null; // object of type tx_agency_data
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
@@ -362,7 +356,6 @@ class InitializationController implements SingletonInterface
                 $pibaseObj->prefixId,
                 $pibaseObj->extKey
             );
-        debug ('E');
 
         return $content;
     }

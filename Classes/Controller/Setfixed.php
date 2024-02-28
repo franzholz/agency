@@ -114,12 +114,10 @@ class Setfixed implements SingletonInterface
         $content = false;
         $request = $controlData->getRequest();
         $frontendUser = $request->getAttribute('frontend.user');
-        debug ($origArray, 'process $origArray');
         $row = $currentArray = $origArray;
         $usesPassword = false;
         $enableAutoLoginOnConfirmation =
             Parameters::enableAutoLoginOnConfirmation($conf, $cmdKey);
-        debug ($enableAutoLoginOnConfirmation, '$enableAutoLoginOnConfirmation');
         $systemObj =
             GeneralUtility::makeInstance(
                 System::class,
@@ -154,7 +152,6 @@ class Setfixed implements SingletonInterface
         $origUsergroup = $row['usergroup'] ?? 0;
         $setfixedUsergroup = '';
         $setfixedSuffix = $setFixedKey = $controlData->getFeUserData('sFK');
-        debug ($setFixedKey, '$setFixedKey');
         $fD = $controlData->getFd();
         $setfixedConfig = [];
         if (
@@ -200,7 +197,6 @@ class Setfixed implements SingletonInterface
         } else {
             $theAuthCode = $authObj->setfixedHash($row, $fieldList);
         }
-        debug ($theAuthCode, '$theAuthCode');
 
         if (
             !strcmp($authObj->getAuthCode(), $theAuthCode) &&
@@ -385,22 +381,14 @@ class Setfixed implements SingletonInterface
                             true
                         );
                     }
-debug ($autoLoginIsRequested, '$autoLoginIsRequested');
 
                     if ($autoLoginIsRequested) {
-                        debug ($currentArray['tx_agency_password'], '$currentArray[\'tx_agency_password\'] als BASE64 +++');
                         // $cryptedPassword = '';
                         $encoded = $currentArray['tx_agency_password'];
                         $cryptedPassword = base64_decode($encoded);
 
-                        // for ($i = 0; $i < ceil(strlen($encoded) / 256); $i++) {
-                        //     $cryptedPassword .= base64_decode(substr($encoded, $i * 256, 256));
-                        //     debug ($i, '$i hier');
-                        // }
-                        // debug ($i, '$i nach FOR');
                         $errorCode = '';
                         $errorMessage = '';
-                        debug ($autoLoginKey, '$autoLoginKey +++');
                         \JambageCom\Agency\Security\SecuredData::getStorageSecurity()
                             ->decryptPasswordForAutoLogin(
                                 $cryptedPassword,
@@ -408,7 +396,6 @@ debug ($autoLoginIsRequested, '$autoLoginIsRequested');
                                 $errorMessage,
                                 $autoLoginKey
                             );
-                        debug ($cryptedPassword, '$cryptedPassword nach decryptPasswordForAutoLogin +++ muss Original Passwort sein');
                         $markerArray['###ENCRYPTION###'] = $cryptedPassword;
                     }
 
@@ -469,7 +456,6 @@ debug ($autoLoginIsRequested, '$autoLoginIsRequested');
                     $fD
                 );
             }
-debug ($setFixedKey, '$setFixedKey');
 
             if ($setFixedKey != 'EDIT') {
 
@@ -506,10 +492,6 @@ debug ($setFixedKey, '$setFixedKey');
                         $hasError = true;
                     }
                 }
-                debug ($hasError, '$hasError');
-                debug ($content, '$content');
-                debug ($setFixedKey, '$setFixedKey');
-                debug ($usesPassword, '$usesPassword');
 
                 if (
                     !$hasError &&
@@ -525,7 +507,6 @@ debug ($setFixedKey, '$setFixedKey');
                     ) &&
                     !$usesPassword
                 ) {
-                    debug ($cryptedPassword, '$cryptedPassword vor LOGIN +++');
                     $redirect = true;
                     // Auto-login
                     $loginSuccess =
@@ -539,38 +520,11 @@ debug ($setFixedKey, '$setFixedKey');
                             true,
                             $redirect
                         );
-                    debug ($loginSuccess, '$loginSuccess nach login');
 
                     if ($loginSuccess) {
                         if ($setFixedKey != 'ENTER') {
                             $sendExecutionEmail = true;
                         }
-                        debug ($setFixedKey, '$setFixedKey nach login');
-                        // $content =
-                        //     $editView->render(
-                        //         $errorCode,
-                        //         $markerArray,
-                        //         $conf,
-                        //         $cObj,
-                        //         $languageObj,
-                        //         $controlData,
-                        //         $confObj,
-                        //         $tcaObj,
-                        //         $markerObj,
-                        //         $dataObj,
-                        //         $template,
-                        //         $theTable,
-                        //         $prefixId,
-                        //         $dataArray,
-                        //         $origArray,
-                        //         $securedArray,
-                        //         'password',
-                        //         'password',
-                        //         $controlData->getMode(),
-                        //         $dataObj->getInError(),
-                        //         $token
-                        //     );
-                        debug ($content, '$content nach Login SUCCESS');
                     } else {
                         // Login failed
                         $content =
@@ -596,7 +550,6 @@ debug ($setFixedKey, '$setFixedKey');
                         $hasError = true;
                     }
                 }
-                debug ($setFixedKey, '$setFixedKey +++ Login ?');
 
                 if (
                     $conf['enableAdminReview'] &&
@@ -604,14 +557,12 @@ debug ($setFixedKey, '$setFixedKey');
                 ) {
                     $setfixedSuffix .= '_REVIEW';
                 }
-                debug ($hasError, '$hasError');
 
                 if (
                     !$hasError &&
                     !$content
                 ) {
                     $subpartMarker = '###TEMPLATE_' . SETFIXED_PREFIX . 'OK_' . $setfixedSuffix . '###';
-                    debug ($subpartMarker, '$subpartMarker LOGIN');
                     $content =
                         $template->getPlainTemplate(
                             $errorCode,
@@ -633,7 +584,6 @@ debug ($setFixedKey, '$setFixedKey');
                             $securedArray,
                             false
                         );
-                    debug ($content, '$content LOGIN');
                     $sendExecutionEmail = true;
                 }
 
@@ -642,7 +592,6 @@ debug ($setFixedKey, '$setFixedKey');
                     !$content
                 ) {
                     $subpartMarker = '###TEMPLATE_' . SETFIXED_PREFIX . 'OK###';
-                    debug ($subpartMarker, '$subpartMarker');
                     $content =
                         $template->getPlainTemplate(
                             $errorCode,
@@ -676,10 +625,8 @@ debug ($setFixedKey, '$setFixedKey');
                         $conf['infomail']
                     )
                 ) {
-                    debug ($conf['enableEmailConfirmation'], '$conf[\'enableEmailConfirmation\']');
                     $errorCode = '';
                     $subpart = SETFIXED_PREFIX . $setfixedSuffix;
-                    debug ($subpart, '$subpart vor compiel ');
                     // Compiling email
                     $emailResult = $email->compile(
                         $subpart,
@@ -706,7 +653,6 @@ debug ($setFixedKey, '$setFixedKey');
                         $conf['setfixed.'],
                         $errorCode
                     );
-                    debug ($emailResult, '$emailResult');
                 }
 
                 if (
@@ -715,17 +661,12 @@ debug ($setFixedKey, '$setFixedKey');
                     $errorText =
                         $languageObj->getLabel($errorCode[0], $dummy, '', false, true);
                     $errorContent = sprintf($errorText, $errorCode[1]);
-                    debug ($errorContent, '$errorContent');
                     $content = $errorContent;
                 } elseif (
                     $emailResult &&
                     $theTable == 'fe_users'
                 ) {
                     // If applicable, send admin a request to review the registration request
-                    debug ($conf['enableAdminReview'], '$conf[\'enableAdminReview\']');
-                    debug ($setFixedKey, '$setFixedKey');
-                    debug ($usesPassword, '$usesPassword');
-                    debug ($sendExecutionEmail, '$sendExecutionEmail');
 
                     if (
                         $conf['enableAdminReview'] &&
@@ -734,7 +675,6 @@ debug ($setFixedKey, '$setFixedKey');
                         $sendExecutionEmail
                     ) {
                         $subpart = SETFIXED_PREFIX . 'REVIEW';
-                        debug ($subpart, '$subpart admin review');
                         $emailResult = $email->compile(
                             $subpart,
                             $cObj,
@@ -760,7 +700,6 @@ debug ($setFixedKey, '$setFixedKey');
                             $conf['setfixed.'],
                             $errorCode
                         );
-                        debug ($emailResult, '$emailResult');
 
                         if (
                             is_array($errorCode)
@@ -776,9 +715,6 @@ debug ($setFixedKey, '$setFixedKey');
                             $confirmationEmailSent = true;
                         }
                     }
-                    debug ($errorContent, '$errorContent');
-                    debug ($enableAutoLoginOnConfirmation, '$enableAutoLoginOnConfirmation');
-                    debug ($autoLoginIsRequested, '$autoLoginIsRequested');
 
                     if ($errorContent) {
                         $content = $errorContent;
@@ -797,7 +733,6 @@ debug ($setFixedKey, '$setFixedKey');
                         ) &&
                         $autoLoginIsRequested
                     ) {
-                        debug ($cryptedPassword, '$cryptedPassword +++ vor LOGIN 2');
                         $loginSuccess =
                             $systemObj->login(
                                 $cObj,
@@ -817,11 +752,9 @@ debug ($setFixedKey, '$setFixedKey');
                             $uid,
                             $row
                         );
-                        debug ($loginSuccess, '$loginSuccess');
 
                         if ($loginSuccess) {
                             // Login was successful
-                             debug ($loginSuccess, '$loginSuccess EXIT');
                             exit;
                         } else {
                             // Login failed
@@ -877,7 +810,6 @@ debug ($setFixedKey, '$setFixedKey');
             );
             // TODO: Your registration has been confirmed .
         }
-        debug ($content, 'processSetFixed ENDE $content');
         return $content;
     }	// processSetFixed
 
@@ -892,7 +824,6 @@ debug ($setFixedKey, '$setFixedKey');
         array $feuserData,
         &$autoLoginKey
     ) {
-        debug ($feuserData, 'getAutoLoginIsRequested $feuserData');
         $autoLoginIsRequested = false;
         if (
             isset($feuserData['key']) &&
@@ -900,9 +831,7 @@ debug ($setFixedKey, '$setFixedKey');
         ) {
             $autoLoginKey = $feuserData['key'];
             $autoLoginIsRequested = true;
-            debug ($autoLoginKey, 'getAutoLoginIsRequested $autoLoginKey');
         }
-        debug ($autoLoginIsRequested, 'getAutoLoginIsRequested $autoLoginIsRequested');
 
         return $autoLoginIsRequested;
     }
@@ -954,7 +883,6 @@ debug ($setFixedKey, '$setFixedKey');
                 )
             );
         $subpartMarker = '###TEMPLATE_' . $setFixedKey . '_PREVIEW###';
-        debug ($subpartMarker, '$subpartMarker');
         $content = $template->getPlainTemplate(
             $errorCode,
             $conf,
@@ -974,7 +902,6 @@ debug ($setFixedKey, '$setFixedKey');
             $origArray,
             $securedArray
         );
-        debug ($content, 'confirmationScreen ENDE $content');
 
         return $content;
     }

@@ -112,7 +112,7 @@ class DeleteView
             }
 
             if (
-                ($theTable == 'fe_users' && CompatibilityUtility::isLoggedIn()) ||
+                ($theTable == 'fe_users' && $controlData->isLoggedIn()) ||
                 $aCAuth
             ) {
                 // Must be logged in OR be authenticated by the aC code in order to delete

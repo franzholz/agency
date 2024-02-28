@@ -119,7 +119,6 @@ class System implements LoggerAwareInterface
             'uident_text' => $cryptedPassword,
             'status' => 'login',
         ];
-        debug ($loginData, 'System login $loginData +++');
 
         // Check against configured pid (defaulting to current page)
         $frontendUser->checkPid = true;
@@ -164,15 +163,12 @@ class System implements LoggerAwareInterface
                         )
                 )
             ) {
-                debug (get_class($authServiceObj), 'Klasse von $authServiceObj');
                 $subType = 'authUserFE';
                 $isProcessed =
                     $authServiceObj->processLoginData($loginData, 'normal');
                 if (!$isProcessed) {
-                    debug ($isProcessed, '$isProcessed +++');
                     continue;
                 }
-                debug ($loginData, '$loginData');
                 $authServiceObj->initAuth($subType, $loginData, $authInfo, $frontendUser);
 
                 // Get user info
@@ -181,13 +177,11 @@ class System implements LoggerAwareInterface
                         $loginData['uname']
                         // $authInfo['db_user'],
                     );
-                    debug ($user, '$user');
 
                 if (
                     !empty($user) &&
                     ($ret = $authServiceObj->authUser($user)) > 0
                 ) {
-                    debug ($ret, '$ret OK');
                     // If the service returns >=200 then no more checking is needed - useful for IP checking without password
                     if ((int)$ret >= 200) {
                         $ok = true;
@@ -200,8 +194,6 @@ class System implements LoggerAwareInterface
                     }
                 } else {
                     $authenticated = false;
-                    debug ($ret, '$ret FALSE');
-                    debug ($ok, '$ok');
                     break;
                 }
 
@@ -212,13 +204,8 @@ class System implements LoggerAwareInterface
         } else {
             $ok = true;
         }
-        debug ($ok, '$ok');
-        debug ($authenticated, '$authenticated');
 
         if ($ok && $authenticated) {
-            debug ($ok, '$ok +++ LOGIN erfolgreich');
-            debug ($user, '$user');
-// neu ++++++++++++++++++++++++++++++++++++++++++
             $this->userSessionManager = UserSessionManager::create($frontendUser->loginType);
             $this->userSession =
                 $this->userSessionManager->createFromRequestOrAnonymous(
@@ -226,10 +213,7 @@ class System implements LoggerAwareInterface
                     $frontendUser->getCookieName()
                 );
             $isExistingSession = !$this->userSession->isNew();
-            debug ($isExistingSession, '$isExistingSession');
             $anonymousSession = $isExistingSession && $this->userSession->isAnonymous();
-            debug ($anonymousSession, '$anonymousSession');
-            debug ($this->userSession->getUserId(), '$this->userSession->getUserId()');
 
             // Insert session record if needed
             if (!$isExistingSession
@@ -239,13 +223,10 @@ class System implements LoggerAwareInterface
                 $sessionData = $this->userSession->getData();
                 // Create a new session with a fixated user
                 $this->userSession = $this->createUserSession($user, $frontendUser->userid_column);
-                debug ($this->userSession->getUserId(), '$this->userSession->getUserId() nach createUserSession');
 
                 // Preserve session data on login
                 if ($anonymousSession || $isExistingSession) {
-                    debug ($sessionData, 'vor overrideData $sessionData +++');
                     $this->userSession->overrideData($sessionData);
-                    debug ($this->userSession->getUserId(), '$this->userSession->getUserId() nach overrideData');
                 }
 
                 // The login session is started.
@@ -274,7 +255,7 @@ class System implements LoggerAwareInterface
                 ]);
             } else {
                 $this->logger->debug('User {username} authenticated from {ip}', [
-                    'username' => $userRecordCandidate[$frontendUser->username_column],
+                    'username' => $user[$frontendUser->username_column],
                     'ip' => GeneralUtility::getIndpEnv('REMOTE_ADDR'),
                 ]);
             }
@@ -313,30 +294,17 @@ class System implements LoggerAwareInterface
                 // Required authentication service not available
                 $message = $languageObj->getLabel('internal_required_authentication_service_not_available');
                 $result = false;
-                debug ($message, '$message');
             }
         }
-
-        // Delete regHash
-        // if (
-        //     $this->controlData->getValidRegHash()
-        // ) {
-        //     $regHash = $this->controlData->getRegHash();
-        //     $this->controlData->deleteShortUrl($regHash);
-        // }
 
         if ($result == true) {
             $frontendUser->storeSessionData();
         } else {
             if (strlen($message)) {
-                debug ($message, '$message +++');
                 $this->logger->critical($message);
             }
             $ok = false;
         }
-
-        $this->context->setAspect('frontend.user', $this->fe_user->createUserAspect());
-
 
         if (
             $ok &&
@@ -355,11 +323,8 @@ class System implements LoggerAwareInterface
                     $redirectUrl = $this->controlData->getSiteUrl();
                 }
             }
-            debug ($redirectUrl, 'Login ENDE $redirectUrl');
-
             header('Location: ' . GeneralUtility::locationHeaderUrl($redirectUrl));
         }
-        debug ($result, 'login ENDE $result');
 
         return $result;
     }
@@ -373,7 +338,6 @@ class System implements LoggerAwareInterface
     public function createUserSession(array &$userRecord, $userid_column): UserSession
     {
         $userRecordId = (int)($userRecord[$userid_column] ?? 0);
-        debug ($userRecordId, 'createUserSession $userRecordId');
         $session =
             $this->userSessionManager->elevateToFixatedUserSession(
                 $this->userSession,
@@ -473,8 +437,6 @@ class System implements LoggerAwareInterface
      */
     public function setSessionData($key, $data)
     {
-        debug ($key, 'setSessionData $key');
-        debug ($data, 'setSessionData $data');
         $this->userSession->set($key, $data);
     }
 
@@ -485,9 +447,7 @@ class System implements LoggerAwareInterface
      */
     protected function regenerateSessionId()
     {
-        debug ($this->userSession, 'regenerateSessionId VORHER $this->userSession');
         $this->userSession = $this->userSessionManager->regenerateSession($this->userSession->getIdentifier());
-        debug ($this->userSession, 'regenerateSessionId ENDE $this->userSession');
     }
 
     /**

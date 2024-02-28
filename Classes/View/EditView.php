@@ -383,7 +383,7 @@ class EditView
             if (
                 is_array($origArray) &&
                 (
-                    ($theTable == 'fe_users' && CompatibilityUtility::isLoggedIn()) ||
+                    ($theTable == 'fe_users' && $controlData->isLoggedIn()) ||
                     $aCAuth ||
                     (
                         $theAuthCode != '' &&

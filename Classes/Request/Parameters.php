@@ -114,14 +114,20 @@ class Parameters implements SingletonInterface
 
     public function injectContext(Context $context)
     {
-        debug ($this->thePid, 'injectContext +++ $this->thePid');
         $this->context = $context;
     }
 
     public function getContext()
     {
-        debug ($this->context, 'getContext $this->context');
         return $this->context;
+    }
+
+    public function isLoggedIn()
+    {
+        $context = $this->getContext();
+        $result = $context->getPropertyFromAspect('frontend.user', 'isLoggedIn');
+
+        return $result;
     }
 
     public function init(
@@ -132,12 +138,9 @@ class Parameters implements SingletonInterface
         $piVars,
         $theTable
     ): void {
-        debug ($prefixId, 'init $prefixId');
-        debug (is_object($this->context), '$this->context ist Objekt?');
         $fdArray = [];
         $conf = $confObj->getConf();
         $shortUrls = $conf['useShortUrls'] ?? false;
-        debug ($shortUrls, '$shortUrls');
         $this->setRequest($request);
         $this->setFrontendUser($request->getAttribute('frontend.user'));
 
@@ -188,7 +191,6 @@ class Parameters implements SingletonInterface
 
         // Get hash variable if provided and if short url feature is enabled
         $feUserData = GeneralUtility::_GP($prefixId);
-        debug ($feUserData, '$feUserData Pos 1');
         $bSecureStartCmd =
             (
                 is_array($feUserData) &&
@@ -210,7 +212,6 @@ class Parameters implements SingletonInterface
             ) {
                 $regHash = $feUserData['regHash'];
             }
-            debug ($regHash, '$regHash shortUrls');
 
             if (!$regHash) {
                 $getData = GeneralUtility::_GET($prefixId);
@@ -227,7 +228,6 @@ class Parameters implements SingletonInterface
             // Check and process for short URL if the regHash GET parameter exists
             if ($regHash) {
                 $getVars = $this->getShortUrl($regHash);
-                debug ($getVars, '$getVars aus getShortUrl');
 
                 if (
                     isset($getVars) &&
@@ -274,30 +274,24 @@ class Parameters implements SingletonInterface
                     } else {
                         $feUserData = $origFeuserData;
                     }
-debug ($regHash, '$regHash');
                     $this->setRegHash($regHash);
                 }
             }
         }
 
         if (isset($feUserData) && is_array($feUserData)) {
-            debug ($feUserData, 'setFeUserData $feUserData');
             $this->setFeUserData($feUserData);
         }
 
         // Establishing compatibility with the extension Direct Mail
         $piVarArray = $this->getSetfixedParameters();
-        debug ($piVarArray, '$piVarArray');
 
         foreach ($piVarArray as $pivar) {
             $value = GeneralUtility::_GP($pivar);
             if ($value != '') {
-                debug ($value, '$pivar');
                 $this->setFeUserData($value, $pivar);
             }
         }
-        debug ($this->getFeUserData(), '$feUserData Pos 2');
-
         $aC = $this->getFeUserData('aC');
         $authObj->setAuthCode($aC);
 
@@ -377,10 +371,7 @@ debug ($regHash, '$regHash');
         } else {
             // Get the latest token from the session data
             $token = $this->readToken();
-            debug ($token, '$token');
         }
-        debug ($feUserData, '$feUserData');
-        debug ($cmd, '$cmd');
 
         if (
             is_array($feUserData) &&
@@ -412,12 +403,10 @@ debug ($regHash, '$regHash');
                 ($authObj->getAuthCode($aC) && !$bSecureStartCmd)
             )
         ) {
-            debug ($fdArray, '$fdArray Pos hier');
             if (
                 !empty($fdArray) &&
                 !empty($origArray)
             ) {
-                debug ($origArray, '$origArray');
                 // Calculate the setfixed hash from incoming data
                 $fieldList = rawurldecode($fdArray['_FIELDLIST']);
                 $setFixedArray = array_merge($origArray, $fdArray);
@@ -622,7 +611,6 @@ debug ($regHash, '$regHash');
     */
     protected function setTokenValid($valid)
     {
-        debug ($valid, 'setTokenValid $valid');
         $this->tokenValid = $valid;
     }
 
@@ -824,7 +812,6 @@ debug ($regHash, '$regHash');
             $key != ''
         ) {
             if (isset($this->feUserData[$key])) {
-                debug ($this->feUserData[$key], '$this->feUserData['.$key.']');
                 $result = $this->feUserData[$key];
             }
         } else {
@@ -866,7 +853,6 @@ debug ($regHash, '$regHash');
 
     public function getFailure()
     {
-        debug ($this->failure, '$this->failure');
         return $this->failure;
     }
 
@@ -1072,7 +1058,6 @@ debug ($regHash, '$regHash');
             }
             eval("\$retArray" . $newkey . "='$val';");
         }
-        debug ($retArray, 'getShortUrl $retArray');
         return $retArray;
     }   // getShortUrl
 
@@ -1082,7 +1067,6 @@ debug ($regHash, '$regHash');
     public function deleteShortUrl($regHash): void
     {
         if ($regHash != '') {
-            debug ($regHash, 'deleteShortUrl $regHash');
             // get the serialised array from the DB based on the passed hash value
             $GLOBALS['TYPO3_DB']->exec_DELETEquery(
                 'cache_md5params',
@@ -1108,7 +1092,6 @@ debug ($regHash, '$regHash');
                     'tstamp<' . $max_life . ' AND type=99'
                 );
         }
-        debug ($max_life, 'cleanShortUrlCache $max_life');
     }   // cleanShortUrlCache
 
     /**

@@ -100,7 +100,6 @@ class CreateView
         ) {
             return false;
         }
-    debug ($prefixId, 'render $prefixId');
 
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         $templateCode = $dataObj->getTemplateCode();
@@ -147,12 +146,11 @@ class CreateView
                 $subpartKey = '###TEMPLATE_' . $key . $markerObj->getPreviewLabel() . '###';
             } else {
                 $bNeedUpdateJS = false;
-                if (CompatibilityUtility::isLoggedIn()) {
+                if ($controlData->isLoggedIn()) {
                     $subpartKey = '###TEMPLATE_CREATE_LOGIN###';
                 } else {
                     $subpartKey = '###TEMPLATE_AUTH###';
                 }
-                debug ($subpartKey, 'CreateView::render $subpartKey');
             }
 
             $templateCode = $templateService->getSubpart($templateCode, $subpartKey);
@@ -179,8 +177,7 @@ class CreateView
                     $errorFieldArray,
                     $failure
                 );
-                debug ($templateCode, 'CreateView::render $templateCode');
-                
+
             $markerArray =
                 $markerObj->fillInMarkerArray(
                     $markerArray,
@@ -331,18 +328,9 @@ class CreateView
                         'FE[' . $theTable . ']',
                         $fields
                     );
-                debug ($updateJS, '$updateJS');
                 $content .= $updateJS;
-                // $finalJavaScript = '';
-                // Javascript::getOnSubmitHooks(
-                //     $finalJavaScript,
-                //     $this
-                // );
-                // debug ($finalJavaScript, '$finalJavaScript');
-                // $content .= $finalJavaScript;
             }
         }
-debug ($content, 'render END $content +++');
 
         return $content;
     } // render
