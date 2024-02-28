@@ -80,6 +80,7 @@ class DeleteView
         $theTable,
         array $dataArray,
         array $origArray,
+        array $feUser,
         array $securedArray,
         $token,
         $setFixedKey,
@@ -111,7 +112,7 @@ class DeleteView
             }
 
             if (
-                ($theTable == 'fe_users' && CompatibilityUtility::isLoggedIn()) ||
+                ($theTable == 'fe_users' && $controlData->isLoggedIn()) ||
                 $aCAuth
             ) {
                 // Must be logged in OR be authenticated by the aC code in order to delete
@@ -122,7 +123,7 @@ class DeleteView
                         $dataObj->getCoreQuery()->DBmayFEUserEdit(
                             $theTable,
                             $origArray,
-                            $GLOBALS['TSFE']->fe_user->user,
+                            $feUser,
                             $conf['allowedGroups'] ?? '',
                             $conf['fe_userEditSelf'] ?? ''
                         );

@@ -30,9 +30,6 @@ namespace JambageCom\Agency\Controller;
 *
 * Part of the agency (Agency Registration) extension.
 *
-* Front End creating/editing/deleting records authenticated by fe_user login.
-* A variant restricted to front end user self-registration and profile maintenance, with a number of enhancements (see the manual).
-*
 * @author   Kasper Skårhøj <kasperYYYY@typo3.com>
 * @author   Stanislas Rolland <typo3(arobas)sjbr.ca>
 * @author   Franz Holzinger <franz@ttproducts.de>
@@ -40,32 +37,39 @@ namespace JambageCom\Agency\Controller;
 *
 *
 */
+
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use JambageCom\Agency\Configuration\ConfigurationStore;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use Psr\Http\Message\ServerRequestInterface;
+
+use SJBR\StaticInfoTables\PiBaseApi;
+
 use JambageCom\Div2007\Utility\HtmlUtility;
+use JambageCom\Div2007\Utility\FrontendUtility;
+use JambageCom\Div2007\Database\CoreQuery;
+
+use JambageCom\Agency\Configuration\ConfigurationStore;
+
+use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Api\Url;
+use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Domain\Tca;
 use JambageCom\Agency\Domain\Tables;
+use JambageCom\Agency\Domain\Data;
 use JambageCom\Agency\Security\Authentication;
 use JambageCom\Agency\Request\Parameters;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use SJBR\StaticInfoTables\PiBaseApi;
-use JambageCom\Agency\Api\Url;
-use JambageCom\Div2007\Database\CoreQuery;
-use JambageCom\Agency\Domain\Data;
-use JambageCom\Agency\View\Marker;
-use JambageCom\Agency\Api\Localization;
 use JambageCom\Agency\Utility\LocalizationUtility;
 use JambageCom\Agency\View\CreateView;
 use JambageCom\Agency\View\EditView;
 use JambageCom\Agency\View\DeleteView;
+use JambageCom\Agency\View\Marker;
 use JambageCom\Agency\View\Template;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use JambageCom\Div2007\Utility\FrontendUtility;
 
-use JambageCom\Agency\Constants\Extension;
 
 class InitializationController implements SingletonInterface
 {
@@ -90,6 +94,7 @@ class InitializationController implements SingletonInterface
         &$languageObj,
         &$markerObj,
         &$errorMessage,
+        ServerRequestInterface $request,
         AbstractPlugin $pibaseObj,
         ContentObjectRenderer $cObj,
         ConfigurationStore $confObj,
@@ -99,7 +104,6 @@ class InitializationController implements SingletonInterface
         $buttonLabelsList,
         $otherLabelsList
     ) {
-
         $result = true;
         HtmlUtility::generateXhtmlFix();
 
@@ -113,6 +117,7 @@ class InitializationController implements SingletonInterface
         $controlData = GeneralUtility::makeInstance(Parameters::class);
         $controlData->init(
             $confObj,
+            $request,
             $pibaseObj->prefixId,
             $pibaseObj->extKey,
             $pibaseObj->piVars,
@@ -270,6 +275,7 @@ class InitializationController implements SingletonInterface
 
     public function main(
         AbstractPlugin $pibaseObj,
+        ServerRequestInterface $request,
         ContentObjectRenderer $cObj,
         $content,
         $conf,
@@ -294,6 +300,7 @@ class InitializationController implements SingletonInterface
             $languageObj,
             $markerObj,
             $errorMessage,
+            $request,
             $pibaseObj,
             $cObj,
             $confObj,
@@ -349,6 +356,7 @@ class InitializationController implements SingletonInterface
                 $pibaseObj->prefixId,
                 $pibaseObj->extKey
             );
+
         return $content;
     }
 

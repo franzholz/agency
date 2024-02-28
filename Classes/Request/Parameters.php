@@ -40,28 +40,35 @@ namespace JambageCom\Agency\Request;
  *
  *
  */
-use JambageCom\Agency\Configuration\ConfigurationStore;
-use JambageCom\Agency\Security\Authentication;
-use JambageCom\Div2007\Utility\ControlUtility;
-use JambageCom\Agency\Constants\Field;
-use JambageCom\Div2007\Captcha\CaptchaManager;
+
+use Psr\Http\Message\ServerRequestInterface;
+
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
-use JambageCom\Div2007\Utility\FrontendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 use JambageCom\Div2007\Captcha\CaptchaInterface;
+use JambageCom\Div2007\Captcha\CaptchaManager;
+use JambageCom\Div2007\Utility\ControlUtility;
+use JambageCom\Div2007\Utility\FrontendUtility;
 
+use JambageCom\Agency\Constants\Field;
+use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Agency\Security\Authentication;
 use JambageCom\Agency\Security\SecuredData;
 use JambageCom\Agency\Utility\SessionUtility;
 
-use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Context\LanguageAspect;
+
+
 
 /**
  * Request parameters
  */
-class Parameters
+class Parameters implements SingletonInterface
 {
     private $confObj;
     protected $thePid = 0;
@@ -72,6 +79,8 @@ class Parameters
     protected $site_url;
     protected $prefixId;
     protected $piVars;
+    protected $request;
+    protected $frontendUser;
     protected $extensionKey;
     protected $cmd = '';
     protected $cmdKey = '';
@@ -96,9 +105,34 @@ class Parameters
     protected $setFixedParameters = ['rU', 'aC', 'cmd', 'sFK'];
     protected $fD = [];
 
+    /**
+     * @var TypoScriptFrontendController|null
+     */
+    protected $typoScriptFrontendController;
+
+    protected ?Context $context = null;
+
+    public function injectContext(Context $context)
+    {
+        $this->context = $context;
+    }
+
+    public function getContext()
+    {
+        return $this->context;
+    }
+
+    public function isLoggedIn()
+    {
+        $context = $this->getContext();
+        $result = $context->getPropertyFromAspect('frontend.user', 'isLoggedIn');
+
+        return $result;
+    }
 
     public function init(
         ConfigurationStore $confObj,
+        ServerRequestInterface $request,
         $prefixId,
         $extensionKey,
         $piVars,
@@ -106,6 +140,10 @@ class Parameters
     ): void {
         $fdArray = [];
         $conf = $confObj->getConf();
+        $shortUrls = $conf['useShortUrls'] ?? false;
+        $this->setRequest($request);
+        $this->setFrontendUser($request->getAttribute('frontend.user'));
+
         if ($theTable == 'fe_users') {
             $this->initPasswordField($conf);
         }
@@ -113,15 +151,16 @@ class Parameters
         $this->setDefaultPid($conf['pid']);
 
         $this->site_url = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
+        $tsfe = $this->getTypoScriptFrontendController();
 
-        if ($GLOBALS['TSFE']->absRefPrefix) {
+        if ($tsfe->absRefPrefix) {
             if(
-                strpos($GLOBALS['TSFE']->absRefPrefix, 'http://') === 0 ||
-                strpos($GLOBALS['TSFE']->absRefPrefix, 'https://') === 0
+                strpos($tsfe->absRefPrefix, 'http://') === 0 ||
+                strpos($tsfe->absRefPrefix, 'https://') === 0
             ) {
-                $this->site_url = $GLOBALS['TSFE']->absRefPrefix;
+                $this->site_url = $tsfe->absRefPrefix;
             } else {
-                $this->site_url = $this->site_url . ltrim($GLOBALS['TSFE']->absRefPrefix, '/');
+                $this->site_url = $this->site_url . ltrim($tsfe->absRefPrefix, '/');
             }
         }
         $this->setPrefixId($prefixId);
@@ -130,7 +169,7 @@ class Parameters
         $this->setTable($theTable);
         $authObj = GeneralUtility::makeInstance(Authentication::class);
 
-        $this->sys_language_content = intval($GLOBALS['TSFE']->config['config']['sys_language_uid'] ?? 0);
+        $this->sys_language_content = intval($tsfe->config['config']['sys_language_uid'] ?? 0);
 
         // set the title language overlay
         $this->setPidTitle($conf, $this->sys_language_content);
@@ -161,9 +200,10 @@ class Parameters
             );
         $bValidRegHash = false;
 
-        if (!empty($conf['useShortUrls'])) {
+        if ($shortUrls) {
             $regHash = false;
 
+            // delete outdated short urls
             $this->cleanShortUrlCache();
             if (
                 isset($feUserData) &&
@@ -234,7 +274,6 @@ class Parameters
                     } else {
                         $feUserData = $origFeuserData;
                     }
-
                     $this->setRegHash($regHash);
                 }
             }
@@ -253,7 +292,6 @@ class Parameters
                 $this->setFeUserData($value, $pivar);
             }
         }
-
         $aC = $this->getFeUserData('aC');
         $authObj->setAuthCode($aC);
 
@@ -281,6 +319,7 @@ class Parameters
             $value = $this->getFormPassword();
             if ($value !== null) {
                 SecuredData::writePassword(
+                    $this->getFrontendUser(),
                     $extensionKey,
                     $value,
                     '',
@@ -294,7 +333,7 @@ class Parameters
         $bRuIsInt = MathUtility::canBeInterpretedAsInteger($feUserData['rU'] ?? '');
         if ($bRuIsInt) {
             $theUid = intval($feUserData['rU']);
-            $origArray = $GLOBALS['TSFE']->sys_page->getRawRecord($theTable, $theUid);
+            $origArray = $tsfe->sys_page->getRawRecord($theTable, $theUid);
         }
 
         if (
@@ -339,27 +378,34 @@ class Parameters
             (
                 !count($feUserData) ||
                 $bSecureStartCmd ||
-                (!empty($token) && $feUserData['token'] == $token) ||
-                (empty($token) && !empty($feUserData['token']) && $cmd == 'create')
+                (
+                    !empty($feUserData['token']) &&
+                    (
+                        (
+                            !empty($token) && $feUserData['token'] == $token
+                        ) ||
+                        (
+                            empty($token) && $cmd == 'create'
+                        )
+                    )
+                )
                 // Allow always the creation of a new user. No session data exists in this case.
             )
         ) {
             $this->setTokenValid(true);
         } elseif (
             $bRuIsInt &&
-                // When processing a setfixed link from other extensions,
-                // there might no token and no short url regHash, but there might be an authCode
+                // When processing a setfixed link from third party extensions,
+                // there might be no token and no short url regHash, but there might be an authCode
             (
                 $bValidRegHash ||
-                !$conf['useShortUrls'] ||
+                !$shortUrls ||
                 ($authObj->getAuthCode($aC) && !$bSecureStartCmd)
             )
         ) {
             if (
-                isset($fdArray) &&
-                is_array($fdArray) &&
-                isset($origArray) &&
-                is_array($origArray)
+                !empty($fdArray) &&
+                !empty($origArray)
             ) {
                 // Calculate the setfixed hash from incoming data
                 $fieldList = rawurldecode($fdArray['_FIELDLIST']);
@@ -394,6 +440,7 @@ class Parameters
             $this->setFeUserData([]);
             // Erase any stored password
             SecuredData::writePassword(
+                $this->getFrontendUser(),
                 $extensionKey,
                 ''
             );
@@ -433,7 +480,7 @@ class Parameters
     }
 
     /**
-     * Set the title of the page of the records
+     * Set the title of the page o  f the records
      *
      * @return void
      */
@@ -484,7 +531,7 @@ class Parameters
     {
 
         $bPidIsInt = MathUtility::canBeInterpretedAsInteger($pid);
-        $this->defaultPid = ($bPidIsInt ? intval($pid) : $GLOBALS['TSFE']->id);
+        $this->defaultPid = ($bPidIsInt ? intval($pid) : $this->getTypoScriptFrontendController()->id);
     }
 
     public function getDefaultPid()
@@ -576,7 +623,7 @@ class Parameters
     {
         $token = '';
         $extensionKey = $this->getExtensionKey();
-        $sessionData = SessionUtility::readData($extensionKey);
+        $sessionData = SessionUtility::readData($this->getFrontendUser(), $extensionKey);
 
         if (isset($sessionData['token'])) {
             $token = $sessionData['token'];
@@ -593,13 +640,14 @@ class Parameters
     protected function writeToken($token)
     {
         $extensionKey = $this->getExtensionKey();
-        $sessionData = SessionUtility::readData($extensionKey);
+        $sessionData = SessionUtility::readData($this->getFrontendUser(), $extensionKey);
         if ($token == '') {
             $sessionData['token'] = '__UNSET';
         } else {
             $sessionData['token'] = $token;
         }
         SessionUtility::writeData(
+            $this->getFrontendUser(),
             $extensionKey,
             $sessionData,
             false,
@@ -618,7 +666,7 @@ class Parameters
     {
         $redirectUrl = '';
         $extensionKey = $this->getExtensionKey();
-        $sessionData = SessionUtility::readData($extensionKey);
+        $sessionData = SessionUtility::readData($this->getFrontendUser(), $extensionKey);
         if (isset($sessionData['redirect_url'])) {
             $redirectUrl = $sessionData['redirect_url'];
         }
@@ -638,6 +686,7 @@ class Parameters
             $data['redirect_url'] = $redirectUrl;
             $extensionKey = $this->getExtensionKey();
             SessionUtility::writeData(
+                $this->getFrontendUser(),
                 $extensionKey,
                 $data,
                 true,
@@ -667,6 +716,26 @@ class Parameters
             $result = $this->sys_language_content;
         }
         return $result;
+    }
+
+    private function setRequest ($request)
+    {
+        $this->request = $request;
+    }
+
+    public function getRequest ()
+    {
+        return $this->request;
+    }
+
+    private function setFrontendUser ($frontendUser)
+    {
+        $this->frontendUser = $frontendUser;
+    }
+
+    public function getFrontendUser ()
+    {
+        return $this->frontendUser;
     }
 
     public function getPidTitle()
@@ -837,7 +906,7 @@ class Parameters
                     $pid = $this->getPid('password');
                     break;
                 default:
-                    $pid = $GLOBALS['TSFE']->id;
+                    $pid = $this->getTypoScriptFrontendController()->id;
                     break;
             }
         }
@@ -1011,7 +1080,6 @@ class Parameters
     */
     public function cleanShortUrlCache(): void
     {
-
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
@@ -1025,4 +1093,12 @@ class Parameters
                 );
         }
     }   // cleanShortUrlCache
+
+    /**
+     * @return TypoScriptFrontendController|null
+     */
+    public function getTypoScriptFrontendController()
+    {
+        return $this->typoScriptFrontendController ?: $GLOBALS['TSFE'] ?? null;
+    }
 }

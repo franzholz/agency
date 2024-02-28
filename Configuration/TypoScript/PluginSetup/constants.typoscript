@@ -8,7 +8,7 @@ plugin.tx_agency {
     # cat=plugin.tx_agency/enable; type=boolean; label= Force file deletion: On record deletion, related images and files will be deleted even if the record is only marked 'deleted'
   forceFileDelete = 1
 
-    # cat=plugin.tx_agency/file; type=file[pdf,doc,sxw,txt]; label= Attachment file: File to be attached to the confirmation email.
+    # cat=plugin.tx_agency/file; type=file[pdf,doc,txt]; label= Attachment file: File to be attached to the confirmation email.
   file.attachmentFile = EXT:agency/Resources/Public/Examples/tx_agency_sample.txt
 
     # cat=plugin.tx_agency/file; type=file[pdf,doc,sxw,txt]; label= Terms file: File to be shown as the terms and conditions of usage.
@@ -95,7 +95,7 @@ plugin.tx_agency {
     # cat=plugin.tx_agency//; type=int+; label= Confirmation page Type: Type (or pageNum) of the confirmation page.
   confirmType = 0
 
-    # cat=plugin.tx_agency//; type=int+; label= Login page PID: PID of the page on which the New login box plugin is inserted with the intent of serving as the front user login page.
+    # cat=plugin.tx_agency//; type=int+; label= Login page PID: PID of the page to which the the front user is redirected after a login or whatever you have under the template subpart TEMPLATE_SETFIXED_OK_ENTER. On this page there must be an agency plugin to process the login or you must put there a login box of another extension.
   loginPID =
 
     # cat=plugin.tx_agency//; type=int+; label= Link to after edit PID: PID of the page to be linked to after the user has completed the edition of his/her profile.
@@ -264,7 +264,7 @@ plugin.tx_agency {
   useShortUrls = 1
 
     # cat=plugin.tx_agency//; type=int+; label=Short URL cache lifespan: Number of days that short URL's will be kept in the DB. After this delay, the short URL's will be removed. Confirmation URL's included in email messages older than this number of days will not work.
-  shortUrlLife = 30
+  shortUrlLife = 35
 
     # cat=plugin.tx_agency/enable; type=boolean; label= Enable localization: If set, only localized records are shown.
   useLocalization = 0
@@ -280,4 +280,9 @@ plugin.tx_agency {
 
     # cat=plugin.tx_agency//; type=boolean; label= Merge labels: If set then the labels for select boxes found in setup are merged to the labels already in the TCA, which might come from TCEFORM.fe_users altLabels or addItems. If 0, then only the labels from plugin.tx_agency._LOCAL_LANG.de.fe_users.x.I.x are taken.
   mergeLabels = 1
+  
+    # cat=plugin.tx_agency//; type=string; label= Authorization Service classes: Comma separated list of authorization classes for front end user login.
+  authServiceClass =
 }
+
+

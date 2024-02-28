@@ -1,4 +1,14 @@
+2024-02-28 Franz Holzinger  <franz@ttproducts.de>
+    Deprecation no. 87193: function compareUident removed
+    Breaking no. 87193: TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordService has been removed.
+    Fix autologin
 
+2024-01-24 Franz Holzinger  <franz@ttproducts.de>
+    Deprecation no.81852: - Remove usage of classes
+    JambageCom\Div2007\Security\TransmissionSecurity and
+    JambageCom\Div2007\Security\StorageSecurity
+
+    Deprecation no.88740: Replace hooks for felogin by events
 
 2023-11-22 Franz Holzinger  <franz@ttproducts.de>
     compatibility 12: replace CmsBackend->pmDrawItem by PageContentPreviewRenderingListener listener
@@ -19,7 +29,7 @@
     * Replace PATH_site
 
 2022-02-22 Franz Holzinger  <franz@ttproducts.de>
-    * compatibility 9: replace PATH_site by \TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/' 
+    * compatibility 9: replace PATH_site by \TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/'
 
 2022-02-21 Franz Holzinger  <franz@ttproducts.de>
     Deprecation no.94312: - Remove loginSecurityLevel for FE and BE
@@ -98,7 +108,7 @@
 2018-07-12 Franz Holzinger  <franz@ttproducts.de>
     * remove the files:
         ext_autoload.php, hooks/captcha/class.tx_agency_captcha.php, hooks/class.tx_agency_feusergroup_scheduler.php, hooks/class.tx_agency_hooksHandler.php,
-        hooks/class.tx_agency_hooks_cms.php, hooks/freecap/class.tx_agency_freecap.php, 
+        hooks/class.tx_agency_hooks_cms.php, hooks/freecap/class.tx_agency_freecap.php,
         hooks/statusreport/class.tx_agency_statusReport.php, hooks/statusreport/ext_localconf.php,
         hooks/statusreport/locallang.xlf
 
@@ -144,7 +154,7 @@
     * extract methods readSessionData, writeSessionData and clearSessionData from class Request/Parameters into class Utility/SessionUtility as readData, writeData and clearData
     * restructuring: move \JambageCom\Agency\Security\StorageSecurity into extension div2007 \JambageCom\Div2007\Security\StorageSecurity
     * restructuring: move \JambageCom\Agency\Security\TransmissionSecurity into extension div2007 \JambageCom\Div2007\Security\TransmissionSecurity
-    
+
 2018-03-30 Franz Holzinger  <franz@ttproducts.de>
     * bugfix: do not decrypt a RSA password when it is empty or has no required rsa prefix.
     * new feature: add a javacript generator as a workaround to deal with a password again field for the RSA transmission security. This is necessary to avoid a second encryption and to come into other error cases. Encrpted passwords cannot be verified directly.

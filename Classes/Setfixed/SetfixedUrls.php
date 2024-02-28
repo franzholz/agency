@@ -150,7 +150,7 @@ class SetFixedUrls
                     if (
                         $useShortUrls &&
                         $autoLoginKey != ''
-                    ) {
+                    ) {                        
                         $setfixedpiVars[$prefixId . '%5Bkey%5D'] = $autoLoginKey;
                     }
                 }

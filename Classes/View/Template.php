@@ -183,7 +183,7 @@ class Template
                             '###SUB_ERROR_FIELD_' . $theField . '###',
                             ''
                         );
-                } elseif (!$errorFieldArray[$theField]) {
+                } elseif (empty($errorFieldArray[$theField])) {
                     $templateCode =
                         $templateService->substituteSubpart(
                             $templateCode,
@@ -435,8 +435,8 @@ class Template
                     $deleteUnusedMarkers
                 );
         } elseif ($bCheckEmpty) {
-            $errorCode['0'] = 'internal_no_subtemplate';
-            $errorCode['1'] = $subpartMarker;
+            $errorCode[0] = 'internal_no_subtemplate';
+            $errorCode[1] = $subpartMarker;
             $result = false;
         }
 

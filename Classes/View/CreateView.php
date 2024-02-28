@@ -71,7 +71,7 @@ class CreateView
     * @return string  the template with substituted markers
     */
     public function render(
-        &$markerArray,
+        array $markerArray,
         $conf,
         $prefixId,
         $extensionKey,
@@ -146,23 +146,11 @@ class CreateView
                 $subpartKey = '###TEMPLATE_' . $key . $markerObj->getPreviewLabel() . '###';
             } else {
                 $bNeedUpdateJS = false;
-                if (CompatibilityUtility::isLoggedIn()) {
+                if ($controlData->isLoggedIn()) {
                     $subpartKey = '###TEMPLATE_CREATE_LOGIN###';
                 } else {
                     $subpartKey = '###TEMPLATE_AUTH###';
                 }
-            }
-
-            if (
-                $bNeedUpdateJS &&
-                $controlData->getTable() == 'fe_users'
-            ) {
-                SecuredData::getTransmissionSecurity()
-                    ->getMarkers(
-                        $markerArray,
-                        $controlData->getExtensionKey(),
-                        $controlData->getUsePasswordAgain()
-                    );
             }
 
             $templateCode = $templateService->getSubpart($templateCode, $subpartKey);
@@ -341,24 +329,6 @@ class CreateView
                         $fields
                     );
                 $content .= $updateJS;
-                $securityJavaScript = '';
-                SecuredData::getTransmissionSecurity()->
-                    getJavaScript(
-                        $securityJavaScript,
-                        $extensionKey,
-                        $form,
-                        $controlData->getUsePasswordAgain()
-                    );
-                GeneralUtility::makeInstance(AssetCollector::class)
-                    ->addJavaScript('agency-security', $securityJavaScript);
-                //                 $GLOBALS['TSFE']->setJS('agency-security', $securityJavaScript);
-
-                $finalJavaScript = '';
-                Javascript::getOnSubmitHooks(
-                    $finalJavaScript,
-                    $this
-                );
-                $content .= $finalJavaScript;
             }
         }
 

@@ -51,7 +51,6 @@ use JambageCom\Div2007\Utility\HtmlUtility;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
 use JambageCom\Agency\Security\SecuredData;
 use JambageCom\Agency\Security\Authentication;
-use JambageCom\Agency\Api\Javascript;
 use JambageCom\Div2007\Utility\CompatibilityUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -72,7 +71,7 @@ class EditView
     * @return string  the template with substituted markers
     */
     protected function renderForm(
-        array &$markerArray,
+        array $markerArray,
         array $conf,
         $prefixId,
         ContentObjectRenderer $cObj,
@@ -135,14 +134,6 @@ class EditView
                 );
         }
 
-        if ($controlData->getTable() == 'fe_users') {
-            SecuredData::getTransmissionSecurity()
-                ->getMarkers(
-                    $markerArray,
-                    $controlData->getExtensionKey(),
-                    $controlData->getUsePasswordAgain()
-                );
-        }
         $templateCode =
             $template->removeRequired(
                 $confObj,
@@ -313,16 +304,6 @@ class EditView
                     $fields
                 );
             $content .= $updateJS;
-            $finalJavaScript = '';
-            SecuredData::getTransmissionSecurity()->
-                getJavaScript(
-                    $finalJavaScript,
-                    $controlData->getExtensionKey(),
-                    $form,
-                    $controlData->getUsePasswordAgain()
-                );
-            Javascript::getOnSubmitHooks($finalJavaScript, $this);
-            $content .= $finalJavaScript;
         }
 
         return $content;
@@ -402,7 +383,7 @@ class EditView
             if (
                 is_array($origArray) &&
                 (
-                    ($theTable == 'fe_users' && CompatibilityUtility::isLoggedIn()) ||
+                    ($theTable == 'fe_users' && $controlData->isLoggedIn()) ||
                     $aCAuth ||
                     (
                         $theAuthCode != '' &&

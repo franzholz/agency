@@ -2,50 +2,36 @@
 
 namespace JambageCom\Agency\Security;
 
-/***************************************************************
-*  Copyright notice
-*
-*  (c) 2018 Stanislas Rolland <typo3(arobas)sjbr.ca>
-*  All rights reserved
-*
-*  This script is part of the Typo3 project. The Typo3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*  A copy is found in the textfile GPL.txt and important notices to the license
-*  from the author is found in LICENSE.txt distributed with these scripts.
-*
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
+
 /**
 * Part of the agency (Agency Registration) extension. former class tx_agency_auth
 *
 * authentication functions
-*
-* @author	Kasper Skaarhoj <kasper2007@typo3.com>
-* @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
-* @author	Franz Holzinger <franz@ttproducts.de>
 *
 * @package TYPO3
 * @subpackage agency
 *
 *
 */
-use JambageCom\Div2007\Security\TransmissionSecurity;
-use JambageCom\Div2007\Security\StorageSecurity;
-use JambageCom\Agency\Request\Parameters;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
+
+use JambageCom\Div2007\Security\StorageSecurity;
+
+use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Utility\SessionUtility;
 
 /**
@@ -59,32 +45,6 @@ class SecuredData
     * @var array
     */
     protected static $securedFields = ['password', 'password_again', 'tx_agency_password'];
-
-    /**
-     * Gets the transmission security object
-     *
-     * @return tx_agency_transmission_security the transmission security object
-     */
-    public static function getTransmissionSecurity()
-    {
-        $result = GeneralUtility::makeInstance(
-            TransmissionSecurity::class
-        );
-        return $result;
-    }
-
-    /**
-     * Gets the storage security object
-     *
-     * @return tx_agency_transmission_security the storage security object
-     */
-    public static function getStorageSecurity()
-    {
-        $result = GeneralUtility::makeInstance(
-            StorageSecurity::class
-        );
-        return $result;
-    }
 
     /**
     * Gets the array of names of secured fields
@@ -180,6 +140,7 @@ class SecuredData
     * @return void
     */
     public static function securePassword(
+        FrontendUserAuthentication $frontendUser,
         $extensionKey,
         array &$row,
         &$errorMessage
@@ -187,25 +148,14 @@ class SecuredData
         $result = true;
         $data = [];
         // Decrypt incoming password (and eventually other encrypted fields)
-        $passwordRow = ['password' => self::readPassword($extensionKey)];
+        $passwordRow =
+            ['password' => self::readPassword($frontendUser, $extensionKey)];
         $errorCode = '';
         $errorMessage = '';
-        $passwordDecrypted =
-            self::getTransmissionSecurity()->decryptIncomingFields(
-                $passwordRow,
-                $errorCode,
-                $errorMessage
-            );
 
-        // Collect secured fields
-        if ($passwordDecrypted !== false) {
+        if ($errorMessage == '') {
             self::writePassword(
-                $extensionKey,
-                $passwordRow['password'],
-                $passwordRow['password']
-            );
-        } elseif ($errorMessage == '') {
-            self::writePassword(
+                $frontendUser,
                 $extensionKey,
                 $passwordRow['password'],
                 $row['password_again'] ?? ''
@@ -223,13 +173,14 @@ class SecuredData
     * @return   void
     */
     public static function writePassword(
+        FrontendUserAuthentication $frontendUser,
         $extensionKey,
         $password,
         $passwordAgain = '',
         $token = '',
         $redirectUrl = ''
     ): void {
-        $sessionData = SessionUtility::readData($extensionKey);
+        $sessionData = SessionUtility::readData($frontendUser, $extensionKey);
         if ($password == '') {
             $sessionData['password'] = '__UNSET';
             $sessionData['password_again'] = '__UNSET';
@@ -240,6 +191,7 @@ class SecuredData
             }
         }
         SessionUtility::writeData(
+            $frontendUser,
             $extensionKey,
             $sessionData,
             true,
@@ -259,15 +211,19 @@ class SecuredData
     * @return   string  the encrypted password
     *           boolean false in case of an error
     */
-    public static function readPasswordForStorage($extensionKey)
+    public static function readPasswordForStorage(
+        FrontendUserAuthentication $frontendUser,
+        $extensionKey
+    )
     {
-        $result = false;
-        $password = self::readPassword($extensionKey);
+        $password = self::readPassword($frontendUser, $extensionKey);
+
         if ($password != '') {
-            $result =
-                self::getStorageSecurity()->encryptPasswordForStorage($password);
+            $password =
+            self::getStorageSecurity()->encryptPasswordForStorage($password);
         }
-        return $result;
+
+        return $password;
     }
 
     /**
@@ -275,10 +231,13 @@ class SecuredData
     *
     * @return   string  the password
     */
-    public static function readPassword($extensionKey)
+    public static function readPassword(
+        FrontendUserAuthentication $frontendUser,
+        $extensionKey
+    )
     {
         $result = '';
-        $securedArray = self::readSecuredArray($extensionKey);
+        $securedArray = self::readSecuredArray($frontendUser, $extensionKey);
         if ($securedArray['password']) {
             $result = $securedArray['password'];
         }
@@ -293,6 +252,7 @@ class SecuredData
     * @return   void
     */
     public static function generatePassword(
+        FrontendUserAuthentication $frontendUser,
         $extensionKey,
         $cmdKey,
         array $conf,
@@ -316,6 +276,7 @@ class SecuredData
                 $dataArray['password'] = $generatedPassword;
                 $dataArray['password_again'] = $generatedPassword;
                 self::writePassword(
+                    $frontendUser,
                     $extensionKey,
                     $generatedPassword,
                     $generatedPassword
@@ -329,18 +290,19 @@ class SecuredData
                 $cmdKey
             )
         ) {
-            $password = self::readPassword($extensionKey);
+            $password = self::readPassword($frontendUser, $extensionKey);
             $cryptedPassword = '';
             $autoLoginKey = '';
             $isEncrypted =
                 self::getStorageSecurity()
-                    ->encryptPasswordForAutoLogin(
-                        $password,
-                        $cryptedPassword,
-                        $autoLoginKey
-                    );
+                ->encryptPasswordForAutoLogin(
+                    $password,
+                    $cryptedPassword,
+                    $autoLoginKey
+                );
+
             if ($isEncrypted) {
-                $dataArray['tx_agency_password'] = base64_encode($cryptedPassword);
+                $dataArray['tx_agency_password'] = base64_encode($password);
             }
         }
     }
@@ -355,10 +317,11 @@ class SecuredData
     * @return   array   secured FE user session data
     */
     public static function readSecuredArray(
+        FrontendUserAuthentication $frontendUser,
         $extensionKey
     ) {
         $securedArray = [];
-        $sessionData = SessionUtility::readData($extensionKey);
+        $sessionData = SessionUtility::readData($frontendUser, $extensionKey);
         $securedFields = self::getSecuredFields();
         foreach ($securedFields as $securedField) {
             if (isset($sessionData[$securedField])) {
@@ -366,5 +329,18 @@ class SecuredData
             }
         }
         return $securedArray;
+    }
+
+    /**
+     * Gets the storage security object
+     *
+     * @return tx_agency_transmission_security the storage security object
+     */
+    public static function getStorageSecurity()
+    {
+        $result = GeneralUtility::makeInstance(
+            StorageSecurity::class
+        );
+        return $result;
     }
 }

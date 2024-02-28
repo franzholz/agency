@@ -39,23 +39,50 @@ namespace JambageCom\Agency\Api;
  *
  *
  */
-use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use JambageCom\Agency\Request\Parameters;
-use JambageCom\Div2007\Utility\SystemUtility;
-use TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordService;
-use TYPO3\CMS\Core\Context\UserAspect;
-use TYPO3\CMS\Core\Context\Context;
-use JambageCom\Agency\Domain\Data;
+
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Core\Authentication\Event\LoginAttemptFailedEvent;
+
+
+use TYPO3\CMS\Core\Authentication\Mfa\MfaProviderRegistry;
+use TYPO3\CMS\Core\Authentication\Mfa\MfaRequiredException;
+use TYPO3\CMS\Core\Context\UserAspect;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Session\UserSession;
+use TYPO3\CMS\Core\Session\UserSessionManager;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
+
+use JambageCom\Div2007\Utility\SystemUtility;
+
+use JambageCom\Agency\Api\Url;
+use JambageCom\Agency\Authentication\AuthenticationService;
+use JambageCom\Agency\Domain\Data;
+use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Utility\SessionUtility;
+
+
 
 class System implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
+
+    protected ?Parameters $controlData = null;
+
+    protected UserSessionManager $userSessionManager;
+
+    protected ?UserSession $userSession = null;
+
+    public function __construct(Parameters $controlData)
+    {
+        $this->controlData = $controlData;
+    }
 
 
     /**
@@ -67,18 +94,23 @@ class System implements LoggerAwareInterface
     public function login(
         ContentObjectRenderer $cObj,
         Localization $languageObj,
-        Parameters $controlData,
         Url $url,
         $conf,
         $username,
         $cryptedPassword,
         $requiresAuthorization = true,
         $redirect = true
-    ) {
+    )
+    {
         $result = true;
         $ok = true;
+        $authenticated = false;
         $message = '';
         $authServiceObj = null;
+        $request = $this->controlData->getRequest();
+        $frontendUser = $this->controlData->getFrontendUser();
+        $user = [];
+        $activeLogin = false;
 
         // Log the user in
         $loginData = [
@@ -89,98 +121,185 @@ class System implements LoggerAwareInterface
         ];
 
         // Check against configured pid (defaulting to current page)
-        $GLOBALS['TSFE']->fe_user->checkPid = true;
-        $pageIds = ($cObj->data['pages'] ? $cObj->data['pages'] . ',' : '') . $controlData->getPid();
-        $GLOBALS['TSFE']->fe_user->checkPid_value =
+        $frontendUser->checkPid = true;
+        $pageIds = ($cObj->data['pages'] ? $cObj->data['pages'] . ',' : '') . $this->controlData->getPid();
+        $frontendUser->checkPid_value =
             SystemUtility::getRecursivePids(
                 $pageIds,
                 $cObj->data['recursive']
             );
 
         // Get authentication info array
-        $authInfo = $GLOBALS['TSFE']->fe_user->getAuthInfoArray();
+        $authInfo = $frontendUser->getAuthInfoArray($request);
 
-        // Get user info
-        $user =
-            $GLOBALS['TSFE']->fe_user->fetchUserRecord(
-                $authInfo['db_user'],
-                $loginData['uname']
-            );
+        if ($requiresAuthorization) {
+            $ok = false;
+            $serviceKeyArray = [];
 
-        if (is_array($user)) {
-            if ($requiresAuthorization) {
-                $ok = false;
-                $serviceKeyArray = [];
-                $serviceKeyArray[] = SaltedPasswordService::class;
-
-                if (
-                    $conf['authServiceClass'] != '' &&
-                    $conf['authServiceClass'] != '{$plugin.tx_agency.authServiceClass}' &&
-                    class_exists($conf['authServiceClass'])
-                ) {
-                    $serviceKeyArray = array_merge($serviceKeyArray, GeneralUtility::trimExplode(',', $conf['authServiceClass']));
-                }
-
-                $serviceChain = '';
-
-                while (
-                    is_object(
-                        $authServiceObj =
-                            GeneralUtility::makeInstanceService(
-                                'auth',
-                                'authUserFE',
-                                GeneralUtility::trimExplode(',', $serviceChain, true)
-                            )
-                    )
-                ) {
-                    $serviceChain .= ',' . $authServiceObj->getServiceKey();
-                    $ok = $authServiceObj->compareUident($user, $loginData);
-
-                    if ($ok) {
-                        break;
+            if (
+                $conf['authServiceClass'] != '' &&
+                $conf['authServiceClass'] != '{$plugin.tx_agency.authServiceClass}'
+            ) {
+                $keyArray = GeneralUtility::trimExplode(',', $conf['authServiceClass']);
+                foreach ($keyArray as $key) {
+                    if (class_exists($key)) {
+                        $serviceKeyArray[] = $key;
                     }
                 }
+            }
+            $serviceKeyArray[] = AuthenticationService::class;
+
+            $serviceChain = '';
+            $ok = false;
+
+            while (
+                !$ok &&
+                is_object(
+                    $authServiceObj =
+                        GeneralUtility::makeInstanceService(
+                            'auth',
+                            'authUserFE',
+                            GeneralUtility::trimExplode(',', $serviceChain, true)
+                        )
+                )
+            ) {
+                $subType = 'authUserFE';
+                $isProcessed =
+                    $authServiceObj->processLoginData($loginData, 'normal');
+                if (!$isProcessed) {
+                    continue;
+                }
+                $authServiceObj->initAuth($subType, $loginData, $authInfo, $frontendUser);
+
+                // Get user info
+                $user =
+                    $authServiceObj->fetchUserRecord(
+                        $loginData['uname']
+                        // $authInfo['db_user'],
+                    );
+
+                if (
+                    !empty($user) &&
+                    ($ret = $authServiceObj->authUser($user)) > 0
+                ) {
+                    // If the service returns >=200 then no more checking is needed - useful for IP checking without password
+                    if ((int)$ret >= 200) {
+                        $ok = true;
+                        $authenticated = true;
+                    } else if ((int)$ret >= 100) {
+                        // nothing
+                    } else {
+                        $ok = true;
+                        $authenticated = true;
+                    }
+                } else {
+                    $authenticated = false;
+                    break;
+                }
+
+                if (!empty($user)) {
+                    $serviceChain .= ',' . $authServiceObj->getServiceKey();
+                }
+            }
+        } else {
+            $ok = true;
+        }
+
+        if ($ok && $authenticated) {
+            $this->userSessionManager = UserSessionManager::create($frontendUser->loginType);
+            $this->userSession =
+                $this->userSessionManager->createFromRequestOrAnonymous(
+                    $request,
+                    $frontendUser->getCookieName()
+                );
+            $isExistingSession = !$this->userSession->isNew();
+            $anonymousSession = $isExistingSession && $this->userSession->isAnonymous();
+
+            // Insert session record if needed
+            if (!$isExistingSession
+                || $anonymousSession
+                || (int)($user[$frontendUser->userid_column] ?? 0) !== $this->userSession->getUserId()
+            ) {
+                $sessionData = $this->userSession->getData();
+                // Create a new session with a fixated user
+                $this->userSession = $this->createUserSession($user, $frontendUser->userid_column);
+
+                // Preserve session data on login
+                if ($anonymousSession || $isExistingSession) {
+                    $this->userSession->overrideData($sessionData);
+                }
+
+                // The login session is started.
+                $this->logger->debug('User session finally read', [
+                    $frontendUser->userid_column => $user[$frontendUser->userid_column],
+                    $frontendUser->username_column => $user[$frontendUser->username_column],
+                ]);
+                $activeLogin = true;
             } else {
-                $ok = true;
+                // if we come here the current session is for sure not anonymous as this is a pre-condition for $authenticated = true
+
             }
 
-            if ($ok) {
-                // Login successfull: create user session
-                $GLOBALS['TSFE']->fe_user->createUserSession($user);
-                // Enforce session so we get a FE cookie. Otherwise autologin might not work (TYPO3 6.2.5+) :
-                $GLOBALS['TSFE']->fe_user->setAndSaveSessionData('dummy', true);
-                $GLOBALS['TSFE']->initUserGroups();
-                $GLOBALS['TSFE']->fe_user->user = $GLOBALS['TSFE']->fe_user->fetchUserSession();
-                $aspect = GeneralUtility::makeInstance(UserAspect::class, $GLOBALS['TSFE']->fe_user);
-                $context = GeneralUtility::makeInstance(Context::class);
-                $context->setAspect('frontend.user', $aspect);
-            } elseif (
-                is_object($authServiceObj) &&
-                in_array(get_class($authServiceObj), $serviceKeyArray)
-            ) {
-                // auto login failed...
-                $message = $languageObj->getLabel('internal_auto_login_failed');
-                $result = false;
+            if ($activeLogin && !$this->userSession->isNew()) {
+                $this->regenerateSessionId();
+            }
+
+            if ($activeLogin) {
+                // User logged in - write that to the log!
+                if ($frontendUser->writeStdLog) {
+                    $this->writelog(SystemLogType::LOGIN, SystemLogLoginAction::LOGIN, SystemLogErrorClassification::MESSAGE, 1, 'User %s logged in from ###IP###', [$userRecordCandidate[$this->username_column]], '', '', '');
+                }
+                $this->logger->info('User {username} logged in from {ip}', [
+                    'username' => $user[$frontendUser->username_column],
+                    'ip' => GeneralUtility::getIndpEnv('REMOTE_ADDR'),
+                ]);
             } else {
+                $this->logger->debug('User {username} authenticated from {ip}', [
+                    'username' => $user[$frontendUser->username_column],
+                    'ip' => GeneralUtility::getIndpEnv('REMOTE_ADDR'),
+                ]);
+            }
+            // Check if multi-factor authentication is required
+            $this->evaluateMfaRequirements();
+        } else {
+            $result = false;
+        // Mark the current login attempt as failed
+            if (empty($user) && $activeLogin) {
+                $this->logger->debug('Login failed', [
+                    'loginData' => $this->removeSensitiveLoginDataForLoggingInfo($loginData),
+                ]);
+                $message =
+                    sprintf(
+                        $languageObj->getLabel('internal_no_enabled_user'),
+                        $loginData['uname']
+                    );
+            } elseif (!empty($user)) {
+                $this->logger->debug('Login failed', [
+                    $frontendUser->userid_column => $user[$frontendUser->userid_column],
+                    $frontendUser->username_column => $user[$frontendUser->username_column],
+                ]);
+                $message = $languageObj->getLabel('internal_auto_login_failed');
+            }
+
+            // If there were a login failure, check to see if a warning email should be sent
+            if ($activeLogin) {
+                GeneralUtility::makeInstance(EventDispatcherInterface::class)->dispatch(
+                    new LoginAttemptFailedEvent($this, $request, $this->removeSensitiveLoginDataForLoggingInfo($loginData))
+                );
+            }
+            if (
+                !is_object($authServiceObj) ||
+                !in_array(get_class($authServiceObj), $serviceKeyArray)
+            ) {
                 // Required authentication service not available
                 $message = $languageObj->getLabel('internal_required_authentication_service_not_available');
                 $result = false;
             }
-
-            // Delete regHash
-            if (
-                $controlData->getValidRegHash()
-            ) {
-                $regHash = $controlData->getRegHash();
-                $controlData->deleteShortUrl($regHash);
-            }
-        } else {
-            // No enabled user of the given name
-            $message = sprintf($languageObj->getLabel('internal_no_enabled_user'), $loginData['uname']);
-            $result = false;
         }
 
-        if ($result == false) {
+        if ($result == true) {
+            $frontendUser->storeSessionData();
+        } else {
             if (strlen($message)) {
                 $this->logger->critical($message);
             }
@@ -192,23 +311,59 @@ class System implements LoggerAwareInterface
             $redirect
         ) {
             // Redirect to configured page, if any
-            $redirectUrl = $controlData->readRedirectUrl();
+            $redirectUrl = $this->controlData->readRedirectUrl();
             if (!$redirectUrl && $result == true) {
                 $redirectUrl = trim($conf['autoLoginRedirect_url']);
             }
 
             if (!$redirectUrl) {
                 if ($conf['loginPID']) {
-                    $redirectUrl = $url->get('', $conf['loginPID']);
+                    $redirectUrl = $url->get($conf['loginPID'], '', [], ['regHash']);
                 } else {
-                    $redirectUrl = $controlData->getSiteUrl();
+                    $redirectUrl = $this->controlData->getSiteUrl();
                 }
             }
-
             header('Location: ' . GeneralUtility::locationHeaderUrl($redirectUrl));
         }
 
         return $result;
+    }
+
+    /**
+     * Creates a user session record and returns its values.
+     *
+     * @param array $userRecord User data array
+     * @return UserSession The session data for the newly created session.
+     */
+    public function createUserSession(array &$userRecord, $userid_column): UserSession
+    {
+        $userRecordId = (int)($userRecord[$userid_column] ?? 0);
+        $session =
+            $this->userSessionManager->elevateToFixatedUserSession(
+                $this->userSession,
+                $userRecordId
+            );
+        $frontendUser = $this->controlData->getFrontendUser();
+
+        // Updating lastLogin_column carrying information about last login.
+        $this->updateLoginTimestamp($userRecord, $frontendUser, $userRecordId);
+        return $session;
+    }
+
+    /**
+     * Updates the last login column in the user with the given id
+     */
+    protected function updateLoginTimestamp(&$userRecord, FrontendUserAuthentication $frontendUser, int $userId)
+    {
+        if ($frontendUser->lastLogin_column) {
+            $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($frontendUser->user_table);
+            $connection->update(
+                $frontendUser->user_table,
+                [$frontendUser->lastLogin_column => $GLOBALS['EXEC_TIME']],
+                [$frontendUser->userid_column => $userId]
+            );
+            $userRecord[$frontendUser->lastLogin_column] = $GLOBALS['EXEC_TIME'];
+        }
     }
 
     public function removePasswordAdditions(
@@ -234,4 +389,93 @@ class System implements LoggerAwareInterface
             true
         );
     }
+
+    /**
+     * This method checks if the user is authenticated but has not succeeded in
+     * passing his MFA challenge. This method can therefore only be used if a user
+     * has been authenticated against his first authentication method (username+password
+     * or any other authentication token).
+     *
+     * @throws MfaRequiredException
+     * @internal
+     */
+    protected function evaluateMfaRequirements(): void
+    {
+        // MFA has been validated already, nothing to do
+        if ($this->getSessionData('mfa')) {
+            return;
+        }
+        // If the user session does not contain the 'mfa' key - indicating that MFA is already
+        // passed - get the first provider for authentication, which is either the default provider
+        // or the first active provider (based on the providers configured ordering).
+        $frontendUser = $this->controlData->getFrontendUser();
+        $provider = GeneralUtility::makeInstance(MfaProviderRegistry::class)->getFirstAuthenticationAwareProvider($frontendUser);
+        // Throw an exception (hopefully caught in a middleware) when an active provider for the user exists
+        if ($provider !== null) {
+            throw new MfaRequiredException($provider, 1708773832);
+        }
+    }
+
+    /**
+     * Returns the session data stored for $key.
+     * The data will last only for this login session since it is stored in the user session.
+     *
+     * @param string $key The key associated with the session data
+     * @return mixed
+     */
+    public function getSessionData($key)
+    {
+        return $this->userSession ? $this->userSession->get($key) : '';
+    }
+
+    /**
+     * Set session data by key.
+     * The data will last only for this login session since it is stored in the user session.
+     *
+     * @param string $key A non empty string to store the data under
+     * @param mixed $data Data store store in session
+     */
+    public function setSessionData($key, $data)
+    {
+        $this->userSession->set($key, $data);
+    }
+
+    /**
+     * Regenerate the session ID and transfer the session to new ID
+     * Call this method whenever a user proceeds to a higher authorization level
+     * e.g. when an anonymous session is now authenticated.
+     */
+    protected function regenerateSessionId()
+    {
+        $this->userSession = $this->userSessionManager->regenerateSession($this->userSession->getIdentifier());
+    }
+
+    /**
+     * Removes any sensitive data from the incoming data (either from loginData, processedLogin data
+     * or the user record from the DB).
+     *
+     * No type hinting is added because it might be possible that the incoming data is of any other type.
+     *
+     * @param mixed|array $data
+     * @param bool $isUserRecord
+     * @return mixed
+     */
+    protected function removeSensitiveLoginDataForLoggingInfo($data, bool $isUserRecord = false)
+    {
+        if ($isUserRecord && is_array($data)) {
+            $fieldNames = ['uid', 'pid', 'tstamp', 'crdate', 'deleted', 'disabled', 'starttime', 'endtime', 'username', 'admin', 'usergroup', 'db_mountpoints', 'file_mountpoints', 'file_permissions', 'workspace_perms', 'lastlogin', 'workspace_id', 'category_perms'];
+            $data = array_intersect_key($data, array_combine($fieldNames, $fieldNames));
+        }
+        if (isset($data['uident'])) {
+            $data['uident'] = '********';
+        }
+        if (isset($data['uident_text'])) {
+            $data['uident_text'] = '********';
+        }
+        if (isset($data['password'])) {
+            $data['password'] = '********';
+        }
+        return $data;
+    }
+
 }

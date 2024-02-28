@@ -1474,9 +1474,11 @@ class Data implements SingletonInterface
     */
     public function save(
         $staticInfoObj,
+        Parameters $controlData,
         $theTable,
         array $dataArray,
         array $origArray,
+        $feUser,
         $token,
         array &$newRow,
         $cmd,
@@ -1501,7 +1503,7 @@ class Data implements SingletonInterface
                 // Fetch the original record to check permissions
                 if (
                     $conf['edit'] &&
-                    (CompatibilityUtility::isLoggedIn() || $aCAuth)
+                    ($controlData->isLoggedIn() || $aCAuth)
                 ) {
                     // Must be logged in in order to edit  (OR be validated by email)
                     $newFieldList =
@@ -1540,7 +1542,7 @@ class Data implements SingletonInterface
                         $this->coreQuery->DBmayFEUserEdit(
                             $theTable,
                             $origArray,
-                            $GLOBALS['TSFE']->fe_user->user,
+                            $feUser,
                             $conf['allowedGroups'] ?? '',
                             $conf['fe_userEditSelf'] ?? ''
                         )
@@ -1687,7 +1689,6 @@ class Data implements SingletonInterface
                         $parsedArray['token'] = $token;
                         $newFieldList  .= ',token';
                     }
-
                     $res =
                         $this->coreQuery->DBgetInsert(
                             $theTable,
@@ -1806,10 +1807,11 @@ class Data implements SingletonInterface
     * @return void  sets $this->saved
     */
     public function deleteRecord(
-        Parameters $controlDataObj,
+        Parameters $controlData,
         $theTable,
         array $origArray,
-        array &$dataArray
+        array &$dataArray,
+        array $feUser
     ): void {
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
@@ -1821,7 +1823,7 @@ class Data implements SingletonInterface
                 $authObj = GeneralUtility::makeInstance(Authentication::class);
                 $aCAuth = $authObj->aCAuth($origArray, $conf['setfixed.']['DELETE.']['_FIELDLIST']);
 
-                if (CompatibilityUtility::isLoggedIn() || $aCAuth) {
+                if ($controlData->isLoggedIn() || $aCAuth) {
                     // Must be logged in OR be authenticated by the aC code in order to delete
                     // If the recUid selects a record.... (no check here)
 
@@ -1830,13 +1832,13 @@ class Data implements SingletonInterface
                         $this->coreQuery->DBmayFEUserEdit(
                             $theTable,
                             $origArray,
-                            $GLOBALS['TSFE']->fe_user->user,
+                            $feUser,
                             $conf['allowedGroups'] ?? '',
                             $conf['fe_userEditSelf'] ?? ''
                         )
                     ) {
                         // Delete the record and display form, if access granted.
-                        $extKey = $controlDataObj->getExtensionKey();
+                        $extKey = $controlData->getExtensionKey();
 
                         // <Ries van Twisk added registrationProcess hooks>
                         // Call all beforeSaveDelete hooks BEFORE the record is deleted
@@ -1852,7 +1854,7 @@ class Data implements SingletonInterface
                                         $hookObj->init($this);
                                     }
                                     $hookObj->registrationProcess_beforeSaveDelete(
-                                        $controlDataObj,
+                                        $controlData,
                                         $origArray,
                                         $this
                                     );
