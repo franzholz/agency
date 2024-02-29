@@ -68,7 +68,7 @@ use JambageCom\Agency\Utility\SessionUtility;
 /**
  * Request parameters
  */
-class Parameters implements SingletonInterface
+final class Parameters implements SingletonInterface
 {
     private $confObj;
     protected $thePid = 0;
@@ -110,12 +110,9 @@ class Parameters implements SingletonInterface
      */
     protected $typoScriptFrontendController;
 
-    protected ?Context $context = null;
-
-    public function injectContext(Context $context)
-    {
-        $this->context = $context;
-    }
+    public function __construct(
+        private readonly Context $context,
+    ) {}
 
     public function getContext()
     {

@@ -3,9 +3,6 @@ services:
     autowire: true
     autoconfigure: true
     public: false
-  JambageCom\Agency\:
-    resource: '../Classes/*'
-    exclude: '../Classes/Hooks/*,../Classes/Api/*'
 
   JambageCom\Agency\EventListener\PageContentPreviewRenderingListener:
     tags:
