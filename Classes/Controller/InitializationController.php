@@ -192,7 +192,7 @@ class InitializationController implements SingletonInterface
             } // otherwise the labels from agency need not be included, because this has been done in TYPO3 pibase
 
             $templateFile = $conf['templateFile'];
-            $templateCode = FrontendUtility::fileResource($templateFile);
+            $templateCode = FrontendUtility::fileResource($templateFile, '', false);
             if (
                 (!$templateFile || empty($templateCode))
             ) {
