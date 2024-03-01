@@ -671,7 +671,6 @@ class Setfixed implements SingletonInterface
                     if (
                         $conf['enableAdminReview'] &&
                         $setFixedKey == 'APPROVE' &&
-                        // $usesPassword && neu +++
                         $sendExecutionEmail
                     ) {
                         $subpart = SETFIXED_PREFIX . 'REVIEW';
