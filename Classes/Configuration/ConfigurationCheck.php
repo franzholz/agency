@@ -160,7 +160,7 @@ class ConfigurationCheck implements LoggerAwareInterface
         $extensionKey
     ) {
         $content = '';
-        $templateCode = FrontendUtility::fileResource($conf['templateFile']);
+        $templateCode = FrontendUtility::fileResource($conf['templateFile'], '', false);
         $messages =
             Marker::checkDeprecatedMarkers(
                 $templateCode,

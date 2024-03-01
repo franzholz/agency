@@ -1,3 +1,6 @@
+2024-03-81 Franz Holzinger  <franz@ttproducts.de>
+    Do not use sanitizer for template file which can be in private folder.
+
 2024-02-28 Franz Holzinger  <franz@ttproducts.de>
     Deprecation no. 87193: function compareUident removed
     Breaking no. 87193: TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordService has been removed.
