@@ -14,7 +14,7 @@ call_user_func(function ($extensionKey): void {
         define('STATIC_INFO_TABLES_EXT', 'static_info_tables');
     }
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPItoST43($extensionKey, 'class.tx_agency.php', '', 'list_type', 0);
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPItoST43($extensionKey, '', '', 'list_type', 0);
 
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['uploadfolder'] = $extensionConfiguration['uploadFolder'] ?: 'uploads/tx_agency';
 
