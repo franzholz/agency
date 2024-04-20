@@ -1,3 +1,6 @@
+2024-04-14 Franz Holzinger  <franz@ttproducts.de>
+    * Remove file class.tx_agency.php again which is deprecated since TYPO3 8 for addPItoST43.
+
 2024-03-81 Franz Holzinger  <franz@ttproducts.de>
     Do not use sanitizer for template file which can be in private folder.
 
