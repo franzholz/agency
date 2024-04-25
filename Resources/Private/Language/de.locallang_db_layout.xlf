@@ -5,15 +5,15 @@
     <body>
       <trans-unit id="agency" resname="agency">
         <source>Agency Registration</source>
-        <target state="needs-translation">Agency Registration</target>
+        <target state="translated">Agency Registrierung</target>
       </trans-unit>
       <trans-unit id="feUserGroupScheduler.name" resname="feUserGroupScheduler.name">
         <source>FE User Group Check for Timeouts</source>
-        <target state="needs-translation">FE User Group Check for Timeouts</target>
+        <target state="translated">Prüfung auf Zeitüberschreitung für die FE Benutzergruppe</target>
       </trans-unit>
       <trans-unit id="feUserGroupScheduler.description" resname="feUserGroupScheduler.description">
         <source>This task checks all FE User Groups of all FE Users for a timeout. The FE User might lose a FE User Group membership if its endtime has been reached.</source>
-        <target state="needs-translation">This task checks all FE User Groups of all FE Users for a timeout. The FE User might lose a FE User Group membership if its endtime has been reached.</target>
+        <target state="translated">Diese Option bewirkt eine Prüfung aller FE Benutzergruppen aller FE Benutzer auf Zeitüberschreitung. Der FE Benutzer verliert die Zugehörigkeit zu einer FE Benutzergrippe, wenn die Endzeit erreicht wurde.</target>
       </trans-unit>
     </body>
   </file>
