@@ -5,39 +5,39 @@
     <body>
       <trans-unit id="tstamp" resname="tstamp">
         <source>Time stamp</source>
-        <target state="needs-translation">Time stamp</target>
+        <target state="translated">Zeitstempel</target>
       </trans-unit>
       <trans-unit id="crdate" resname="crdate">
         <source>Creation date</source>
-        <target state="needs-translation">Creation date</target>
+        <target state="translated">Erstellungsdatum</target>
       </trans-unit>
       <trans-unit id="tt_content.list_type" resname="tt_content.list_type">
         <source>Agency Registration</source>
-        <target state="needs-translation">Agency Registration</target>
+        <target state="translated">Frontend-Benutzerregistrierung</target>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.display_mode" resname="tt_content.pi_flexform.display_mode">
         <source>Display mode</source>
-        <target state="needs-translation">Display mode</target>
+        <target state="translated">Anzeigemodus</target>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.display_mode.1" resname="tt_content.pi_flexform.display_mode.1">
         <source>Default</source>
-        <target state="needs-translation">Default</target>
+        <target state="translated">Voreinstellung</target>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.display_mode.3" resname="tt_content.pi_flexform.display_mode.3">
         <source>Create</source>
-        <target state="needs-translation">Create</target>
+        <target state="translated">Erstellen</target>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.display_mode.4" resname="tt_content.pi_flexform.display_mode.4">
         <source>Delete</source>
-        <target state="needs-translation">Delete</target>
+        <target state="translated">Löschen</target>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.display_mode.5" resname="tt_content.pi_flexform.display_mode.5">
         <source>Invite</source>
-        <target state="needs-translation">Invite</target>
+        <target state="translated">Einladen</target>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.display_mode.7" resname="tt_content.pi_flexform.display_mode.7">
         <source>Edit</source>
-        <target state="needs-translation">Edit</target>
+        <target state="translated">Bearbeiten</target>
       </trans-unit>
       <trans-unit id="tt_content.pi_flexform.display_mode.8" resname="tt_content.pi_flexform.display_mode.8">
         <source>Setfixed</source>
@@ -49,59 +49,59 @@
       </trans-unit>
       <trans-unit id="fe_users.cnum" resname="fe_users.cnum">
         <source>Customer Number:</source>
-        <target state="needs-translation">Customer Number:</target>
+        <target state="translated">Kundennummer:</target>
       </trans-unit>
       <trans-unit id="fe_users.house_no" resname="fe_users.house_no">
         <source>House Number:</source>
-        <target state="needs-translation">House Number:</target>
+        <target state="translated">Hausnummer</target>
       </trans-unit>
       <trans-unit id="fe_users.static_info_country" resname="fe_users.static_info_country">
         <source>Country Code:</source>
-        <target state="needs-translation">Country Code:</target>
+        <target state="translated">Ländercode:</target>
       </trans-unit>
       <trans-unit id="fe_users.zone" resname="fe_users.zone">
         <source>State/province:</source>
-        <target state="needs-translation">State/province:</target>
+        <target state="translated">Bundesland/Staat/Provinz:</target>
       </trans-unit>
       <trans-unit id="fe_users.language" resname="fe_users.language">
         <source>Language:</source>
-        <target state="needs-translation">Language:</target>
+        <target state="translated">Sprache:</target>
       </trans-unit>
       <trans-unit id="fe_users.first_name" resname="fe_users.first_name">
         <source>First Name:</source>
-        <target state="needs-translation">First Name:</target>
+        <target state="translated">Vorname:</target>
       </trans-unit>
       <trans-unit id="fe_users.last_name" resname="fe_users.last_name">
         <source>Last Name:</source>
-        <target state="needs-translation">Last Name:</target>
+        <target state="translated">Nachname:</target>
       </trans-unit>
       <trans-unit id="fe_users.module_sys_dmail_newsletter" resname="fe_users.module_sys_dmail_newsletter">
         <source>Activate Newsletter</source>
-        <target state="needs-translation">Activate Newsletter</target>
+        <target state="translated">Aktiviere Newsletter</target>
       </trans-unit>
       <trans-unit id="fe_users.module_sys_dmail_category" resname="fe_users.module_sys_dmail_category">
         <source>Subscribe to categories</source>
-        <target state="needs-translation">Subscribe to categories</target>
+        <target state="translated">Kategorien abonnieren</target>
       </trans-unit>
       <trans-unit id="fe_users.module_sys_dmail_html" resname="fe_users.module_sys_dmail_html">
         <source>Receive emails in HTML format?</source>
-        <target state="needs-translation">Receive emails in HTML format?</target>
+        <target state="translated">E-Mails im HTML-Format erhalten?</target>
       </trans-unit>
       <trans-unit id="fe_users.date_of_birth" resname="fe_users.date_of_birth">
         <source>Date of birth:</source>
-        <target state="needs-translation">Date of birth:</target>
+        <target state="translated">Geburtsdatum:</target>
       </trans-unit>
       <trans-unit id="fe_users.gender" resname="fe_users.gender">
         <source>Mr/Ms:</source>
-        <target state="needs-translation">Mr/Ms:</target>
+        <target state="translated">Hr./Fr.:</target>
       </trans-unit>
       <trans-unit id="fe_users.gender.I.0" resname="fe_users.gender.I.0">
         <source>Mr</source>
-        <target state="needs-translation">Mr</target>
+        <target state="translated">Hr.</target>
       </trans-unit>
       <trans-unit id="fe_users.gender.I.1" resname="fe_users.gender.I.1">
         <source>Ms</source>
-        <target state="needs-translation">Ms</target>
+        <target state="translated">Fr.</target>
       </trans-unit>
       <trans-unit id="fe_users.gender.I.99" resname="fe_users.gender.I.99">
         <source>  </source>
@@ -119,43 +119,43 @@
       </trans-unit>
       <trans-unit id="fe_users.status.I.2" resname="fe_users.status.I.2">
         <source>Job seeking full time</source>
-        <target state="needs-translation">Job seeking full time</target>
+        <target state="translated">Schüler</target>
       </trans-unit>
       <trans-unit id="fe_users.status.I.3" resname="fe_users.status.I.3">
         <source>Working</source>
-        <target state="needs-translation">Working</target>
+        <target state="translated">Angestellter</target>
       </trans-unit>
       <trans-unit id="fe_users.status.I.4" resname="fe_users.status.I.4">
         <source>Retired</source>
-        <target state="needs-translation">Retired</target>
+        <target state="translated">Rentner</target>
       </trans-unit>
       <trans-unit id="fe_users.status.I.5" resname="fe_users.status.I.5">
         <source>Job seeking half time</source>
-        <target state="needs-translation">Job seeking half time</target>
+        <target state="translated">halbtags beschäftigt</target>
       </trans-unit>
       <trans-unit id="fe_users.comments" resname="fe_users.comments">
         <source>Comments:</source>
-        <target state="needs-translation">Comments:</target>
+        <target state="translated">Kommentare:</target>
       </trans-unit>
       <trans-unit id="fe_users.by_invitation" resname="fe_users.by_invitation">
         <source>Was invited:</source>
-        <target state="needs-translation">Was invited:</target>
+        <target state="translated">Wurde eingeladen:</target>
       </trans-unit>
       <trans-unit id="fe_users.terms_acknowledged" resname="fe_users.terms_acknowledged">
         <source>The terms have been acknowledged:</source>
-        <target state="needs-translation">The terms have been acknowledged:</target>
+        <target state="translated">Die Bedingungen wurden angenommen:</target>
       </trans-unit>
       <trans-unit id="fe_users.privacy_policy_acknowledged" resname="fe_users.privacy_policy_acknowledged">
         <source>The privacy policy has been acknowledged:</source>
-        <target state="needs-translation">The privacy policy has been acknowledged:</target>
+        <target state="translated">Der Datenschutzerklärung wurde zugestimmt.</target>
       </trans-unit>
       <trans-unit id="fe_users.privacy_policy_date" resname="fe_users.privacy_policy_date">
         <source>Date of agreement to the privacy policy:</source>
-        <target state="needs-translation">Date of agreement to the privacy policy:</target>
+        <target state="translated">Datum der Zustimmung zur Datenschutzerklärung</target>
       </trans-unit>
       <trans-unit id="fe_users.token" resname="fe_users.token">
         <source>Security Token</source>
-        <target state="needs-translation">Security Token</target>
+        <target state="translated">Sicherheitstoken</target>
       </trans-unit>
       <trans-unit id="fe_users.tx_agency_password" resname="fe_users.tx_agency_password">
         <source>Encrypted auto-login password</source>
@@ -163,23 +163,23 @@
       </trans-unit>
       <trans-unit id="fe_users.lost_password" resname="fe_users.lost_password">
         <source>Password is lost</source>
-        <target state="needs-translation">Password is lost</target>
+        <target state="translated">Passwort vergessen</target>
       </trans-unit>
       <trans-unit id="fe_users.has_privileges" resname="fe_users.has_privileges">
         <source>Has privileges:</source>
-        <target state="needs-translation">Has privileges:</target>
+        <target state="translated">Hat Berechtigungen</target>
       </trans-unit>
       <trans-unit id="fe_groups_language_overlay" resname="fe_groups_language_overlay">
         <source>User Group Alternative Language</source>
-        <target state="needs-translation">User Group Alternative Language</target>
+        <target state="translated">Alternative Sprache Benutzergruppe</target>
       </trans-unit>
       <trans-unit id="fe_groups_language_overlay.title" resname="fe_groups_language_overlay.title">
         <source>Translated user group name</source>
-        <target state="needs-translation">Translated user group name</target>
+        <target state="translated">Übersetzter Name der Benutzergruppe</target>
       </trans-unit>
       <trans-unit id="sys_agency_fe_users_limit_fe_groups" resname="sys_agency_fe_users_limit_fe_groups">
         <source>Relation FE users to FE groups</source>
-        <target state="needs-translation">Relation FE users to FE groups</target>
+        <target state="translated">Relation FE Benutzer zu FE Benutzergruppe</target>
       </trans-unit>
       <trans-unit id="sys_agency_fe_users_limit_fe_groups.codes" resname="sys_agency_fe_users_limit_fe_groups.codes">
         <source>Codes</source>
@@ -191,15 +191,15 @@
       </trans-unit>
       <trans-unit id="sys_dmail_category" resname="sys_dmail_category">
         <source>Direct Mail Category</source>
-        <target state="needs-translation">Direct Mail Category</target>
+        <target state="translated">Direct Mail Kategorie</target>
       </trans-unit>
       <trans-unit id="sys_dmail_category.category" resname="sys_dmail_category.category">
         <source>Category:</source>
-        <target state="needs-translation">Category:</target>
+        <target state="translated">Kategorie</target>
       </trans-unit>
       <trans-unit id="sys_dmail_category.old_cat_number" resname="sys_dmail_category.old_cat_number">
         <source>Old category number:</source>
-        <target state="needs-translation">Old category number:</target>
+        <target state="translated">Kategorie Nummer (alt):</target>
       </trans-unit>
     </body>
   </file>
