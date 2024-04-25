@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file source-language="en" datatype="plaintext" original="EXT:agency/Resources/Private/Language/locallang_db_layout.xlf" date="2018-03-07T09:00:22Z" product-name="agency" target-language="nl">
+  <file source-language="en" datatype="plaintext" original="EXT:agency/Resources/Private/Language/locallang_db_layout.xlf" date="2018-03-07T09:00:22Z" product-name="agency" target-language="nl-BE">
     <header/>
     <body>
       <trans-unit id="agency" resname="agency">
