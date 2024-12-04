@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file source-language="en" datatype="plaintext" original="EXT:agency/Resources/Private/Language/locallang.xlf" date="2018-03-07T09:00:37Z" product-name="agency" target-language="nl-BE">
+  <file source-language="en" datatype="plaintext" original="EXT:agency/Resources/Private/Language/locallang.xlf" date="2018-03-07T09:00:37Z" product-name="agency" target-language="nl">
     <header/>
     <body>
       <trans-unit id="unsupported" resname="unsupported">
         <source>unsupported</source>
-        <target state="needs-translation">unsupported</target>
+        <target state="translated">Niet ondersteund</target>
       </trans-unit>
       <trans-unit id="username" resname="username">
         <source>Preferred username</source>
-        <target state="needs-translation">Preferred username</target>
+        <target state="translated">Gewenste gebruikernaam</target>
       </trans-unit>
       <trans-unit id="tooltip_username" resname="tooltip_username">
         <source>Enter the username you want to use to login.</source>
-        <target state="needs-translation">Enter the username you want to use to login.</target>
+        <target state="translated">Geef de gebruikernaam die u wilt gaan gebruiken.</target>
       </trans-unit>
       <trans-unit id="tooltip_username_informal" resname="tooltip_username_informal">
         <source>Enter the username you want to use to login.</source>
-        <target state="needs-translation">Enter the username you want to use to login.</target>
+        <target state="translated">Geef de gebruikernaam die je wilt gaan gebruiken.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_username" resname="tooltip_invitation_username">
         <source>Enter a username for the invited person.</source>
-        <target state="needs-translation">Enter a username for the invited person.</target>
+        <target state="translated">Geef de gebruikernaam voor de uit te nodigen gebruiker.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_username_informal" resname="tooltip_invitation_username_informal">
         <source>Enter a username for the invited person.</source>
-        <target state="needs-translation">Enter a username for the invited person.</target>
+        <target state="translated">Voer een gebruikersnaam in voor de uitgenodigde persoon.</target>
       </trans-unit>
       <trans-unit id="tooltip_login_username" resname="tooltip_login_username">
         <source>Enter your username.</source>
-        <target state="needs-translation">Enter your username.</target>
+        <target state="translated">Geef uw gebruikernaam.</target>
       </trans-unit>
       <trans-unit id="tooltip_login_username_informal" resname="tooltip_login_username_informal">
         <source>Enter your username.</source>
-        <target state="needs-translation">Enter your username.</target>
+        <target state="translated">Geef je gebruikernaam.</target>
       </trans-unit>
       <trans-unit id="missing_username" resname="missing_username">
         <source>Enter a username!</source>
-        <target state="needs-translation">Enter a username!</target>
+        <target state="translated">Probeer het a.u.b. opnieuw!</target>
       </trans-unit>
       <trans-unit id="missing_username_informal" resname="missing_username_informal">
         <source>Enter a username!</source>
-        <target state="needs-translation">Enter a username!</target>
+        <target state="translated">Probeer het opnieuw!</target>
       </trans-unit>
       <trans-unit id="password" resname="password">
         <source>Password</source>
-        <target state="needs-translation">Password</target>
+        <target state="translated">Wachtwoord</target>
       </trans-unit>
       <trans-unit id="new_password" resname="new_password">
         <source>New password, if desired</source>
@@ -53,163 +53,163 @@
       </trans-unit>
       <trans-unit id="tooltip_password" resname="tooltip_password">
         <source>Enter the password you want to use to login.</source>
-        <target state="needs-translation">Enter the password you want to use to login.</target>
+        <target state="translated">Geef uw wachtwoord om in te loggen.</target>
       </trans-unit>
       <trans-unit id="tooltip_password_informal" resname="tooltip_password_informal">
         <source>Enter the password you want to use to login.</source>
-        <target state="needs-translation">Enter the password you want to use to login.</target>
+        <target state="translated">Geef je wachtwoord om in te loggen.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_password" resname="tooltip_invitation_password">
         <source>Enter a password for the invited person.</source>
-        <target state="needs-translation">Enter a password for the invited person.</target>
+        <target state="translated">Geef het wachtwoord van de uit te nodigen gebruiker.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_password_informal" resname="tooltip_invitation_password_informal">
         <source>Enter a password for the invited person.</source>
-        <target state="needs-translation">Enter a password for the invited person.</target>
+        <target state="translated">Voer een wachtwoord in voor de uitgenodigde persoon.</target>
       </trans-unit>
       <trans-unit id="tooltip_login_password" resname="tooltip_login_password">
         <source>Enter your password.</source>
-        <target state="needs-translation">Enter your password.</target>
+        <target state="translated">Type uw wachtwoord.</target>
       </trans-unit>
       <trans-unit id="tooltip_login_password_informal" resname="tooltip_login_password_informal">
         <source>Enter your password.</source>
-        <target state="needs-translation">Enter your password.</target>
+        <target state="translated">Type je wachtwoord</target>
       </trans-unit>
       <trans-unit id="password_again" resname="password_again">
         <source>Repeat Password</source>
-        <target state="needs-translation">Repeat Password</target>
+        <target state="translated">Herhaal</target>
       </trans-unit>
       <trans-unit id="tooltip_password_again" resname="tooltip_password_again">
         <source>Enter the same password a second time.</source>
-        <target state="needs-translation">Enter the same password a second time.</target>
+        <target state="translated">Geef uw wachtwoord nogmaals.</target>
       </trans-unit>
       <trans-unit id="tooltip_password_again_informal" resname="tooltip_password_again_informal">
         <source>Enter the same password a second time.</source>
-        <target state="needs-translation">Enter the same password a second time.</target>
+        <target state="translated">Geef je wachtwoord nogmaals.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_password_again" resname="tooltip_invitation_password_again">
         <source>Enter the same password a second time.</source>
-        <target state="needs-translation">Enter the same password a second time.</target>
+        <target state="translated">Geef het wachtwoord van de gebruiker nogmaals.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_password_again_informal" resname="tooltip_invitation_password_again_informal">
         <source>Enter the same password a second time.</source>
-        <target state="needs-translation">Enter the same password a second time.</target>
+        <target state="translated">Voer hetzelfde wachtwoord nogmaals in.</target>
       </trans-unit>
       <trans-unit id="missing_password" resname="missing_password">
         <source>Please enter a password!</source>
-        <target state="needs-translation">Please enter a password!</target>
+        <target state="translated">Een wachtwoord is verplicht!</target>
       </trans-unit>
       <trans-unit id="missing_password_informal" resname="missing_password_informal">
         <source>Please enter a password!</source>
-        <target state="needs-translation">Please enter a password!</target>
+        <target state="translated">Een wachtwoord is verplicht!</target>
       </trans-unit>
       <trans-unit id="usergroup" resname="usergroup">
         <source>User group</source>
-        <target state="needs-translation">User group</target>
+        <target state="translated">Gebruikersgroep</target>
       </trans-unit>
       <trans-unit id="tooltip_usergroup" resname="tooltip_usergroup">
         <source>Select the group(s) to which you wish to belong.</source>
-        <target state="needs-translation">Select the group(s) to which you wish to belong.</target>
+        <target state="translated">Kies de groep(en) waar u deel van wilt uitmaken.</target>
       </trans-unit>
       <trans-unit id="tooltip_usergroup_informal" resname="tooltip_usergroup_informal">
         <source>Select the group(s) to which you wish to belong.</source>
-        <target state="needs-translation">Select the group(s) to which you wish to belong.</target>
+        <target state="translated">Kies de groep(en) waar je lid van wilt worden.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_usergroup" resname="tooltip_invitation_usergroup">
         <source>Select the group(s) to which the invited person will initially belong.</source>
-        <target state="needs-translation">Select the group(s) to which the invited person will initially belong.</target>
+        <target state="translated">Kies de groep(en) waar de nieuwe gebruiker meteen lid van is.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_usergroup_informal" resname="tooltip_invitation_usergroup_informal">
         <source>Select the group(s) to which the invited person will initially belong.</source>
-        <target state="needs-translation">Select the group(s) to which the invited person will initially belong.</target>
+        <target state="translated">Selecteer de groep(en) waartoe de uitgenodigde persoon behoort.</target>
       </trans-unit>
       <trans-unit id="missing_usergroup" resname="missing_usergroup">
         <source>Please select a user group!</source>
-        <target state="needs-translation">Please select a user group!</target>
+        <target state="translated">Kies minstens één groep!</target>
       </trans-unit>
       <trans-unit id="missing_usergroup_informal" resname="missing_usergroup_informal">
         <source>Please select a user group!</source>
-        <target state="needs-translation">Please select a user group!</target>
+        <target state="translated">Uw gebruikersgroep is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_usergroup" resname="missing_invitation_usergroup">
         <source>Please select a user group!</source>
-        <target state="needs-translation">Please select a user group!</target>
+        <target state="translated">Je gebruikersgroep is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_usergroup_informal" resname="missing_invitation_usergroup_informal">
         <source>Please select a user group!</source>
-        <target state="needs-translation">Please select a user group!</target>
+        <target state="translated">Kies a.u.b. een gebruikersgroep!</target>
       </trans-unit>
       <trans-unit id="name" resname="name">
         <source>Name</source>
-        <target state="needs-translation">Name</target>
+        <target state="translated">Volledige naam</target>
       </trans-unit>
       <trans-unit id="tooltip_name" resname="tooltip_name">
         <source>Enter your full name.</source>
-        <target state="needs-translation">Enter your full name.</target>
+        <target state="translated">Geef uw volledige naam.</target>
       </trans-unit>
       <trans-unit id="tooltip_name_informal" resname="tooltip_name_informal">
         <source>Enter your full name.</source>
-        <target state="needs-translation">Enter your full name.</target>
+        <target state="translated">Geef je volledige naam.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_name" resname="tooltip_invitation_name">
         <source>Enter the full name of the invited person.</source>
-        <target state="needs-translation">Enter the full name of the invited person.</target>
+        <target state="translated">Geef de volledige naam van de gebruiker.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_name_informal" resname="tooltip_invitation_name_informal">
         <source>Enter the full name of the invited person.</source>
-        <target state="needs-translation">Enter the full name of the invited person.</target>
+        <target state="translated">Voer de volledige naam in van de uitgenodigde persoon.</target>
       </trans-unit>
       <trans-unit id="missing_name" resname="missing_name">
         <source>Please enter your name!</source>
-        <target state="needs-translation">Please enter your name!</target>
+        <target state="translated">Uw volledige naam is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_name_informal" resname="missing_name_informal">
         <source>Please enter your name!</source>
-        <target state="needs-translation">Please enter your name!</target>
+        <target state="translated">Je volledige naam is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_name" resname="missing_invitation_name">
         <source>Please enter a name!</source>
-        <target state="needs-translation">Please enter a name!</target>
+        <target state="translated">De volledige naam van de gebruiker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_name_informal" resname="missing_invitation_name_informal">
         <source>Please enter a name!</source>
-        <target state="needs-translation">Please enter a name!</target>
+        <target state="translated">Voer a.u.b. een naam in!</target>
       </trans-unit>
       <trans-unit id="first_name" resname="first_name">
         <source>First name</source>
-        <target state="needs-translation">First name</target>
+        <target state="translated">Voornaam</target>
       </trans-unit>
       <trans-unit id="tooltip_first_name" resname="tooltip_first_name">
         <source>Enter your first name.</source>
-        <target state="needs-translation">Enter your first name.</target>
+        <target state="translated">Geef uw voornaam.</target>
       </trans-unit>
       <trans-unit id="tooltip_first_name_informal" resname="tooltip_first_name_informal">
         <source>Enter your first name.</source>
-        <target state="needs-translation">Enter your first name.</target>
+        <target state="translated">Geef je voornaam.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_first_name" resname="tooltip_invitation_first_name">
         <source>Enter the first name of the invited person.</source>
-        <target state="needs-translation">Enter the first name of the invited person.</target>
+        <target state="translated">Geef de voornaam van de gebruiker.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_first_name_informal" resname="tooltip_invitation_first_name_informal">
         <source>Enter the first name of the invited person.</source>
-        <target state="needs-translation">Enter the first name of the invited person.</target>
+        <target state="translated">Voer de voornaam in van de uitgenodigde persoon.</target>
       </trans-unit>
       <trans-unit id="missing_first_name" resname="missing_first_name">
         <source>Please enter your first name!</source>
-        <target state="needs-translation">Please enter your first name!</target>
+        <target state="translated">Uw voornaam is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_first_name_informal" resname="missing_first_name_informal">
         <source>Please enter your first name!</source>
-        <target state="needs-translation">Please enter your first name!</target>
+        <target state="translated">Je voornaam is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_first_name" resname="missing_invitation_first_name">
         <source>Please enter a first name!</source>
-        <target state="needs-translation">Please enter a first name!</target>
+        <target state="translated">De voornaam van de gebruiker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_first_name_informal" resname="missing_invitation_first_name_informal">
         <source>Please enter a first name!</source>
-        <target state="needs-translation">Please enter a first name!</target>
+        <target state="translated">Voer a.u.b. een voornaam in!</target>
       </trans-unit>
       <trans-unit id="middle_name" resname="middle_name">
         <source>Middle name</source>
@@ -217,167 +217,167 @@
       </trans-unit>
       <trans-unit id="tooltip_middle_name" resname="tooltip_middle_name">
         <source>Enter your middle name.</source>
-        <target state="needs-translation">Enter your middle name.</target>
+        <target state="translated">Geef het tussenvoegsel in.</target>
       </trans-unit>
       <trans-unit id="tooltip_middle_name_informal" resname="tooltip_middle_name_informal">
         <source>Enter your middle name.</source>
-        <target state="needs-translation">Enter your middle name.</target>
+        <target state="translated">Geef het tussenvoegsel in.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_middle_name" resname="tooltip_invitation_middle_name">
         <source>Enter the middle name of the invited person.</source>
-        <target state="needs-translation">Enter the middle name of the invited person.</target>
+        <target state="translated">Geef het tussenvoegsel van de uitgenodigde persoon in.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_middle_name_informal" resname="tooltip_invitation_middle_name_informal">
         <source>Enter the middle name of the invited person.</source>
-        <target state="needs-translation">Enter the middle name of the invited person.</target>
+        <target state="translated">Geef het tussenvoegsel van de uitgenodigde persoon in.</target>
       </trans-unit>
       <trans-unit id="missing_middle_name" resname="missing_middle_name">
         <source>Please enter your middle name!</source>
-        <target state="needs-translation">Please enter your middle name!</target>
+        <target state="translated">Geef het tussenvoegsel in.</target>
       </trans-unit>
       <trans-unit id="missing_middle_name_informal" resname="missing_middle_name_informal">
         <source>Please enter your middle name!</source>
-        <target state="needs-translation">Please enter your middle name!</target>
+        <target state="translated">Geef het tussenvoegsel in.</target>
       </trans-unit>
       <trans-unit id="missing_invitation_middle_name" resname="missing_invitation_middle_name">
         <source>Please enter a middle name!</source>
-        <target state="needs-translation">Please enter a middle name!</target>
+        <target state="translated">Geef het tussenvoegsel in.</target>
       </trans-unit>
       <trans-unit id="missing_invitation_middle_name_informal" resname="missing_invitation_middle_name_informal">
         <source>Please enter a middle name!</source>
-        <target state="needs-translation">Please enter a middle name!</target>
+        <target state="translated">Geef het tussenvoegsel in.</target>
       </trans-unit>
       <trans-unit id="last_name" resname="last_name">
         <source>Last name</source>
-        <target state="needs-translation">Last name</target>
+        <target state="translated">Achternaam</target>
       </trans-unit>
       <trans-unit id="tooltip_last_name" resname="tooltip_last_name">
         <source>Enter your surname.</source>
-        <target state="needs-translation">Enter your surname.</target>
+        <target state="translated">Geef uw achternaam</target>
       </trans-unit>
       <trans-unit id="tooltip_last_name_informal" resname="tooltip_last_name_informal">
         <source>Enter your surname.</source>
-        <target state="needs-translation">Enter your surname.</target>
+        <target state="translated">Geef je achternaam</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_last_name" resname="tooltip_invitation_last_name">
         <source>Enter the surname of the invited person.</source>
-        <target state="needs-translation">Enter the surname of the invited person.</target>
+        <target state="translated">Geef de achternaam van de gebruiker.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_last_name_informal" resname="tooltip_invitation_last_name_informal">
         <source>Enter the surname of the invited person.</source>
-        <target state="needs-translation">Enter the surname of the invited person.</target>
+        <target state="translated">Voer de achternaam in van de uitgenodigde persoon.</target>
       </trans-unit>
       <trans-unit id="missing_last_name" resname="missing_last_name">
         <source>Please enter your surname!</source>
-        <target state="needs-translation">Please enter your surname!</target>
+        <target state="translated">Uw achternaam is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_last_name_informal" resname="missing_last_name_informal">
         <source>Please enter your surname!</source>
-        <target state="needs-translation">Please enter your surname!</target>
+        <target state="translated">Je achternaam is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_last_name" resname="missing_invitation_last_name">
         <source>Please enter a surname!</source>
-        <target state="needs-translation">Please enter a surname!</target>
+        <target state="translated">De achteraam van de gebruiker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_last_name_informal" resname="missing_invitation_last_name_informal">
         <source>Please enter a surname!</source>
-        <target state="needs-translation">Please enter a surname!</target>
+        <target state="translated">Voer a.u.b. een achternaam in!</target>
       </trans-unit>
       <trans-unit id="tooltip_status" resname="tooltip_status">
         <source>Select in the list the status that corresponds to yours.</source>
-        <target state="needs-translation">Select in the list the status that corresponds to yours.</target>
+        <target state="translated">Wat geeft het beste uw situatie weer?</target>
       </trans-unit>
       <trans-unit id="tooltip_status_informal" resname="tooltip_status_informal">
         <source>Select in the list the status that corresponds to yours.</source>
-        <target state="needs-translation">Select in the list the status that corresponds to yours.</target>
+        <target state="translated">Wat geeft het beste jouw situatie weer?</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_status" resname="tooltip_invitation_status">
         <source>Select in the list the status that corresponds to the status of the invited person.</source>
-        <target state="needs-translation">Select in the list the status that corresponds to the status of the invited person.</target>
+        <target state="translated">Wat geeft het beste de situatie weer van de gebruiker?</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_status_informal" resname="tooltip_invitation_status_informal">
         <source>Select in the list the status that corresponds to the status of the invited person.</source>
-        <target state="needs-translation">Select in the list the status that corresponds to the status of the invited person.</target>
+        <target state="translated">Kies uit de lijst de positie welke het beste past bij de positie van de uitgenodigde persoon.</target>
       </trans-unit>
       <trans-unit id="date_of_birth" resname="date_of_birth">
         <source>Date of birth (dd-mm-yyyy)</source>
-        <target state="needs-translation">Date of birth (dd-mm-yyyy)</target>
+        <target state="translated">Geboortedatum (dd-mm-jjjj)</target>
       </trans-unit>
       <trans-unit id="tooltip_date_of_birth" resname="tooltip_date_of_birth">
         <source>Enter your date of birth in the format day-month-year.</source>
-        <target state="needs-translation">Enter your date of birth in the format day-month-year.</target>
+        <target state="translated">Geef uw geboortedatum in (dag-maand-jaar) formaat.</target>
       </trans-unit>
       <trans-unit id="tooltip_date_of_birth_informal" resname="tooltip_date_of_birth_informal">
         <source>Enter your date of birth in the format day-month-year.</source>
-        <target state="needs-translation">Enter your date of birth in the format day-month-year.</target>
+        <target state="translated">Geef je geboortedatum in (dag-maand-jaar) formaat.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_date_of_birth" resname="tooltip_invitation_date_of_birth">
         <source>Enter the date of birth of the invited person.</source>
-        <target state="needs-translation">Enter the date of birth of the invited person.</target>
+        <target state="translated">Geef de geboortedatum van de gebuiker.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_date_of_birth_informal" resname="tooltip_invitation_date_of_birth_informal">
         <source>Enter the date of birth of the invited person.</source>
-        <target state="needs-translation">Enter the date of birth of the invited person.</target>
+        <target state="translated">Voer de geboortedatum in van de uitgenodigde persoon.</target>
       </trans-unit>
       <trans-unit id="missing_date_of_birth" resname="missing_date_of_birth">
         <source>Please enter your date of birth!</source>
-        <target state="needs-translation">Please enter your date of birth!</target>
+        <target state="translated">Uw geboortedatum is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_date_of_birth_informal" resname="missing_date_of_birth_informal">
         <source>Please enter your date of birth!</source>
-        <target state="needs-translation">Please enter your date of birth!</target>
+        <target state="translated">Je geboortedatum is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_date_of_birth" resname="missing_invitation_date_of_birth">
         <source>Please enter a date of birth!</source>
-        <target state="needs-translation">Please enter a date of birth!</target>
+        <target state="translated">De geboortedatum van de gebruiker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_date_of_birth_informal" resname="missing_invitation_date_of_birth_informal">
         <source>Please enter a date of birth!</source>
-        <target state="needs-translation">Please enter a date of birth!</target>
+        <target state="translated">Voer a.u.b een geboortedatum in!</target>
       </trans-unit>
       <trans-unit id="address" resname="address">
         <source>Address</source>
-        <target state="needs-translation">Address</target>
+        <target state="translated">Adres</target>
       </trans-unit>
       <trans-unit id="tooltip_address" resname="tooltip_address">
         <source>Enter your address (number, street, apt.).</source>
-        <target state="needs-translation">Enter your address (number, street, apt.).</target>
+        <target state="translated">Geef uw adres (straat, huisnummer).</target>
       </trans-unit>
       <trans-unit id="tooltip_address_informal" resname="tooltip_address_informal">
         <source>Enter your address (number, street, apt.).</source>
-        <target state="needs-translation">Enter your address (number, street, apt.).</target>
+        <target state="translated">Geef je adres (straat, huisnummer)</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_address" resname="tooltip_invitation_address">
         <source>Enter the address (number, street, apt.).</source>
-        <target state="needs-translation">Enter the address (number, street, apt.).</target>
+        <target state="translated">Geef het adres (straat, huisnummer) van de gebruiker.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_address_informal" resname="tooltip_invitation_address_informal">
         <source>Enter the address (number, street, apt.).</source>
-        <target state="needs-translation">Enter the address (number, street, apt.).</target>
+        <target state="translated">Voer het adres in (straat, huisnummer, etc).</target>
       </trans-unit>
       <trans-unit id="missing_address" resname="missing_address">
         <source>Please enter your address!</source>
-        <target state="needs-translation">Please enter your address!</target>
+        <target state="translated">Uw adres is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_address_informal" resname="missing_address_informal">
         <source>Please enter your address!</source>
-        <target state="needs-translation">Please enter your address!</target>
+        <target state="translated">Je adres is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_captcha_response" resname="missing_captcha_response">
         <source>Please enter the captcha phrase!</source>
-        <target state="needs-translation">Please enter the captcha phrase!</target>
+        <target state="translated">Vul de captcha tekens/zin in!</target>
       </trans-unit>
       <trans-unit id="missing_captcha_response_informal" resname="missing_captcha_response_informal">
         <source>Please enter the captcha phrase!</source>
-        <target state="needs-translation">Please enter the captcha phrase!</target>
+        <target state="translated">Voer a.u.b. de captcha-tekst in!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_address" resname="missing_invitation_address">
         <source>Please enter an address!</source>
-        <target state="needs-translation">Please enter an address!</target>
+        <target state="translated">Het adres van de gebruiker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_address_informal" resname="missing_invitation_address_informal">
         <source>Please enter an address!</source>
-        <target state="needs-translation">Please enter an address!</target>
+        <target state="translated">Voer a.u.b. het adres in!</target>
       </trans-unit>
       <trans-unit id="house_no" resname="house_no">
         <source>House number</source>
@@ -385,239 +385,239 @@
       </trans-unit>
       <trans-unit id="tooltip_house_no" resname="tooltip_house_no">
         <source>Enter your house number.</source>
-        <target state="needs-translation">Enter your house number.</target>
+        <target state="translated">Voer het huisnummer in.</target>
       </trans-unit>
       <trans-unit id="tooltip_house_no_informal" resname="tooltip_house_no_informal">
         <source>Enter your house number.</source>
-        <target state="needs-translation">Enter your house number.</target>
+        <target state="translated">Voer het huisnummer in.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_house_no" resname="tooltip_invitation_house_no">
         <source>Enter your house number.</source>
-        <target state="needs-translation">Enter your house number.</target>
+        <target state="translated">Voer het huisnummer in.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_house_no_informal" resname="tooltip_invitation_house_no_informal">
         <source>Enter your house number.</source>
-        <target state="needs-translation">Enter your house number.</target>
+        <target state="translated">Voer het huisnummer in.</target>
       </trans-unit>
       <trans-unit id="missing_house_no" resname="missing_house_no">
         <source>Please enter your house number!</source>
-        <target state="needs-translation">Please enter your house number!</target>
+        <target state="translated">Voer aub het huisnummer in!</target>
       </trans-unit>
       <trans-unit id="missing_house_no_informal" resname="missing_house_no_informal">
         <source>Please enter your house number!</source>
-        <target state="needs-translation">Please enter your house number!</target>
+        <target state="translated">Voer aub het huisnummer in!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_house_no" resname="missing_invitation_house_no">
         <source>Please enter a house number!</source>
-        <target state="needs-translation">Please enter a house number!</target>
+        <target state="translated">Voer aub het huisnummer in!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_house_no_informal" resname="missing_invitation_house_no_informal">
         <source>Please enter a house number!</source>
-        <target state="needs-translation">Please enter a house number!</target>
+        <target state="translated">Voer aub het huisnummer in!</target>
       </trans-unit>
       <trans-unit id="city" resname="city">
         <source>City</source>
-        <target state="needs-translation">City</target>
+        <target state="translated">Woonplaats</target>
       </trans-unit>
       <trans-unit id="tooltip_city" resname="tooltip_city">
         <source>Enter the name of the city or village.</source>
-        <target state="needs-translation">Enter the name of the city or village.</target>
+        <target state="translated">Geef uw woonplaats.</target>
       </trans-unit>
       <trans-unit id="tooltip_city_informal" resname="tooltip_city_informal">
         <source>Enter the name of your city or village.</source>
-        <target state="needs-translation">Enter the name of your city or village.</target>
+        <target state="translated">Geef je woonplaats.</target>
       </trans-unit>
       <trans-unit id="missing_city" resname="missing_city">
         <source>Please enter the name of your city!</source>
-        <target state="needs-translation">Please enter the name of your city!</target>
+        <target state="translated">Uw woonplaats is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_city_informal" resname="missing_city_informal">
         <source>Please enter the name of your city!</source>
-        <target state="needs-translation">Please enter the name of your city!</target>
+        <target state="translated">Je woonplaats is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_city" resname="missing_invitation_city">
         <source>Please enter the name of a city!</source>
-        <target state="needs-translation">Please enter the name of a city!</target>
+        <target state="translated">De woonplaats van de gebruiker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_city_informal" resname="missing_invitation_city_informal">
         <source>Please enter the name of a city!</source>
-        <target state="needs-translation">Please enter the name of a city!</target>
+        <target state="translated">Voer a.u.b. de woonplaats in!</target>
       </trans-unit>
       <trans-unit id="zone" resname="zone">
         <source>County/province</source>
-        <target state="needs-translation">County/province</target>
+        <target state="translated">Provincie/Deelstaat</target>
       </trans-unit>
       <trans-unit id="tooltip_zone" resname="tooltip_zone">
         <source>Select your County or Province in this list.</source>
-        <target state="needs-translation">Select your County or Province in this list.</target>
+        <target state="translated">Kies uw Deelstaat of Provincie uit deze lijst.</target>
       </trans-unit>
       <trans-unit id="tooltip_zone_informal" resname="tooltip_zone_informal">
         <source>Select your County or Province in this list.</source>
-        <target state="needs-translation">Select your County or Province in this list.</target>
+        <target state="translated">Kies je Deelstaat of Provincie uit deze lijst.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_zone" resname="tooltip_invitation_zone">
         <source>Select the County or Province in this list.</source>
-        <target state="needs-translation">Select the County or Province in this list.</target>
+        <target state="translated">Kies de Deelstaat of Provincie van de gebruiker uit deze lijst.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_zone_informal" resname="tooltip_invitation_zone_informal">
         <source>Select the County or Province in this list.</source>
-        <target state="needs-translation">Select the County or Province in this list.</target>
+        <target state="translated">Selecteer uit de lijst de provincie.</target>
       </trans-unit>
       <trans-unit id="missing_zone" resname="missing_zone">
         <source>Please select your County or Province!</source>
-        <target state="needs-translation">Please select your County or Province!</target>
+        <target state="translated">Uw Provincie/Deelstaat is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_zone_informal" resname="missing_zone_informal">
         <source>Please select your County or Province!</source>
-        <target state="needs-translation">Please select your County or Province!</target>
+        <target state="translated">Je Provincie/Deelstaat is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_zone" resname="missing_invitation_zone">
         <source>Please select a County or Province!</source>
-        <target state="needs-translation">Please select a County or Province!</target>
+        <target state="translated">De Provincie/Deelstaat van de gebruiker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_zone_informal" resname="missing_invitation_zone_informal">
         <source>Please select a County or Province!</source>
-        <target state="needs-translation">Please select a County or Province!</target>
+        <target state="translated">Selecteer alstublieft een provincie!</target>
       </trans-unit>
       <trans-unit id="country" resname="country">
         <source>Country</source>
-        <target state="needs-translation">Country</target>
+        <target state="translated">Land</target>
       </trans-unit>
       <trans-unit id="tooltip_country" resname="tooltip_country">
         <source>Enter the name of your country.</source>
-        <target state="needs-translation">Enter the name of your country.</target>
+        <target state="translated">Geef uw land.</target>
       </trans-unit>
       <trans-unit id="tooltip_country_informal" resname="tooltip_country_informal">
         <source>Enter the name of your country.</source>
-        <target state="needs-translation">Enter the name of your country.</target>
+        <target state="translated">Geef je land.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_country" resname="tooltip_invitation_country">
         <source>Enter the name of the country.</source>
-        <target state="needs-translation">Enter the name of the country.</target>
+        <target state="translated">Geef het land van de gebruiker.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_country_informal" resname="tooltip_invitation_country_informal">
         <source>Enter the name of the country.</source>
-        <target state="needs-translation">Enter the name of the country.</target>
+        <target state="translated">Voer het land in.</target>
       </trans-unit>
       <trans-unit id="missing_country" resname="missing_country">
         <source>Please enter the name of your country!</source>
-        <target state="needs-translation">Please enter the name of your country!</target>
+        <target state="translated">Uw land is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_country_informal" resname="missing_country_informal">
         <source>Please enter the name of your country!</source>
-        <target state="needs-translation">Please enter the name of your country!</target>
+        <target state="translated">Je land is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_country" resname="missing_invitation_country">
         <source>Please enter the name of the country!</source>
-        <target state="needs-translation">Please enter the name of the country!</target>
+        <target state="translated">Het land van de gebruiker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_country_informal" resname="missing_invitation_country_informal">
         <source>Please enter the name of the country!</source>
-        <target state="needs-translation">Please enter the name of the country!</target>
+        <target state="translated">Voer a.u.b. het land in!</target>
       </trans-unit>
       <trans-unit id="zip" resname="zip">
         <source>Postal code</source>
-        <target state="needs-translation">Postal code</target>
+        <target state="translated">Postcode</target>
       </trans-unit>
       <trans-unit id="tooltip_zip" resname="tooltip_zip">
         <source>Enter your Postcode.</source>
-        <target state="needs-translation">Enter your Postcode.</target>
+        <target state="translated">Geef uw postcode.</target>
       </trans-unit>
       <trans-unit id="tooltip_zip_informal" resname="tooltip_zip_informal">
         <source>Enter your Postcode.</source>
-        <target state="needs-translation">Enter your Postcode.</target>
+        <target state="translated">Geef je postcode.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_zip" resname="tooltip_invitation_zip">
         <source>Enter the Postcode.</source>
-        <target state="needs-translation">Enter the Postcode.</target>
+        <target state="translated">Geef de postcode van de gebruiker.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_zip_informal" resname="tooltip_invitation_zip_informal">
         <source>Enter the Postcode.</source>
-        <target state="needs-translation">Enter the Postcode.</target>
+        <target state="translated">Voer de postcode in.</target>
       </trans-unit>
       <trans-unit id="missing_zip" resname="missing_zip">
         <source>Please enter your Postcode!</source>
-        <target state="needs-translation">Please enter your Postcode!</target>
+        <target state="translated">Uw postcode is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_zip_informal" resname="missing_zip_informal">
         <source>Please enter your Postcode!</source>
-        <target state="needs-translation">Please enter your Postcode!</target>
+        <target state="translated">Je postcode is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_zip" resname="missing_invitation_zip">
         <source>Please enter a Postcode!</source>
-        <target state="needs-translation">Please enter a Postcode!</target>
+        <target state="translated">De postcode van de gebruiker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="static_info_country" resname="static_info_country">
         <source>Country</source>
-        <target state="needs-translation">Country</target>
+        <target state="translated">Land</target>
       </trans-unit>
       <trans-unit id="tooltip_static_info_country" resname="tooltip_static_info_country">
         <source>Select your country in the list.</source>
-        <target state="needs-translation">Select your country in the list.</target>
+        <target state="translated">Kies uw land uit de lijst</target>
       </trans-unit>
       <trans-unit id="tooltip_static_info_country_informal" resname="tooltip_static_info_country_informal">
         <source>Select your country in the list.</source>
-        <target state="needs-translation">Select your country in the list.</target>
+        <target state="translated">Kies je land uit de lijst</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_static_info_country" resname="tooltip_invitation_static_info_country">
         <source>Select the country in the list.</source>
-        <target state="needs-translation">Select the country in the list.</target>
+        <target state="translated">Kies het land van de gebruiker uit de lijst</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_static_info_country_informal" resname="tooltip_invitation_static_info_country_informal">
         <source>Select the country in the list.</source>
-        <target state="needs-translation">Select the country in the list.</target>
+        <target state="translated">Selecteer uit de lijst het land.</target>
       </trans-unit>
       <trans-unit id="missing_static_info_country" resname="missing_static_info_country">
         <source>Please select your country!</source>
-        <target state="needs-translation">Please select your country!</target>
+        <target state="translated">Uw land is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_static_info_country_informal" resname="missing_static_info_country_informal">
         <source>Please select your country!</source>
-        <target state="needs-translation">Please select your country!</target>
+        <target state="translated">Je land is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_static_info_country" resname="missing_invitation_static_info_country">
         <source>Please select a country!</source>
-        <target state="needs-translation">Please select a country!</target>
+        <target state="translated">Het land van de gebruiker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_static_info_country_informal" resname="missing_invitation_static_info_country_informal">
         <source>Please select a country!</source>
-        <target state="needs-translation">Please select a country!</target>
+        <target state="translated">Selecteer alstublieft een land!</target>
       </trans-unit>
       <trans-unit id="telephone" resname="telephone">
         <source>Telephone</source>
-        <target state="needs-translation">Telephone</target>
+        <target state="translated">Telefoon</target>
       </trans-unit>
       <trans-unit id="tooltip_telephone" resname="tooltip_telephone">
         <source>Enter your phone number.</source>
-        <target state="needs-translation">Enter your phone number.</target>
+        <target state="translated">Geef uw telefoonnummer.</target>
       </trans-unit>
       <trans-unit id="tooltip_telephone_informal" resname="tooltip_telephone_informal">
         <source>Enter your phone number.</source>
-        <target state="needs-translation">Enter your phone number.</target>
+        <target state="translated">Geef je telefoonnummer.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_telephone" resname="tooltip_invitation_telephone">
         <source>Enter the phone number of the invited person.</source>
-        <target state="needs-translation">Enter the phone number of the invited person.</target>
+        <target state="translated">Geef het telefoonnummer van de gebruiker.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_telephone_informal" resname="tooltip_invitation_telephone_informal">
         <source>Enter the phone number of the invited person.</source>
-        <target state="needs-translation">Enter the phone number of the invited person.</target>
+        <target state="translated">Voer van de uitgenodigde persoon het telefoonnummer in.</target>
       </trans-unit>
       <trans-unit id="missing_telephone" resname="missing_telephone">
         <source>Please enter your phone number!</source>
-        <target state="needs-translation">Please enter your phone number!</target>
+        <target state="translated">Uw telefoonnummer is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_telephone_informal" resname="missing_telephone_informal">
         <source>Please enter your phone number!</source>
-        <target state="needs-translation">Please enter your phone number!</target>
+        <target state="translated">Je telefoonnummer is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_telephone" resname="missing_invitation_telephone">
         <source>Please enter a phone number!</source>
-        <target state="needs-translation">Please enter a phone number!</target>
+        <target state="translated">Het telefoonnummer van de gebruiker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_telephone_informal" resname="missing_invitation_telephone_informal">
         <source>Please enter a phone number!</source>
-        <target state="needs-translation">Please enter a phone number!</target>
+        <target state="translated">Voer a.u.b. een telefoonnummer in!</target>
       </trans-unit>
       <trans-unit id="fax" resname="fax">
         <source>Fax</source>
@@ -625,35 +625,35 @@
       </trans-unit>
       <trans-unit id="tooltip_fax" resname="tooltip_fax">
         <source>Enter your fax number.</source>
-        <target state="needs-translation">Enter your fax number.</target>
+        <target state="translated">Geef uw faxnummer.</target>
       </trans-unit>
       <trans-unit id="tooltip_fax_informal" resname="tooltip_fax_informal">
         <source>Enter your fax number.</source>
-        <target state="needs-translation">Enter your fax number.</target>
+        <target state="translated">Geef je faxnummer.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_fax" resname="tooltip_invitation_fax">
         <source>Enter the fax number of the invited person.</source>
-        <target state="needs-translation">Enter the fax number of the invited person.</target>
+        <target state="translated">Geef het faxnummer van de gebruiker.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_fax_informal" resname="tooltip_invitation_fax_informal">
         <source>Enter the fax number of the invited person.</source>
-        <target state="needs-translation">Enter the fax number of the invited person.</target>
+        <target state="translated">Voer van de uitgenodigde persoon het faxnummer in.</target>
       </trans-unit>
       <trans-unit id="missing_fax" resname="missing_fax">
         <source>Please enter your fax number!</source>
-        <target state="needs-translation">Please enter your fax number!</target>
+        <target state="translated">Uw faxnummer is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_fax_informal" resname="missing_fax_informal">
         <source>Please enter your fax number!</source>
-        <target state="needs-translation">Please enter your fax number!</target>
+        <target state="translated">Je faxnummer is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_fax" resname="missing_invitation_fax">
         <source>Please enter a fax number!</source>
-        <target state="needs-translation">Please enter a fax number!</target>
+        <target state="translated">Het faxnummer van de gebruiker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_fax_informal" resname="missing_invitation_fax_informal">
         <source>Please enter a fax number!</source>
-        <target state="needs-translation">Please enter a fax number!</target>
+        <target state="translated">Voer a.u.b. een faxnummer in!</target>
       </trans-unit>
       <trans-unit id="email" resname="email">
         <source>E-mail</source>
@@ -661,43 +661,43 @@
       </trans-unit>
       <trans-unit id="tooltip_email" resname="tooltip_email">
         <source>Enter your email address.</source>
-        <target state="needs-translation">Enter your email address.</target>
+        <target state="translated">Geef uw e-mailadres.</target>
       </trans-unit>
       <trans-unit id="tooltip_email_informal" resname="tooltip_email_informal">
         <source>Enter your email address.</source>
-        <target state="needs-translation">Enter your email address.</target>
+        <target state="translated">Geef je e-mailadres.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_email" resname="tooltip_invitation_email">
         <source>Enter the email address of the invited person.</source>
-        <target state="needs-translation">Enter the email address of the invited person.</target>
+        <target state="translated">Geef het e-mailadres van de gebruiker.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_email_informal" resname="tooltip_invitation_email_informal">
         <source>Enter the email address of the invited person.</source>
-        <target state="needs-translation">Enter the email address of the invited person.</target>
+        <target state="translated">Voer van de uitgenodigde persoon het e-mailadres in.</target>
       </trans-unit>
       <trans-unit id="missing_email" resname="missing_email">
         <source>A valid e-mail is required.</source>
-        <target state="needs-translation">A valid e-mail is required.</target>
+        <target state="translated">Een geldig e-mailadres is noodzakelijk!</target>
       </trans-unit>
       <trans-unit id="missing_email_informal" resname="missing_email_informal">
         <source>A valid e-mail is required.</source>
-        <target state="needs-translation">A valid e-mail is required.</target>
+        <target state="translated">Een geldig e-mailadres is verplicht!</target>
       </trans-unit>
       <trans-unit id="module_sys_dmail_html" resname="module_sys_dmail_html">
         <source>Receive HTML e-mails?</source>
-        <target state="needs-translation">Receive HTML e-mails?</target>
+        <target state="translated">HTML e-mail ontvangen?</target>
       </trans-unit>
       <trans-unit id="module_sys_dmail_html_informal" resname="module_sys_dmail_html_informal">
         <source>Receive HTML e-mails?</source>
-        <target state="needs-translation">Receive HTML e-mails?</target>
+        <target state="translated">Wilt u HTML e-mails ontvangen?</target>
       </trans-unit>
       <trans-unit id="yes" resname="yes">
         <source>Yes</source>
-        <target state="needs-translation">Yes</target>
+        <target state="translated">Ja</target>
       </trans-unit>
       <trans-unit id="no" resname="no">
         <source>No</source>
-        <target state="needs-translation">No</target>
+        <target state="translated">Nee</target>
       </trans-unit>
       <trans-unit id="module_sys_dmail_newsletter" resname="module_sys_dmail_newsletter">
         <source>Receive newsletter?</source>
@@ -709,99 +709,99 @@
       </trans-unit>
       <trans-unit id="module_sys_dmail_category" resname="module_sys_dmail_category">
         <source>Receive news on any of these subjects?</source>
-        <target state="needs-translation">Receive news on any of these subjects?</target>
+        <target state="translated">Wilt u op de hoogte gehouden worden van een van deze onderwerpen?</target>
       </trans-unit>
       <trans-unit id="module_sys_dmail_category_informal" resname="module_sys_dmail_category_informal">
         <source>Receive news on any of these subjects?</source>
-        <target state="needs-translation">Receive news on any of these subjects?</target>
+        <target state="translated">Wilt u nieuws ontvangen over een van deze onderwerpen?</target>
       </trans-unit>
       <trans-unit id="missing_module_sys_dmail_category" resname="missing_module_sys_dmail_category">
         <source>Please select at least one subject!</source>
-        <target state="needs-translation">Please select at least one subject!</target>
+        <target state="translated">Kies minimaal één onderwerp.</target>
       </trans-unit>
       <trans-unit id="missing_module_sys_dmail_category_informal" resname="missing_module_sys_dmail_category_informal">
         <source>Please select at least one subject!</source>
-        <target state="needs-translation">Please select at least one subject!</target>
+        <target state="translated">Kies minimaal één onderwerp.</target>
       </trans-unit>
       <trans-unit id="missing_invitation_module_sys_dmail_category" resname="missing_invitation_module_sys_dmail_category">
         <source>Please select at least one subject!</source>
-        <target state="needs-translation">Please select at least one subject!</target>
+        <target state="translated">Kies minimaal één onderwerp.</target>
       </trans-unit>
       <trans-unit id="missing_invitation_module_sys_dmail_category_informal" resname="missing_invitation_module_sys_dmail_category_informal">
         <source>Please select at least one subject!</source>
-        <target state="needs-translation">Please select at least one subject!</target>
+        <target state="translated">Kies minimaal één onderwerp.</target>
       </trans-unit>
       <trans-unit id="language" resname="language">
         <source>Language</source>
-        <target state="needs-translation">Language</target>
+        <target state="translated">Taal</target>
       </trans-unit>
       <trans-unit id="tooltip_language" resname="tooltip_language">
         <source>Select your preferred language in this list.</source>
-        <target state="needs-translation">Select your preferred language in this list.</target>
+        <target state="translated">Kies uw gewenste taal uit deze lijst.</target>
       </trans-unit>
       <trans-unit id="tooltip_language_informal" resname="tooltip_language_informal">
         <source>Select your preferred language in this list.</source>
-        <target state="needs-translation">Select your preferred language in this list.</target>
+        <target state="translated">Kies je gewenste taal uit deze lijst.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_language" resname="tooltip_invitation_language">
         <source>Select the language of the invited person in this list.</source>
-        <target state="needs-translation">Select the language of the invited person in this list.</target>
+        <target state="translated">Kies de gewenste taal voor de uit te nodigen persoon uit deze lijst.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_language_informal" resname="tooltip_invitation_language_informal">
         <source>Select the language of the invited person in this list.</source>
-        <target state="needs-translation">Select the language of the invited person in this list.</target>
+        <target state="translated">Voer van de uitgenodigde persoon zijn taal in.</target>
       </trans-unit>
       <trans-unit id="missing_language" resname="missing_language">
         <source>Please select your preferred language!</source>
-        <target state="needs-translation">Please select your preferred language!</target>
+        <target state="translated">Uw voorkeurstaal is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_language_informal" resname="missing_language_informal">
         <source>Please select your preferred language!</source>
-        <target state="needs-translation">Please select your preferred language!</target>
+        <target state="translated">Je voorkeurstaal is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_language" resname="missing_invitation_language">
         <source>Please select a preferred language!</source>
-        <target state="needs-translation">Please select a preferred language!</target>
+        <target state="translated">De voorkeurstaal van de gebruker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_language_informal" resname="missing_invitation_language_informal">
         <source>Please select a preferred language!</source>
-        <target state="needs-translation">Please select a preferred language!</target>
+        <target state="translated">Selecteer a.u.b. uw voorkeurstaal!</target>
       </trans-unit>
       <trans-unit id="title" resname="title">
         <source>Title</source>
-        <target state="needs-translation">Title</target>
+        <target state="translated">Functie / Beroep</target>
       </trans-unit>
       <trans-unit id="tooltip_title" resname="tooltip_title">
         <source>Enter the title of your position or profession.</source>
-        <target state="needs-translation">Enter the title of your position or profession.</target>
+        <target state="translated">Uw functie of beroep</target>
       </trans-unit>
       <trans-unit id="tooltip_title_informal" resname="tooltip_title_informal">
         <source>Enter the title of your position or profession.</source>
-        <target state="needs-translation">Enter the title of your position or profession.</target>
+        <target state="translated">Geef je functie of beroep</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_title" resname="tooltip_invitation_title">
         <source>Enter the title of the invited person.</source>
-        <target state="needs-translation">Enter the title of the invited person.</target>
+        <target state="translated">De functie of beroep van de gebruiker.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_title_informal" resname="tooltip_invitation_title_informal">
         <source>Enter the title of the invited person.</source>
-        <target state="needs-translation">Enter the title of the invited person.</target>
+        <target state="translated">Voer van de uitgenodigde persoon de titel in.</target>
       </trans-unit>
       <trans-unit id="missing_title" resname="missing_title">
         <source>Please enter your title!</source>
-        <target state="needs-translation">Please enter your title!</target>
+        <target state="translated">Uw functie of beroep is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_title_informal" resname="missing_title_informal">
         <source>Please enter your title!</source>
-        <target state="needs-translation">Please enter your title!</target>
+        <target state="translated">Je functie of beroep is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_title" resname="missing_invitation_title">
         <source>Please enter a title!</source>
-        <target state="needs-translation">Please enter a title!</target>
+        <target state="translated">De functie of beroep van de gebruiker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_title_informal" resname="missing_invitation_title_informal">
         <source>Please enter a title!</source>
-        <target state="needs-translation">Please enter a title!</target>
+        <target state="translated">Voer alstublieft een titel in!</target>
       </trans-unit>
       <trans-unit id="terms_acknowledged" resname="terms_acknowledged">
         <source>I acknowledge and agree to the terms.</source>
@@ -841,115 +841,115 @@
       </trans-unit>
       <trans-unit id="company" resname="company">
         <source>Company</source>
-        <target state="needs-translation">Company</target>
+        <target state="translated">Bedrijfsnaam</target>
       </trans-unit>
       <trans-unit id="tooltip_company" resname="tooltip_company">
         <source>Enter the name of your company or organization.</source>
-        <target state="needs-translation">Enter the name of your company or organization.</target>
+        <target state="translated">Geef uw bedrijfsnaam.</target>
       </trans-unit>
       <trans-unit id="tooltip_company_informal" resname="tooltip_company_informal">
         <source>Enter the name of your company or organization.</source>
-        <target state="needs-translation">Enter the name of your company or organization.</target>
+        <target state="translated">Geef je bedrijfsnaam.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_company" resname="tooltip_invitation_company">
         <source>Enter the name of the company or organization of the invited person.</source>
-        <target state="needs-translation">Enter the name of the company or organization of the invited person.</target>
+        <target state="translated">Geef de bedrijfsnaam van de uit te nodigen persoon</target>
       </trans-unit>
       <trans-unit id="missing_company" resname="missing_company">
         <source>Please enter the name of your company!</source>
-        <target state="needs-translation">Please enter the name of your company!</target>
+        <target state="translated">Uw bedrijfsnaam is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_company_informal" resname="missing_company_informal">
         <source>Please enter the name of your company!</source>
-        <target state="needs-translation">Please enter the name of your company!</target>
+        <target state="translated">Je bedrijfsnaam is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_company" resname="missing_invitation_company">
         <source>Please enter the name of a company!</source>
-        <target state="needs-translation">Please enter the name of a company!</target>
+        <target state="translated">De bedrijfsnaam van de gebruiker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="www" resname="www">
         <source>Web site</source>
-        <target state="needs-translation">Web site</target>
+        <target state="translated">Website</target>
       </trans-unit>
       <trans-unit id="tooltip_www" resname="tooltip_www">
         <source>Enter the address of your website.</source>
-        <target state="needs-translation">Enter the address of your website.</target>
+        <target state="translated">Geef uw website url.</target>
       </trans-unit>
       <trans-unit id="tooltip_www_informal" resname="tooltip_www_informal">
         <source>Enter the address of your website.</source>
-        <target state="needs-translation">Enter the address of your website.</target>
+        <target state="translated">Geef je website url.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_www" resname="tooltip_invitation_www">
         <source>Enter the address of the website of the invited person.</source>
-        <target state="needs-translation">Enter the address of the website of the invited person.</target>
+        <target state="translated">Geef de website url van de gebruiker.</target>
       </trans-unit>
       <trans-unit id="missing_www" resname="missing_www">
         <source>Please enter the address of your website!</source>
-        <target state="needs-translation">Please enter the address of your website!</target>
+        <target state="translated">Uw website url is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_www_informal" resname="missing_www_informal">
         <source>Please enter the address of your website!</source>
-        <target state="needs-translation">Please enter the address of your website!</target>
+        <target state="translated">Je website url is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_www" resname="missing_invitation_www">
         <source>Please enter a website address!</source>
-        <target state="needs-translation">Please enter a website address!</target>
+        <target state="translated">De website url van de gebruiker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="image" resname="image">
         <source>Photographs</source>
-        <target state="needs-translation">Photographs</target>
+        <target state="translated">Foto's</target>
       </trans-unit>
       <trans-unit id="tooltip_image" resname="tooltip_image">
         <source>Enter the path and name of a file or click on the button to browse the files on your computer.</source>
-        <target state="needs-translation">Enter the path and name of a file or click on the button to browse the files on your computer.</target>
+        <target state="translated">Geef het volledige pad naar uw foto of kies zoeken om de bestanden op uw computer te vinden.</target>
       </trans-unit>
       <trans-unit id="tooltip_image_informal" resname="tooltip_image_informal">
         <source>Enter the path and name of a file or click on the button to browse the files on your computer.</source>
-        <target state="needs-translation">Enter the path and name of a file or click on the button to browse the files on your computer.</target>
+        <target state="translated">Geef het volledige pad naar je foto of kies zoeken om de bestanden op je computer te vinden.</target>
       </trans-unit>
       <trans-unit id="tooltip_invitation_image" resname="tooltip_invitation_image">
         <source>Enter the path and name of a file or click on the button to browse the files on your computer.</source>
-        <target state="needs-translation">Enter the path and name of a file or click on the button to browse the files on your computer.</target>
+        <target state="translated">Geef het volledige pad naar de foto van de gebruiker of kies zoeken om de bestanden op de computer te vinden.</target>
       </trans-unit>
       <trans-unit id="missing_image" resname="missing_image">
         <source>Please enter your photograph!</source>
-        <target state="needs-translation">Please enter your photograph!</target>
+        <target state="translated">Uw foto is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_image_informal" resname="missing_image_informal">
         <source>Please enter your photograph!</source>
-        <target state="needs-translation">Please enter your photograph!</target>
+        <target state="translated">Je foto is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_image" resname="missing_invitation_image">
         <source>Please enter a photograph!</source>
-        <target state="needs-translation">Please enter a photograph!</target>
+        <target state="translated">De foto van de gebruiker is een verplicht veld!</target>
       </trans-unit>
       <trans-unit id="missing_invitation_image_informal" resname="missing_invitation_image_informal">
         <source>Please enter a photograph!</source>
-        <target state="needs-translation">Please enter a photograph!</target>
+        <target state="translated">Voer alstublieft een foto in!</target>
       </trans-unit>
       <trans-unit id="icon_delete" resname="icon_delete">
         <source>Delete!</source>
-        <target state="needs-translation">Delete!</target>
+        <target state="translated">Verwijder!</target>
       </trans-unit>
       <trans-unit id="file_view" resname="file_view">
         <source>View</source>
-        <target state="needs-translation">View</target>
+        <target state="translated">Toon</target>
       </trans-unit>
       <trans-unit id="confirm_file_delete" resname="confirm_file_delete">
         <source>Are sure that you want to delete this file?</source>
-        <target state="needs-translation">Are sure that you want to delete this file?</target>
+        <target state="translated">Wilt u dit bestand verwijderen?</target>
       </trans-unit>
       <trans-unit id="confirm_file_delete_informal" resname="confirm_file_delete_informal">
         <source>Are sure that you want to delete this file?</source>
-        <target state="needs-translation">Are sure that you want to delete this file?</target>
+        <target state="translated">Wil je dit bestand verwijderen?</target>
       </trans-unit>
       <trans-unit id="tooltip_comments" resname="tooltip_comments">
         <source>Enter your comments.</source>
-        <target state="needs-translation">Enter your comments.</target>
+        <target state="translated">Geef uw commentaar.</target>
       </trans-unit>
       <trans-unit id="tooltip_comments_informal" resname="tooltip_comments_informal">
         <source>Enter your comments.</source>
-        <target state="needs-translation">Enter your comments.</target>
+        <target state="translated">Geef je commentaar.</target>
       </trans-unit>
       <trans-unit id="missing_terms_acknowledged" resname="missing_terms_acknowledged">
         <source>Please acknowledge the terms!</source>
@@ -961,39 +961,39 @@
       </trans-unit>
       <trans-unit id="button_register" resname="button_register">
         <source>Create account</source>
-        <target state="needs-translation">Create account</target>
+        <target state="translated">Schrijf in</target>
       </trans-unit>
       <trans-unit id="button_confirm_register" resname="button_confirm_register">
         <source>Create account now!</source>
-        <target state="needs-translation">Create account now!</target>
+        <target state="translated">Schrijf nu in!</target>
       </trans-unit>
       <trans-unit id="button_back_to_form" resname="button_back_to_form">
         <source>Back to form</source>
-        <target state="needs-translation">Back to form</target>
+        <target state="translated">Terug naar het invulscherm.</target>
       </trans-unit>
       <trans-unit id="button_update" resname="button_update">
         <source>Update profile</source>
-        <target state="needs-translation">Update profile</target>
+        <target state="translated">Profiel bijwerken</target>
       </trans-unit>
       <trans-unit id="button_confirm_update" resname="button_confirm_update">
         <source>Update profile now!</source>
-        <target state="needs-translation">Update profile now!</target>
+        <target state="translated">Profiel nu bijwerken!</target>
       </trans-unit>
       <trans-unit id="button_update_and_more" resname="button_update_and_more">
         <source>Update and continue...</source>
-        <target state="needs-translation">Update and continue...</target>
+        <target state="translated">Bijwerken en doorgaan...</target>
       </trans-unit>
       <trans-unit id="button_enter" resname="button_enter">
         <source>Enter</source>
-        <target state="needs-translation">Enter</target>
+        <target state="translated">Verder</target>
       </trans-unit>
       <trans-unit id="button_confirm_delete" resname="button_confirm_delete">
         <source>Yes, delete account</source>
-        <target state="needs-translation">Yes, delete account</target>
+        <target state="translated">Ja, verwijder deze inschrijving</target>
       </trans-unit>
       <trans-unit id="button_cancel_delete" resname="button_cancel_delete">
         <source>No, cancel</source>
-        <target state="needs-translation">No, cancel</target>
+        <target state="translated">Nee, annuleren</target>
       </trans-unit>
       <trans-unit id="button_confirm_approve" resname="button_confirm_approve">
         <source>Yes, approve account</source>
@@ -1001,7 +1001,7 @@
       </trans-unit>
       <trans-unit id="button_cancel_approve" resname="button_cancel_approve">
         <source>No, cancel</source>
-        <target state="needs-translation">No, cancel</target>
+        <target state="translated">Nee, annuleren</target>
       </trans-unit>
       <trans-unit id="button_password_enter_new" resname="button_password_enter_new">
         <source>Send me the email to enter a new password.</source>
@@ -1013,43 +1013,43 @@
       </trans-unit>
       <trans-unit id="click_here_to_register" resname="click_here_to_register">
         <source>Not a member yet? click here to register.</source>
-        <target state="needs-translation">Not a member yet? click here to register.</target>
+        <target state="translated">Nog geen inschrijving? Klik hier om te registreren.</target>
       </trans-unit>
       <trans-unit id="click_here_to_register_informal" resname="click_here_to_register_informal">
         <source>Not a member yet? click here to register.</source>
-        <target state="needs-translation">Not a member yet? click here to register.</target>
+        <target state="translated">Nog geen inschrijving? Klik hier om je te registreren.</target>
       </trans-unit>
       <trans-unit id="tooltip_click_here_to_register" resname="tooltip_click_here_to_register">
         <source>Presents a registration form.</source>
-        <target state="needs-translation">Presents a registration form.</target>
+        <target state="translated">Toont het registratieformulier</target>
       </trans-unit>
       <trans-unit id="click_here_to_edit" resname="click_here_to_edit">
         <source>Click here to edit your profile or delete your account.</source>
-        <target state="needs-translation">Click here to edit your profile or delete your account.</target>
+        <target state="translated">Klik hier om uw gegevens te bewerken of te verwijderen.</target>
       </trans-unit>
       <trans-unit id="click_here_to_edit_informal" resname="click_here_to_edit_informal">
         <source>Click here to edit your profile or delete your account.</source>
-        <target state="needs-translation">Click here to edit your profile or delete your account.</target>
+        <target state="translated">Klik hier om je gegevens te bewerken of te verwijderen.</target>
       </trans-unit>
       <trans-unit id="tooltip_click_here_to_edit" resname="tooltip_click_here_to_edit">
         <source>Presents an account editing form.</source>
-        <target state="needs-translation">Presents an account editing form.</target>
+        <target state="translated">Opent een scherm om je inschrijvingsgegevens te beheren.</target>
       </trans-unit>
       <trans-unit id="click_here_to_delete" resname="click_here_to_delete">
         <source>Click here to delete your membership.</source>
-        <target state="needs-translation">Click here to delete your membership.</target>
+        <target state="translated">Kilk hier om uw inschrijving te verwijderen.</target>
       </trans-unit>
       <trans-unit id="click_here_to_delete_informal" resname="click_here_to_delete_informal">
         <source>Click here to delete your membership.</source>
-        <target state="needs-translation">Click here to delete your membership.</target>
+        <target state="translated">Kilk hier om je inschrijving te verwijderen.</target>
       </trans-unit>
       <trans-unit id="tooltip_click_here_to_delete" resname="tooltip_click_here_to_delete">
         <source>Opens a dialog to delete your membership.</source>
-        <target state="needs-translation">Opens a dialog to delete your membership.</target>
+        <target state="translated">Open een venster om de inschrijving te verwijderen.</target>
       </trans-unit>
       <trans-unit id="tooltip_click_here_to_delete_informal" resname="tooltip_click_here_to_delete_informal">
         <source>Opens a dialog to delete your membership.</source>
-        <target state="needs-translation">Opens a dialog to delete your membership.</target>
+        <target state="translated">Opent een scherm om uw lidmaatschap te verwijderen.</target>
       </trans-unit>
       <trans-unit id="click_here_to_see_terms" resname="click_here_to_see_terms">
         <source>Click here to see the terms.</source>
@@ -1105,23 +1105,23 @@
       </trans-unit>
       <trans-unit id="enter_account_info" resname="enter_account_info">
         <source>Please complete the information for your membership.</source>
-        <target state="needs-translation">Please complete the information for your membership.</target>
+        <target state="translated">De volgende gegevens zijn nodig voor uw inschrijving</target>
       </trans-unit>
       <trans-unit id="enter_account_info_informal" resname="enter_account_info_informal">
         <source>Please complete the information for your membership.</source>
-        <target state="needs-translation">Please complete the information for your membership.</target>
+        <target state="translated">De volgende gegevens zijn nodig voor je inschrijving</target>
       </trans-unit>
       <trans-unit id="enter_invitation_account_info" resname="enter_invitation_account_info">
         <source>Please complete the information of the account for the invited person.</source>
-        <target state="needs-translation">Please complete the information of the account for the invited person.</target>
+        <target state="translated">De volgende gegevens zijn nodig om de gebruiker in te schrijven</target>
       </trans-unit>
       <trans-unit id="enter_invitation_account_info_informal" resname="enter_invitation_account_info_informal">
         <source>Please complete the information of the account for the invited person.</source>
-        <target state="needs-translation">Please complete the information of the account for the invited person.</target>
+        <target state="translated">Voer a.u.b. voor de uitgenodigde persoon zijn accountgegevens in.</target>
       </trans-unit>
       <trans-unit id="required_info_notice" resname="required_info_notice">
         <source>Please complete all required fields *</source>
-        <target state="needs-translation">Please complete all required fields *</target>
+        <target state="translated">Let op: velden met * zijn verplicht!</target>
       </trans-unit>
       <trans-unit id="copy_paste_link" resname="copy_paste_link">
         <source>Or copy and paste it into your browser.&lt;br&gt;</source>
@@ -1141,7 +1141,7 @@
       </trans-unit>
       <trans-unit id="registration_problem" resname="registration_problem">
         <source>There seems to be a problem.</source>
-        <target state="needs-translation">There seems to be a problem.</target>
+        <target state="translated">Er is iets fout gegaan tijdens de registratie.</target>
       </trans-unit>
       <trans-unit id="registration_login" resname="registration_login">
         <source>Your login data seem to be invalid.</source>
@@ -1149,11 +1149,11 @@
       </trans-unit>
       <trans-unit id="registration_sorry" resname="registration_sorry">
         <source>We are sorry that it was not possible to complete this process.</source>
-        <target state="needs-translation">We are sorry that it was not possible to complete this process.</target>
+        <target state="translated">Helaas kunnen we op dit moment de registratie niet voltooien.</target>
       </trans-unit>
       <trans-unit id="registration_sorry_informal" resname="registration_sorry_informal">
         <source>We are sorry that it was not possible to complete this process.</source>
-        <target state="needs-translation">We are sorry that it was not possible to complete this process.</target>
+        <target state="translated">Helaas kunnen we op dit moment de registratie niet voltooien.</target>
       </trans-unit>
       <trans-unit id="registration_internal error" resname="registration_internal error">
         <source>An internal error has occurred.</source>
@@ -1161,75 +1161,75 @@
       </trans-unit>
       <trans-unit id="registration_clicked_twice" resname="registration_clicked_twice">
         <source>Perhaps you clicked twice on the link?</source>
-        <target state="needs-translation">Perhaps you clicked twice on the link?</target>
+        <target state="translated">Misschien heeft u twee keer op de link geklikt?</target>
       </trans-unit>
       <trans-unit id="registration_clicked_twice_informal" resname="registration_clicked_twice_informal">
         <source>Perhaps you clicked twice on the link?</source>
-        <target state="needs-translation">Perhaps you clicked twice on the link?</target>
+        <target state="translated">Misschien heeft u twee keer op de link geklikt?</target>
       </trans-unit>
       <trans-unit id="registration_help" resname="registration_help">
         <source>If the problem persists, please contact us at the following e-mail address and we will be pleased to help you.</source>
-        <target state="needs-translation">If the problem persists, please contact us at the following e-mail address and we will be pleased to help you.</target>
+        <target state="translated">Als het proleem aanhoudt kunt u contact opnemen met het volgende e-mail adres. Wij zullen u zo snel mogelijk helpen.</target>
       </trans-unit>
       <trans-unit id="registration_help_informal" resname="registration_help_informal">
         <source>If the problem persists, please contact us at the following e-mail address and we will be pleased to help you.</source>
-        <target state="needs-translation">If the problem persists, please contact us at the following e-mail address and we will be pleased to help you.</target>
+        <target state="translated">Als het proleem aanhoudt kan je contact opnemen met het volgende e-mail adres. Wij zullen je zo snel mogelijk helpen.</target>
       </trans-unit>
       <trans-unit id="kind_regards" resname="kind_regards">
         <source>Kind regards,</source>
-        <target state="needs-translation">Kind regards,</target>
+        <target state="translated">Met vriendelijke groet,</target>
       </trans-unit>
       <trans-unit id="kind_regards_informal" resname="kind_regards_informal">
         <source>Kind regards,</source>
-        <target state="needs-translation">Kind regards,</target>
+        <target state="translated">Met vriendelijke groet,</target>
       </trans-unit>
       <trans-unit id="kind_regards_cre" resname="kind_regards_cre">
         <source>Welcome from us all at</source>
-        <target state="needs-translation">Welcome from us all at</target>
+        <target state="translated">Met vriendelijke groet,</target>
       </trans-unit>
       <trans-unit id="kind_regards_cre_informal" resname="kind_regards_cre_informal">
         <source>Welcome from us all at</source>
-        <target state="needs-translation">Welcome from us all at</target>
+        <target state="translated">Met vriendelijke groet,</target>
       </trans-unit>
       <trans-unit id="kind_regards_del" resname="kind_regards_del">
         <source>Wishing you well</source>
-        <target state="needs-translation">Wishing you well</target>
+        <target state="translated">Met vriendelijke groet,</target>
       </trans-unit>
       <trans-unit id="kind_regards_del_informal" resname="kind_regards_del_informal">
         <source>Wishing you well</source>
-        <target state="needs-translation">Wishing you well</target>
+        <target state="translated">Met vriendelijke groet,</target>
       </trans-unit>
       <trans-unit id="kind_regards_ini" resname="kind_regards_ini">
         <source>We would like to welcome you at</source>
-        <target state="needs-translation">We would like to welcome you at</target>
+        <target state="translated">Wij hopen u te verwelkomen op</target>
       </trans-unit>
       <trans-unit id="kind_regards_ini_informal" resname="kind_regards_ini_informal">
         <source>We would like to welcome you at</source>
-        <target state="needs-translation">We would like to welcome you at</target>
+        <target state="translated">Wij hopen je te verwelkomen op</target>
       </trans-unit>
       <trans-unit id="kind_regards_inv" resname="kind_regards_inv">
         <source>We would like to welcome you at</source>
-        <target state="needs-translation">We would like to welcome you at</target>
+        <target state="translated">Wij hopen u te verwelkomen op</target>
       </trans-unit>
       <trans-unit id="kind_regards_inv_informal" resname="kind_regards_inv_informal">
         <source>We would like to welcome you at</source>
-        <target state="needs-translation">We would like to welcome you at</target>
+        <target state="translated">Wij hopen je te verwelkomen op</target>
       </trans-unit>
       <trans-unit id="kind_regards_upd" resname="kind_regards_upd">
         <source>Warmest wishes</source>
-        <target state="needs-translation">Warmest wishes</target>
+        <target state="translated">Met vriendelijke groet</target>
       </trans-unit>
       <trans-unit id="kind_regards_upd_informal" resname="kind_regards_upd_informal">
         <source>Warmest wishes</source>
-        <target state="needs-translation">Warmest wishes</target>
+        <target state="translated">Met vriendelijke groet</target>
       </trans-unit>
       <trans-unit id="v_really_wish_to_delete" resname="v_really_wish_to_delete">
         <source>Do you really wish to delete your membership &lt;b&gt;%2$s&lt;/b&gt;?</source>
-        <target state="needs-translation">Do you really wish to delete your membership &lt;b&gt;%2$s&lt;/b&gt;?</target>
+        <target state="translated">Weet u zeker dat u uw inschrijving &lt;b&gt;%2$s&lt;/b&gt; wilt opzeggen?</target>
       </trans-unit>
       <trans-unit id="v_really_wish_to_delete_informal" resname="v_really_wish_to_delete_informal">
         <source>Do you really wish to delete your membership &lt;b&gt;%2$s&lt;/b&gt;?</source>
-        <target state="needs-translation">Do you really wish to delete your membership &lt;b&gt;%2$s&lt;/b&gt;?</target>
+        <target state="translated">Weet je zeker dat je je inschrijving &lt;b&gt;%2$s&lt;/b&gt; wilt opzeggen?</target>
       </trans-unit>
       <trans-unit id="v_really_wish_to_approve" resname="v_really_wish_to_approve">
         <source>Do you really wish to approve your membership &lt;b&gt;%2$s&lt;/b&gt;?</source>
@@ -1249,35 +1249,35 @@
       </trans-unit>
       <trans-unit id="v_verify_invitation_before_create" resname="v_verify_invitation_before_create">
         <source>Please verify that all the data of &lt;b&gt;%3$s&lt;/b&gt; is correct before the membership with the name &lt;b&gt;%2$s&lt;/b&gt; will be created</source>
-        <target state="needs-translation">Please verify that all the data of &lt;b&gt;%3$s&lt;/b&gt; is correct before the membership with the name &lt;b&gt;%2$s&lt;/b&gt; will be created</target>
+        <target state="translated">Controleer alle gegevens &lt;br&gt;voordat inschrijving met naam &lt;b&gt;%2$s&lt;/b&gt; aanmaken</target>
       </trans-unit>
       <trans-unit id="v_verify_invitation_before_create_informal" resname="v_verify_invitation_before_create_informal">
         <source>Please verify that all the data of &lt;b&gt;%3$s&lt;/b&gt; is correct before the membership with the name &lt;b&gt;%2$s&lt;/b&gt; will be created</source>
-        <target state="needs-translation">Please verify that all the data of &lt;b&gt;%3$s&lt;/b&gt; is correct before the membership with the name &lt;b&gt;%2$s&lt;/b&gt; will be created</target>
+        <target state="translated">Controleer alstublieft of alle gegevens van &lt;b&gt;%3$s&lt;/b&gt; kloppen voordat het lidmaatschap onder de naam &lt;b&gt;%2$s&lt;/b&gt; aangemaakt zal worden.</target>
       </trans-unit>
       <trans-unit id="v_edit_your_account" resname="v_edit_your_account">
         <source>Edit the information of your membership &lt;b&gt;%2$s&lt;/b&gt;</source>
-        <target state="needs-translation">Edit the information of your membership &lt;b&gt;%2$s&lt;/b&gt;</target>
+        <target state="translated">Bewerk de gegevens van uw inschrijving &lt;b&gt;%2$s&lt;/b&gt;</target>
       </trans-unit>
       <trans-unit id="v_edit_your_account_informal" resname="v_edit_your_account_informal">
         <source>Edit the information of your membership &lt;b&gt;%2$s&lt;/b&gt;</source>
-        <target state="needs-translation">Edit the information of your membership &lt;b&gt;%2$s&lt;/b&gt;</target>
+        <target state="translated">Bewerk de gegevens van je inschrijving &lt;b&gt;%2$s&lt;/b&gt;</target>
       </trans-unit>
       <trans-unit id="v_verify_before_update" resname="v_verify_before_update">
         <source>Please verify that all the information is correct before your membership &lt;b&gt;%2$s&lt;/b&gt; will be updated</source>
-        <target state="needs-translation">Please verify that all the information is correct before your membership &lt;b&gt;%2$s&lt;/b&gt; will be updated</target>
+        <target state="translated">Controleer aub alle gegevens voordat uw inschrijving met naam &lt;b&gt;%2$s&lt;/b&gt; wordt bijgewerkt:</target>
       </trans-unit>
       <trans-unit id="v_verify_before_update_informal" resname="v_verify_before_update_informal">
         <source>Please verify that all the information is correct before your membership &lt;b&gt;%2$s&lt;/b&gt; will be updated</source>
-        <target state="needs-translation">Please verify that all the information is correct before your membership &lt;b&gt;%2$s&lt;/b&gt; will be updated</target>
+        <target state="translated">Controleer aub alle gegevens voordat je inschrijving met naam &lt;b&gt;%2$s&lt;/b&gt; wordt bijgewerkt:</target>
       </trans-unit>
       <trans-unit id="v_dear" resname="v_dear">
         <source>Dear %3$s,</source>
-        <target state="needs-translation">Dear %3$s,</target>
+        <target state="translated">Geachte %3$s,</target>
       </trans-unit>
       <trans-unit id="v_dear_informal" resname="v_dear_informal">
         <source>Hi %3$s,</source>
-        <target state="needs-translation">Hi %3$s,</target>
+        <target state="translated">Beste %3$s,</target>
       </trans-unit>
       <trans-unit id="v_dear_male" resname="v_dear_male">
         <source>Dear Mr. %3$s,</source>
@@ -1289,15 +1289,15 @@
       </trans-unit>
       <trans-unit id="v_infomail_dear" resname="v_infomail_dear">
         <source>Dear Mrs./Sir,</source>
-        <target state="needs-translation">Dear Mrs./Sir,</target>
+        <target state="translated">Beste mevrouw/mijnheer,</target>
       </trans-unit>
       <trans-unit id="v_infomail_dear_informal" resname="v_infomail_dear_informal">
         <source>Dear Mrs./Sir,</source>
-        <target state="needs-translation">Dear Mrs./Sir,</target>
+        <target state="translated">Geachte mevrouw/mijnheer,</target>
       </trans-unit>
       <trans-unit id="v_infomail_lost_password" resname="v_infomail_lost_password">
         <source>Enter the email address under which you are registered.</source>
-        <target state="needs-translation">Enter the email address under which you are registered.</target>
+        <target state="translated">Voer het e-mailadres is waaronder u bent geregistreerd.</target>
       </trans-unit>
       <trans-unit id="v_infomail_lost_password_confirm" resname="v_infomail_lost_password_confirm">
         <source>The email with the lost password has been sent to &lt;b&gt;%4$s&lt;/b&gt;.</source>
@@ -1309,11 +1309,11 @@
       </trans-unit>
       <trans-unit id="v_infomail_lost_password_subject" resname="v_infomail_lost_password_subject">
         <source>Information about your registration with &lt;b&gt;%1$s&lt;/b&gt;.</source>
-        <target state="needs-translation">Information about your registration with &lt;b&gt;%1$s&lt;/b&gt;.</target>
+        <target state="translated">Informatie over uw registratie met &lt;b&gt;%1$s&lt;/b&gt;.</target>
       </trans-unit>
       <trans-unit id="v_infomail_lost_password_subject_informal" resname="v_infomail_lost_password_subject_informal">
         <source>Information about your registration with &lt;b&gt;%1$s&lt;/b&gt;.</source>
-        <target state="needs-translation">Information about your registration with &lt;b&gt;%1$s&lt;/b&gt;.</target>
+        <target state="translated">Informatie over uw registratie met &lt;b&gt;%1$s&lt;/b&gt;.</target>
       </trans-unit>
       <trans-unit id="v_infomail_lost_password_message1" resname="v_infomail_lost_password_message1">
         <source>The email message will contain a link that will allow you to enter your new password for &lt;b&gt;%1$s&lt;/b&gt;.</source>
@@ -1333,43 +1333,43 @@
       </trans-unit>
       <trans-unit id="v_to_the_administrator" resname="v_to_the_administrator">
         <source>To the administrator of memberships with %1$s</source>
-        <target state="needs-translation">To the administrator of memberships with %1$s</target>
+        <target state="translated">Aan de beheerder van %1$s</target>
       </trans-unit>
       <trans-unit id="v_now_enter_your_username" resname="v_now_enter_your_username">
         <source>You may now enter with your username &lt;b&gt;%2$s&lt;/b&gt; and your password</source>
-        <target state="needs-translation">You may now enter with your username &lt;b&gt;%2$s&lt;/b&gt; and your password</target>
+        <target state="translated">U kunt nu inloggen met uw gebruikersnaam &lt;b&gt;%2$s&lt;/b&gt; en wachtwoord</target>
       </trans-unit>
       <trans-unit id="v_now_enter_your_username_informal" resname="v_now_enter_your_username_informal">
         <source>You may now enter with your username &lt;b&gt;%2$s&lt;/b&gt; and your password</source>
-        <target state="needs-translation">You may now enter with your username &lt;b&gt;%2$s&lt;/b&gt; and your password</target>
+        <target state="translated">Je kan nu inloggen met je gebruikersnaam &lt;b&gt;%2$s&lt;/b&gt; en wachtwoord</target>
       </trans-unit>
       <trans-unit id="v_notification" resname="v_notification">
         <source>Notification</source>
-        <target state="needs-translation">Notification</target>
+        <target state="translated">Bericht</target>
       </trans-unit>
       <trans-unit id="v_registration_created_subject" resname="v_registration_created_subject">
         <source>Thank you for joining us at &lt;b&gt;%1$s&lt;/b&gt;.</source>
-        <target state="needs-translation">Thank you for joining us at &lt;b&gt;%1$s&lt;/b&gt;.</target>
+        <target state="translated">Dank u voor het aanmaken van uw inschrijving op &lt;b&gt;%1$s&lt;/b&gt;.</target>
       </trans-unit>
       <trans-unit id="v_registration_created_subject_informal" resname="v_registration_created_subject_informal">
         <source>Thank you for joining us at &lt;b&gt;%1$s&lt;/b&gt;.</source>
-        <target state="needs-translation">Thank you for joining us at &lt;b&gt;%1$s&lt;/b&gt;.</target>
+        <target state="translated">Dank je voor het aanmaken van je inschrijving op &lt;b&gt;%1$s&lt;/b&gt;.</target>
       </trans-unit>
       <trans-unit id="v_registration_created_message1" resname="v_registration_created_message1">
         <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</source>
-        <target state="needs-translation">Your membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</target>
+        <target state="translated">Uw inschrijving &lt;b&gt;%2$s&lt;/b&gt; is bevestigd.</target>
       </trans-unit>
       <trans-unit id="v_registration_created_message1_informal" resname="v_registration_created_message1_informal">
         <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</source>
-        <target state="needs-translation">Your membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</target>
+        <target state="translated">Je inschrijving &lt;b&gt;%2$s&lt;/b&gt; is bevestigd.</target>
       </trans-unit>
       <trans-unit id="v_registration_created_message2" resname="v_registration_created_message2">
         <source>Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list of members.</source>
-        <target state="needs-translation">Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list of members.</target>
+        <target state="translated">Uw e-mail adres &lt;b&gt;%4$s&lt;/b&gt; is toegevoegd aan onze lijst.</target>
       </trans-unit>
       <trans-unit id="v_registration_created_message2_informal" resname="v_registration_created_message2_informal">
         <source>Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list of members.</source>
-        <target state="needs-translation">Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list of members.</target>
+        <target state="translated">Je e-mail adres &lt;b&gt;%4$s&lt;/b&gt; is toegevoegd aan onze lijst.</target>
       </trans-unit>
       <trans-unit id="v_registration_created_message3" resname="v_registration_created_message3">
         <source>Welcome as our new member.</source>
@@ -1385,35 +1385,35 @@
       </trans-unit>
       <trans-unit id="v_registration_updated_subject" resname="v_registration_updated_subject">
         <source>Your membership details with &lt;b&gt;%1$s&lt;/b&gt; have been updated.</source>
-        <target state="needs-translation">Your membership details with &lt;b&gt;%1$s&lt;/b&gt; have been updated.</target>
+        <target state="translated">Uw inschrijvings gegevens bij &lt;b&gt;%1$s&lt;/b&gt; zijn bijgewerkt.</target>
       </trans-unit>
       <trans-unit id="v_registration_updated_subject_informal" resname="v_registration_updated_subject_informal">
         <source>Your membership details with &lt;b&gt;%1$s&lt;/b&gt; have been updated.</source>
-        <target state="needs-translation">Your membership details with &lt;b&gt;%1$s&lt;/b&gt; have been updated.</target>
+        <target state="translated">Je inschrijvings gegevens bij &lt;b&gt;%1$s&lt;/b&gt; zijn bijgewerkt.</target>
       </trans-unit>
       <trans-unit id="v_registration_updated_message1" resname="v_registration_updated_message1">
         <source>Thank you for keeping your profile up-to-date.</source>
-        <target state="needs-translation">Thank you for keeping your profile up-to-date.</target>
+        <target state="translated">Vriendelijk dank dat u uw gegevens bij ons up-to-date houdt.</target>
       </trans-unit>
       <trans-unit id="v_registration_updated_message1_informal" resname="v_registration_updated_message1_informal">
         <source>Thanks for keeping your profile up-to-date.</source>
-        <target state="needs-translation">Thanks for keeping your profile up-to-date.</target>
+        <target state="translated">Bedankt dat je je gegevens bij ons bijgewerkt heeft.</target>
       </trans-unit>
       <trans-unit id="v_registration_updated" resname="v_registration_updated">
         <source>%3$s updated his(her) profile with %1$s.</source>
-        <target state="needs-translation">%3$s updated his(her) profile with %1$s.</target>
+        <target state="translated">%3$s heeft zijn(haar) gegevens bijgewerkt op %1$s.</target>
       </trans-unit>
       <trans-unit id="v_invitation_confirm" resname="v_invitation_confirm">
         <source>The invitation has been sent.</source>
-        <target state="needs-translation">The invitation has been sent.</target>
+        <target state="translated">De uitnodiging is verstuurd.</target>
       </trans-unit>
       <trans-unit id="v_invitation_account_was_created" resname="v_invitation_account_was_created">
         <source>The membership &lt;b&gt;%2$s&lt;/b&gt; has been created. An invitation to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt; was sent to &lt;b&gt;%3$s&lt;/b&gt; at the e-mail address &lt;b&gt;%4$s&lt;/b&gt;.</source>
-        <target state="needs-translation">The membership &lt;b&gt;%2$s&lt;/b&gt; has been created. An invitation to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt; was sent to &lt;b&gt;%3$s&lt;/b&gt; at the e-mail address &lt;b&gt;%4$s&lt;/b&gt;.</target>
+        <target state="translated">De inschrijving &lt;b&gt;%2$s&lt;/b&gt; is aangemaakt. Een uitnodiging ter bevestiging van uw inschrijving is verstuurd naar gebruiker &lt;b&gt;%3$s&lt;/b&gt; met e-mail adres &lt;b&gt;%4$s&lt;/b&gt;.</target>
       </trans-unit>
       <trans-unit id="v_invitation_account_was_created_informal" resname="v_invitation_account_was_created_informal">
         <source>The membership &lt;b&gt;%2$s&lt;/b&gt; has been created. An invitation to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt; was sent to &lt;b&gt;%3$s&lt;/b&gt; at the e-mail address &lt;b&gt;%4$s&lt;/b&gt;.</source>
-        <target state="needs-translation">The membership &lt;b&gt;%2$s&lt;/b&gt; has been created. An invitation to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt; was sent to &lt;b&gt;%3$s&lt;/b&gt; at the e-mail address &lt;b&gt;%4$s&lt;/b&gt;.</target>
+        <target state="translated">Het lidmaatschap &lt;b&gt;%2$s&lt;/b&gt; is aangemaakt. Een uitnodiging om uw registratie met &lt;b&gt;%1$s&lt;/b&gt; te bevestigen is verstuurd naar &lt;b&gt;%3$s&lt;/b&gt; met als email adres &lt;b&gt;%4$s&lt;/b&gt;.</target>
       </trans-unit>
       <trans-unit id="v_invitation_instructions1" resname="v_invitation_instructions1">
         <source>You will have access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website only after you will have confirmed your registration.&lt;br&gt;Please follow the instructions given in the confirmation message in order to complete the registration procedure.</source>
@@ -1421,23 +1421,23 @@
       </trans-unit>
       <trans-unit id="v_please_confirm" resname="v_please_confirm">
         <source>Please confirm your registration.</source>
-        <target state="needs-translation">Please confirm your registration.</target>
+        <target state="translated">Bevestig a.u.b. uw registratie.</target>
       </trans-unit>
       <trans-unit id="v_please_confirm_informal" resname="v_please_confirm_informal">
         <source>Please confirm your registration.</source>
-        <target state="needs-translation">Please confirm your registration.</target>
+        <target state="translated">Bevestig a.u.b. je registratie.</target>
       </trans-unit>
       <trans-unit id="v_your_account_was_created" resname="v_your_account_was_created">
         <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been created. We are sending a message to your e-mail address &lt;b&gt;%4$s&lt;/b&gt; so that you can confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;.</source>
-        <target state="needs-translation">Your membership &lt;b&gt;%2$s&lt;/b&gt; has been created. We are sending a message to your e-mail address &lt;b&gt;%4$s&lt;/b&gt; so that you can confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;.</target>
+        <target state="translated">Uw inschrijving &lt;b&gt;%2$s&lt;/b&gt; is nu aangemaakt. Wij sturen nu een e-mail naar &lt;b&gt;%4$s&lt;/b&gt; om de registratie op %1$s te bevestigen.</target>
       </trans-unit>
       <trans-unit id="v_your_account_was_created_informal" resname="v_your_account_was_created_informal">
         <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been created. We are sending a message to your e-mail address &lt;b&gt;%4$s&lt;/b&gt; so that you can confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;.</source>
-        <target state="needs-translation">Your membership &lt;b&gt;%2$s&lt;/b&gt; has been created. We are sending a message to your e-mail address &lt;b&gt;%4$s&lt;/b&gt; so that you can confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;.</target>
+        <target state="translated">Je inschrijving &lt;b&gt;%2$s&lt;/b&gt; is nu aangemaakt. Wij sturen nu een e-mail naar &lt;b&gt;%4$s&lt;/b&gt; om de registratie op %1$s te bevestigen.</target>
       </trans-unit>
       <trans-unit id="v_your_account_was_created_nomail" resname="v_your_account_was_created_nomail">
         <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been created. Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; is being used. Now you are registered at &lt;b&gt;%1$s&lt;/b&gt;.</source>
-        <target state="needs-translation">Your membership &lt;b&gt;%2$s&lt;/b&gt; has been created. Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; is being used. Now you are registered at &lt;b&gt;%1$s&lt;/b&gt;.</target>
+        <target state="translated">Uw inschrijving &lt;b&gt;%2$s&lt;/b&gt; is aangemaakt. Uw e-mail adres &lt;b&gt;%4$s&lt;/b&gt; wordt gebruikt. U bent nu geregistreerd op op &lt;b&gt;%1$s&lt;/b&gt;.</target>
       </trans-unit>
       <trans-unit id="v_your_account_was_created_nomail_informal" resname="v_your_account_was_created_nomail_informal">
         <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been created. Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; is being used. Now you are registered at &lt;b&gt;%1$s&lt;/b&gt;.</source>
@@ -1445,35 +1445,35 @@
       </trans-unit>
       <trans-unit id="v_follow_instructions1" resname="v_follow_instructions1">
         <source>In order to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;, you will have to follow the instructions given in the invitation message.</source>
-        <target state="needs-translation">In order to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;, you will have to follow the instructions given in the invitation message.</target>
+        <target state="translated">Volg om uw registratie op &lt;b&gt;%1$s&lt;/b&gt; te bevestigen, de aanwijzingen in het uitnodigingsbericht.</target>
       </trans-unit>
       <trans-unit id="v_follow_instructions1_informal" resname="v_follow_instructions1_informal">
         <source>In order to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;, you will have to follow the instructions given in the invitation message.</source>
-        <target state="needs-translation">In order to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;, you will have to follow the instructions given in the invitation message.</target>
+        <target state="translated">Volg om je registratie op &lt;b&gt;%1$s&lt;/b&gt; te bevestigen, de aanwijzingen in het uitnodigingsbericht.</target>
       </trans-unit>
       <trans-unit id="v_follow_instructions_review1" resname="v_follow_instructions_review1">
         <source>In order to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;, you will have to follow the instructions given in the invitation message.</source>
-        <target state="needs-translation">In order to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;, you will have to follow the instructions given in the invitation message.</target>
+        <target state="translated">Volg om uw registratie op &lt;b&gt;%1$s&lt;/b&gt; te bevestigen, de aanwijzingen in het uitnodigingsbericht.</target>
       </trans-unit>
       <trans-unit id="v_follow_instructions_review1_informal" resname="v_follow_instructions_review1_informal">
         <source>In order to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;, you will have to follow the instructions given in the invitation message.</source>
-        <target state="needs-translation">In order to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;, you will have to follow the instructions given in the invitation message.</target>
+        <target state="translated">Volg om je registratie op &lt;b&gt;%1$s&lt;/b&gt; te bevestigen, de aanwijzingen in het uitnodigingsbericht.</target>
       </trans-unit>
       <trans-unit id="v_follow_instructions_review2" resname="v_follow_instructions_review2">
         <source>Please be aware that after you confirm your registration, it will need to be reviewed by the administrator before you gain access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website.</source>
-        <target state="needs-translation">Please be aware that after you confirm your registration, it will need to be reviewed by the administrator before you gain access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website.</target>
+        <target state="translated">Uw aanvraag zal na uw bevestiging worden bekeken door een beheerder die uw de uiteindelijke toegangsrechten zal toekennen.</target>
       </trans-unit>
       <trans-unit id="v_follow_instructions_review2_informal" resname="v_follow_instructions_review2_informal">
         <source>Please be aware that after you confirm your registration, it will need to be reviewed by the administrator before you gain access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website.</source>
-        <target state="needs-translation">Please be aware that after you confirm your registration, it will need to be reviewed by the administrator before you gain access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website.</target>
+        <target state="translated">Je aanvraag zal na je bevestiging worden bekeken door een beheerder die je de uiteindelijke toegangsrechten zal toekennen.</target>
       </trans-unit>
       <trans-unit id="v_registration_initiated_subject" resname="v_registration_initiated_subject">
         <source>Please confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;.</source>
-        <target state="needs-translation">Please confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;.</target>
+        <target state="translated">Bevestig a.u.b. uw registratie op &lt;b&gt;%1$s&lt;/b&gt;.</target>
       </trans-unit>
       <trans-unit id="v_registration_initiated_subject_informal" resname="v_registration_initiated_subject_informal">
         <source>Please confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;.</source>
-        <target state="needs-translation">Please confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;.</target>
+        <target state="translated">Bevestig je registratie op &lt;b&gt;%1$s&lt;/b&gt;.</target>
       </trans-unit>
       <trans-unit id="v_registration_initiated_message1" resname="v_registration_initiated_message1">
         <source>Thank you for your application to become a member of &lt;b&gt;%1$s&lt;/b&gt;. &lt;br&gt;Everyone is welcome to browse around our website but you will need to confirm your membership to have unrestricted access to all areas.&lt;br&gt;&lt;br&gt;To confirm your membership please click on this link</source>
@@ -1485,19 +1485,19 @@
       </trans-unit>
       <trans-unit id="v_registration_initiated_message2" resname="v_registration_initiated_message2">
         <source>If, for any reason, you do not wish to continue the registration process, or you have received this message in error, please click on this link</source>
-        <target state="needs-translation">If, for any reason, you do not wish to continue the registration process, or you have received this message in error, please click on this link</target>
+        <target state="translated">Het kan zijn dat u dit bericht onverwacht ontvangt. Indien u niet wilt bevestigen of het proces wilt afbreken klik dan op deze link</target>
       </trans-unit>
       <trans-unit id="v_registration_initiated_message2_informal" resname="v_registration_initiated_message2_informal">
         <source>If, for any reason, you do not wish to continue the registration process, or you have received this message in error, please click on this link</source>
-        <target state="needs-translation">If, for any reason, you do not wish to continue the registration process, or you have received this message in error, please click on this link</target>
+        <target state="translated">Het kan zijn dat je dit bericht onverwacht ontvangt. Indien je niet wilt bevestigen of het proces wilt afbreken klik dan op deze link</target>
       </trans-unit>
       <trans-unit id="v_registration_initiated_message3" resname="v_registration_initiated_message3">
         <source>Please feel free to ask us any questions, or  tell us anything about the registration process, or make any other constructive comments by sending an e-mail to</source>
-        <target state="needs-translation">Please feel free to ask us any questions, or  tell us anything about the registration process, or make any other constructive comments by sending an e-mail to</target>
+        <target state="translated">Als u vragen heeft over het registratieproces of iets anders kwijt wilt stuur dan een e-mail naar</target>
       </trans-unit>
       <trans-unit id="v_registration_initiated_message3_informal" resname="v_registration_initiated_message3_informal">
         <source>Please feel free to ask us any questions, or  tell us anything about the registration process, or make any other constructive comments by sending an e-mail to</source>
-        <target state="needs-translation">Please feel free to ask us any questions, or  tell us anything about the registration process, or make any other constructive comments by sending an e-mail to</target>
+        <target state="translated">Als je vragen hebt over het resitratieproces of iets anders kwijt wilt stuur dan een e-mail naar</target>
       </trans-unit>
       <trans-unit id="v_registration_initiated_review1" resname="v_registration_initiated_review1">
         <source>Thank you for your application to become a member of &lt;b&gt;%1$s&lt;/b&gt;. &lt;br&gt;Everyone is welcome to browse around our website but you will need to confirm your membership to have unrestricted access to all areas.&lt;br&gt;&lt;br&gt;To confirm your membership please click on this link</source>
@@ -1509,19 +1509,19 @@
       </trans-unit>
       <trans-unit id="v_registration_initiated_review2" resname="v_registration_initiated_review2">
         <source>Please be aware that after you confirm your registration, it will need to be reviewed by the administrator before you gain access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website.</source>
-        <target state="needs-translation">Please be aware that after you confirm your registration, it will need to be reviewed by the administrator before you gain access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website.</target>
+        <target state="translated">Uw aanvraag zal na uw bevestiging worden bekeken door een beheerder die uw de uiteindelijke toegangsrechten zal toekennen.</target>
       </trans-unit>
       <trans-unit id="v_registration_initiated_review2_informal" resname="v_registration_initiated_review2_informal">
         <source>Please be aware that after you confirm your registration, it will need to be reviewed by the administrator before you gain access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website.</source>
-        <target state="needs-translation">Please be aware that after you confirm your registration, it will need to be reviewed by the administrator before you gain access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website.</target>
+        <target state="translated">Je aanvraag zal na je bevestiging worden bekeken door een beheerder die je de uiteindelijke toegangsrechten zal toekennen.</target>
       </trans-unit>
       <trans-unit id="v_registration_initiated" resname="v_registration_initiated">
         <source>%3$s initiated his(her) registration in %1$s.</source>
-        <target state="needs-translation">%3$s initiated his(her) registration in %1$s.</target>
+        <target state="translated">%2$s is gestart met de inschrijving op %1$s.</target>
       </trans-unit>
       <trans-unit id="v_registration_review_subject" resname="v_registration_review_subject">
         <source>Please review the application of &lt;b&gt;%3$s&lt;/b&gt; for membership with &lt;b&gt;%1$s&lt;/b&gt;.</source>
-        <target state="needs-translation">Please review the application of &lt;b&gt;%3$s&lt;/b&gt; for membership with &lt;b&gt;%1$s&lt;/b&gt;.</target>
+        <target state="translated">Controleer de registratie van &lt;b&gt;%3$s&lt;/b&gt; voor een inschrijving op &lt;b&gt;%1$s&lt;/b&gt;</target>
       </trans-unit>
       <trans-unit id="v_registration_review_subject_informal" resname="v_registration_review_subject_informal">
         <source>Please review the application of &lt;b&gt;%3$s&lt;/b&gt; for membership with &lt;b&gt;%1$s&lt;/b&gt;.</source>
@@ -1529,7 +1529,7 @@
       </trans-unit>
       <trans-unit id="v_registration_review_message1" resname="v_registration_review_message1">
         <source>If you think that the application for membership with &lt;b&gt;%3$s&lt;/b&gt; should be accepted, please click on this link to accept</source>
-        <target state="needs-translation">If you think that the application for membership with &lt;b&gt;%3$s&lt;/b&gt; should be accepted, please click on this link to accept</target>
+        <target state="translated">Als de registratiegegevens kloppen klik dan op onderstaande link om de aanvraag te bevestigen</target>
       </trans-unit>
       <trans-unit id="v_registration_review_message1_informal" resname="v_registration_review_message1_informal">
         <source>If you think that the application for membership with &lt;b&gt;%3$s&lt;/b&gt; should be accepted, please click on this link to accept</source>
@@ -1537,7 +1537,7 @@
       </trans-unit>
       <trans-unit id="v_registration_review_message2" resname="v_registration_review_message2">
         <source>If you think that the application for membership with &lt;b&gt;%3$s&lt;/b&gt; should be refused, please click on this link to refuse</source>
-        <target state="needs-translation">If you think that the application for membership with &lt;b&gt;%3$s&lt;/b&gt; should be refused, please click on this link to refuse</target>
+        <target state="translated">Als de registratiegegevens &lt;b&gt;niet kloppen&lt;/b&gt; klik dan op onderstaande link om de aanvraag te af te wijzen</target>
       </trans-unit>
       <trans-unit id="v_registration_review_message2_informal" resname="v_registration_review_message2_informal">
         <source>If you think that the application for membership with &lt;b&gt;%3$s&lt;/b&gt; should be refused, please click on this link to refuse</source>
@@ -1545,15 +1545,15 @@
       </trans-unit>
       <trans-unit id="v_registration_review_message3" resname="v_registration_review_message3">
         <source>Please review the application of &lt;b&gt;%3$s&lt;/b&gt; for membership with &lt;b&gt;%1$s&lt;/b&gt;. The following data was entered on the registration form</source>
-        <target state="needs-translation">Please review the application of &lt;b&gt;%3$s&lt;/b&gt; for membership with &lt;b&gt;%1$s&lt;/b&gt;. The following data was entered on the registration form</target>
+        <target state="translated">Controleer a.u.b. de gegevens van de registratie van %3$s voor een inschrijving op %1$s.&lt;br /&gt; de volgende gegevens zijn ingevuld</target>
       </trans-unit>
       <trans-unit id="v_registration_invited_subject" resname="v_registration_invited_subject">
         <source>Invitation to register with &lt;b&gt;%1$s&lt;/b&gt;.</source>
-        <target state="needs-translation">Invitation to register with &lt;b&gt;%1$s&lt;/b&gt;.</target>
+        <target state="translated">Uitnodiging om u te registeren op &lt;b&gt;%1$s&lt;/b&gt;.</target>
       </trans-unit>
       <trans-unit id="v_registration_invited_subject_informal" resname="v_registration_invited_subject_informal">
         <source>Invitation to register with &lt;b&gt;%1$s&lt;/b&gt;.</source>
-        <target state="needs-translation">Invitation to register with &lt;b&gt;%1$s&lt;/b&gt;.</target>
+        <target state="translated">Uitnodiging om je te registeren op &lt;b&gt;%1$s&lt;/b&gt;.</target>
       </trans-unit>
       <trans-unit id="v_registration_invited_message1" resname="v_registration_invited_message1">
         <source>We thought you might be interested in registering with &lt;b&gt;%1$s&lt;/b&gt;&lt;br&gt;&lt;br&gt;
@@ -1621,11 +1621,11 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
       </trans-unit>
       <trans-unit id="v_registration_invited_message2" resname="v_registration_invited_message2">
         <source>You will not receive this message twice. If you wish to decline our invitation and do not wish to register in &lt;b&gt;%1$s&lt;/b&gt;, please follow this link or just ignore this message</source>
-        <target state="needs-translation">You will not receive this message twice. If you wish to decline our invitation and do not wish to register in &lt;b&gt;%1$s&lt;/b&gt;, please follow this link or just ignore this message</target>
+        <target state="translated">U zult verder geen e-mail van ons ontvangen. Als u wilt afzeggen voor %1$s kunt u onderstaande link klikken. Indien u niets onderneemt zal de inschrijving automatisch verwijderd worden.</target>
       </trans-unit>
       <trans-unit id="v_registration_invited_message2_informal" resname="v_registration_invited_message2_informal">
         <source>You will not receive this message twice. If you wish to decline our invitation and do not wish to register in &lt;b&gt;%1$s&lt;/b&gt;, please follow this link or just ignore this message</source>
-        <target state="needs-translation">You will not receive this message twice. If you wish to decline our invitation and do not wish to register in &lt;b&gt;%1$s&lt;/b&gt;, please follow this link or just ignore this message</target>
+        <target state="translated">Je zult verder geen e-mail van ons ontvangen. Als je wilt afzeggen voor %1$s kan je onderstaande link klikken. Indien je niets onderneemt zal de inschrijving automatisch verwijderd worden.</target>
       </trans-unit>
       <trans-unit id="v_now_choose_password" resname="v_now_choose_password">
         <source>Please choose a password now and enter it twice.</source>
@@ -1637,7 +1637,7 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
       </trans-unit>
       <trans-unit id="v_registration_invited" resname="v_registration_invited">
         <source>An invitation to register in %1$s was sent to %3$s.</source>
-        <target state="needs-translation">An invitation to register in %1$s was sent to %3$s.</target>
+        <target state="translated">Een uitnodiging tot registratie voor %1$s is verstuurd aan %3$s.</target>
       </trans-unit>
       <trans-unit id="v_registration_infomail_message1" resname="v_registration_infomail_message1">
         <source>Your account data are username &lt;b&gt;%2$s&lt;/b&gt; and password &lt;b&gt;%5$s&lt;/b&gt;.&lt;br&gt;&lt;br&gt;</source>
@@ -1657,55 +1657,55 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
       </trans-unit>
       <trans-unit id="v_registration_confirmed_subject" resname="v_registration_confirmed_subject">
         <source>Thank you for registering with &lt;b&gt;%1$s&lt;/b&gt;.</source>
-        <target state="needs-translation">Thank you for registering with &lt;b&gt;%1$s&lt;/b&gt;.</target>
+        <target state="translated">Hartelijk dank voor uw registratie op %1$s.</target>
       </trans-unit>
       <trans-unit id="v_registration_confirmed_subject_informal" resname="v_registration_confirmed_subject_informal">
         <source>Thank you for registering with &lt;b&gt;%1$s&lt;/b&gt;.</source>
-        <target state="needs-translation">Thank you for registering with &lt;b&gt;%1$s&lt;/b&gt;.</target>
+        <target state="translated">Hartelijk dank voor je registratie op %1$s.</target>
       </trans-unit>
       <trans-unit id="v_registration_confirmed_message1" resname="v_registration_confirmed_message1">
         <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</source>
-        <target state="needs-translation">Your membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</target>
+        <target state="translated">Uw inschrijving op %2$s is bevestigd.</target>
       </trans-unit>
       <trans-unit id="v_registration_confirmed_message1_informal" resname="v_registration_confirmed_message1_informal">
         <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</source>
-        <target state="needs-translation">Your membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</target>
+        <target state="translated">Je inschrijving op %2$s is bevestigd.</target>
       </trans-unit>
       <trans-unit id="v_registration_confirmed_message2" resname="v_registration_confirmed_message2">
         <source>Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</source>
-        <target state="needs-translation">Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</target>
+        <target state="translated">Uw e-mailadres %4$s is toegevoegd aan onze lijst.</target>
       </trans-unit>
       <trans-unit id="v_registration_confirmed_message2_informal" resname="v_registration_confirmed_message2_informal">
         <source>Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</source>
-        <target state="needs-translation">Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</target>
+        <target state="translated">Je e-mailadres %4$s is toegevoegd aan onze lijst.</target>
       </trans-unit>
       <trans-unit id="v_registration_confirmed_review1" resname="v_registration_confirmed_review1">
         <source>Your application for membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</source>
-        <target state="needs-translation">Your application for membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</target>
+        <target state="translated">Uw inschrijving op %2$s is bevestigd.</target>
       </trans-unit>
       <trans-unit id="v_registration_confirmed_review1_informal" resname="v_registration_confirmed_review1_informal">
         <source>Your application for membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</source>
-        <target state="needs-translation">Your application for membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</target>
+        <target state="translated">Je inschrijving op %2$s is bevestigd.</target>
       </trans-unit>
       <trans-unit id="v_registration_confirmed_review2" resname="v_registration_confirmed_review2">
         <source>Your application for membership will now be reviewed by the website administrator. You will be informed by email of the administrator's decision.</source>
-        <target state="needs-translation">Your application for membership will now be reviewed by the website administrator. You will be informed by email of the administrator's decision.</target>
+        <target state="translated">Uw aanvraag om in te schrijving zal nu worden bekeken door een beheerder. U hoort spoedig meer.</target>
       </trans-unit>
       <trans-unit id="v_registration_confirmed_review2_informal" resname="v_registration_confirmed_review2_informal">
         <source>Your application for membership will now be reviewed by the website administrator. You will be informed by email of the administrator's decision.</source>
-        <target state="needs-translation">Your application for membership will now be reviewed by the website administrator. You will be informed by email of the administrator's decision.</target>
+        <target state="translated">Je aanvraag om in te schrijving zal nu worden bekeken door een beheerder. Je hoort spoedig meer.</target>
       </trans-unit>
       <trans-unit id="v_registration_confirmed" resname="v_registration_confirmed">
         <source>%3$s confirmed his(her) registration with %1$s.</source>
-        <target state="needs-translation">%3$s confirmed his(her) registration with %1$s.</target>
+        <target state="translated">%3$s heeft zijn/haar inschrijving bevestigd op %1$s.</target>
       </trans-unit>
       <trans-unit id="v_registration_cancelled_subject" resname="v_registration_cancelled_subject">
         <source>Your registration has been cancelled.</source>
-        <target state="needs-translation">Your registration has been cancelled.</target>
+        <target state="translated">Uw inschrijving is verwijderd uit onze lijst.</target>
       </trans-unit>
       <trans-unit id="v_registration_cancelled_subject_informal" resname="v_registration_cancelled_subject_informal">
         <source>Your registration has been cancelled.</source>
-        <target state="needs-translation">Your registration has been cancelled.</target>
+        <target state="translated">Je inschrijving is verwijderd uit onze lijst.</target>
       </trans-unit>
       <trans-unit id="v_registration_cancelled_message1" resname="v_registration_cancelled_message1">
         <source>As requested, we have cancelled your membership &lt;b&gt;%2$s&lt;/b&gt; and your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been deleted from our list.&lt;br&gt;</source>
@@ -1725,7 +1725,7 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
       </trans-unit>
       <trans-unit id="v_registration_cancelled" resname="v_registration_cancelled">
         <source>%3$s cancelled his(her) registration with %1$s.</source>
-        <target state="needs-translation">%3$s cancelled his(her) registration with %1$s.</target>
+        <target state="translated">%3$s heeft zijn inschrijving %1$s gewist.</target>
       </trans-unit>
       <trans-unit id="v_deletion_cancelled_subject" resname="v_deletion_cancelled_subject">
         <source>No deletion has been executed.</source>
@@ -1737,107 +1737,107 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
       </trans-unit>
       <trans-unit id="v_registration_accepted_subject" resname="v_registration_accepted_subject">
         <source>The application of &lt;b&gt;%3$s&lt;/b&gt; for membership with &lt;b&gt;%1$s&lt;/b&gt; is now accepted.</source>
-        <target state="needs-translation">The application of &lt;b&gt;%3$s&lt;/b&gt; for membership with &lt;b&gt;%1$s&lt;/b&gt; is now accepted.</target>
+        <target state="translated">De aanvraag van %3$s voor een inschrijving %1$s is geaccepteerd.</target>
       </trans-unit>
       <trans-unit id="v_registration_accepted_message1" resname="v_registration_accepted_message1">
         <source>A message is being sent to &lt;b&gt;%3$s&lt;/b&gt; to inform him(her) that his(her) membership with &lt;b&gt;%1$s&lt;/b&gt; was accepted.</source>
-        <target state="needs-translation">A message is being sent to &lt;b&gt;%3$s&lt;/b&gt; to inform him(her) that his(her) membership with &lt;b&gt;%1$s&lt;/b&gt; was accepted.</target>
+        <target state="translated">Er is een e-mail verstuurd aan %3$s om de acceptatie te bevestigen voor %1$s.</target>
       </trans-unit>
       <trans-unit id="v_registration_accepted_message2" resname="v_registration_accepted_message2">
         <source>&lt;b&gt;%3$s&lt;/b&gt; is now able to login.</source>
-        <target state="needs-translation">&lt;b&gt;%3$s&lt;/b&gt; is now able to login.</target>
+        <target state="translated">%3$s kan nu inloggen.</target>
       </trans-unit>
       <trans-unit id="v_registration_accepted_subject2" resname="v_registration_accepted_subject2">
         <source>Your application for membership with &lt;b&gt;%1$s&lt;/b&gt; has been accepted.</source>
-        <target state="needs-translation">Your application for membership with &lt;b&gt;%1$s&lt;/b&gt; has been accepted.</target>
+        <target state="translated">Uw aanvraag om in te schrijven op %1$s is geaccpeteerd.</target>
       </trans-unit>
       <trans-unit id="v_registration_accepted_subject2_informal" resname="v_registration_accepted_subject2_informal">
         <source>Your application for membership with &lt;b&gt;%1$s&lt;/b&gt; has been accepted.</source>
-        <target state="needs-translation">Your application for membership with &lt;b&gt;%1$s&lt;/b&gt; has been accepted.</target>
+        <target state="translated">Je aanvraag om in te schrijven op %1$s is geaccpeteerd.</target>
       </trans-unit>
       <trans-unit id="v_registration_accepted_message3" resname="v_registration_accepted_message3">
         <source>We are pleased to inform you that your membership &lt;b&gt;%2$s&lt;/b&gt; has been accepted and that your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</source>
-        <target state="needs-translation">We are pleased to inform you that your membership &lt;b&gt;%2$s&lt;/b&gt; has been accepted and that your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</target>
+        <target state="translated">Uw aanvraag voor toegang op %2$s is geaccepteerd, uw e-mailadres is toegevoegd aan onze lijst.</target>
       </trans-unit>
       <trans-unit id="v_registration_accepted_message3_informal" resname="v_registration_accepted_message3_informal">
         <source>We are pleased to inform you that your membership &lt;b&gt;%2$s&lt;/b&gt; has been accepted and that your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</source>
-        <target state="needs-translation">We are pleased to inform you that your membership &lt;b&gt;%2$s&lt;/b&gt; has been accepted and that your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</target>
+        <target state="translated">Je aanvraag voor toegang op %2$s is geaccepteerd, je e-mailadres is toegevoegd aan onze lijst.</target>
       </trans-unit>
       <trans-unit id="v_registration_accepted_message4" resname="v_registration_accepted_message4">
         <source>You may now login at</source>
-        <target state="needs-translation">You may now login at</target>
+        <target state="translated">U kunt nu inloggen op</target>
       </trans-unit>
       <trans-unit id="v_registration_accepted_message4_informal" resname="v_registration_accepted_message4_informal">
         <source>You may now login at</source>
-        <target state="needs-translation">You may now login at</target>
+        <target state="translated">Je kunt nu inloggen op</target>
       </trans-unit>
       <trans-unit id="v_registration_accepted" resname="v_registration_accepted">
         <source>The application of %3$s for membership with %1$s was accepted.</source>
-        <target state="needs-translation">The application of %3$s for membership with %1$s was accepted.</target>
+        <target state="translated">De aanvraag van %3$s voor toegang op %1$s is geaccepteerd.</target>
       </trans-unit>
       <trans-unit id="v_registration_refused_subject" resname="v_registration_refused_subject">
         <source>The application of &lt;b&gt;%3$s&lt;/b&gt; for membership with &lt;b&gt;%1$s&lt;/b&gt; is now refused.</source>
-        <target state="needs-translation">The application of &lt;b&gt;%3$s&lt;/b&gt; for membership with &lt;b&gt;%1$s&lt;/b&gt; is now refused.</target>
+        <target state="translated">De aanvraag van %3$s voor toegang op %1$s is geweigerd.</target>
       </trans-unit>
       <trans-unit id="v_registration_refused_message1" resname="v_registration_refused_message1">
         <source>A message is being sent to &lt;b&gt;%3$s&lt;/b&gt; to inform him(her) that his(her) membership with &lt;b&gt;%1$s&lt;/b&gt; was refused.</source>
-        <target state="needs-translation">A message is being sent to &lt;b&gt;%3$s&lt;/b&gt; to inform him(her) that his(her) membership with &lt;b&gt;%1$s&lt;/b&gt; was refused.</target>
+        <target state="translated">Er is een bericht verstuurd aan &lt;b&gt;%3$s&lt;/b&gt; om de afwijzing te melden.</target>
       </trans-unit>
       <trans-unit id="v_registration_refused_message2" resname="v_registration_refused_message2">
         <source>The account of &lt;b&gt;%3$s&lt;/b&gt; will now be deleted.</source>
-        <target state="needs-translation">The account of &lt;b&gt;%3$s&lt;/b&gt; will now be deleted.</target>
+        <target state="translated">De inschrijving van &lt;b&gt;%3$s&lt;/b&gt; wordt nu verwijderd.</target>
       </trans-unit>
       <trans-unit id="v_registration_refused" resname="v_registration_refused">
         <source>The application of %3$s for membership with %1$s was refused.</source>
-        <target state="needs-translation">The application of %3$s for membership with %1$s was refused.</target>
+        <target state="translated">De aanvraag van %3$s voor toegang op %1$s is geweigerd.</target>
       </trans-unit>
       <trans-unit id="v_registration_refused_subject2" resname="v_registration_refused_subject2">
         <source>Your application for membership with &lt;b&gt;%1$s&lt;/b&gt; has been refused.</source>
-        <target state="needs-translation">Your application for membership with &lt;b&gt;%1$s&lt;/b&gt; has been refused.</target>
+        <target state="translated">Uw aanvraag voor toegang op %1$s is geweigerd.</target>
       </trans-unit>
       <trans-unit id="v_registration_refused_subject2_informal" resname="v_registration_refused_subject2_informal">
         <source>Your application for membership with &lt;b&gt;%1$s&lt;/b&gt; has been refused.</source>
-        <target state="needs-translation">Your application for membership with &lt;b&gt;%1$s&lt;/b&gt; has been refused.</target>
+        <target state="translated">Je aanvraag voor toegang op %1$s is geweigerd.</target>
       </trans-unit>
       <trans-unit id="v_registration_refused_message3" resname="v_registration_refused_message3">
         <source>We are sorry to inform you that your membership &lt;b&gt;%2$s&lt;/b&gt; has been refused.</source>
-        <target state="needs-translation">We are sorry to inform you that your membership &lt;b&gt;%2$s&lt;/b&gt; has been refused.</target>
+        <target state="translated">Helaas is uw aanvraag voor toegang op %2$s geweigerd.</target>
       </trans-unit>
       <trans-unit id="v_registration_refused_message3_informal" resname="v_registration_refused_message3_informal">
         <source>We are sorry to inform you that your membership &lt;b&gt;%2$s&lt;/b&gt; has been refused.</source>
-        <target state="needs-translation">We are sorry to inform you that your membership &lt;b&gt;%2$s&lt;/b&gt; has been refused.</target>
+        <target state="translated">Helaas is je aanvraag voor toegang op %2$s geweigerd.</target>
       </trans-unit>
       <trans-unit id="v_registration_refused_message4" resname="v_registration_refused_message4">
         <source>Please feel free to ask us any questions, or  tell us anything about the registration process, or make any other comments by sending an e-mail to</source>
-        <target state="needs-translation">Please feel free to ask us any questions, or  tell us anything about the registration process, or make any other comments by sending an e-mail to</target>
+        <target state="translated">Indien u nog vragen of opmerkingen heeft over het registratie proces kunt u deze sturen aan</target>
       </trans-unit>
       <trans-unit id="v_registration_refused_message4_informal" resname="v_registration_refused_message4_informal">
         <source>Please feel free to ask us any questions, or  tell us anything about the registration process, or make any other comments by sending an e-mail to</source>
-        <target state="needs-translation">Please feel free to ask us any questions, or  tell us anything about the registration process, or make any other comments by sending an e-mail to</target>
+        <target state="translated">Indien je nog vragen of opmerkingen heeft over het registratie proces kan je deze sturen aan</target>
       </trans-unit>
       <trans-unit id="v_registration_entered_subject" resname="v_registration_entered_subject">
         <source>Thank you for registering with &lt;b&gt;%1$s&lt;/b&gt;.</source>
-        <target state="needs-translation">Thank you for registering with &lt;b&gt;%1$s&lt;/b&gt;.</target>
+        <target state="translated">Dank voor uw registratie op &lt;b&gt;%1$s&lt;/b&gt;.</target>
       </trans-unit>
       <trans-unit id="v_registration_entered_subject_informal" resname="v_registration_entered_subject_informal">
         <source>Thank you for registering with &lt;b&gt;%1$s&lt;/b&gt;.</source>
-        <target state="needs-translation">Thank you for registering with &lt;b&gt;%1$s&lt;/b&gt;.</target>
+        <target state="translated">Dank voor je registratie op &lt;b&gt;%1$s&lt;/b&gt;.</target>
       </trans-unit>
       <trans-unit id="v_registration_entered_message1" resname="v_registration_entered_message1">
         <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been accepted.</source>
-        <target state="needs-translation">Your membership &lt;b&gt;%2$s&lt;/b&gt; has been accepted.</target>
+        <target state="translated">Uw inschrijving %2$s is geaccepteerd.</target>
       </trans-unit>
       <trans-unit id="v_registration_entered_message1_informal" resname="v_registration_entered_message1_informal">
         <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been accepted.</source>
-        <target state="needs-translation">Your membership &lt;b&gt;%2$s&lt;/b&gt; has been accepted.</target>
+        <target state="translated">Je inschrijving %2$s is geaccepteerd.</target>
       </trans-unit>
       <trans-unit id="v_registration_entered_message2" resname="v_registration_entered_message2">
         <source>Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</source>
-        <target state="needs-translation">Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</target>
+        <target state="translated">Wij hebben uw e-mailadres %4$s toegevoegd aan onze lijst.</target>
       </trans-unit>
       <trans-unit id="v_registration_entered_message2_informal" resname="v_registration_entered_message2_informal">
         <source>Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</source>
-        <target state="needs-translation">Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</target>
+        <target state="translated">Wij hebben je e-mailadres %4$s toegevoegd aan onze lijst.</target>
       </trans-unit>
       <trans-unit id="v_registration_entered" resname="v_registration_entered">
         <source>%3$s accessed the login form of %1$s after acceptation of his(her) membership application.</source>
@@ -1845,11 +1845,11 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
       </trans-unit>
       <trans-unit id="v_registration_deleted_subject" resname="v_registration_deleted_subject">
         <source>Your membership with &lt;b&gt;%1$s&lt;/b&gt; has been ended.</source>
-        <target state="needs-translation">Your membership with &lt;b&gt;%1$s&lt;/b&gt; has been ended.</target>
+        <target state="translated">Op uw verzoek is uw inschrijving op %1$s beëindigd.</target>
       </trans-unit>
       <trans-unit id="v_registration_deleted_subject_informal" resname="v_registration_deleted_subject_informal">
         <source>Your membership with &lt;b&gt;%1$s&lt;/b&gt; has been ended.</source>
-        <target state="needs-translation">Your membership with &lt;b&gt;%1$s&lt;/b&gt; has been ended.</target>
+        <target state="translated">Op jouw verzoek is je inschrijving op %1$s beëindigd.</target>
       </trans-unit>
       <trans-unit id="v_registration_deleted_message1" resname="v_registration_deleted_message1">
         <source>As requested, we have ended your membership &lt;b&gt;%2$s&lt;/b&gt; and your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been deleted from our list.&lt;br&gt;</source>
@@ -1869,7 +1869,7 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
       </trans-unit>
       <trans-unit id="v_registration_deleted" resname="v_registration_deleted">
         <source>%3$s deleted his(her) account from %1$s.</source>
-        <target state="needs-translation">%3$s deleted his(her) account from %1$s.</target>
+        <target state="translated">%3$s heeft zijn inschrijving op %1$s verwijderd.</target>
       </trans-unit>
       <trans-unit id="v_registration_unsubscribed_subject" resname="v_registration_unsubscribed_subject">
         <source>Your subscription to the newsletter of &lt;b&gt;%1$s&lt;/b&gt; has been ended.</source>
@@ -1901,107 +1901,107 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
       </trans-unit>
       <trans-unit id="evalErrors_allowed_image" resname="evalErrors_allowed_image">
         <source>The file extension %s is not allowed.</source>
-        <target state="needs-translation">The file extension %s is not allowed.</target>
+        <target state="translated">De bestandsextensie %s is helaas niet toegestaan.</target>
       </trans-unit>
       <trans-unit id="evalErrors_atLeast" resname="evalErrors_atLeast">
         <source>You must enter at least %s characters!</source>
-        <target state="needs-translation">You must enter at least %s characters!</target>
+        <target state="translated">Geef minimaal %s tekens!</target>
       </trans-unit>
       <trans-unit id="evalErrors_atLeast_username" resname="evalErrors_atLeast_username">
         <source>The username must contain at least %s characters.</source>
-        <target state="needs-translation">The username must contain at least %s characters.</target>
+        <target state="translated">De gebruikernaam moet minimaal uit %s tekens bestaan.</target>
       </trans-unit>
       <trans-unit id="evalErrors_atLeast_informal" resname="evalErrors_atLeast_informal">
         <source>You must enter at least %s characters!</source>
-        <target state="needs-translation">You must enter at least %s characters!</target>
+        <target state="translated">Geef minimaal %s tekens!</target>
       </trans-unit>
       <trans-unit id="evalErrors_atleast_characters" resname="evalErrors_atleast_characters">
         <source>You must enter at least %s characters!</source>
-        <target state="needs-translation">You must enter at least %s characters!</target>
+        <target state="translated">Geef minimaal %s tekens!</target>
       </trans-unit>
       <trans-unit id="evalErrors_atleast_characters_informal" resname="evalErrors_atleast_characters_informal">
         <source>You must enter at least %s characters!</source>
-        <target state="needs-translation">You must enter at least %s characters!</target>
+        <target state="translated">Geef minimaal %s tekens!</target>
       </trans-unit>
       <trans-unit id="evalErrors_atLeast_password" resname="evalErrors_atLeast_password">
         <source>The password must contain at least %s characters.</source>
-        <target state="needs-translation">The password must contain at least %s characters.</target>
+        <target state="translated">Het wachtwoord moet minimaal uit %s tekens bestaan.</target>
       </trans-unit>
       <trans-unit id="evalErrors_atLeast_password_informal" resname="evalErrors_atLeast_password_informal">
         <source>The password must contain at least %s characters.</source>
-        <target state="needs-translation">The password must contain at least %s characters.</target>
+        <target state="translated">Het wachtwoord moet minimaal uit %s tekens bestaan.</target>
       </trans-unit>
       <trans-unit id="evalErrors_atmost_characters" resname="evalErrors_atmost_characters">
         <source>You must enter at most %s characters!</source>
-        <target state="needs-translation">You must enter at most %s characters!</target>
+        <target state="translated">Geef maximaal %s tekens!</target>
       </trans-unit>
       <trans-unit id="evalErrors_atmost_characters_informal" resname="evalErrors_atmost_characters_informal">
         <source>You must enter at most %s characters!</source>
-        <target state="needs-translation">You must enter at most %s characters!</target>
+        <target state="translated">Geef maximaal %s tekens!</target>
       </trans-unit>
       <trans-unit id="evalErrors_atMost" resname="evalErrors_atMost">
         <source>You must enter at most %s characters!</source>
-        <target state="needs-translation">You must enter at most %s characters!</target>
+        <target state="translated">Geef minimaal %s tekens!</target>
       </trans-unit>
       <trans-unit id="evalErrors_atMost_informal" resname="evalErrors_atMost_informal">
         <source>You must enter at most %s characters!</source>
-        <target state="needs-translation">You must enter at most %s characters!</target>
+        <target state="translated">Geef minimaal %s tekens!</target>
       </trans-unit>
       <trans-unit id="evalErrors_atMost_password" resname="evalErrors_atMost_password">
         <source>The password must contain at most %s characters.</source>
-        <target state="needs-translation">The password must contain at most %s characters.</target>
+        <target state="translated">Het wachtwoor mag niet langer zijn dan %s tekens.</target>
       </trans-unit>
       <trans-unit id="evalErrors_atMost_password_informal" resname="evalErrors_atMost_password_informal">
         <source>The password must contain at most %s characters.</source>
-        <target state="needs-translation">The password must contain at most %s characters.</target>
+        <target state="translated">Het wachtwoor mag niet langer zijn dan %s tekens.</target>
       </trans-unit>
       <trans-unit id="evalErrors_atMost_username" resname="evalErrors_atMost_username">
         <source>The username must contain at most %s characters.</source>
-        <target state="needs-translation">The username must contain at most %s characters.</target>
+        <target state="translated">De gebruikernaam mag maximaal uit %s tekens bestaan.</target>
       </trans-unit>
       <trans-unit id="evalErrors_captcha" resname="evalErrors_captcha">
         <source>Invalid!</source>
-        <target state="needs-translation">Invalid!</target>
+        <target state="translated">Ongeldig!</target>
       </trans-unit>
       <trans-unit id="evalErrors_freecap" resname="evalErrors_freecap">
         <source>The entered letters did not correspond to the letters in the image.</source>
-        <target state="needs-translation">The entered letters did not correspond to the letters in the image.</target>
+        <target state="translated">De ingevoerde letters komen niet overeen met de letters in de afbeelding.</target>
       </trans-unit>
       <trans-unit id="evalErrors_date" resname="evalErrors_date">
         <source>Please enter a valid date in format dd-mm-yyyy!</source>
-        <target state="needs-translation">Please enter a valid date in format dd-mm-yyyy!</target>
+        <target state="translated">Geef a.u.b. een geldige datum in (dd-mm-jjjj) formaat!</target>
       </trans-unit>
       <trans-unit id="evalErrors_date_informal" resname="evalErrors_date_informal">
         <source>Please enter a valid date in format dd-mm-yyyy!</source>
-        <target state="needs-translation">Please enter a valid date in format dd-mm-yyyy!</target>
+        <target state="translated">Geef een geldige datum in (dd-mm-jjjj) formaat!</target>
       </trans-unit>
       <trans-unit id="evalErrors_email" resname="evalErrors_email">
         <source>Please enter a valid e-mail address.</source>
-        <target state="needs-translation">Please enter a valid e-mail address.</target>
+        <target state="translated">Geef een betaand e-mail adres.</target>
       </trans-unit>
       <trans-unit id="evalErrors_email_informal" resname="evalErrors_email_informal">
         <source>Please enter a valid e-mail address.</source>
-        <target state="needs-translation">Please enter a valid e-mail address.</target>
+        <target state="translated">Geef een betaand e-mail adres.</target>
       </trans-unit>
       <trans-unit id="evalErrors_email_email" resname="evalErrors_email_email">
         <source>According to our verifications, the e-mail you have entered is not valid. Perhaps it was not entered correctly?</source>
-        <target state="needs-translation">According to our verifications, the e-mail you have entered is not valid. Perhaps it was not entered correctly?</target>
+        <target state="translated">Wij kunnen uw e-mailadres niet verifiëren. Heeft u het adres juist ingevuld?</target>
       </trans-unit>
       <trans-unit id="evalErrors_email_email_informal" resname="evalErrors_email_email_informal">
         <source>According to our verifications, the e-mail you entered is not valid. Perhaps you did not enter it correctly?</source>
-        <target state="needs-translation">According to our verifications, the e-mail you entered is not valid. Perhaps you did not enter it correctly?</target>
+        <target state="translated">Wij kunnen je e-mailadres niet verifiëren. Heb je het adres juist ingevuld?</target>
       </trans-unit>
       <trans-unit id="evalErrors_existed_already" resname="evalErrors_existed_already">
         <source>The value existed already. Enter a new value.</source>
-        <target state="needs-translation">The value existed already. Enter a new value.</target>
+        <target state="translated">De waarde bestaat al. Voer een nieuwe in.</target>
       </trans-unit>
       <trans-unit id="evalErrors_existed_already_informal" resname="evalErrors_existed_already_informal">
         <source>The value existed already. Enter a new value.</source>
-        <target state="needs-translation">The value existed already. Enter a new value.</target>
+        <target state="translated">De waarde bestaat al. Voer een nieuwe in.</target>
       </trans-unit>
       <trans-unit id="evalErrors_file_extension" resname="evalErrors_file_extension">
         <source>The file extension %s is not allowed.</source>
-        <target state="needs-translation">The file extension %s is not allowed.</target>
+        <target state="translated">De bestands extensie %s is niet toegestaan.</target>
       </trans-unit>
       <trans-unit id="evalErrors_file_upload" resname="evalErrors_file_upload">
         <source>Internal server error in upload of file &quot;%s&quot;.</source>
@@ -2013,7 +2013,7 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
       </trans-unit>
       <trans-unit id="evalErrors_max_size_image" resname="evalErrors_max_size_image">
         <source>The file size should not exceed %s KB.</source>
-        <target state="needs-translation">The file size should not exceed %s KB.</target>
+        <target state="translated">Een bestand mag niet groter zijn dan %s Kb.</target>
       </trans-unit>
       <trans-unit id="evalErrors_preg" resname="evalErrors_preg">
         <source>This value does not fit to the required expression!</source>
@@ -2025,11 +2025,11 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
       </trans-unit>
       <trans-unit id="evalErrors_required" resname="evalErrors_required">
         <source>You must enter a value!</source>
-        <target state="needs-translation">You must enter a value!</target>
+        <target state="translated">Geef een waarde!</target>
       </trans-unit>
       <trans-unit id="evalErrors_required_informal" resname="evalErrors_required_informal">
         <source>You must enter a value!</source>
-        <target state="needs-translation">You must enter a value!</target>
+        <target state="translated">Geef een waarde!</target>
       </trans-unit>
       <trans-unit id="evalErrors_required_terms_acknowledged" resname="evalErrors_required_terms_acknowledged">
         <source>Please acknowledge the terms!</source>
@@ -2041,99 +2041,99 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
       </trans-unit>
       <trans-unit id="evalErrors_same_twice" resname="evalErrors_same_twice">
         <source>You must enter the same value twice.</source>
-        <target state="needs-translation">You must enter the same value twice.</target>
+        <target state="translated">Geef tweemaal dezelfde waarde.</target>
       </trans-unit>
       <trans-unit id="evalErrors_same_twice_informal" resname="evalErrors_same_twice_informal">
         <source>You must enter the same value twice.</source>
-        <target state="needs-translation">You must enter the same value twice.</target>
+        <target state="translated">Geef tweemaal dezelfde waarde.</target>
       </trans-unit>
       <trans-unit id="evalErrors_size_too_large" resname="evalErrors_size_too_large">
         <source>The file is larger than %s KB.</source>
-        <target state="needs-translation">The file is larger than %s KB.</target>
+        <target state="translated">Het bestand is groter dan %s KB.</target>
       </trans-unit>
       <trans-unit id="evalErrors_twice" resname="evalErrors_twice">
         <source>Please enter the same value twice.</source>
-        <target state="needs-translation">Please enter the same value twice.</target>
+        <target state="translated">Geef tweemaal dezelfde waarde.</target>
       </trans-unit>
       <trans-unit id="evalErrors_twice_informal" resname="evalErrors_twice_informal">
         <source>Please enter the same value twice.</source>
-        <target state="needs-translation">Please enter the same value twice.</target>
+        <target state="translated">Geef tweemaal dezelfde waarde.</target>
       </trans-unit>
       <trans-unit id="evalErrors_twice_password" resname="evalErrors_twice_password">
         <source>You must enter the same password twice.</source>
-        <target state="needs-translation">You must enter the same password twice.</target>
+        <target state="translated">Uw wachtwoorden zijn niet identiek.</target>
       </trans-unit>
       <trans-unit id="evalErrors_twice_password_informal" resname="evalErrors_twice_password_informal">
         <source>You must enter the same password twice.</source>
-        <target state="needs-translation">You must enter the same password twice.</target>
+        <target state="translated">Je wachtwoorden zijn niet identiek.</target>
       </trans-unit>
       <trans-unit id="evalErrors_unvalid_list" resname="evalErrors_unvalid_list">
         <source>The value was not a valid value from this list: %s</source>
-        <target state="needs-translation">The value was not a valid value from this list: %s</target>
+        <target state="translated">De waarde is niet geldig in deze lijst: %s</target>
       </trans-unit>
       <trans-unit id="evalErrors_unvalid_url" resname="evalErrors_unvalid_url">
         <source>Please enter a valid Internet site address.</source>
-        <target state="needs-translation">Please enter a valid Internet site address.</target>
+        <target state="translated">Geef een geldig internet adres.</target>
       </trans-unit>
       <trans-unit id="evalErrors_unvalid_url_informal" resname="evalErrors_unvalid_url_informal">
         <source>Please enter a valid Internet site address.</source>
-        <target state="needs-translation">Please enter a valid Internet site address.</target>
+        <target state="translated">Geef een geldig internet adres.</target>
       </trans-unit>
       <trans-unit id="evalErrors_unvalid_date" resname="evalErrors_unvalid_date">
         <source>Please enter a valid date.</source>
-        <target state="needs-translation">Please enter a valid date.</target>
+        <target state="translated">Geef een geldige datum.</target>
       </trans-unit>
       <trans-unit id="evalErrors_uniqueLocal" resname="evalErrors_uniqueLocal">
         <source>This value already exist. Please enter a new value.</source>
-        <target state="needs-translation">This value already exist. Please enter a new value.</target>
+        <target state="translated">Deze waarde bestaat reeds, kies een andere.</target>
       </trans-unit>
       <trans-unit id="evalErrors_uniqueLocal_informal" resname="evalErrors_uniqueLocal_informal">
         <source>This value already exist. Please enter a new value.</source>
-        <target state="needs-translation">This value already exist. Please enter a new value.</target>
+        <target state="translated">Deze waarde bestaat reeds, kies een andere.</target>
       </trans-unit>
       <trans-unit id="evalErrors_uniqueLocal_username" resname="evalErrors_uniqueLocal_username">
         <source>This username already exists. Please enter a different username.</source>
-        <target state="needs-translation">This username already exists. Please enter a different username.</target>
+        <target state="translated">Deze gebruiker bestaat al, kies a.u.b. een andere gebruikernaam.</target>
       </trans-unit>
       <trans-unit id="evalErrors_uniqueLocal_username_informal" resname="evalErrors_uniqueLocal_username_informal">
         <source>This username already exists. Please enter a different username.</source>
-        <target state="needs-translation">This username already exists. Please enter a different username.</target>
+        <target state="translated">Deze gebruiker bestaat al, kies een andere gebruikernaam.</target>
       </trans-unit>
       <trans-unit id="evalErrors_valid_email" resname="evalErrors_valid_email">
         <source>You must enter a valid email address.</source>
-        <target state="needs-translation">You must enter a valid email address.</target>
+        <target state="translated">Geef een geldig e-mailadres.</target>
       </trans-unit>
       <trans-unit id="evalErrors_valid_email_informal" resname="evalErrors_valid_email_informal">
         <source>You must enter a valid email address.</source>
-        <target state="needs-translation">You must enter a valid email address.</target>
+        <target state="translated">Geef een geldig e-mailadres.</target>
       </trans-unit>
       <trans-unit id="evalErrors_uniqueGlobal_username" resname="evalErrors_uniqueGlobal_username">
         <source>This username already exists. Please enter a different username.</source>
-        <target state="needs-translation">This username already exists. Please enter a different username.</target>
+        <target state="translated">Deze gebruiker bestaat al, kies a.u.b. een andere gebruikernaam.</target>
       </trans-unit>
       <trans-unit id="evalErrors_uniqueGlobal_username_informal" resname="evalErrors_uniqueGlobal_username_informal">
         <source>This username already exists. Please enter a different username.</source>
-        <target state="needs-translation">This username already exists. Please enter a different username.</target>
+        <target state="translated">Deze gebruiker bestaat al, kies een andere gebruikernaam.</target>
       </trans-unit>
       <trans-unit id="evalErrors_uniqueGlobal" resname="evalErrors_uniqueGlobal">
         <source>This value already exists. Please enter a new value.</source>
-        <target state="needs-translation">This value already exists. Please enter a new value.</target>
+        <target state="translated">Deze waarde bestaat reeds, kies een andere.</target>
       </trans-unit>
       <trans-unit id="evalErrors_uniqueGlobal_informal" resname="evalErrors_uniqueGlobal_informal">
         <source>This value already exists. Please enter a new value.</source>
-        <target state="needs-translation">This value already exists. Please enter a new value.</target>
+        <target state="translated">Deze waarde bestaat reeds, kies een andere.</target>
       </trans-unit>
       <trans-unit id="evalErrors_uniqueLocal_email" resname="evalErrors_uniqueLocal_email">
         <source>This e-mail address already exist.</source>
-        <target state="needs-translation">This e-mail address already exist.</target>
+        <target state="translated">Dit e-mailadres bestaat al in onze gegevens.</target>
       </trans-unit>
       <trans-unit id="evalErrors_uniqueLocal_email_informal" resname="evalErrors_uniqueLocal_email_informal">
         <source>This e-mail address already exist.</source>
-        <target state="needs-translation">This e-mail address already exist.</target>
+        <target state="translated">Dit e-mailadres bestaat al in onze gegevens.</target>
       </trans-unit>
       <trans-unit id="evalErrors_wwwURL_www" resname="evalErrors_wwwURL_www">
         <source>According to our verifications, the website address you entered is not valid. Perhaps it was not entered correctly?</source>
-        <target state="needs-translation">According to our verifications, the website address you entered is not valid. Perhaps it was not entered correctly?</target>
+        <target state="translated">Wij konden uw webpagina niet terugvinden. Is de opgegeven adres (url) juist?</target>
       </trans-unit>
       <trans-unit id="evalErrors_wwwURL_www_informal" resname="evalErrors_wwwURL_www_informal">
         <source>According to our verifications, the website address you entered is not valid. Perhaps it was not entered correctly?</source>
@@ -2141,15 +2141,15 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
       </trans-unit>
       <trans-unit id="internal_no_subtemplate" resname="internal_no_subtemplate">
         <source>The subpart %s has not been found inside of the template file.</source>
-        <target state="needs-translation">The subpart %s has not been found inside of the template file.</target>
+        <target state="translated">Het onderdeel %s is niet gevonden in het sjabloon bestand.</target>
       </trans-unit>
       <trans-unit id="internal_edit_option" resname="internal_edit_option">
         <source>Edit-option is not set in TypoScript.</source>
-        <target state="needs-translation">Edit-option is not set in TypoScript.</target>
+        <target state="translated">De Wijzig-optie bestaat niet in Typoscript.</target>
       </trans-unit>
       <trans-unit id="internal_infomail_configuration" resname="internal_infomail_configuration">
         <source>Configuration error: infomail option is not available or emailField is not set in TypoScript</source>
-        <target state="needs-translation">Configuration error: infomail option is not available or emailField is not set in TypoScript</target>
+        <target state="translated">Configuratie fout: infomail is niet beschikbaar of het e-mailveld is niet aangemaakt in Typoscript</target>
       </trans-unit>
       <trans-unit id="internal_token_empty" resname="internal_token_empty">
         <source>The form's token is empty!</source>
