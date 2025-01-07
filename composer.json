@@ -23,10 +23,10 @@
     "GPL-2.0-or-later"
   ],
   "require": {
-    "typo3/cms-core": "^12.4",
-    "jambagecom/div2007": "^2.1",
+    "typo3/cms-core": "^13.4",
+    "jambagecom/div2007": "^2.2",
     "friendsoftypo3/rdct": "^3.0",
-    "friendsoftypo3/typo3db-legacy": "^1.2"
+    "friendsoftypo3/typo3db-legacy": "^1.3"
   },
   "suggest": {
     "typo3/cms-felogin": "^12.4",

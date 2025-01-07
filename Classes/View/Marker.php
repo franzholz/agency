@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\View;
 
 /***************************************************************
@@ -41,30 +43,33 @@ namespace JambageCom\Agency\View;
 *
 *
 */
-use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use JambageCom\Agency\Configuration\ConfigurationStore;
-use JambageCom\Agency\Domain\Data;
-use JambageCom\Agency\Domain\Tca;
-use JambageCom\Agency\Request\Parameters;
-use JambageCom\Agency\Api\Url;
-use JambageCom\Agency\Api\Localization;
-use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
-use JambageCom\Agency\Security\Authentication;
-use JambageCom\Div2007\Api\Css;
-use JambageCom\Agency\Security\SecuredData;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Core\Utility\StringUtility;
 
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
+
+use JambageCom\Div2007\Api\Css;
 use JambageCom\Div2007\Captcha\CaptchaInterface;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\HtmlUtility;
 
+use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Api\ParameterApi;
+use JambageCom\Agency\Api\Url;
+use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Constants\Mode;
+use JambageCom\Agency\Domain\Data;
+use JambageCom\Agency\Domain\Tca;
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Security\Authentication;
+use JambageCom\Agency\Security\SecuredData;
+
 
 define('SAVED_SUFFIX', '_SAVED');
 define('SETFIXED_PREFIX', 'SETFIXED_');

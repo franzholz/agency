@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Request;
 
 /***************************************************************
@@ -56,6 +58,7 @@ use JambageCom\Div2007\Captcha\CaptchaManager;
 use JambageCom\Div2007\Utility\ControlUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
 
+use JambageCom\Agency\Api\ParameterApi;
 use JambageCom\Agency\Constants\Field;
 use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Security\Authentication;
@@ -138,6 +141,7 @@ class Parameters implements SingletonInterface
         $piVars,
         $theTable
     ): void {
+        $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
         $fdArray = [];
         $conf = $confObj->getConf();
         $shortUrls = $conf['useShortUrls'] ?? false;
@@ -190,7 +194,7 @@ class Parameters implements SingletonInterface
         }
 
         // Get hash variable if provided and if short url feature is enabled
-        $feUserData = GeneralUtility::_GP($prefixId);
+        $feUserData = $parameterApi->getParameter($prefixId);
         $bSecureStartCmd =
             (
                 is_array($feUserData) &&
@@ -214,7 +218,7 @@ class Parameters implements SingletonInterface
             }
 
             if (!$regHash) {
-                $getData = GeneralUtility::_GET($prefixId);
+                $getData = $parameterApi->getGetParameter($prefixId);
 
                 if (
                     isset($getData) &&
@@ -287,7 +291,7 @@ class Parameters implements SingletonInterface
         $piVarArray = $this->getSetfixedParameters();
 
         foreach ($piVarArray as $pivar) {
-            $value = GeneralUtility::_GP($pivar);
+            $value = $parameterApi->getParameter($pivar);
             if ($value != '') {
                 $this->setFeUserData($value, $pivar);
             }
@@ -349,7 +353,7 @@ class Parameters implements SingletonInterface
             if (isset($feUserData['fD'])) {
                 $fdArray = $feUserData['fD'];
             } else {
-                $fdArray = GeneralUtility::_GP('fD');
+                $fdArray = $parameterApi->getParameter('fD');
             }
         }
 
@@ -513,7 +517,8 @@ class Parameters implements SingletonInterface
 
     public function getFormPassword()
     {
-        $result = GeneralUtility::_POST('pass');
+        $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
+        $result = $parameterApi->getPostParameter('pass');
         return $result;
     }
 
@@ -680,7 +685,8 @@ class Parameters implements SingletonInterface
     */
     protected function writeRedirectUrl()
     {
-        $redirectUrl = GeneralUtility::_GET('redirect_url');
+        $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
+        $redirectUrl = $parameterApi->getGetParameter('redirect_url');
         if ($redirectUrl != '') {
             $data = [];
             $data['redirect_url'] = $redirectUrl;

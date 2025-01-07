@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\View;
 
 /***************************************************************
@@ -41,22 +43,24 @@ namespace JambageCom\Agency\View;
 *
 *
 */
-use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use JambageCom\Agency\Api\Localization;
-use JambageCom\Agency\Request\Parameters;
-use JambageCom\Agency\Configuration\ConfigurationStore;
-use JambageCom\Agency\Domain\Tca;
-use JambageCom\Agency\Domain\Data;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
-use JambageCom\Div2007\Utility\CompatibilityUtility;
-use JambageCom\Agency\Security\SecuredData;
-use JambageCom\Agency\Api\Javascript;
 use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
+use JambageCom\Div2007\Utility\CompatibilityUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
 
+use JambageCom\Agency\Api\Javascript;
+use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Api\ParameterApi;
+use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Constants\Mode;
+use JambageCom\Agency\Domain\Tca;
+use JambageCom\Agency\Domain\Data;
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Security\SecuredData;
+
 
 class CreateView
 {
@@ -104,6 +108,7 @@ class CreateView
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         $templateCode = $dataObj->getTemplateCode();
         $currentArray = array_merge($origArray, $dataArray);
+        $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
 
         if ($controlData->getUsePassword() && !isset($currentArray['password'])) {
             $currentArray['password'] = '';
@@ -154,7 +159,7 @@ class CreateView
             }
 
             $templateCode = $templateService->getSubpart($templateCode, $subpartKey);
-            $failure = GeneralUtility::_GP('noWarnings') ? false : $controlData->getFailure();
+            $failure = $parameterApi->getParameter('noWarnings') ? false : $controlData->getFailure();
 
             if ($failure == false) {
                 $templateCode = $templateService->substituteSubpart(

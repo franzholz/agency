@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Domain;
 
 /***************************************************************
@@ -41,16 +43,15 @@ namespace JambageCom\Agency\Domain;
  */
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use JambageCom\Agency\Api\Localization;
-use JambageCom\Agency\Request\Parameters;
-use JambageCom\Div2007\Utility\HtmlUtility;
-use JambageCom\Div2007\Api\Css;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-use JambageCom\Div2007\Utility\FrontendUtility;
-
+use JambageCom\Agency\Api\Localization;
 use JambageCom\Agency\Constants\Mode;
+use JambageCom\Agency\Request\Parameters;
 
+use JambageCom\Div2007\Api\Css;
+use JambageCom\Div2007\Utility\FrontendUtility;
+use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\TableUtility;
 
 class Tca implements SingletonInterface

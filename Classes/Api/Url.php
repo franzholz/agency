@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Api;
 
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;

@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Api;
 
-use JambageCom\Div2007\Base\TranslationBase;
 use TYPO3\CMS\Core\SingletonInterface;
+
+use JambageCom\Div2007\Base\TranslationBase;
 
 /*
  * This file is part of the TYPO3 CMS project.

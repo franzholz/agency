@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Utility;
 
 use TYPO3\CMS\Core\Utility\ArrayUtility;
@@ -58,7 +60,7 @@ class SessionUtility
     */
     public static function readData(
         FrontendUserAuthentication $frontendUser,
-        $extensionKey, 
+        $extensionKey,
         $readAll = false
     )
     {

@@ -10,7 +10,7 @@ A documentation manual.odt is available in the doc folder.
 
 ## Compatibility
 
-TYPO3 12 has new requirement for front end user passwords
+TYPO3 has new requirements for front end user passwords
 
 * At least 8 chars
 * At least one number

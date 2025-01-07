@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\View;
 
 /***************************************************************
@@ -41,22 +43,25 @@ namespace JambageCom\Agency\View;
 *
 *
 */
+use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+
+use JambageCom\Div2007\Utility\CompatibilityUtility;
+use JambageCom\Div2007\Utility\FrontendUtility;
+use JambageCom\Div2007\Utility\HtmlUtility;
+
 use JambageCom\Agency\Api\Localization;
-use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Api\ParameterApi;
 use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Agency\Constants\Mode;
 use JambageCom\Agency\Domain\Tca;
 use JambageCom\Agency\Domain\Data;
-use JambageCom\Div2007\Utility\HtmlUtility;
-use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
-use JambageCom\Agency\Security\SecuredData;
+use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Security\Authentication;
-use JambageCom\Div2007\Utility\CompatibilityUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use JambageCom\Agency\Security\SecuredData;
 
-use JambageCom\Div2007\Utility\FrontendUtility;
 
-use JambageCom\Agency\Constants\Mode;
 
 class EditView
 {
@@ -92,6 +97,7 @@ class EditView
         $errorFieldArray,
         $token
     ) {
+        $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
         $xhtmlFix = HtmlUtility::determineXhtmlFix();
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         if (isset($dataArray) && is_array($dataArray)) {
@@ -123,7 +129,7 @@ class EditView
                     ''
                 );
         }
-        $failure = GeneralUtility::_GP('noWarnings') ? '' : $controlData->getFailure();
+        $failure = $parameterApi->getParameter('noWarnings') ? '' : $controlData->getFailure();
 
         if (!$failure) {
             $templateCode =
@@ -353,12 +359,13 @@ class EditView
         // If editing is enabled
         if ($conf['edit']) {
             $authObj = GeneralUtility::makeInstance(Authentication::class);
+            $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
 
             if(
                 $theTable != 'fe_users' &&
                 $conf['setfixed.']['EDIT.']['_FIELDLIST']
             ) {
-                $fD = GeneralUtility::_GP('fD');
+                $fD = $parameterApi->getParameter('fD');
                 $fieldArr = [];
                 if (is_array($fD)) {
                     foreach($fD as $field => $value) {

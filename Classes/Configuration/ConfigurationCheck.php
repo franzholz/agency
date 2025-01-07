@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Configuration;
 
 /***************************************************************
@@ -38,12 +40,12 @@ namespace JambageCom\Agency\Configuration;
 *
 *
 */
-use TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordsUtility;
-use TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory;
-use JambageCom\Agency\View\Marker;
+
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
+use TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordsUtility;
+use TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -51,6 +53,7 @@ use JambageCom\Div2007\Utility\FrontendUtility;
 
 use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Utility\LocalizationUtility;
+use JambageCom\Agency\View\Marker;
 
 class ConfigurationCheck implements LoggerAwareInterface
 {

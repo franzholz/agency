@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Domain;
 
 /***************************************************************
@@ -40,12 +42,13 @@ namespace JambageCom\Agency\Domain;
  *
  */
 use TYPO3\CMS\Core\SingletonInterface;
-use JambageCom\Agency\Domain\Table\FeUsers;
-use JambageCom\Agency\Domain\Table\Setfixed;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 use JambageCom\Agency\Constants\Extension;
+use JambageCom\Agency\Domain\Table\FeUsers;
+use JambageCom\Agency\Domain\Table\Setfixed;
+
 
 class Tables implements SingletonInterface
 {

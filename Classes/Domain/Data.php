@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Domain;
 
 /***************************************************************
@@ -39,28 +41,32 @@ namespace JambageCom\Agency\Domain;
  *
  *
  */
-use TYPO3\CMS\Core\Resource\Security\FileNameValidator;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\SingletonInterface;
-use JambageCom\Agency\Request\Parameters;
-use TYPO3\CMS\Core\Utility\File\BasicFileUtility;
-use JambageCom\Div2007\Captcha\CaptchaManager;
-use JambageCom\Agency\Constants\Field;
-use JambageCom\Div2007\Utility\FrontendUtility;
-use JambageCom\Agency\Configuration\ConfigurationStore;
 use TYPO3\CMS\Core\Core\Environment;
-use JambageCom\Div2007\Utility\HtmlUtility;
-use JambageCom\Agency\Security\Authentication;
-use JambageCom\Div2007\Utility\CompatibilityUtility;
-use JambageCom\Agency\Security\SecuredData;
+use TYPO3\CMS\Core\Resource\Security\FileNameValidator;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\File\BasicFileUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
-use JambageCom\Div2007\Database\CoreQuery;
 use JambageCom\Div2007\Captcha\CaptchaInterface;
+use JambageCom\Div2007\Captcha\CaptchaManager;
+use JambageCom\Div2007\Database\CoreQuery;
+use JambageCom\Div2007\Utility\CompatibilityUtility;
+use JambageCom\Div2007\Utility\FrontendUtility;
+use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\SystemUtility;
 use JambageCom\Div2007\Utility\TableUtility;
+
+use JambageCom\Agency\Api\ParameterApi;
+use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Agency\Constants\Field;
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Security\Authentication;
+use JambageCom\Agency\Security\SecuredData;
+
+
 
 class Data implements SingletonInterface
 {
@@ -116,6 +122,7 @@ class Data implements SingletonInterface
         $this->control = $control;
         $this->controlData = $controlData;
         $this->fileFunc = GeneralUtility::makeInstance(BasicFileUtility::class);
+        $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
 
         // Fetching the template file
         $this->setTemplateCode($templateCode);
@@ -129,7 +136,7 @@ class Data implements SingletonInterface
         }
 
         // Get POST parameters
-        $fe = GeneralUtility::_GP('FE');
+        $fe = $parameterApi->getParameter('FE');
 
         if (
             isset($fe) &&

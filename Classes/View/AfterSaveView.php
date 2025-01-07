@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\View;
 
 /***************************************************************
@@ -41,16 +43,17 @@ namespace JambageCom\Agency\View;
 *
 *
 */
+use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+
 use JambageCom\Agency\Api\Localization;
-use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Domain\Tca;
 use JambageCom\Agency\Domain\Data;
-use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
+use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Security\SecuredData;
 use JambageCom\Agency\Setfixed\SetfixedUrls;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class AfterSaveView
 {

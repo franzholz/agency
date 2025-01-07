@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\View;
 
 /***************************************************************
@@ -41,17 +43,19 @@ namespace JambageCom\Agency\View;
 *
 *
 */
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+
+use JambageCom\Div2007\Utility\CompatibilityUtility;
+use JambageCom\Div2007\Utility\FrontendUtility;
+use JambageCom\Div2007\Utility\HtmlUtility;
+
 use JambageCom\Agency\Api\Localization;
-use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Domain\Tca;
 use JambageCom\Agency\Domain\Data;
-use JambageCom\Div2007\Utility\HtmlUtility;
+use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Security\Authentication;
-use JambageCom\Div2007\Utility\CompatibilityUtility;
-use JambageCom\Div2007\Utility\FrontendUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class DeleteView
 {

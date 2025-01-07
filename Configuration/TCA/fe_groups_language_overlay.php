@@ -34,6 +34,9 @@ $result = [
         'enablecolumns' => [
             'disabled' => 'hidden'
         ],
+        'security' => [
+            'ignorePageTypeRestriction' => true,
+        ],
         'typeicon_classes' => [
             'default' => 'status-user-group-frontend'
         ],

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Controller;
 
 /***************************************************************
@@ -40,15 +42,15 @@ namespace JambageCom\Agency\Controller;
 
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use Psr\Http\Message\ServerRequestInterface;
 
 use SJBR\StaticInfoTables\PiBaseApi;
 
+use JambageCom\Div2007\Compatibility\AbstractPlugin;
 use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Database\CoreQuery;
@@ -56,6 +58,7 @@ use JambageCom\Div2007\Database\CoreQuery;
 use JambageCom\Agency\Configuration\ConfigurationStore;
 
 use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Api\ParameterApi;
 use JambageCom\Agency\Api\Url;
 use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Domain\Tca;
@@ -69,6 +72,7 @@ use JambageCom\Agency\View\EditView;
 use JambageCom\Agency\View\DeleteView;
 use JambageCom\Agency\View\Marker;
 use JambageCom\Agency\View\Template;
+
 
 
 class InitializationController implements SingletonInterface
@@ -106,6 +110,9 @@ class InitializationController implements SingletonInterface
     ) {
         $result = true;
         HtmlUtility::generateXhtmlFix();
+
+        $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
+        $parameterApi->setRequest($request);
 
         $tcaObj = GeneralUtility::makeInstance(Tca::class);
         $confObj->init($conf);

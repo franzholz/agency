@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Controller;
 
 /***************************************************************
@@ -58,6 +60,7 @@ use JambageCom\Div2007\Utility\TableUtility;
 
 use JambageCom\Agency\Api\CustomerNumber;
 use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Api\ParameterApi;
 use JambageCom\Agency\Api\System;
 use JambageCom\Agency\Api\Url;
 use JambageCom\Agency\Configuration\ConfigurationStore;
@@ -543,6 +546,7 @@ class ActionController implements SingletonInterface
         $templateCode,
         &$errorMessage
     ) {
+        $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
         $dataArray = $dataObj->getDataArray();
         $conf = $confObj->getConf();
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
@@ -1082,7 +1086,7 @@ class ActionController implements SingletonInterface
             }
 
             if ($errorContent == '') {	// success case
-                $origGetFeUserData = GeneralUtility::_GET($prefixId);
+                $origGetFeUserData = $parameterApi->getGetParameter($prefixId);
                 $deleteRegHash = true;
 
                 // Link to on edit save

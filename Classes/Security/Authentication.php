@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Security;
 
 /***************************************************************
@@ -42,8 +44,9 @@ namespace JambageCom\Agency\Security;
 *
 */
 use TYPO3\CMS\Core\SingletonInterface;
-use JambageCom\Agency\Configuration\ConfigurationStore;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use JambageCom\Agency\Configuration\ConfigurationStore;
 
 class Authentication implements SingletonInterface
 {

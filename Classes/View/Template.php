@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\View;
 
 /***************************************************************
@@ -42,16 +44,18 @@ namespace JambageCom\Agency\View;
 *
 */
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use JambageCom\Agency\Configuration\ConfigurationStore;
-use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use JambageCom\Agency\Request\Parameters;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
-use JambageCom\Agency\Constants\Field;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use JambageCom\Agency\Api\Localization;
-use JambageCom\Agency\Domain\Tca;
-use JambageCom\Div2007\Utility\FrontendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+
+use JambageCom\Div2007\Utility\FrontendUtility;
+
+use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Agency\Constants\Field;
+use JambageCom\Agency\Domain\Tca;
+use JambageCom\Agency\Request\Parameters;
 
 class Template
 {
