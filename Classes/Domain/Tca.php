@@ -74,7 +74,7 @@ class Tca implements SingletonInterface
             ExtensionManagementUtility::isLoaded('tt_address') &&
             isset($GLOBALS['TCA']['tt_address']['feInterface']['fe_admin_fieldList'])
         ) {
-            $fieldArray = array_unique(GeneralUtility::trimExplode(',', $GLOBALS['TCA']['tt_address']['feInterface']['fe_admin_fieldList'], 1));
+            $fieldArray = array_unique(GeneralUtility::trimExplode(',', $GLOBALS['TCA']['tt_address']['feInterface']['fe_admin_fieldList'], true));
             $fieldArray = array_diff($fieldArray, ['middle_first_name', 'last_first_name']);
             $fieldList = implode(',', $fieldArray);
             $fieldList = str_replace('first_first_name', 'first_name', $fieldList);
@@ -224,7 +224,7 @@ class Tca implements SingletonInterface
                             $dataArray[$colName] = $valuesArray;
                         } else {
                             // the values from the mm table are already available as an array
-                            $dataArray[$colName] = GeneralUtility::trimExplode(',', $value, 1);
+                            $dataArray[$colName] = GeneralUtility::trimExplode(',', $value, true);
                         }
                     }
                     break;
@@ -263,7 +263,7 @@ class Tca implements SingletonInterface
                 $value = $dataArray[$colName] ?? '';
 
                 if (!empty($value) && !is_array($value)) {
-                    $dataArray[$colName] = GeneralUtility::trimExplode(',', $value, 1);
+                    $dataArray[$colName] = GeneralUtility::trimExplode(',', $value, true);
                 }
             }
         }

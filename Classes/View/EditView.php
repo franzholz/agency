@@ -299,7 +299,7 @@ class EditView
                     $cmdKey
                 );
             $fields = $dataObj->getFieldList() . ',' . $dataObj->getAdditionalUpdateFields();
-            $fields = implode(',', array_intersect(explode(',', $fields), GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)));
+            $fields = implode(',', array_intersect(explode(',', $fields), GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true)));
             $fields = SecuredData::getOpenFields($fields);
             $form = $controlData->determineFormId();
             $updateJS =
@@ -348,6 +348,7 @@ class EditView
         $token
     ) {
         $theAuthCode = '';
+        $frontendUser = $controlData->getFrontendUser();
 
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
@@ -408,7 +409,7 @@ class EditView
                     $dataObj->getCoreQuery()->DBmayFEUserEdit(
                         $theTable,
                         $origArray,
-                        $GLOBALS['TSFE']->fe_user->user,
+                        $frontendUser->user,
                         $conf['allowedGroups'],
                         $conf['fe_userEditSelf']
                     )

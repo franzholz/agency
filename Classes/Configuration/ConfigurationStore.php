@@ -111,7 +111,7 @@ class ConfigurationStore implements SingletonInterface
             isset($configuration['fields'])
         ) {
             $result =
-                GeneralUtility::trimExplode(',', $configuration['fields'], 1);
+                GeneralUtility::trimExplode(',', $configuration['fields'], true);
         }
         return $result;
     }

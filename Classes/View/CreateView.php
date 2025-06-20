@@ -314,7 +314,7 @@ class CreateView
                         GeneralUtility::trimExplode(
                             ',',
                             $conf[$cmdKey . '.']['fields'],
-                            1
+                            true
                         )
                     )
                 );

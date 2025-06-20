@@ -388,7 +388,7 @@ class Data implements SingletonInterface
                     $this->controlData->getTable() == 'fe_users' &&
                     !empty($conf['allowUserGroupSelection'])
                 ) {
-                    $overrideArray = GeneralUtility::trimExplode(',', $theValue, 1);
+                    $overrideArray = GeneralUtility::trimExplode(',', $theValue, true);
                     if (is_array($dataArray[$theField])) {
                         $dataValue = array_merge($dataArray[$theField], $overrideArray);
                     } else {
@@ -534,7 +534,7 @@ class Data implements SingletonInterface
     ) {
         $conf = $confObj->getConf();
         $failureMsg = [];
-        $displayFieldArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1);
+        $displayFieldArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true);
         if (
             $captcha instanceof CaptchaInterface
         ) {
@@ -599,7 +599,7 @@ class Data implements SingletonInterface
                 }
                 $this->evalErrors[$theField] = [];
                 $failureMsg[$theField] = [];
-                $listOfCommands = GeneralUtility::trimExplode(',', $theValue, 1);
+                $listOfCommands = GeneralUtility::trimExplode(',', $theValue, true);
                 // Unset the incoming value is empty and unsetEmpty is specified
                 if (array_search('unsetEmpty', $listOfCommands) !== false) {
                     if (
@@ -804,7 +804,7 @@ class Data implements SingletonInterface
                                         $colConfig['internal_type'] == 'file'
                                     ) {
                                         $uploadPath = $colConfig['uploadfolder'];
-                                        $allowedExtArray = GeneralUtility::trimExplode(',', $colConfig['allowed'], 1);
+                                        $allowedExtArray = GeneralUtility::trimExplode(',', $colConfig['allowed'], true);
                                         $maxSize = $colConfig['max_size'];
                                         $fileNameArray = $dataArray[$theField];
                                         $newFileNameArray = [];
@@ -1182,7 +1182,7 @@ class Data implements SingletonInterface
         if (is_array($conf['parseValues.'])) {
 
             foreach($conf['parseValues.'] as $theField => $theValue) {
-                $listOfCommands = GeneralUtility::trimExplode(',', $theValue, 1);
+                $listOfCommands = GeneralUtility::trimExplode(',', $theValue, true);
                 if (in_array('setEmptyIfAbsent', $listOfCommands)) {
                     $this->setEmptyIfAbsent($theTable, $theField, $dataArray);
                 }
@@ -1242,7 +1242,7 @@ class Data implements SingletonInterface
                                     if (is_array($dataValue)) {
                                         $fieldDataArray = $dataValue;
                                     } elseif (is_string($dataValue) && $dataValue) {
-                                        $fieldDataArray = GeneralUtility::trimExplode(',', $dataValue, 1);
+                                        $fieldDataArray = GeneralUtility::trimExplode(',', $dataValue, true);
                                     }
                                 }
                                 $dataValue =
@@ -1276,7 +1276,7 @@ class Data implements SingletonInterface
                                             GeneralUtility::trimExplode(
                                                 ',',
                                                 $dataArray[$theField],
-                                                1
+                                                true
                                             );
                                     }
                                 }
@@ -1302,7 +1302,7 @@ class Data implements SingletonInterface
                                 }
                                 break;
                             case 'uniqueHashInt':
-                                $otherFields = GeneralUtility::trimExplode(';', $cmdParts[1], 1);
+                                $otherFields = GeneralUtility::trimExplode(';', $cmdParts[1], true);
                                 $hashArray = [];
                                 foreach($otherFields as $fN) {
                                     $vv = $dataArray[$fN];
@@ -1518,7 +1518,7 @@ class Data implements SingletonInterface
                             ',',
                             array_intersect(
                                 explode(',', $this->getFieldList()),
-                                GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)
+                                GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true)
                             )
                         );
                     $newFieldArray =
@@ -1529,7 +1529,7 @@ class Data implements SingletonInterface
                                 $this->getAdditionalOverrideFields()
                             )
                         );
-                    $fieldArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1);
+                    $fieldArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true);
 
                     // Do not reset the name if we have no new value
                     if (
@@ -1649,7 +1649,7 @@ class Data implements SingletonInterface
                                 GeneralUtility::trimExplode(
                                     ',',
                                     $conf[$cmdKey . '.']['fields'],
-                                    1
+                                    true
                                 )
                             )
                         );
@@ -2113,7 +2113,7 @@ class Data implements SingletonInterface
     ) {
         if (is_array($conf[$cmdKey.'.']['evalValues.'])) {
             foreach($conf[$cmdKey.'.']['evalValues.'] as $theField => $theValue) {
-                $listOfCommands = GeneralUtility::trimExplode(',', $theValue, 1);
+                $listOfCommands = GeneralUtility::trimExplode(',', $theValue, true);
                 foreach($listOfCommands as $k => $cmd) {
                     $cmdParts = preg_split('/\[|\]/', $cmd); // Point is to enable parameters after each command enclosed in brackets [..]. These will be in position 1 in the array.
                     $theCmd = trim($cmdParts[0]);
@@ -2133,7 +2133,7 @@ class Data implements SingletonInterface
 
         if (is_array($conf['parseValues.'])) {
             foreach($conf['parseValues.'] as $theField => $theValue) {
-                $listOfCommands = GeneralUtility::trimExplode(',', $theValue, 1);
+                $listOfCommands = GeneralUtility::trimExplode(',', $theValue, true);
                 foreach($listOfCommands as $k => $cmd) {
                     $cmdParts = preg_split('/\[|\]/', $cmd); // Point is to enable parameters after each command enclosed in brackets [..]. These will be in position 1 in the array.
                     $theCmd = trim($cmdParts[0]);
@@ -2198,9 +2198,9 @@ class Data implements SingletonInterface
 
         if (
             in_array('name', explode(',', $this->getFieldList())) &&
-            !in_array('name', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)) &&
-            in_array('first_name', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)) &&
-            in_array('last_name', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1))
+            !in_array('name', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true)) &&
+            in_array('first_name', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true)) &&
+            in_array('last_name', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true))
         ) {
             // Honour Address List (tt_address) configuration settings
             $nameFormat = '';
@@ -2224,7 +2224,7 @@ class Data implements SingletonInterface
                 );
             } else {
                 $dataArray['name'] = trim(trim($dataArray['first_name'] ?? '')
-                    . ((in_array('middle_name', GeneralUtility::trimExplode(',', ($conf[$cmdKey . '.']['fields'] ?? ''), 1)) && !empty($dataArray['middle_name'])) ? ' ' . trim($dataArray['middle_name']) : '')
+                    . ((in_array('middle_name', GeneralUtility::trimExplode(',', ($conf[$cmdKey . '.']['fields'] ?? ''), true)) && !empty($dataArray['middle_name'])) ? ' ' . trim($dataArray['middle_name']) : '')
                     . ' ' . trim($dataArray['last_name'] ?? ''));
             }
         }
@@ -2268,7 +2268,7 @@ class Data implements SingletonInterface
         $parsedArray = $origArray;
         if (count($origArray) && is_array($conf['parseFromDBValues.'])) {
             foreach($conf['parseFromDBValues.'] as $theField => $theValue) {
-                $listOfCommands = GeneralUtility::trimExplode(',', $theValue, 1);
+                $listOfCommands = GeneralUtility::trimExplode(',', $theValue, true);
                 if (is_array($listOfCommands)) {
                     foreach($listOfCommands as $k2 => $cmd) {
                         $cmdParts = preg_split('/\[|\]/', $cmd); // Point is to enable parameters after each command enclosed in brackets [..]. These will be in position 1 in the array.
@@ -2325,7 +2325,7 @@ class Data implements SingletonInterface
         if (is_array($conf['parseToDBValues.'])) {
 
             foreach ($conf['parseToDBValues.'] as $theField => $theValue) {
-                $listOfCommands = GeneralUtility::trimExplode(',', $theValue, 1);
+                $listOfCommands = GeneralUtility::trimExplode(',', $theValue, true);
                 foreach($listOfCommands as $k2 => $cmd) {
                     $cmdParts = preg_split('/\[|\]/', $cmd); // Point is to enable parameters after each command enclosed in brackets [..]. These will be in position 1 in the array.
                     $theCmd = trim($cmdParts[0]);
@@ -2377,13 +2377,13 @@ class Data implements SingletonInterface
                                 if (is_array($origArray[$theField])) {
                                     $origFiles = $origArray[$theField];
                                 } elseif ($origArray[$theField]) {
-                                    $origFiles = GeneralUtility::trimExplode(',', $origArray[$theField], 1);
+                                    $origFiles = GeneralUtility::trimExplode(',', $origArray[$theField], true);
                                 }
                                 $updatedFiles = [];
                                 if (is_array($dataArray[$theField])) {
                                     $updatedFiles = $dataArray[$theField];
                                 } elseif ($dataArray[$theField]) {
-                                    $updatedFiles = GeneralUtility::trimExplode(',', $dataArray[$theField], 1);
+                                    $updatedFiles = GeneralUtility::trimExplode(',', $dataArray[$theField], true);
                                 }
                                 $unReferencedFiles = array_diff($origFiles, $updatedFiles);
                                 foreach ($unReferencedFiles as $file) {

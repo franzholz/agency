@@ -230,7 +230,7 @@ class Template
                         isset($conf['parseValues.'][$theField]) &&
                         strpos($conf['parseValues.'][$theField], 'checkArray')
                     ) {
-                        $listOfCommands = GeneralUtility::trimExplode(',', $conf['parseValues.'][$theField], 1);
+                        $listOfCommands = GeneralUtility::trimExplode(',', $conf['parseValues.'][$theField], true);
                         foreach($listOfCommands as $cmd) {
                             $cmdParts = preg_split('/\[|\]/', $cmd); // Point is to enable parameters after each command enclosed in brackets [..]. These will be in position 1 in the array.
                             $theCmd = trim($cmdParts[0]);

@@ -288,7 +288,7 @@ class ActionController implements SingletonInterface
                 ',',
                 array_intersect(
                     explode(',', $fieldlist),
-                    GeneralUtility::trimExplode(',', $adminFieldList, 1)
+                    GeneralUtility::trimExplode(',', $adminFieldList, true)
                 )
             );
         $dataObj->setAdminFieldList($adminFieldList);
@@ -297,8 +297,8 @@ class ActionController implements SingletonInterface
             if (
                 ExtensionManagementUtility::isLoaded('direct_mail')
             ) {
-                $conf[$cmdKey.'.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['module_sys_dmail_category,module_sys_dmail_newsletter']));
-                $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), ['module_sys_dmail_category, module_sys_dmail_newsletter']));
+                $conf[$cmdKey.'.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true), ['module_sys_dmail_category,module_sys_dmail_newsletter']));
+                $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], true), ['module_sys_dmail_category, module_sys_dmail_newsletter']));
             }
 
             $fieldConfArray = ['fields', 'required'];
@@ -333,27 +333,27 @@ class ActionController implements SingletonInterface
                         return $element == $item;
                     }));
                 } else {
-                    $conf[$cmdKey . '.']['fields'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',username', 1)));
+                    $conf[$cmdKey . '.']['fields'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',username', true)));
                     $conf[$cmdKey . '.']['required'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',username', 1)));
                 }
             }
 
             // When in edit mode, remove password from required fields
             if ($cmdKey == 'edit') {
-                $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), ['password']));
+                $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], true), ['password']));
             }
 
             if (
                 !empty($conf[$cmdKey . '.']['generateUsername']) ||
                 $cmdKey == 'password'
             ) {
-                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['username']));
+                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true), ['username']));
             }
 
             if (
                 !empty($conf[$cmdKey . '.']['generateCustomerNumber'])
             ) {
-                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['cnum']));
+                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true), ['cnum']));
             }
 
             if (
@@ -362,18 +362,18 @@ class ActionController implements SingletonInterface
                     $cmdKey == 'create'
                 ) && !empty($conf[$cmdKey . '.']['generatePassword'])
             ) {
-                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['password']));
+                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true), ['password']));
             }
 
             if (!empty($conf[$cmdKey . '.']['useEmailAsUsername'])) {
-                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['username']));
+                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true), ['username']));
 
                 if (
                     $cmdKey == 'create' ||
                     $cmdKey == 'invite'
                 ) {
-                    $conf[$cmdKey . '.']['fields'] = implode(',', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',email', 1));
-                    $conf[$cmdKey . '.']['required'] = implode(',', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',email', 1));
+                    $conf[$cmdKey . '.']['fields'] = implode(',', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',email', true));
+                    $conf[$cmdKey . '.']['required'] = implode(',', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',email', true));
                 }
 
                 if (
@@ -383,7 +383,7 @@ class ActionController implements SingletonInterface
                     ) &&
                     $controlData->getSetfixedEnabled()
                 ) {
-                    $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['email']));
+                    $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true), ['email']));
                 }
             }
             $userGroupObj = $addressObj->getFieldObj('usergroup');
@@ -466,12 +466,12 @@ class ActionController implements SingletonInterface
                 GeneralUtility::trimExplode(
                     ',',
                     $conf[$cmdKey . '.']['required'],
-                    1
+                    true
                 ),
                 GeneralUtility::trimExplode(
                     ',',
                     $conf[$cmdKey . '.']['fields'],
-                    1
+                    true
                 )
             );
         }
@@ -479,7 +479,7 @@ class ActionController implements SingletonInterface
         $controlData->setRequiredArray($requiredArray);
 
         $fieldList = $dataObj->getFieldList();
-        $fieldArray = GeneralUtility::trimExplode(',', $fieldList, 1);
+        $fieldArray = GeneralUtility::trimExplode(',', $fieldList, true);
         $additionalFields = $dataObj->getAdditionalIncludedFields();
 
         if ($theTable == 'fe_users' && !empty($cmdKey)) {

@@ -112,7 +112,7 @@ class Authentication implements SingletonInterface
         $recordCopy = [];
 
         if ($fields) {
-            $fieldArray = GeneralUtility::trimExplode(',', $fields, 1);
+            $fieldArray = GeneralUtility::trimExplode(',', $fields, true);
             foreach ($fieldArray as $key => $value) {
                 if (isset($record[$value])) {
                     if (is_array($record[$value])) {

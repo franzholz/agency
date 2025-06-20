@@ -45,7 +45,7 @@ class Localization extends TranslationBase implements SingletonInterface
     public function setSalutation($salutation): void
     {
         if (
-            in_array($salutation, $this->allowedSuffixes, 1)
+            in_array($salutation, $this->allowedSuffixes, true)
         ) {
             $this->salutation = $salutation;
         }

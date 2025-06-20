@@ -389,8 +389,8 @@ class Marker
         }
 
         // Data field labels
-        $infoFieldArray = GeneralUtility::trimExplode(',', $infoFields, 1);
-        $specialFieldArray = GeneralUtility::trimExplode(',', $this->data->getSpecialFieldList(), 1);
+        $infoFieldArray = GeneralUtility::trimExplode(',', $infoFields, true);
+        $specialFieldArray = GeneralUtility::trimExplode(',', $this->data->getSpecialFieldList(), true);
 
         if (!empty($specialFieldArray['0'])) {
             $infoFieldArray = array_merge($infoFieldArray, $specialFieldArray);
@@ -488,7 +488,7 @@ class Marker
             $markerArray['###NAME_' . $markerkey . '###'] = $this->getFieldName($theTable, $theField);
         }
         $markerArray['###NAME_PASSWORD_AGAIN###'] = $this->getFieldName($theTable, 'password_again');
-        $buttonLabels = GeneralUtility::trimExplode(',', $this->getButtonLabelsList(), 1);
+        $buttonLabels = GeneralUtility::trimExplode(',', $this->getButtonLabelsList(), true);
 
         foreach($buttonLabels as $labelName) {
             if ($labelName) {
@@ -622,7 +622,7 @@ class Marker
         if (isset($conf['extraLabels']) && $conf['extraLabels'] != '') {
             $otherLabelsList .= ',' . $conf['extraLabels'];
         }
-        $otherLabels = GeneralUtility::trimExplode(',', $otherLabelsList, 1);
+        $otherLabels = GeneralUtility::trimExplode(',', $otherLabelsList, true);
 
         foreach($otherLabels as $value) {
             if (
@@ -1179,7 +1179,7 @@ var submitFile = function(id){
                 }
             }
         }
-        $fieldArray = GeneralUtility::trimExplode(',', $cmdKeyFields, 1);
+        $fieldArray = GeneralUtility::trimExplode(',', $cmdKeyFields, true);
 
         if ($mode == Mode::PREVIEW) {
             $fieldArray = array_diff($fieldArray, ['hidden', 'disable']);
@@ -1311,7 +1311,7 @@ var submitFile = function(id){
         }
 
         if ($fieldList != '') {
-            $fArr = GeneralUtility::trimExplode(',', $fieldList, 1);
+            $fArr = GeneralUtility::trimExplode(',', $fieldList, true);
             foreach($fArr as $field) {
                 $markerArray['###' . $prefix . $field . '###'] = $nl2br ? nl2br($row[$field]) : $row[$field];
             }

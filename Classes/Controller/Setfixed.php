@@ -343,8 +343,8 @@ class Setfixed implements SingletonInterface
                         }
                     }
                     $newFieldList = implode(',', array_intersect(
-                        GeneralUtility::trimExplode(',', $dataObj->getFieldList(), 1),
-                        GeneralUtility::trimExplode(',', implode(',', $fieldArray), 1)
+                        GeneralUtility::trimExplode(',', $dataObj->getFieldList(), true),
+                        GeneralUtility::trimExplode(',', implode(',', $fieldArray), true)
                     ));
 
                     // Hook: confirmRegistrationClass_preProcess
@@ -367,7 +367,7 @@ class Setfixed implements SingletonInterface
                     if ($setFixedKey == 'UNSUBSCRIBE') {
                         $newFieldList = implode(',', array_intersect(
                             GeneralUtility::trimExplode(',', $newFieldList),
-                            GeneralUtility::trimExplode(',', $conf['unsubscribeAllowedFields'], 1)
+                            GeneralUtility::trimExplode(',', $conf['unsubscribeAllowedFields'], true)
                         ));
                     }
 

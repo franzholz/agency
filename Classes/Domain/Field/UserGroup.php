@@ -65,8 +65,8 @@ class UserGroup extends Base
             $cmdKey != 'delete'
         ) {
             if (isset($conf[$cmdKey . '.']['allowUserGroupSelection'])) {
-                $conf[$cmdKey . '.']['fields'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',usergroup', 1)));
-                $conf[$cmdKey . '.']['required'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',usergroup', 1)));
+                $conf[$cmdKey . '.']['fields'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',usergroup', true)));
+                $conf[$cmdKey . '.']['required'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',usergroup', true)));
             } else {
                 // Remove usergroup from the list of fields and required fields if the user is not allowed to select user groups
                 $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['usergroup']));
@@ -93,9 +93,9 @@ class UserGroup extends Base
         &$allowedSubgroupArray,
         &$deniedUserGroupArray
     ): void {
-        $allowedUserGroupArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['allowedUserGroups'], 1);
-        $allowedSubgroupArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['allowedSubgroups'], 1);
-        $deniedUserGroupArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['deniedUserGroups'], 1);
+        $allowedUserGroupArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['allowedUserGroups'], true);
+        $allowedSubgroupArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['allowedSubgroups'], true);
+        $deniedUserGroupArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['deniedUserGroups'], true);
     }
 
     /*
@@ -106,10 +106,10 @@ class UserGroup extends Base
     public function getReservedValues($conf)
     {
         $result = array_merge(
-            GeneralUtility::trimExplode(',', $conf['create.']['overrideValues.']['usergroup'], 1),
-            GeneralUtility::trimExplode(',', $conf['invite.']['overrideValues.']['usergroup'], 1),
-            GeneralUtility::trimExplode(',', $conf['setfixed.']['APPROVE.']['usergroup'], 1),
-            GeneralUtility::trimExplode(',', $conf['setfixed.']['ACCEPT.']['usergroup'], 1),
+            GeneralUtility::trimExplode(',', $conf['create.']['overrideValues.']['usergroup'], true),
+            GeneralUtility::trimExplode(',', $conf['invite.']['overrideValues.']['usergroup'], true),
+            GeneralUtility::trimExplode(',', $conf['setfixed.']['APPROVE.']['usergroup'], true),
+            GeneralUtility::trimExplode(',', $conf['setfixed.']['ACCEPT.']['usergroup'], true),
             $this->savedReservedValues
         );
 
@@ -144,7 +144,7 @@ class UserGroup extends Base
         $subgroupWhereClauseArray = [];
         $subgroupWhereClause = '';
         $pidArray = [];
-        $tmpArray = GeneralUtility::trimExplode(',', $conf['userGroupsPidList'], 1);
+        $tmpArray = GeneralUtility::trimExplode(',', $conf['userGroupsPidList'], true);
         if (count($tmpArray)) {
             foreach($tmpArray as $value) {
                 $valueIsInt = MathUtility::canBeInterpretedAsInteger($value);

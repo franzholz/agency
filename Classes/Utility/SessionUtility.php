@@ -134,10 +134,9 @@ class SessionUtility
         } else {
             $allSessionData[$extensionKey] = $data;
         }
-
-        $GLOBALS['TSFE']->fe_user->setKey('ses', 'feuser', $allSessionData);
+        $frontendUser->setKey('ses', 'feuser', $allSessionData);
         // The feuser session data shall not get lost when coming back from external scripts
-        $GLOBALS['TSFE']->fe_user->storeSessionData();
+        $frontendUser->storeSessionData();
     }
 
     /**
