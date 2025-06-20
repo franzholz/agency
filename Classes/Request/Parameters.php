@@ -754,6 +754,13 @@ class Parameters implements SingletonInterface
         return $this->site_url;
     }
 
+    public function getType()
+    {
+        $result = $this->getRequest()->getAttribute('routing')->getPageType();
+        return $result;
+    }
+
+
     public function getPrefixId()
     {
         return $this->prefixId;
@@ -1000,7 +1007,10 @@ class Parameters implements SingletonInterface
 
     public function getBackURL()
     {
-        $result = rawurldecode($this->getFeUserData('backURL'));
+        $result = $this->getFeUserData('backURL');
+        if (is_string($result)) {
+            $result = rawurldecode($result);
+        }
         return $result;
     }
 

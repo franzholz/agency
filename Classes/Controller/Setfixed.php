@@ -880,7 +880,7 @@ class Setfixed implements SingletonInterface
         $markerArray['###BACK_URL###'] =
             (
                 $controlData->getBackURL() ?: $cObj->getTypoLink_URL(
-                    $conf['loginPID'] . ',' . $GLOBALS['TSFE']->type
+                    $conf['loginPID'] . ',' . $controlData->getType()
                 )
             );
         $subpartMarker = '###TEMPLATE_' . $setFixedKey . '_PREVIEW###';

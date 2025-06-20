@@ -115,7 +115,7 @@ class Marker
 
         $markerArray = [];
 
-        $charset = $GLOBALS['TSFE']->metaCharset ?: 'utf-8';
+        $charset = 'utf-8';
         $markerArray['###CHARSET###'] = $charset;
         $markerArray['###PREFIXID###'] = $prefixId;
         $markerArray['###FORM_NAME###'] = $controlData->determineFormId();
@@ -681,7 +681,7 @@ class Marker
         $unsetVars['cmd'] = 'cmd';
         $unsetVarsAll = $unsetVars;
         $unsetVarsAll[] = 'token';
-        $formUrl = $urlObj->get($GLOBALS['TSFE']->id . ',' . $GLOBALS['TSFE']->type, '', $vars, $unsetVarsAll);
+        $formUrl = $urlObj->get($GLOBALS['TSFE']->id . ',' . $this->controlData->getType(), '', $vars, $unsetVarsAll);
 
         unset($unsetVars['cmd']);
         $markerArray['###FORM_URL###'] = $formUrl;
@@ -697,28 +697,28 @@ class Marker
         $vars['rU'] = $uid;
         $vars['preview'] = '1';
 
-        $markerArray['###DELETE_URL###'] = $urlObj->get($this->controlData->getPid('edit') . ',' . $GLOBALS['TSFE']->type, '', $vars);
+        $markerArray['###DELETE_URL###'] = $urlObj->get($this->controlData->getPid('edit') . ',' . $this->controlData->getType(), '', $vars);
 
         $vars['cmd'] = 'create';
 
         $unsetVars[] = 'regHash';
-        $url = $urlObj->get($this->controlData->getPid('register') . ',' . $GLOBALS['TSFE']->type, '', $vars, $unsetVars);
+        $url = $urlObj->get($this->controlData->getPid('register') . ',' . $this->controlData->getType(), '', $vars, $unsetVars);
         $markerArray['###REGISTER_URL###'] = $url;
 
         $unsetVarsList = 'mode,pointer,sort,sword,backURL,submit,doNotSave,preview';
         $unsetVars = GeneralUtility::trimExplode(',', $unsetVarsList);
 
         $vars['cmd'] = 'login';
-        $markerArray['###LOGIN_FORM###'] = $urlObj->get($this->controlData->getPid('login') . ',' . $GLOBALS['TSFE']->type, '', $vars, $unsetVars);
+        $markerArray['###LOGIN_FORM###'] = $urlObj->get($this->controlData->getPid('login') . ',' . $this->controlData->getType(), '', $vars, $unsetVars);
 
         $vars['cmd'] = 'infomail';
-        $markerArray['###INFOMAIL_URL###'] = $urlObj->get($this->controlData->getPid('infomail') . ',' . $GLOBALS['TSFE']->type, '', $vars, $unsetVars);
+        $markerArray['###INFOMAIL_URL###'] = $urlObj->get($this->controlData->getPid('infomail') . ',' . $this->controlData->getType(), '', $vars, $unsetVars);
 
         $vars['cmd'] = 'edit';
 
         $markerArray['###EDIT_URL###'] =
             $urlObj->get(
-                $this->controlData->getPid('edit') . ',' . $GLOBALS['TSFE']->type,
+                $this->controlData->getPid('edit') . ',' . $this->controlData->getType(),
                 '',
                 $vars,
                 $unsetVars
@@ -783,7 +783,7 @@ class Marker
             if (!$pid) {
                 $pid = $GLOBALS['TSFE']->id;
             }
-            $formUrl = $urlObj->get($pid . ',' . $GLOBALS['TSFE']->type, '', $vars, $unsetVarsAll);
+            $formUrl = $urlObj->get($pid . ',' . $this->controlData->getType(), '', $vars, $unsetVarsAll);
             $markerArray['###FORM_' . $upperCommand . '_URL###'] = $formUrl;
         }
         return $markerArray;
