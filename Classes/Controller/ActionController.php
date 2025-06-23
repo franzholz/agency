@@ -55,6 +55,7 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 use JambageCom\Div2007\Utility\CompatibilityUtility;
 use JambageCom\Div2007\Utility\ConfigUtility;
+use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\SystemUtility;
 use JambageCom\Div2007\Utility\TableUtility;
 
@@ -1107,8 +1108,12 @@ class ActionController implements SingletonInterface
                 ) {
                     $destUrl =
                         (
-                            $controlData->getBackURL() ?: $cObj->getTypoLink_URL($conf['linkToPID'] . ',' . $GLOBALS['TSFE']->type)
-                        );
+                            $controlData->getBackURL() ?:
+                            FrontendUtility::getTypoLink_URL(
+                                $cObj,
+                                $conf['linkToPID'] . ',' . $controlData->getType()
+                            )
+                         );
                     header('Location: '.GeneralUtility::locationHeaderUrl($destUrl));
                     exit;
                 }

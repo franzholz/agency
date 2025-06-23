@@ -48,6 +48,7 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
+use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\SystemUtility;
 

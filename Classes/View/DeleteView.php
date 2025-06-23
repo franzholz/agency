@@ -144,7 +144,9 @@ class DeleteView
                         $tokenParameter = $controlData->getTokenParameter();
                         $markerArray['###BACK_URL###'] =
                             (
-                                $controlData->getBackURL() ?: $cObj->getTypoLink_URL(
+                                $controlData->getBackURL() ?:
+                                FrontendUtility::getTypoLink_URL(
+                                    $cObj,
                                     $conf['loginPID'] . ',' . $controlData->getType()
                                 )
                             ) . $tokenParameter;

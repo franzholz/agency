@@ -760,7 +760,6 @@ class Parameters implements SingletonInterface
         return $result;
     }
 
-
     public function getPrefixId()
     {
         return $this->prefixId;
