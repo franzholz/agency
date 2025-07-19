@@ -995,6 +995,14 @@
         <source>No, cancel</source>
         <target state="translated">Non, annuler</target>
       </trans-unit>
+      <trans-unit id="button_confirm_refuse" resname="button_confirm_refuse">
+        <source>Yes, refuse account</source>
+        <target state="needs-translation">Yes, refuse account</target>
+      </trans-unit>
+      <trans-unit id="button_cancel_refuse" resname="button_cancel_refuse">
+        <source>No, cancel</source>
+        <target state="needs-translation">No, cancel</target>
+      </trans-unit>
       <trans-unit id="button_confirm_approve" resname="button_confirm_approve">
         <source>Yes, approve account</source>
         <target state="needs-translation">Yes, approve account</target>
@@ -1050,6 +1058,14 @@
       <trans-unit id="tooltip_click_here_to_delete_informal" resname="tooltip_click_here_to_delete_informal">
         <source>Opens a dialog to delete your membership.</source>
         <target state="translated">Ouvre une boite de dialogue de fermeture de compte.</target>
+      </trans-unit>
+      <trans-unit id="tooltip_click_here_to_refuse" resname="tooltip_click_here_to_refuse">
+        <source>Opens a dialog to refuse this membership.</source>
+        <target state="needs-translation">Opens a dialog to refuse this membership.</target>
+      </trans-unit>
+      <trans-unit id="tooltip_click_here_to_refuse_informal" resname="tooltip_click_here_to_refuse_informal">
+        <source>Opens a dialog to refuse this membership.</source>
+        <target state="needs-translation">Opens a dialog to refuse this membership.</target>
       </trans-unit>
       <trans-unit id="click_here_to_see_terms" resname="click_here_to_see_terms">
         <source>Click here to see the terms.</source>
@@ -1230,6 +1246,14 @@
       <trans-unit id="v_really_wish_to_delete_informal" resname="v_really_wish_to_delete_informal">
         <source>Do you really wish to delete your membership &lt;b&gt;%2$s&lt;/b&gt;?</source>
         <target state="translated">Veux-tu vraiment fermer ton compte &lt;b&gt;%2$s&lt;/b&gt;?</target>
+      </trans-unit>
+      <trans-unit id="v_really_wish_to_refuse" resname="v_really_wish_to_refuse">
+        <source>Do you really wish to refuse the membership of &lt;b&gt;%2$s&lt;/b&gt;?</source>
+        <target state="needs-translation">Do you really wish to refuse the membership of &lt;b&gt;%2$s&lt;/b&gt;?</target>
+      </trans-unit>
+      <trans-unit id="v_really_wish_to_refuse_informal" resname="v_really_wish_to_refuse_informal">
+        <source>Do you really wish to refuse the membership of &lt;b&gt;%2$s&lt;/b&gt;?</source>
+        <target state="needs-translation">Do you really wish to refuse the membership of &lt;b&gt;%2$s&lt;/b&gt;?</target>
       </trans-unit>
       <trans-unit id="v_really_wish_to_approve" resname="v_really_wish_to_approve">
         <source>Do you really wish to approve your membership &lt;b&gt;%2$s&lt;/b&gt;?</source>
@@ -1784,8 +1808,8 @@ If you wish to accept our invitation and confirm your registration in &lt;b&gt;%
         <target state="translated">Un message est envoyé à &lt;b&gt;%3$s&lt;/b&gt; pour l'informer que l'ouverture de son compte auprès de &lt;b&gt;%1$s&lt;/b&gt; a été refusée.</target>
       </trans-unit>
       <trans-unit id="v_registration_refused_message2" resname="v_registration_refused_message2">
-        <source>The account of &lt;b&gt;%3$s&lt;/b&gt; will now be deleted.</source>
-        <target state="translated">Le compte de &lt;b&gt;%3$s&lt;/b&gt; sera maintenant détruit.</target>
+        <source>The account of &lt;b&gt;%3$s&lt;/b&gt; will now be refused.</source>
+        <target state="needs-translation">The account of &lt;b&gt;%3$s&lt;/b&gt; will now be refused.</target>
       </trans-unit>
       <trans-unit id="v_registration_refused" resname="v_registration_refused">
         <source>The application of %3$s for membership with %1$s was refused.</source>
