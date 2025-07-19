@@ -22,6 +22,9 @@ $result = [
             'starttime' => 'starttime',
             'endtime' => 'endtime',
         ],
+        'security' => [
+            'ignorePageTypeRestriction' => true,
+        ],
         'iconfile' => 'EXT:' . $extensionKey . '/Resources/Public/Icons/Extension.gif',
     ],
     'interface' => [

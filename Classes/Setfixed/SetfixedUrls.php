@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Setfixed;
 
 /***************************************************************
@@ -40,14 +42,16 @@ namespace JambageCom\Agency\Setfixed;
 *
 *
 */
-use JambageCom\Agency\Request\Parameters;
-use JambageCom\Agency\Security\Authentication;
-use JambageCom\Agency\Domain\Tables;
 use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
 use JambageCom\Div2007\Utility\FrontendUtility;
+
+use JambageCom\Agency\Api\ParameterApi;
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Security\Authentication;
+use JambageCom\Agency\Domain\Tables;
 
 class SetFixedUrls
 {
@@ -77,6 +81,7 @@ class SetFixedUrls
         $confirmType
     ): void {
         if ($controlData->getSetfixedEnabled() && is_array($setfixed)) {
+            $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
             $authObj = GeneralUtility::makeInstance(Authentication::class);
 
             foreach($setfixed as $theKey => $data) {
@@ -150,7 +155,7 @@ class SetFixedUrls
                     if (
                         $useShortUrls &&
                         $autoLoginKey != ''
-                    ) {                        
+                    ) {
                         $setfixedpiVars[$prefixId . '%5Bkey%5D'] = $autoLoginKey;
                     }
                 }
@@ -173,10 +178,10 @@ class SetFixedUrls
                 $linkPID = $controlData->getPid($pidCmd);
 
                 if (
-                    GeneralUtility::_GP('L') &&
+                    $parameterApi->getParameter('L') &&
                     !GeneralUtility::inList($GLOBALS['TSFE']->config['config']['linkVars'], 'L')
                 ) {
-                    $setfixedpiVars['L'] = GeneralUtility::_GP('L');
+                    $setfixedpiVars['L'] = $parameterApi->getParameter('L');
                 }
 
                 if ($useShortUrls) {
@@ -185,7 +190,7 @@ class SetFixedUrls
                 }
                 $urlConf = [];
                 $urlConf['disableGroupAccessCheck'] = true;
-                $confirmType = (MathUtility::canBeInterpretedAsInteger($confirmType) ? intval($confirmType) : $GLOBALS['TSFE']->type);
+                $confirmType = (MathUtility::canBeInterpretedAsInteger($confirmType) ? intval($confirmType) : $controlData->getType();
                 $url =
                     FrontendUtility::getTypoLink_URL(
                         $cObj,

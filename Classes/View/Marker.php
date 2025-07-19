@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\View;
 
 /***************************************************************
@@ -41,30 +43,37 @@ namespace JambageCom\Agency\View;
 *
 *
 */
-use TYPO3\CMS\Core\Utility\StringUtility;
+
+use Psr\Http\Message\ServerRequestInterface;
+
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use JambageCom\Agency\Configuration\ConfigurationStore;
-use JambageCom\Agency\Domain\Data;
-use JambageCom\Agency\Domain\Tca;
-use JambageCom\Agency\Request\Parameters;
-use JambageCom\Agency\Api\Url;
-use JambageCom\Agency\Api\Localization;
-use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
-use JambageCom\Agency\Security\Authentication;
-use JambageCom\Div2007\Api\Css;
-use JambageCom\Agency\Security\SecuredData;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Core\Utility\StringUtility;
 
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
+
+use JambageCom\Div2007\Api\Css;
 use JambageCom\Div2007\Captcha\CaptchaInterface;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\HtmlUtility;
 
+use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Api\ParameterApi;
+use JambageCom\Agency\Api\Url;
+use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Constants\Mode;
+use JambageCom\Agency\Domain\Data;
+use JambageCom\Agency\Domain\Tca;
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Security\Authentication;
+use JambageCom\Agency\Security\SecuredData;
+
 
 define('SAVED_SUFFIX', '_SAVED');
 define('SETFIXED_PREFIX', 'SETFIXED_');
@@ -110,7 +119,7 @@ class Marker
 
         $markerArray = [];
 
-        $charset = $GLOBALS['TSFE']->metaCharset ?: 'utf-8';
+        $charset = 'utf-8';
         $markerArray['###CHARSET###'] = $charset;
         $markerArray['###PREFIXID###'] = $prefixId;
         $markerArray['###FORM_NAME###'] = $controlData->determineFormId();
@@ -132,17 +141,17 @@ class Marker
         $this->setArray($markerArray);
 
         // Button labels
-        $buttonLabelsList = 'register,confirm_register,back_to_form,update,confirm_update,enter,confirm_delete,cancel_delete,confirm_approve,cancel_approve,update_and_more,password_enter_new';
+        $buttonLabelsList = 'register,confirm_register,back_to_form,update,confirm_update,enter,confirm_delete,cancel_delete,confirm_refuse,cancel_refuse,confirm_approve,cancel_approve,update_and_more,password_enter_new';
 
         $this->setButtonLabelsList($buttonLabelsList);
 
-        $otherLabelsList = 'yes,no,new_password,password_again,tooltip_password_again,tooltip_invitation_password_again,click_here_to_register,tooltip_click_here_to_register,click_here_to_edit,tooltip_click_here_to_edit,click_here_to_delete,tooltip_click_here_to_delete,click_here_to_see_terms,tooltip_click_here_to_see_terms,click_here_to_see_privacy_policy,tooltip_click_here_to_see_privacy_policy,privacy_policy_acknowledged_2,privacy_policy_hint,privacy_policy_hint_1,privacy_policy_hint_2,' .
+        $otherLabelsList = 'yes,no,new_password,password_again,tooltip_password_again,tooltip_invitation_password_again,click_here_to_register,tooltip_click_here_to_register,click_here_to_edit,tooltip_click_here_to_edit,click_here_to_delete,tooltip_click_here_to_delete,click_here_to_refuse,tooltip_click_here_to_refuse,click_here_to_see_terms,tooltip_click_here_to_see_terms,click_here_to_see_privacy_policy,tooltip_click_here_to_see_privacy_policy,privacy_policy_acknowledged_2,privacy_policy_hint,privacy_policy_hint_1,privacy_policy_hint_2,' .
         'click_here_to_see_information,tooltip_click_here_to_see_information' .
         ',copy_paste_link,enter_account_info,enter_invitation_account_info,required_info_notice,excuse_us' .
         ',consider_terms_usage,disclaimer,signature' .
             ',tooltip_login_username,tooltip_login_password,' .
             ',registration_problem,registration_internal,registration_login,registration_sorry,registration_clicked_twice,registration_help,kind_regards,kind_regards_cre,kind_regards_del,kind_regards_ini,kind_regards_inv,kind_regards_upd' .
-            ',v_dear,v_verify_before_create,v_verify_invitation_before_create,v_verify_before_update,v_really_wish_to_delete,v_really_wish_to_approve,v_edit_your_account' .
+            ',v_dear,v_verify_before_create,v_verify_invitation_before_create,v_verify_before_update,v_really_wish_to_delete,v_really_wish_to_refuse,v_really_wish_to_approve,v_edit_your_account' .
             ',v_infomail_lost_password,v_infomail_dear,v_infomail_lost_password_enter_new,v_infomail_lost_password_email_not_found,v_infomail_lost_password_subject' .
             ',v_infomail_lost_password_message1,v_infomail_lost_password_message2,v_infomail_lost_password_message3' .
             ',v_now_enter_your_username,v_now_choose_password,v_notification' .
@@ -384,8 +393,8 @@ class Marker
         }
 
         // Data field labels
-        $infoFieldArray = GeneralUtility::trimExplode(',', $infoFields, 1);
-        $specialFieldArray = GeneralUtility::trimExplode(',', $this->data->getSpecialFieldList(), 1);
+        $infoFieldArray = GeneralUtility::trimExplode(',', $infoFields, true);
+        $specialFieldArray = GeneralUtility::trimExplode(',', $this->data->getSpecialFieldList(), true);
 
         if (!empty($specialFieldArray['0'])) {
             $infoFieldArray = array_merge($infoFieldArray, $specialFieldArray);
@@ -448,7 +457,7 @@ class Marker
                     if (is_array($row[$theField])) {
                         $fieldArray = $row[$theField];
                     } else {
-                        $fieldArray = GeneralUtility::trimExplode(',', $row[$theField]);
+                        $fieldArray = GeneralUtility::trimExplode(',', (string) $row[$theField]);
                     }
 
                     foreach ($fieldArray as $key => $value) {
@@ -483,7 +492,7 @@ class Marker
             $markerArray['###NAME_' . $markerkey . '###'] = $this->getFieldName($theTable, $theField);
         }
         $markerArray['###NAME_PASSWORD_AGAIN###'] = $this->getFieldName($theTable, 'password_again');
-        $buttonLabels = GeneralUtility::trimExplode(',', $this->getButtonLabelsList(), 1);
+        $buttonLabels = GeneralUtility::trimExplode(',', $this->getButtonLabelsList(), true);
 
         foreach($buttonLabels as $labelName) {
             if ($labelName) {
@@ -617,7 +626,7 @@ class Marker
         if (isset($conf['extraLabels']) && $conf['extraLabels'] != '') {
             $otherLabelsList .= ',' . $conf['extraLabels'];
         }
-        $otherLabels = GeneralUtility::trimExplode(',', $otherLabelsList, 1);
+        $otherLabels = GeneralUtility::trimExplode(',', $otherLabelsList, true);
 
         foreach($otherLabels as $value) {
             if (
@@ -676,7 +685,7 @@ class Marker
         $unsetVars['cmd'] = 'cmd';
         $unsetVarsAll = $unsetVars;
         $unsetVarsAll[] = 'token';
-        $formUrl = $urlObj->get($GLOBALS['TSFE']->id . ',' . $GLOBALS['TSFE']->type, '', $vars, $unsetVarsAll);
+        $formUrl = $urlObj->get($this->controlData->getPageId() . ',' . $this->controlData->getType(), '', $vars, $unsetVarsAll);
 
         unset($unsetVars['cmd']);
         $markerArray['###FORM_URL###'] = $formUrl;
@@ -692,28 +701,28 @@ class Marker
         $vars['rU'] = $uid;
         $vars['preview'] = '1';
 
-        $markerArray['###DELETE_URL###'] = $urlObj->get($this->controlData->getPid('edit') . ',' . $GLOBALS['TSFE']->type, '', $vars);
+        $markerArray['###DELETE_URL###'] = $urlObj->get($this->controlData->getPid('edit') . ',' . $this->controlData->getType(), '', $vars);
 
         $vars['cmd'] = 'create';
 
         $unsetVars[] = 'regHash';
-        $url = $urlObj->get($this->controlData->getPid('register') . ',' . $GLOBALS['TSFE']->type, '', $vars, $unsetVars);
+        $url = $urlObj->get($this->controlData->getPid('register') . ',' . $this->controlData->getType(), '', $vars, $unsetVars);
         $markerArray['###REGISTER_URL###'] = $url;
 
         $unsetVarsList = 'mode,pointer,sort,sword,backURL,submit,doNotSave,preview';
         $unsetVars = GeneralUtility::trimExplode(',', $unsetVarsList);
 
         $vars['cmd'] = 'login';
-        $markerArray['###LOGIN_FORM###'] = $urlObj->get($this->controlData->getPid('login') . ',' . $GLOBALS['TSFE']->type, '', $vars, $unsetVars);
+        $markerArray['###LOGIN_FORM###'] = $urlObj->get($this->controlData->getPid('login') . ',' . $this->controlData->getType(), '', $vars, $unsetVars);
 
         $vars['cmd'] = 'infomail';
-        $markerArray['###INFOMAIL_URL###'] = $urlObj->get($this->controlData->getPid('infomail') . ',' . $GLOBALS['TSFE']->type, '', $vars, $unsetVars);
+        $markerArray['###INFOMAIL_URL###'] = $urlObj->get($this->controlData->getPid('infomail') . ',' . $this->controlData->getType(), '', $vars, $unsetVars);
 
         $vars['cmd'] = 'edit';
 
         $markerArray['###EDIT_URL###'] =
             $urlObj->get(
-                $this->controlData->getPid('edit') . ',' . $GLOBALS['TSFE']->type,
+                $this->controlData->getPid('edit') . ',' . $this->controlData->getType(),
                 '',
                 $vars,
                 $unsetVars
@@ -776,9 +785,9 @@ class Marker
             $upperCommand = strtoupper($command);
             $pid = $this->conf[$command . 'PID'] ?? 0;
             if (!$pid) {
-                $pid = $GLOBALS['TSFE']->id;
+                $pid = $this->controlData->getPageId();
             }
-            $formUrl = $urlObj->get($pid . ',' . $GLOBALS['TSFE']->type, '', $vars, $unsetVarsAll);
+            $formUrl = $urlObj->get($pid . ',' . $this->controlData->getType(), '', $vars, $unsetVarsAll);
             $markerArray['###FORM_' . $upperCommand . '_URL###'] = $formUrl;
         }
         return $markerArray;
@@ -1174,7 +1183,7 @@ var submitFile = function(id){
                 }
             }
         }
-        $fieldArray = GeneralUtility::trimExplode(',', $cmdKeyFields, 1);
+        $fieldArray = GeneralUtility::trimExplode(',', $cmdKeyFields, true);
 
         if ($mode == Mode::PREVIEW) {
             $fieldArray = array_diff($fieldArray, ['hidden', 'disable']);
@@ -1187,7 +1196,7 @@ var submitFile = function(id){
                 $value = $dataArray[$theField] ?? '';
                 if (is_array($value)) {
                     $value = implode(',', $value);
-                } else {
+                } else if (is_string($value)) {
                     $value = htmlspecialchars($value);
                 }
                 $markerArray['###HIDDENFIELDS###'] .= chr(10) . '<input type="hidden" name="FE[' . $theTable . '][' . $theField . ']" value="' . $value . '"' . HtmlUtility::getXhtmlFix() . '>';
@@ -1306,9 +1315,9 @@ var submitFile = function(id){
         }
 
         if ($fieldList != '') {
-            $fArr = GeneralUtility::trimExplode(',', $fieldList, 1);
+            $fArr = GeneralUtility::trimExplode(',', $fieldList, true);
             foreach($fArr as $field) {
-                $markerArray['###' . $prefix . $field . '###'] = $nl2br ? nl2br($row[$field]) : $row[$field];
+                $markerArray['###' . $prefix . $field . '###'] = $nl2br && is_string($row[$field]) ? nl2br($row[$field]) : $row[$field];
             }
         } else {
 
@@ -1319,11 +1328,11 @@ var submitFile = function(id){
                         if (is_array($value)) {
                             $value = implode(',', $value);
                         }
-                        if ($HSC && !empty($value)) {
+                        if ($HSC && !empty($value) && is_string($value)) {
                             $value = htmlspecialchars($value);
                         }
                         $markerArray['###' . $prefix . $field . '###'] =
-                            $nl2br && !empty($value) ? nl2br($value) : $value;
+                            $nl2br && !empty($value) && is_string($value) ? nl2br($value) : $value;
                     }
                 }
             }
@@ -1385,6 +1394,7 @@ var submitFile = function(id){
     * See: tx_agency_pi_base::checkDeprecatedMarkers
     */
     public static function checkDeprecatedMarkers(
+        ServerRequestInterface $request,
         $templateCode,
         $extKey,
         $fileName
@@ -1400,9 +1410,8 @@ var submitFile = function(id){
                 '###FIELD_password_again###'
             ];
             $removeMarkerMessage =
-                $GLOBALS['TSFE']->sL(
-                    'LLL:EXT:' . $extKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:internal_remove_deprecated_marker'
-                );
+                GeneralUtility::makeInstance(LanguageServiceFactory::class)
+                ->createFromSiteLanguage($request->getAttribute('language'))->sL('LLL:EXT:' . $extKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:internal_remove_deprecated_marker');
 
             foreach ($removeMarkers as $marker) {
                 if (strpos($templateCode, $marker) !== false) {
@@ -1417,7 +1426,8 @@ var submitFile = function(id){
                 ],
             ];
             $replaceMarkerMessage =
-                $GLOBALS['TSFE']->sL(
+                GeneralUtility::makeInstance(LanguageServiceFactory::class)
+            ->createFromSiteLanguage($request->getAttribute('language'))->sL(
                     'LLL:EXT:' . $extKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:internal_replace_deprecated_marker'
                 );
 

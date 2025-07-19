@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Utility;
 
 use TYPO3\CMS\Core\Utility\ArrayUtility;
@@ -53,12 +55,13 @@ class SessionUtility
     /**
     * Retrieves session data
     *
+    * @param    string  $extensionKey
     * @param    boolean $readAll: whether to retrieve all session data or only data for this extension key
     * @return   array   session data
     */
     public static function readData(
         FrontendUserAuthentication $frontendUser,
-        $extensionKey, 
+        $extensionKey,
         $readAll = false
     )
     {
@@ -96,6 +99,7 @@ class SessionUtility
         $redirectUrl = '' // $this->readRedirectUrl()
     ): void {
         $clearSession = empty($data);
+
         if (
             $keepToken &&
             !isset($data['token']) &&
@@ -113,7 +117,7 @@ class SessionUtility
         }
 
         // Read all session data
-        $allSessionData = static::readData($frontendUser, true);
+        $allSessionData = static::readData($frontendUser, $extensionKey, true);
 
         if (
             isset($allSessionData[$extensionKey]) &&
@@ -132,10 +136,9 @@ class SessionUtility
         } else {
             $allSessionData[$extensionKey] = $data;
         }
-
-        $GLOBALS['TSFE']->fe_user->setKey('ses', 'feuser', $allSessionData);
+        $frontendUser->setKey('ses', 'feuser', $allSessionData);
         // The feuser session data shall not get lost when coming back from external scripts
-        $GLOBALS['TSFE']->fe_user->storeSessionData();
+        $frontendUser->storeSessionData();
     }
 
     /**

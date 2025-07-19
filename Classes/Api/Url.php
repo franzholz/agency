@@ -1,9 +1,8 @@
 <?php
 
-namespace JambageCom\Agency\Api;
+declare(strict_types=1);
 
-use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use TYPO3\CMS\Core\SingletonInterface;
+namespace JambageCom\Agency\Api;
 
 /***************************************************************
 *  Copyright notice
@@ -44,12 +43,20 @@ use TYPO3\CMS\Core\SingletonInterface;
  *
  *
  */
+
+
+use TYPO3\CMS\Core\SingletonInterface;
+
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+
+use JambageCom\Div2007\Utility\FrontendUtility;
+
+
 class Url implements SingletonInterface
 {
     protected $cObj;
     private $piVars;
     private $prefixId;
-
 
     public function init(
         $cObj,
@@ -60,6 +67,7 @@ class Url implements SingletonInterface
         $this->piVars = $piVars;
         $this->prefixId = $prefixId;
     }
+
 
     /**
     * Generates a AbstractPlugin-compliant typolink
@@ -100,7 +108,13 @@ class Url implements SingletonInterface
         if ($tag) {
             $result = $this->cObj->getTypoLink($tag, $id, $piVars);
         } else {
-            $result = $this->cObj->getTypoLink_URL($id, $piVars);
+            $result = htmlspecialchars(
+                FrontendUtility::getTypoLink_URL(
+                    $this->cObj,
+                    $id,
+                    $piVars
+                )
+            );
         }
         $result = str_replace(['[', ']'], ['%5B', '%5D'], $result);
         return $result;

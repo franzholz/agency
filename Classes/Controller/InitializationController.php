@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Controller;
 
 /***************************************************************
@@ -40,15 +42,15 @@ namespace JambageCom\Agency\Controller;
 
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use Psr\Http\Message\ServerRequestInterface;
 
 use SJBR\StaticInfoTables\PiBaseApi;
 
+use JambageCom\Div2007\Compatibility\AbstractPlugin;
 use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Database\CoreQuery;
@@ -56,6 +58,7 @@ use JambageCom\Div2007\Database\CoreQuery;
 use JambageCom\Agency\Configuration\ConfigurationStore;
 
 use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Api\ParameterApi;
 use JambageCom\Agency\Api\Url;
 use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Domain\Tca;
@@ -69,6 +72,7 @@ use JambageCom\Agency\View\EditView;
 use JambageCom\Agency\View\DeleteView;
 use JambageCom\Agency\View\Marker;
 use JambageCom\Agency\View\Template;
+
 
 
 class InitializationController implements SingletonInterface
@@ -148,7 +152,7 @@ class InitializationController implements SingletonInterface
         $urlObj = GeneralUtility::makeInstance(Url::class);
         $coreQuery = GeneralUtility::makeInstance(
             CoreQuery::class,
-            static::getTypoScriptFrontendController()
+            $request->getAttribute('frontend.controller')
         );
         $dataObj =
             GeneralUtility::makeInstance(
@@ -161,7 +165,8 @@ class InitializationController implements SingletonInterface
         $languageObj = GeneralUtility::makeInstance(Localization::class);
         $languageObj->init(
             Extension::KEY,
-            $conf['_LOCAL_LANG.'] ?? ''
+            $conf['_LOCAL_LANG.'] ?? '',
+            $request
         );
         $languageObj->loadLocalLang(
             'EXT:' . Extension::KEY . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf',
@@ -289,6 +294,7 @@ class InitializationController implements SingletonInterface
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $errorMessage = '';
         $origArray = [];
+        $controlData = null;
 
         $success = $this->init(
             $controlData,
@@ -358,14 +364,5 @@ class InitializationController implements SingletonInterface
             );
 
         return $content;
-    }
-
-
-    /**
-     * @return TypoScriptFrontendController
-     */
-    protected static function getTypoScriptFrontendController()
-    {
-        return $GLOBALS['TSFE'];
     }
 }

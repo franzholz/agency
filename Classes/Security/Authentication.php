@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Security;
 
 /***************************************************************
@@ -42,8 +44,9 @@ namespace JambageCom\Agency\Security;
 *
 */
 use TYPO3\CMS\Core\SingletonInterface;
-use JambageCom\Agency\Configuration\ConfigurationStore;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use JambageCom\Agency\Configuration\ConfigurationStore;
 
 class Authentication implements SingletonInterface
 {
@@ -109,7 +112,7 @@ class Authentication implements SingletonInterface
         $recordCopy = [];
 
         if ($fields) {
-            $fieldArray = GeneralUtility::trimExplode(',', $fields, 1);
+            $fieldArray = GeneralUtility::trimExplode(',', $fields, true);
             foreach ($fieldArray as $key => $value) {
                 if (isset($record[$value])) {
                     if (is_array($record[$value])) {
@@ -117,7 +120,7 @@ class Authentication implements SingletonInterface
                     } else {
                         $recordCopy[$key] = $record[$value];
                     }
-                    if ($rawUrlDecode) {
+                    if ($rawUrlDecode && is_string($recordCopy[$key])) {
                         $recordCopy[$key] = rawurldecode($recordCopy[$key]);
                     }
                 }

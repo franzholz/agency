@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Utility;
 
 /***************************************************************
@@ -39,6 +41,7 @@ namespace JambageCom\Agency\Utility;
 *
 *
 */
+
 use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Agency\Constants\Extension;
 

@@ -3340,11 +3340,47 @@ The user is informed that a message has been sent to the email address and that 
 
 
 
-<p style="margin-top: 20px"><em>This template is the response page when a user cancelled before sta deletion of his subscription.</em></p>
+<p style="margin-top: 20px"><em>This template is the response page when a user cancelled before the deletion of his subscription.</em></p>
 <!-- ###TEMPLATE_DELETE_CANCEL### begin -->
 <p>###LABEL_V_DELETION_CANCELLED_SUBJECT###</p>
 <p>###LABEL_V_DELETION_CANCELLED_MESSAGE1###</p>
 <!-- ###TEMPLATE_DELETE_CANCEL### end-->
+
+
+<p style="margin-top: 20px"><em>This template is the verification page before the admin finally refuses a subscriber.</em></p>
+<!-- ###TEMPLATE_REFUSE_PREVIEW### begin-->
+<h4>###LABEL_V_TO_THE_ADMINISTRATOR###</h4>
+<p>###LABEL_V_REALLY_WISH_TO_REFUSE###</p>
+
+###LABEL_USERNAME###: ###FIELD_username###
+<!-- ###SUB_INCLUDED_FIELD_gender### -->
+###LABEL_GENDER### ###TCA_INPUT_gender###
+<!-- ###SUB_INCLUDED_FIELD_gender### -->
+<!-- ###SUB_INCLUDED_FIELD_cnum### -->
+###LABEL_CNUM### ###FIELD_cnum###
+<!-- ###SUB_INCLUDED_FIELD_cnum### -->
+<!-- ###SUB_INCLUDED_FIELD_name### -->
+###LABEL_NAME### ###FIELD_name###
+<!-- ###SUB_INCLUDED_FIELD_name### -->
+<!-- ###SUB_INCLUDED_FIELD_first_name### -->
+###LABEL_FIRST_NAME###: ###FIELD_first_name###
+<!-- ###SUB_INCLUDED_FIELD_first_name### -->
+<!-- ###SUB_INCLUDED_FIELD_middle_name### -->
+###LABEL_MIDDLE_NAME###: ###FIELD_middle_name###
+<!-- ###SUB_INCLUDED_FIELD_middle_name### -->
+<!-- ###SUB_INCLUDED_FIELD_last_name### -->
+###LABEL_LAST_NAME###: ###FIELD_last_name###
+<!-- ###SUB_INCLUDED_FIELD_last_name### -->
+###LABEL_EMAIL###: ###FIELD_email###
+
+<form id="###FORM_NAME###" method="post" action="###FORM_URL###">
+	<p>
+		###HIDDENFIELDS###
+		<input type="submit" name="agency[doNotSave]" onclick="document.location.assign('###BACK_URL###'); return false;" value="###LABEL_BUTTON_CANCEL_REFUSE###">
+		<input type="submit" name="agency[submit]" value="###LABEL_BUTTON_CONFIRM_REFUSE###">
+	</p>
+</form>
+<!-- ###TEMPLATE_REFUSE_PREVIEW### end-->
 
 
 
@@ -3638,7 +3674,7 @@ The user is informed that a message has been sent to the email address and that 
             <p>###MISSING_EMAIL###</p>
         </div>
         <!-- ###SUB_REQUIRED_FIELD_email### -->
-        <div class="viewInput divInputEmail">    
+        <div class="viewInput divInputEmail">
             <input id="agency-email" type="text" class="inputEmail" value="###FIELD_email###" size="40" maxlength="80" title="###TOOLTIP_EMAIL###" name="###PREFIXID###[fetch]">
         </div>
     </div>

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Controller;
 
 /***************************************************************
@@ -53,11 +55,13 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 use JambageCom\Div2007\Utility\CompatibilityUtility;
 use JambageCom\Div2007\Utility\ConfigUtility;
+use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\SystemUtility;
 use JambageCom\Div2007\Utility\TableUtility;
 
 use JambageCom\Agency\Api\CustomerNumber;
 use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Api\ParameterApi;
 use JambageCom\Agency\Api\System;
 use JambageCom\Agency\Api\Url;
 use JambageCom\Agency\Configuration\ConfigurationStore;
@@ -146,23 +150,6 @@ class ActionController implements SingletonInterface
         $frontendUser = $request->getAttribute('frontend.user');
         $bHtmlSpecialChars = false;
         SecuredData::secureInput($dataArray, $bHtmlSpecialChars);
-
-        if (
-            $theTable == 'fe_users' &&
-            !empty($dataArray)
-        ) {
-            $modifyPassword =
-                SecuredData::securePassword(
-                    $frontendUser,
-                    $extensionKey,
-                    $dataArray,
-                    $errorMessage
-                );
-
-            if ($modifyPassword === false) {
-                return false;
-            }
-        }
         $dataObj->setDataArray($dataArray);
 
         $fieldlist =
@@ -209,6 +196,7 @@ class ActionController implements SingletonInterface
         }
 
         if ($theUid) {
+            $theUid = intval($theUid);
             $dataObj->setRecUid($theUid);
             $newOrigArray =
                 $GLOBALS['TSFE']->sys_page->getRawRecord(
@@ -285,7 +273,7 @@ class ActionController implements SingletonInterface
                 ',',
                 array_intersect(
                     explode(',', $fieldlist),
-                    GeneralUtility::trimExplode(',', $adminFieldList, 1)
+                    GeneralUtility::trimExplode(',', $adminFieldList, true)
                 )
             );
         $dataObj->setAdminFieldList($adminFieldList);
@@ -294,8 +282,8 @@ class ActionController implements SingletonInterface
             if (
                 ExtensionManagementUtility::isLoaded('direct_mail')
             ) {
-                $conf[$cmdKey.'.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['module_sys_dmail_category,module_sys_dmail_newsletter']));
-                $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), ['module_sys_dmail_category, module_sys_dmail_newsletter']));
+                $conf[$cmdKey.'.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true), ['module_sys_dmail_category,module_sys_dmail_newsletter']));
+                $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], true), ['module_sys_dmail_category, module_sys_dmail_newsletter']));
             }
 
             $fieldConfArray = ['fields', 'required'];
@@ -330,27 +318,27 @@ class ActionController implements SingletonInterface
                         return $element == $item;
                     }));
                 } else {
-                    $conf[$cmdKey . '.']['fields'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',username', 1)));
-                    $conf[$cmdKey . '.']['required'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',username', 1)));
+                    $conf[$cmdKey . '.']['fields'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',username', true)));
+                    $conf[$cmdKey . '.']['required'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',username', true)));
                 }
             }
 
             // When in edit mode, remove password from required fields
             if ($cmdKey == 'edit') {
-                $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), ['password']));
+                $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], true), ['password']));
             }
 
             if (
                 !empty($conf[$cmdKey . '.']['generateUsername']) ||
                 $cmdKey == 'password'
             ) {
-                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['username']));
+                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true), ['username']));
             }
 
             if (
                 !empty($conf[$cmdKey . '.']['generateCustomerNumber'])
             ) {
-                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['cnum']));
+                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true), ['cnum']));
             }
 
             if (
@@ -359,18 +347,18 @@ class ActionController implements SingletonInterface
                     $cmdKey == 'create'
                 ) && !empty($conf[$cmdKey . '.']['generatePassword'])
             ) {
-                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['password']));
+                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true), ['password']));
             }
 
             if (!empty($conf[$cmdKey . '.']['useEmailAsUsername'])) {
-                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['username']));
+                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true), ['username']));
 
                 if (
                     $cmdKey == 'create' ||
                     $cmdKey == 'invite'
                 ) {
-                    $conf[$cmdKey . '.']['fields'] = implode(',', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',email', 1));
-                    $conf[$cmdKey . '.']['required'] = implode(',', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',email', 1));
+                    $conf[$cmdKey . '.']['fields'] = implode(',', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',email', true));
+                    $conf[$cmdKey . '.']['required'] = implode(',', GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',email', true));
                 }
 
                 if (
@@ -380,7 +368,7 @@ class ActionController implements SingletonInterface
                     ) &&
                     $controlData->getSetfixedEnabled()
                 ) {
-                    $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['email']));
+                    $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true), ['email']));
                 }
             }
             $userGroupObj = $addressObj->getFieldObj('usergroup');
@@ -463,12 +451,12 @@ class ActionController implements SingletonInterface
                 GeneralUtility::trimExplode(
                     ',',
                     $conf[$cmdKey . '.']['required'],
-                    1
+                    true
                 ),
                 GeneralUtility::trimExplode(
                     ',',
                     $conf[$cmdKey . '.']['fields'],
-                    1
+                    true
                 )
             );
         }
@@ -476,7 +464,7 @@ class ActionController implements SingletonInterface
         $controlData->setRequiredArray($requiredArray);
 
         $fieldList = $dataObj->getFieldList();
-        $fieldArray = GeneralUtility::trimExplode(',', $fieldList, 1);
+        $fieldArray = GeneralUtility::trimExplode(',', $fieldList, true);
         $additionalFields = $dataObj->getAdditionalIncludedFields();
 
         if ($theTable == 'fe_users' && !empty($cmdKey)) {
@@ -543,6 +531,7 @@ class ActionController implements SingletonInterface
         $templateCode,
         &$errorMessage
     ) {
+        $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
         $dataArray = $dataObj->getDataArray();
         $conf = $confObj->getConf();
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
@@ -586,11 +575,15 @@ class ActionController implements SingletonInterface
             $finalDataArray = $dataArray;
         } elseif ($dataObj->bNewAvailable()) {
             if ($theTable == 'fe_users') {
-                $securedArray =
+                $securedArrayRead =
                     SecuredData::readSecuredArray(
+                        $securedArray,
                         $frontendUser,
                         $extensionKey
                     );
+                if ($securedArrayRead && !empty($securedArray['password'])) {
+                    $savePassword = $securedArray['password'];
+                }
             }
             $finalDataArray = $dataArray;
             ArrayUtility::mergeRecursiveWithOverrule(
@@ -673,6 +666,15 @@ class ActionController implements SingletonInterface
                     $controlData->getFeUserData('linkToPID')
                 )
             ) {
+                $checkFieldArray = $finalDataArray;
+                if (
+                    isset($finalDataArray['password']) &&
+                    $savePassword == $finalDataArray['password']
+                ) {
+                    unset($checkFieldArray['password']);
+                }
+                $checkFieldArray = array_keys($checkFieldArray);
+
                 // A button was clicked on
                 $evalErrors = $dataObj->evalValues(
                     $confObj,
@@ -683,7 +685,7 @@ class ActionController implements SingletonInterface
                     $markerArray,
                     $cmdKey,
                     $controlData->getRequiredArray(),
-                    [],
+                    $checkFieldArray,
                     $controlData->getCaptcha()
                 );
 
@@ -885,7 +887,6 @@ class ActionController implements SingletonInterface
             $markerObj->setPreviewLabel('_PREVIEW');
             $controlData->setMode(Mode::PREVIEW);
         }
-
         $content = '';
         // If data is submitted, we take care of it here.
         if (
@@ -991,7 +992,7 @@ class ActionController implements SingletonInterface
 
             if ($errorContent == '') {
                 $markerArray = $markerObj->getArray(); // uses its own markerArray
-                $errorCode = '';
+                $errorCode = [];
                 $bEmailSent = false;
 
                 if (
@@ -1082,7 +1083,7 @@ class ActionController implements SingletonInterface
             }
 
             if ($errorContent == '') {	// success case
-                $origGetFeUserData = GeneralUtility::_GET($prefixId);
+                $origGetFeUserData = $parameterApi->getGetParameter($prefixId);
                 $deleteRegHash = true;
 
                 // Link to on edit save
@@ -1103,8 +1104,12 @@ class ActionController implements SingletonInterface
                 ) {
                     $destUrl =
                         (
-                            $controlData->getBackURL() ?: $cObj->getTypoLink_URL($conf['linkToPID'] . ',' . $GLOBALS['TSFE']->type)
-                        );
+                            $controlData->getBackURL() ?:
+                            FrontendUtility::getTypoLink_URL(
+                                $cObj,
+                                $conf['linkToPID'] . ',' . $controlData->getType()
+                            )
+                         );
                     header('Location: '.GeneralUtility::locationHeaderUrl($destUrl));
                     exit;
                 }
@@ -1241,7 +1246,7 @@ class ActionController implements SingletonInterface
                         $controlData->setSetfixedEnabled(1);
                     }
                     $origArray = $dataObj->parseIncomingData($origArray, false);
-                    $errorCode = '';
+                    $errorCode = [];
                     $email = GeneralUtility::makeInstance(Email::class);
                     $fetch = $controlData->getFeUserData('fetch');
                     $pidLock = '';
@@ -1420,7 +1425,7 @@ class ActionController implements SingletonInterface
 
             if (
                 isset($errorCode) &&
-                is_array($errorCode)
+                !empty($errorCode)
             ) {
                 $errorText = $languageObj->getLabel($errorCode[0]);
                 if (isset($errorCode[1])) {

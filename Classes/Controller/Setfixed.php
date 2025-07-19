@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Controller;
 
 /***************************************************************
@@ -46,6 +48,7 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
+use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\SystemUtility;
 
@@ -54,16 +57,16 @@ use JambageCom\Agency\Api\System;
 use JambageCom\Agency\Api\Url;
 use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Controller\Email;
-use JambageCom\Agency\Domain\Tca;
-use JambageCom\Agency\View\Marker;
 use JambageCom\Agency\Domain\Data;
+use JambageCom\Agency\Domain\Tca;
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Security\Authentication;
+use JambageCom\Agency\Security\SecuredData;
+use JambageCom\Agency\View\Marker;
 use JambageCom\Agency\View\Template;
 use JambageCom\Agency\View\CreateView;
 use JambageCom\Agency\View\EditView;
 use JambageCom\Agency\View\DeleteView;
-use JambageCom\Agency\Request\Parameters;
-use JambageCom\Agency\Security\Authentication;
-use JambageCom\Agency\Security\SecuredData;
 
 
 
@@ -113,7 +116,10 @@ class Setfixed implements SingletonInterface
         $email = GeneralUtility::makeInstance(Email::class);
         $content = false;
         $request = $controlData->getRequest();
-        $frontendUser = $request->getAttribute('frontend.user');
+        $context = $controlData->getContext();
+        $feUser = [];
+        $feUser['uid'] = $context->getPropertyFromAspect('frontend.user', 'id');
+        $feUser['usergroup'] = $context->getPropertyFromAspect('frontend.user', 'groupIds');
         $row = $currentArray = $origArray;
         $usesPassword = false;
         $enableAutoLoginOnConfirmation =
@@ -124,7 +130,7 @@ class Setfixed implements SingletonInterface
                 $controlData
             );
         $errorContent = '';
-        $errorCode = '';
+        $errorCode = [];
         $hasError = false;
         $sendExecutionEmail = false;
         $cryptedPassword = '';
@@ -143,7 +149,7 @@ class Setfixed implements SingletonInterface
                 $cmdKey == 'invite'
             ) &&
             !$row['lost_password'] &&
-            !$enableAutoLoginOnConfirmation // neu +++
+            !$enableAutoLoginOnConfirmation
         ) {
             $usesPassword = true;
         }
@@ -243,7 +249,7 @@ class Setfixed implements SingletonInterface
                 $setFixedKey == 'REFUSE'
             ) {
                 if (
-                    $setfixedConfig['askAgain'] &&
+                    !empty($setfixedConfig['askAgain']) &&
                     !$controlData->getSubmit()
                 ) { // ask again if the user really wants to delete
                     $content = $deleteView->render(
@@ -263,7 +269,7 @@ class Setfixed implements SingletonInterface
                         $theTable,
                         $dataArray,
                         $origArray,
-                        $frontendUser->user,
+                        $feUser,
                         $securedArray,
                         $token,
                         $setFixedKey,
@@ -341,8 +347,8 @@ class Setfixed implements SingletonInterface
                         }
                     }
                     $newFieldList = implode(',', array_intersect(
-                        GeneralUtility::trimExplode(',', $dataObj->getFieldList(), 1),
-                        GeneralUtility::trimExplode(',', implode(',', $fieldArray), 1)
+                        GeneralUtility::trimExplode(',', $dataObj->getFieldList(), true),
+                        GeneralUtility::trimExplode(',', implode(',', $fieldArray), true)
                     ));
 
                     // Hook: confirmRegistrationClass_preProcess
@@ -356,7 +362,8 @@ class Setfixed implements SingletonInterface
                                 $this,
                                 $errorCode
                             );
-                            if ($errorCode) {
+
+                            if (!empty($errorCode)) {
                                 break;
                             }
                         }
@@ -365,7 +372,7 @@ class Setfixed implements SingletonInterface
                     if ($setFixedKey == 'UNSUBSCRIBE') {
                         $newFieldList = implode(',', array_intersect(
                             GeneralUtility::trimExplode(',', $newFieldList),
-                            GeneralUtility::trimExplode(',', $conf['unsubscribeAllowedFields'], 1)
+                            GeneralUtility::trimExplode(',', $conf['unsubscribeAllowedFields'], true)
                         ));
                     }
 
@@ -387,7 +394,7 @@ class Setfixed implements SingletonInterface
                         $encoded = $currentArray['tx_agency_password'];
                         $cryptedPassword = base64_decode($encoded);
 
-                        $errorCode = '';
+                        $errorCode = [];
                         $errorMessage = '';
                         \JambageCom\Agency\Security\SecuredData::getStorageSecurity()
                             ->decryptPasswordForAutoLogin(
@@ -625,7 +632,7 @@ class Setfixed implements SingletonInterface
                         $conf['infomail']
                     )
                 ) {
-                    $errorCode = '';
+                    $errorCode = [];
                     $subpart = SETFIXED_PREFIX . $setfixedSuffix;
                     // Compiling email
                     $emailResult = $email->compile(
@@ -701,7 +708,7 @@ class Setfixed implements SingletonInterface
                         );
 
                         if (
-                            is_array($errorCode)
+                            !empty($errorCode)
                         ) {
                             $errorText =
                                 $languageObj->getLabel($errorCode[0], $dummy, '', false, true);
@@ -845,7 +852,7 @@ class Setfixed implements SingletonInterface
     * @return string  the template with substituted markers
     */
     public function confirmationScreen(
-        &$errorCode,
+        array &$errorCode,
         $markerArray,
         $conf,
         $prefixId,
@@ -877,8 +884,10 @@ class Setfixed implements SingletonInterface
 
         $markerArray['###BACK_URL###'] =
             (
-                $controlData->getBackURL() ?: $cObj->getTypoLink_URL(
-                    $conf['loginPID'] . ',' . $GLOBALS['TSFE']->type
+                $controlData->getBackURL() ?:
+                FrontendUtility::getTypoLink_URL(
+                    $cObj,
+                    $conf['loginPID'] . ',' . $controlData->getType()
                 )
             );
         $subpartMarker = '###TEMPLATE_' . $setFixedKey . '_PREVIEW###';

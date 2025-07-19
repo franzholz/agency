@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\EventListener;
 
 use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;

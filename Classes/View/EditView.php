@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\View;
 
 /***************************************************************
@@ -41,22 +43,25 @@ namespace JambageCom\Agency\View;
 *
 *
 */
+use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+
+use JambageCom\Div2007\Utility\CompatibilityUtility;
+use JambageCom\Div2007\Utility\FrontendUtility;
+use JambageCom\Div2007\Utility\HtmlUtility;
+
 use JambageCom\Agency\Api\Localization;
-use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Api\ParameterApi;
 use JambageCom\Agency\Configuration\ConfigurationStore;
+use JambageCom\Agency\Constants\Mode;
 use JambageCom\Agency\Domain\Tca;
 use JambageCom\Agency\Domain\Data;
-use JambageCom\Div2007\Utility\HtmlUtility;
-use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
-use JambageCom\Agency\Security\SecuredData;
+use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Security\Authentication;
-use JambageCom\Div2007\Utility\CompatibilityUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use JambageCom\Agency\Security\SecuredData;
 
-use JambageCom\Div2007\Utility\FrontendUtility;
 
-use JambageCom\Agency\Constants\Mode;
 
 class EditView
 {
@@ -92,6 +97,7 @@ class EditView
         $errorFieldArray,
         $token
     ) {
+        $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
         $xhtmlFix = HtmlUtility::determineXhtmlFix();
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         if (isset($dataArray) && is_array($dataArray)) {
@@ -123,7 +129,7 @@ class EditView
                     ''
                 );
         }
-        $failure = GeneralUtility::_GP('noWarnings') ? '' : $controlData->getFailure();
+        $failure = $parameterApi->getParameter('noWarnings') ? '' : $controlData->getFailure();
 
         if (!$failure) {
             $templateCode =
@@ -293,7 +299,7 @@ class EditView
                     $cmdKey
                 );
             $fields = $dataObj->getFieldList() . ',' . $dataObj->getAdditionalUpdateFields();
-            $fields = implode(',', array_intersect(explode(',', $fields), GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1)));
+            $fields = implode(',', array_intersect(explode(',', $fields), GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true)));
             $fields = SecuredData::getOpenFields($fields);
             $form = $controlData->determineFormId();
             $updateJS =
@@ -319,7 +325,7 @@ class EditView
     * @return string  the template with substituted markers
     */
     public function render(
-        &$errorCode,
+        array &$errorCode,
         array &$markerArray,
         $conf,
         ContentObjectRenderer $cObj,
@@ -342,6 +348,7 @@ class EditView
         $token
     ) {
         $theAuthCode = '';
+        $frontendUser = $controlData->getFrontendUser();
 
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
@@ -353,12 +360,13 @@ class EditView
         // If editing is enabled
         if ($conf['edit']) {
             $authObj = GeneralUtility::makeInstance(Authentication::class);
+            $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
 
             if(
                 $theTable != 'fe_users' &&
                 $conf['setfixed.']['EDIT.']['_FIELDLIST']
             ) {
-                $fD = GeneralUtility::_GP('fD');
+                $fD = $parameterApi->getParameter('fD');
                 $fieldArr = [];
                 if (is_array($fD)) {
                     foreach($fD as $field => $value) {
@@ -392,18 +400,20 @@ class EditView
                 )
             ) {
                 $markerObj->setArray($markerArray);
+                $authCode = $authObj->getAuthCode();
 
                 // Must be logged in OR be authenticated by the aC code in order to edit
                 // If the recUid selects a record.... (no check here)
                 if (
-                    !strcmp($authObj->getAuthCode(), $theAuthCode) ||
+                    is_string($authCode) &&
+                        !strcmp($authCode, $theAuthCode) ||
                     $aCAuth ||
                     $dataObj->getCoreQuery()->DBmayFEUserEdit(
                         $theTable,
                         $origArray,
-                        $GLOBALS['TSFE']->fe_user->user,
-                        $conf['allowedGroups'],
-                        $conf['fe_userEditSelf']
+                        $frontendUser->user,
+                        $conf['allowedGroups'] ?? '',
+                        $conf['fe_userEditSelf'] ?? false
                     )
                 ) {
                     // Display the form, if access granted.

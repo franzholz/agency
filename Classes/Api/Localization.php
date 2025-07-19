@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Api;
 
-use JambageCom\Div2007\Base\TranslationBase;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use JambageCom\Div2007\Base\TranslationBase;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -17,6 +21,9 @@ use TYPO3\CMS\Core\SingletonInterface;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+use Psr\Http\Message\ServerRequestInterface;
+
 class Localization extends TranslationBase implements SingletonInterface
 {
     public $allowedSuffixes = ['', 'formal', 'informal']; // list of allowed suffixes
@@ -25,15 +32,15 @@ class Localization extends TranslationBase implements SingletonInterface
     public function init(
         $extensionKey = '',
         $confLocalLang = [], // you must pass only the $conf['_LOCAL_LANG.'] part of the setup of the caller
-        $scriptRelPath = '',
-        $lookupFilename = 'locallang.xlf',
+        ?ServerRequestInterface $request = null,
+        $lookupFilename = '',
         $useDiv2007Language = true
     ): void {
         $scriptRelPath = DIV2007_LANGUAGE_SUBPATH;
         parent::init(
             $extensionKey,
             $confLocalLang,
-            $scriptRelPath,
+            $request,
             $lookupFilename,
             $useDiv2007Language
         );
@@ -42,7 +49,7 @@ class Localization extends TranslationBase implements SingletonInterface
     public function setSalutation($salutation): void
     {
         if (
-            in_array($salutation, $this->allowedSuffixes, 1)
+            in_array($salutation, $this->allowedSuffixes, true)
         ) {
             $this->salutation = $salutation;
         }
@@ -65,7 +72,7 @@ class Localization extends TranslationBase implements SingletonInterface
             if ($temp || !$force) {
                 $result = $temp;
             } else {
-                $result = $GLOBALS['TSFE']->sL($string);
+                $result = $this->sL($string);
             }
         } else {
             $result = $string;

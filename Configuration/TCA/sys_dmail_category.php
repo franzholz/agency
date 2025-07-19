@@ -50,6 +50,9 @@ if ($tableExists) {
             'enablecolumns' => [
                 'disabled' => 'hidden',
             ],
+            'security' => [
+                'ignorePageTypeRestriction' => true,
+            ],
             'iconfile' => 'EXT:' . $extensionKey . '/Resources/Public/Icons/icon_tx_directmail_category.gif'
         ],
         'interface' => [

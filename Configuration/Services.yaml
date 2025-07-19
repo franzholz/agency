@@ -5,7 +5,7 @@ services:
     public: false
   JambageCom\Agency\:
     resource: '../Classes/**'
-    exclude: '../Classes/Hooks/*,../Classes/Api/*'
+    exclude: '../Classes/Hooks/*'
 
   JambageCom\Agency\EventListener\PageContentPreviewRenderingListener:
     tags:

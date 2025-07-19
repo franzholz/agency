@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Controller;
 
 /***************************************************************
@@ -42,8 +44,9 @@ namespace JambageCom\Agency\Controller;
 use Psr\Http\Message\ServerRequestInterface;
 
 use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use JambageCom\Div2007\Compatibility\AbstractPlugin;
 
 use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Configuration\ConfigurationCheck;
@@ -63,7 +66,6 @@ class RegisterPluginController extends AbstractPlugin
         $conf,
         ServerRequestInterface $request
     ) {
-        $this->pi_setPiVarDefaults();
         $this->conf = $conf;
         LocalizationUtility::init();
         $configurationCheck = GeneralUtility::makeInstance(ConfigurationCheck::class);
@@ -84,7 +86,7 @@ class RegisterPluginController extends AbstractPlugin
         // Check presence of deprecated markers
         $content .=
             $configurationCheck->checkDeprecatedMarkers(
-                $this->cObj,
+                $request,
                 $conf,
                 $this->extKey
             );

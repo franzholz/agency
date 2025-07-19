@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Agency\Domain;
 
 /***************************************************************
@@ -39,18 +41,18 @@ namespace JambageCom\Agency\Domain;
  *
  *
  */
+use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use JambageCom\Agency\Api\Localization;
-use JambageCom\Agency\Request\Parameters;
-use JambageCom\Div2007\Utility\HtmlUtility;
-use JambageCom\Div2007\Api\Css;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-use JambageCom\Div2007\Utility\FrontendUtility;
-
+use JambageCom\Agency\Api\Localization;
 use JambageCom\Agency\Constants\Mode;
+use JambageCom\Agency\Request\Parameters;
 
+use JambageCom\Div2007\Api\Css;
+use JambageCom\Div2007\Utility\FrontendUtility;
+use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\TableUtility;
 
 class Tca implements SingletonInterface
@@ -58,27 +60,6 @@ class Tca implements SingletonInterface
     public function init($extKey, $theTable): void
     {
         // nothing
-    }
-
-    /**
-     * Fix contents of $GLOBALS['TCA']['tt_address']['feInterface']['fe_admin_fieldList']
-     * The list gets broken when EXT:tt_address/tca.php is included twice
-     *
-     * @return void
-     */
-    protected function fixAddressFeAdminFieldList($theTable)
-    {
-        if (
-            $theTable == 'tt_address' &&
-            ExtensionManagementUtility::isLoaded('tt_address') &&
-            isset($GLOBALS['TCA']['tt_address']['feInterface']['fe_admin_fieldList'])
-        ) {
-            $fieldArray = array_unique(GeneralUtility::trimExplode(',', $GLOBALS['TCA']['tt_address']['feInterface']['fe_admin_fieldList'], 1));
-            $fieldArray = array_diff($fieldArray, ['middle_first_name', 'last_first_name']);
-            $fieldList = implode(',', $fieldArray);
-            $fieldList = str_replace('first_first_name', 'first_name', $fieldList);
-            $GLOBALS['TCA']['tt_address']['feInterface']['fe_admin_fieldList'] = $fieldList;
-        }
     }
 
     public function getForeignTable($theTable, $colName)
@@ -223,7 +204,7 @@ class Tca implements SingletonInterface
                             $dataArray[$colName] = $valuesArray;
                         } else {
                             // the values from the mm table are already available as an array
-                            $dataArray[$colName] = GeneralUtility::trimExplode(',', $value, 1);
+                            $dataArray[$colName] = GeneralUtility::trimExplode(',', $value, true);
                         }
                     }
                     break;
@@ -262,7 +243,7 @@ class Tca implements SingletonInterface
                 $value = $dataArray[$colName] ?? '';
 
                 if (!empty($value) && !is_array($value)) {
-                    $dataArray[$colName] = GeneralUtility::trimExplode(',', $value, 1);
+                    $dataArray[$colName] = GeneralUtility::trimExplode(',', $value, true);
                 }
             }
         }
@@ -489,7 +470,7 @@ class Tca implements SingletonInterface
                                     isset($mrow[$colName]) &&
                                     $mrow[$colName] != ''
                                 ) {
-                                    $colContent = ($HSC ? nl2br(htmlspecialchars($mrow[$colName])) : $mrow[$colName]);
+                                    $colContent = ($HSC && is_string($mrow[$colName]) ? nl2br(htmlspecialchars($mrow[$colName])) : $mrow[$colName]);
                                 }
                                 break;
 
@@ -567,7 +548,7 @@ class Tca implements SingletonInterface
                                     isset($mrow[$colName]) &&
                                     (string) $mrow[$colName] != ''
                                 ) {
-                                    $valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', $mrow[$colName]);
+                                    $valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', (string) $mrow[$colName]);
                                     $textSchema = $theTable . '.' . $colName . '.I.';
                                     $labelItemArray = $languageObj->getItemsLL($textSchema, true);
 
@@ -610,7 +591,7 @@ class Tca implements SingletonInterface
                                         $mrow[$colName] == '0'
                                     )
                                 ) {
-                                    $valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', $mrow[$colName]);
+                                    $valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', (string) $mrow[$colName]);
                                     $textSchema = $theTable . '.' . $colName . '.I.';
                                     $labelItemArray = $languageObj->getItemsLL($textSchema, true);
 
@@ -664,20 +645,22 @@ class Tca implements SingletonInterface
                                                 $where
                                             );
 
-                                            $languageUid = $controlData->getSysLanguageUid(
-                                                $conf,
-                                                'ALL',
-                                                $colConfig['foreign_table']
-                                            );
-
                                             if (
                                                 is_array($foreignRows) &&
                                                 count($foreignRows) > 0
                                             ) {
+
+                                                $language = $controlData->getSysLanguageUid(
+                                                    $conf,
+                                                    'ALL',
+                                                    $colConfig['foreign_table']
+                                                );
+                                                $languageAspect = new LanguageAspect($language, $language);
+
                                                 for ($i = 0; $i < count($foreignRows); $i++) {
                                                     if ($theTable == 'fe_users' && $colName == 'usergroup') {
                                                         $foreignRows[$i] = $this->getUsergroupOverlay($conf, $controlData, $foreignRows[$i]);
-                                                    } elseif ($localizedRow = $GLOBALS['TSFE']->sys_page->getRecordOverlay($colConfig['foreign_table'], $foreignRows[$i], $languageUid)) {
+                                                    } elseif ($localizedRow = $GLOBALS['TSFE']->sys_page->getLanguageOverlay($colConfig['foreign_table'], $foreignRows[$i], $languageAspect)) {
                                                         $foreignRows[$i] = $localizedRow;
                                                     }
                                                     $text = $foreignRows[$i][$titleField];
@@ -714,10 +697,10 @@ class Tca implements SingletonInterface
                             $valuesArray = [];
 
                             if (isset($mrow[$colName])) {
-                                $valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', $mrow[$colName]);
+                                $valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', (string) $mrow[$colName]);
                             }
 
-                            if (empty($valuesArray['0']) && isset($colConfig['default'])) {
+                            if (empty($valuesArray[0]) && isset($colConfig['default'])) {
                                 $valuesArray[] = $colConfig['default'];
                             }
                             $textSchema = $theTable . '.' . $colName . '.I.';
@@ -1068,7 +1051,7 @@ class Tca implements SingletonInterface
                                         $colConfig['foreign_table'] == 'sys_dmail_category' &&
                                         $conf['module_sys_dmail_category_PIDLIST']
                                     ) {
-                                        $languageUid =
+                                        $language =
                                             $controlData->getSysLanguageUid(
                                                 $conf,
                                                 'ALL',
@@ -1085,7 +1068,7 @@ class Tca implements SingletonInterface
                                                 $pidArray[] = $v;
                                             }
                                         }
-                                        $whereClause .= ' AND sys_dmail_category.pid IN (' . implode(',', $pidArray) . ')' . ($conf['useLocalization'] ? ' AND sys_language_uid=' . intval($languageUid) : '');
+                                        $whereClause .= ' AND sys_dmail_category.pid IN (' . implode(',', $pidArray) . ')' . ($conf['useLocalization'] ? ' AND sys_language_uid=' . intval($language) : '');
                                     }
                                     $whereClause .= TableUtility::enableFields($colConfig['foreign_table']);
                                     $whereClause = $this->replaceForeignWhereMarker($whereClause, $colConfig);
@@ -1155,16 +1138,17 @@ class Tca implements SingletonInterface
                                                 }
                                             }
                                         } else {
-                                            $languageUid = $controlData->getSysLanguageUid(
+                                            $language = $controlData->getSysLanguageUid(
                                                 $conf,
                                                 'ALL',
                                                 $colConfig['foreign_table']
                                             );
+                                            $languageAspect = new LanguageAspect($language, $language);
                                             if ($localizedRow =
-                                                $GLOBALS['TSFE']->sys_page->getRecordOverlay(
+                                                $GLOBALS['TSFE']->sys_page->getLanguageOverlay(
                                                     $colConfig['foreign_table'],
                                                     $row2,
-                                                    $languageUid
+                                                    $languageAspect
                                                 )
                                             ) {
                                                 $row2 = $localizedRow;
@@ -1259,13 +1243,13 @@ class Tca implements SingletonInterface
         $conf,
         Parameters $controlData,
         $usergroup,
-        $languageUid = ''
+        $language = ''
     ) {
         $row = false;
 
         // Initialize:
-        if ($languageUid == '') {
-            $languageUid =
+        if ($language == '') {
+            $language =
                 $controlData->getSysLanguageUid(
                     $conf,
                     'ALL',
@@ -1274,7 +1258,7 @@ class Tca implements SingletonInterface
         }
 
         // If language UID is different from zero, do overlay:
-        if ($languageUid) {
+        if ($language) {
             $fieldArr = ['title'];
             if (is_array($usergroup)) {
                 $fe_groups_uid = $usergroup['uid'];
@@ -1290,7 +1274,7 @@ class Tca implements SingletonInterface
                 $cObj = FrontendUtility::getContentObjectRenderer();
 
                 $whereClause = 'fe_group=' . intval($fe_groups_uid) . ' ' .
-                    'AND sys_language_uid=' . intval($languageUid) . ' ' .
+                    'AND sys_language_uid=' . intval($language) . ' ' .
                      TableUtility::enableFields('fe_groups_language_overlay');
                 $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(implode(',', $fieldArr), 'fe_groups_language_overlay', $whereClause);
                 if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)) {
