@@ -325,7 +325,7 @@ class EditView
     * @return string  the template with substituted markers
     */
     public function render(
-        &$errorCode,
+        array &$errorCode,
         array &$markerArray,
         $conf,
         ContentObjectRenderer $cObj,
@@ -400,18 +400,20 @@ class EditView
                 )
             ) {
                 $markerObj->setArray($markerArray);
+                $authCode = $authObj->getAuthCode();
 
                 // Must be logged in OR be authenticated by the aC code in order to edit
                 // If the recUid selects a record.... (no check here)
                 if (
-                    !strcmp($authObj->getAuthCode(), $theAuthCode) ||
+                    is_string($authCode) &&
+                        !strcmp($authCode, $theAuthCode) ||
                     $aCAuth ||
                     $dataObj->getCoreQuery()->DBmayFEUserEdit(
                         $theTable,
                         $origArray,
                         $frontendUser->user,
-                        $conf['allowedGroups'],
-                        $conf['fe_userEditSelf']
+                        $conf['allowedGroups'] ?? '',
+                        $conf['fe_userEditSelf'] ?? false
                     )
                 ) {
                     // Display the form, if access granted.

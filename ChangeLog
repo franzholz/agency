@@ -1,3 +1,10 @@
+2025-07-18 Franz Holzinger  <franz@ttproducts.de>
+    * Compatibility 13: It works.
+    * add TEMPLATE_REFUSE_PREVIEW and labels for refuse
+
+2025-07-07 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix for TYPO3 8.7: replace the deprecated $GLOBALS['TSFE']->sys_page->getRecordsByField by  \TYPO3\CMS\Frontend\Page\PageRepository::getRecordsByField
+
 2025-06-20 Franz Holzinger  <franz@ttproducts.de>
     * Compatibility 13, Breaking no. 102605: TSFE->fe_user removed
 

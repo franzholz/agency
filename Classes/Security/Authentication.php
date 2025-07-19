@@ -120,7 +120,7 @@ class Authentication implements SingletonInterface
                     } else {
                         $recordCopy[$key] = $record[$value];
                     }
-                    if ($rawUrlDecode) {
+                    if ($rawUrlDecode && is_string($recordCopy[$key])) {
                         $recordCopy[$key] = rawurldecode($recordCopy[$key]);
                     }
                 }

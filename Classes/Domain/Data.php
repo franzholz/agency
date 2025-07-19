@@ -388,7 +388,7 @@ class Data implements SingletonInterface
                     $this->controlData->getTable() == 'fe_users' &&
                     !empty($conf['allowUserGroupSelection'])
                 ) {
-                    $overrideArray = GeneralUtility::trimExplode(',', $theValue, true);
+                    $overrideArray = GeneralUtility::trimExplode(',', (string) $theValue, true);
                     if (is_array($dataArray[$theField])) {
                         $dataValue = array_merge($dataArray[$theField], $overrideArray);
                     } else {
@@ -558,7 +558,6 @@ class Data implements SingletonInterface
             } else {
                 $bIsMissing = true;
             }
-
             if ($bIsMissing) {
                 $failureArray[] = $theField;
                 $this->missing[$theField] = true;
@@ -599,7 +598,7 @@ class Data implements SingletonInterface
                 }
                 $this->evalErrors[$theField] = [];
                 $failureMsg[$theField] = [];
-                $listOfCommands = GeneralUtility::trimExplode(',', $theValue, true);
+                $listOfCommands = GeneralUtility::trimExplode(',', (string) $theValue, true);
                 // Unset the incoming value is empty and unsetEmpty is specified
                 if (array_search('unsetEmpty', $listOfCommands) !== false) {
                     if (
@@ -1242,7 +1241,7 @@ class Data implements SingletonInterface
                                     if (is_array($dataValue)) {
                                         $fieldDataArray = $dataValue;
                                     } elseif (is_string($dataValue) && $dataValue) {
-                                        $fieldDataArray = GeneralUtility::trimExplode(',', $dataValue, true);
+                                        $fieldDataArray = GeneralUtility::trimExplode(',', (string) $dataValue, true);
                                     }
                                 }
                                 $dataValue =
@@ -1932,7 +1931,7 @@ class Data implements SingletonInterface
                 unset($updateFields[$field]);
                 $delFileArr = $row[$field];
                 if (!is_array($delFileArr)) {
-                    $delFileArr = explode(',', $row[$field]);
+                    $delFileArr = explode(',', (string) $row[$field]);
                 }
                 foreach($delFileArr as $n) {
                     if ($n != '') {

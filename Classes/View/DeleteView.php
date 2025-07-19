@@ -68,7 +68,7 @@ class DeleteView
     * @return string  the template with substituted markers
     */
     public function render(
-        &$errorCode,
+        array &$errorCode,
         array $markerArray,
         $conf,
         $prefixId,

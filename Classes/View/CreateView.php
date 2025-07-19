@@ -333,7 +333,7 @@ class CreateView
                         'FE[' . $theTable . ']',
                         $fields
                     );
-                $content .= $updateJS;
+                    $content .= $updateJS;
             }
         }
 

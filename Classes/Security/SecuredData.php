@@ -122,50 +122,18 @@ class SecuredData
         $securedValue = $value;
         if (
             !empty($securedValue) &&
+            is_string($securedValue) &&
             !in_array(
                 $field,
                 self::getSecuredFields()
-            )) {
+            )
+        ) {
             $securedValue = htmlspecialchars_decode($securedValue);
             if ($htmlSpecial) {
                 $securedValue = htmlspecialchars($securedValue);
             }
         }
         return $securedValue;
-    }
-
-    /**
-    * Writes the password to FE user session data
-    *
-    * @param    array   $row: data array that may contain password values
-    *
-    * @return void
-    */
-    public static function securePassword(
-        FrontendUserAuthentication $frontendUser,
-        $extensionKey,
-        array &$row,
-        &$errorMessage
-    ) {
-        $result = true;
-        $data = [];
-        // Decrypt incoming password (and eventually other encrypted fields)
-        $passwordRow =
-            ['password' => self::readPassword($frontendUser, $extensionKey)];
-        $errorCode = '';
-        $errorMessage = '';
-
-        if ($errorMessage == '') {
-            self::writePassword(
-                $frontendUser,
-                $extensionKey,
-                $passwordRow['password'],
-                $row['password_again'] ?? ''
-            );
-        } else {
-            $result = false;
-        }
-        return $result;
     }
 
     /**
@@ -222,7 +190,7 @@ class SecuredData
 
         if ($password != '') {
             $password =
-            self::getStorageSecurity()->encryptPasswordForStorage($password);
+                self::getStorageSecurity()->encryptPasswordForStorage($password);
         }
 
         return $password;
@@ -239,8 +207,8 @@ class SecuredData
     )
     {
         $result = '';
-        $securedArray = self::readSecuredArray($frontendUser, $extensionKey);
-        if ($securedArray['password']) {
+        $securedArrayRead = self::readSecuredArray($securedArray, $frontendUser, $extensionKey);
+        if ($securedArrayRead && !empty($securedArray['password'])) {
             $result = $securedArray['password'];
         }
         return $result;
@@ -319,9 +287,11 @@ class SecuredData
     * @return   array   secured FE user session data
     */
     public static function readSecuredArray(
+        &$securedArray,
         FrontendUserAuthentication $frontendUser,
         $extensionKey
-    ) {
+    ): bool
+    {
         $securedArray = [];
         $sessionData = SessionUtility::readData($frontendUser, $extensionKey);
         $securedFields = self::getSecuredFields();
@@ -330,7 +300,7 @@ class SecuredData
                 $securedArray[$securedField] = $sessionData[$securedField];
             }
         }
-        return $securedArray;
+        return !empty($securedArray);
     }
 
     /**

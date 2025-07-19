@@ -37,28 +37,34 @@ namespace JambageCom\Agency\Api;
  * @author  Franz Holzinger <franz@ttproducts.de>
  *
  */
+
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use JambageCom\Agency\Request\Parameters;
 
-// replacement for the former class tx_ttproducts_model_control
-//
+
 class ParameterApi implements SingletonInterface
 {
-    protected $request = null;
+    protected $controlData = null;
 
-    public function setRequest(
-        ServerRequestInterface $request,
+    public function setControlData(
+        $controlData
     ): void
     {
-        $this->request = $request;
+        $this->controlData = $controlData;
+    }
+
+    public function getControlData(): Parameters
+    {
+        return $this->controlData;
     }
 
     public function getRequest()
     {
-        return $this->request;
+        return $this->getControlData()->getRequest();
     }
 
     public function getParameter($param)

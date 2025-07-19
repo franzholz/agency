@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace JambageCom\Agency\Api;
 
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Div2007\Base\TranslationBase;
 
@@ -20,6 +21,9 @@ use JambageCom\Div2007\Base\TranslationBase;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+use Psr\Http\Message\ServerRequestInterface;
+
 class Localization extends TranslationBase implements SingletonInterface
 {
     public $allowedSuffixes = ['', 'formal', 'informal']; // list of allowed suffixes
@@ -28,15 +32,15 @@ class Localization extends TranslationBase implements SingletonInterface
     public function init(
         $extensionKey = '',
         $confLocalLang = [], // you must pass only the $conf['_LOCAL_LANG.'] part of the setup of the caller
-        $scriptRelPath = '',
-        $lookupFilename = 'locallang.xlf',
+        ?ServerRequestInterface $request = null,
+        $lookupFilename = '',
         $useDiv2007Language = true
     ): void {
         $scriptRelPath = DIV2007_LANGUAGE_SUBPATH;
         parent::init(
             $extensionKey,
             $confLocalLang,
-            $scriptRelPath,
+            $request,
             $lookupFilename,
             $useDiv2007Language
         );
@@ -68,7 +72,7 @@ class Localization extends TranslationBase implements SingletonInterface
             if ($temp || !$force) {
                 $result = $temp;
             } else {
-                $result = $GLOBALS['TSFE']->sL($string);
+                $result = $this->sL($string);
             }
         } else {
             $result = $string;

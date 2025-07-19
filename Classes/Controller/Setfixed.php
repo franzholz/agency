@@ -116,7 +116,10 @@ class Setfixed implements SingletonInterface
         $email = GeneralUtility::makeInstance(Email::class);
         $content = false;
         $request = $controlData->getRequest();
-        $frontendUser = $request->getAttribute('frontend.user');
+        $context = $controlData->getContext();
+        $feUser = [];
+        $feUser['uid'] = $context->getPropertyFromAspect('frontend.user', 'id');
+        $feUser['usergroup'] = $context->getPropertyFromAspect('frontend.user', 'groupIds');
         $row = $currentArray = $origArray;
         $usesPassword = false;
         $enableAutoLoginOnConfirmation =
@@ -127,7 +130,7 @@ class Setfixed implements SingletonInterface
                 $controlData
             );
         $errorContent = '';
-        $errorCode = '';
+        $errorCode = [];
         $hasError = false;
         $sendExecutionEmail = false;
         $cryptedPassword = '';
@@ -146,7 +149,7 @@ class Setfixed implements SingletonInterface
                 $cmdKey == 'invite'
             ) &&
             !$row['lost_password'] &&
-            !$enableAutoLoginOnConfirmation // neu +++
+            !$enableAutoLoginOnConfirmation
         ) {
             $usesPassword = true;
         }
@@ -246,7 +249,7 @@ class Setfixed implements SingletonInterface
                 $setFixedKey == 'REFUSE'
             ) {
                 if (
-                    $setfixedConfig['askAgain'] &&
+                    !empty($setfixedConfig['askAgain']) &&
                     !$controlData->getSubmit()
                 ) { // ask again if the user really wants to delete
                     $content = $deleteView->render(
@@ -266,7 +269,7 @@ class Setfixed implements SingletonInterface
                         $theTable,
                         $dataArray,
                         $origArray,
-                        $frontendUser->user,
+                        $feUser,
                         $securedArray,
                         $token,
                         $setFixedKey,
@@ -359,7 +362,8 @@ class Setfixed implements SingletonInterface
                                 $this,
                                 $errorCode
                             );
-                            if ($errorCode) {
+
+                            if (!empty($errorCode)) {
                                 break;
                             }
                         }
@@ -390,7 +394,7 @@ class Setfixed implements SingletonInterface
                         $encoded = $currentArray['tx_agency_password'];
                         $cryptedPassword = base64_decode($encoded);
 
-                        $errorCode = '';
+                        $errorCode = [];
                         $errorMessage = '';
                         \JambageCom\Agency\Security\SecuredData::getStorageSecurity()
                             ->decryptPasswordForAutoLogin(
@@ -628,7 +632,7 @@ class Setfixed implements SingletonInterface
                         $conf['infomail']
                     )
                 ) {
-                    $errorCode = '';
+                    $errorCode = [];
                     $subpart = SETFIXED_PREFIX . $setfixedSuffix;
                     // Compiling email
                     $emailResult = $email->compile(
@@ -704,7 +708,7 @@ class Setfixed implements SingletonInterface
                         );
 
                         if (
-                            is_array($errorCode)
+                            !empty($errorCode)
                         ) {
                             $errorText =
                                 $languageObj->getLabel($errorCode[0], $dummy, '', false, true);
@@ -848,7 +852,7 @@ class Setfixed implements SingletonInterface
     * @return string  the template with substituted markers
     */
     public function confirmationScreen(
-        &$errorCode,
+        array &$errorCode,
         $markerArray,
         $conf,
         $prefixId,
@@ -880,7 +884,9 @@ class Setfixed implements SingletonInterface
 
         $markerArray['###BACK_URL###'] =
             (
-                $controlData->getBackURL() ?: $cObj->getTypoLink_URL(
+                $controlData->getBackURL() ?:
+                FrontendUtility::getTypoLink_URL(
+                    $cObj,
                     $conf['loginPID'] . ',' . $controlData->getType()
                 )
             );

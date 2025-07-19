@@ -87,6 +87,7 @@ class Parameters implements SingletonInterface
     protected $extensionKey;
     protected $cmd = '';
     protected $cmdKey = '';
+    protected $pageId = 0;
     protected $pid = [];
     protected $defaultPid = '';
     protected $setfixedEnabled = 0;
@@ -141,12 +142,18 @@ class Parameters implements SingletonInterface
         $piVars,
         $theTable
     ): void {
+        $this->setRequest($request);
+
         $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
+        $parameterApi->setControlData($this);
+
         $fdArray = [];
         $conf = $confObj->getConf();
         $shortUrls = $conf['useShortUrls'] ?? false;
-        $this->setRequest($request);
         $this->setFrontendUser($request->getAttribute('frontend.user'));
+        $pageArguments = $request->getAttribute('routing');
+        $pageId = $pageArguments->getPageId();
+        $this->setPageId($pageId);
 
         if ($theTable == 'fe_users') {
             $this->initPasswordField($conf);
@@ -888,19 +895,14 @@ class Parameters implements SingletonInterface
         return $this->bDoNotSave;
     }
 
-    public function getPid($type = '')
+    public function setPageId($pageId): void
     {
-        $result = false;
-        if ($type) {
-            if (isset($this->pid[$type])) {
-                $result = $this->pid[$type];
-            }
-        }
+        $this->pageId = $pageId;
+    }
 
-        if (!$result) {
-            $result = $this->getDefaultPid();
-        }
-        return $result;
+    public function getPageId(): int
+    {
+        return $this->pageId;
     }
 
     public function setPid($type, $pid): void
@@ -918,16 +920,26 @@ class Parameters implements SingletonInterface
                     $pid = $this->getPid('password');
                     break;
                 default:
-                    $pid = $this->getTypoScriptFrontendController()->id;
+                    $pid = $this->getPageId();
                     break;
             }
         }
         $this->pid[$type] = $pid;
     }
 
-    public function getMode()
+    public function getPid($type = '')
     {
-        return $this->mode;
+        $result = false;
+        if ($type) {
+            if (isset($this->pid[$type])) {
+                $result = $this->pid[$type];
+            }
+        }
+
+        if (!$result) {
+            $result = $this->getDefaultPid();
+        }
+        return $result;
     }
 
     public function setMode($mode): void
@@ -935,9 +947,9 @@ class Parameters implements SingletonInterface
         $this->mode = $mode;
     }
 
-    public function getTable()
+    public function getMode()
     {
-        return $this->theTable;
+        return $this->mode;
     }
 
     public function setTable($theTable): void
@@ -945,9 +957,9 @@ class Parameters implements SingletonInterface
         $this->theTable = $theTable;
     }
 
-    public function getRequiredArray()
+    public function getTable()
     {
-        return $this->requiredArray;
+        return $this->theTable;
     }
 
     public function setRequiredArray($requiredArray): void
@@ -955,9 +967,9 @@ class Parameters implements SingletonInterface
         $this->requiredArray = $requiredArray;
     }
 
-    public function getSetfixedEnabled()
+    public function getRequiredArray()
     {
-        return $this->setfixedEnabled;
+        return $this->requiredArray;
     }
 
     public function setSetfixedEnabled($setfixedEnabled): void
@@ -965,9 +977,9 @@ class Parameters implements SingletonInterface
         $this->setfixedEnabled = $setfixedEnabled;
     }
 
-    public function getSetfixedOptions()
+    public function getSetfixedEnabled()
     {
-        return $this->setFixedOptions;
+        return $this->setfixedEnabled;
     }
 
     public function setSetfixedOptions($setFixedOptions): void
@@ -975,9 +987,9 @@ class Parameters implements SingletonInterface
         $this->setFixedOptions = $setFixedOptions;
     }
 
-    public function getSetfixedParameters()
+    public function getSetfixedOptions()
     {
-        return $this->setFixedParameters;
+        return $this->setFixedOptions;
     }
 
     public function setSetfixedParameters($setFixedParameters): void
@@ -985,14 +997,19 @@ class Parameters implements SingletonInterface
         $this->setFixedParameters = $setFixedParameters;
     }
 
-    public function getFd()
+    public function getSetfixedParameters()
     {
-        return $this->fD;
+        return $this->setFixedParameters;
     }
 
     public function setFd($fD): void
     {
         $this->fD = $fD;
+    }
+
+    public function getFd()
+    {
+        return $this->fD;
     }
 
     public function determineFormId($suffix = '_form')
@@ -1064,7 +1081,9 @@ class Parameters implements SingletonInterface
         // convert the array to one that will be properly incorporated into the GET global array.
         $retArray = [];
         foreach($varArray as $key => $val) {
-            $val = str_replace('%2C', ',', $val);
+            if (is_string($val)) {
+                $val = str_replace('%2C', ',', $val);
+            }
             $search = ['[%5D]', '[%5B]'];
             $replace = ['\']', '\'][\''];
             $newkey = "['" . preg_replace($search, $replace, $key);
@@ -1114,6 +1133,6 @@ class Parameters implements SingletonInterface
      */
     public function getTypoScriptFrontendController()
     {
-        return $this->typoScriptFrontendController ?: $GLOBALS['TSFE'] ?? null;
+        return $this->typoScriptFrontendController ?: $this->getRequest()->getAttribute('frontend.controller') ?? null;
     }
 }

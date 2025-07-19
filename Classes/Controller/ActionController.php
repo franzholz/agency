@@ -150,23 +150,6 @@ class ActionController implements SingletonInterface
         $frontendUser = $request->getAttribute('frontend.user');
         $bHtmlSpecialChars = false;
         SecuredData::secureInput($dataArray, $bHtmlSpecialChars);
-
-        if (
-            $theTable == 'fe_users' &&
-            !empty($dataArray)
-        ) {
-            $modifyPassword =
-                SecuredData::securePassword(
-                    $frontendUser,
-                    $extensionKey,
-                    $dataArray,
-                    $errorMessage
-                );
-
-            if ($modifyPassword === false) {
-                return false;
-            }
-        }
         $dataObj->setDataArray($dataArray);
 
         $fieldlist =
@@ -213,6 +196,7 @@ class ActionController implements SingletonInterface
         }
 
         if ($theUid) {
+            $theUid = intval($theUid);
             $dataObj->setRecUid($theUid);
             $newOrigArray =
                 $GLOBALS['TSFE']->sys_page->getRawRecord(
@@ -591,11 +575,15 @@ class ActionController implements SingletonInterface
             $finalDataArray = $dataArray;
         } elseif ($dataObj->bNewAvailable()) {
             if ($theTable == 'fe_users') {
-                $securedArray =
+                $securedArrayRead =
                     SecuredData::readSecuredArray(
+                        $securedArray,
                         $frontendUser,
                         $extensionKey
                     );
+                if ($securedArrayRead && !empty($securedArray['password'])) {
+                    $savePassword = $securedArray['password'];
+                }
             }
             $finalDataArray = $dataArray;
             ArrayUtility::mergeRecursiveWithOverrule(
@@ -678,6 +666,15 @@ class ActionController implements SingletonInterface
                     $controlData->getFeUserData('linkToPID')
                 )
             ) {
+                $checkFieldArray = $finalDataArray;
+                if (
+                    isset($finalDataArray['password']) &&
+                    $savePassword == $finalDataArray['password']
+                ) {
+                    unset($checkFieldArray['password']);
+                }
+                $checkFieldArray = array_keys($checkFieldArray);
+
                 // A button was clicked on
                 $evalErrors = $dataObj->evalValues(
                     $confObj,
@@ -688,7 +685,7 @@ class ActionController implements SingletonInterface
                     $markerArray,
                     $cmdKey,
                     $controlData->getRequiredArray(),
-                    [],
+                    $checkFieldArray,
                     $controlData->getCaptcha()
                 );
 
@@ -890,7 +887,6 @@ class ActionController implements SingletonInterface
             $markerObj->setPreviewLabel('_PREVIEW');
             $controlData->setMode(Mode::PREVIEW);
         }
-
         $content = '';
         // If data is submitted, we take care of it here.
         if (
@@ -996,7 +992,7 @@ class ActionController implements SingletonInterface
 
             if ($errorContent == '') {
                 $markerArray = $markerObj->getArray(); // uses its own markerArray
-                $errorCode = '';
+                $errorCode = [];
                 $bEmailSent = false;
 
                 if (
@@ -1250,7 +1246,7 @@ class ActionController implements SingletonInterface
                         $controlData->setSetfixedEnabled(1);
                     }
                     $origArray = $dataObj->parseIncomingData($origArray, false);
-                    $errorCode = '';
+                    $errorCode = [];
                     $email = GeneralUtility::makeInstance(Email::class);
                     $fetch = $controlData->getFeUserData('fetch');
                     $pidLock = '';
@@ -1429,7 +1425,7 @@ class ActionController implements SingletonInterface
 
             if (
                 isset($errorCode) &&
-                is_array($errorCode)
+                !empty($errorCode)
             ) {
                 $errorText = $languageObj->getLabel($errorCode[0]);
                 if (isset($errorCode[1])) {

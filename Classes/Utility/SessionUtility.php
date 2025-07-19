@@ -55,6 +55,7 @@ class SessionUtility
     /**
     * Retrieves session data
     *
+    * @param    string  $extensionKey
     * @param    boolean $readAll: whether to retrieve all session data or only data for this extension key
     * @return   array   session data
     */
@@ -98,6 +99,7 @@ class SessionUtility
         $redirectUrl = '' // $this->readRedirectUrl()
     ): void {
         $clearSession = empty($data);
+
         if (
             $keepToken &&
             !isset($data['token']) &&
@@ -115,7 +117,7 @@ class SessionUtility
         }
 
         // Read all session data
-        $allSessionData = static::readData($frontendUser, true);
+        $allSessionData = static::readData($frontendUser, $extensionKey, true);
 
         if (
             isset($allSessionData[$extensionKey]) &&

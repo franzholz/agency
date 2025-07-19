@@ -111,9 +111,6 @@ class InitializationController implements SingletonInterface
         $result = true;
         HtmlUtility::generateXhtmlFix();
 
-        $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
-        $parameterApi->setRequest($request);
-
         $tcaObj = GeneralUtility::makeInstance(Tca::class);
         $confObj->init($conf);
         $tcaObj->init($pibaseObj->extKey, $theTable);
@@ -155,7 +152,7 @@ class InitializationController implements SingletonInterface
         $urlObj = GeneralUtility::makeInstance(Url::class);
         $coreQuery = GeneralUtility::makeInstance(
             CoreQuery::class,
-            static::getTypoScriptFrontendController()
+            $request->getAttribute('frontend.controller')
         );
         $dataObj =
             GeneralUtility::makeInstance(
@@ -168,7 +165,8 @@ class InitializationController implements SingletonInterface
         $languageObj = GeneralUtility::makeInstance(Localization::class);
         $languageObj->init(
             Extension::KEY,
-            $conf['_LOCAL_LANG.'] ?? ''
+            $conf['_LOCAL_LANG.'] ?? '',
+            $request
         );
         $languageObj->loadLocalLang(
             'EXT:' . Extension::KEY . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf',
@@ -296,6 +294,7 @@ class InitializationController implements SingletonInterface
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $errorMessage = '';
         $origArray = [];
+        $controlData = null;
 
         $success = $this->init(
             $controlData,
@@ -365,14 +364,5 @@ class InitializationController implements SingletonInterface
             );
 
         return $content;
-    }
-
-
-    /**
-     * @return TypoScriptFrontendController
-     */
-    protected static function getTypoScriptFrontendController()
-    {
-        return $GLOBALS['TSFE'];
     }
 }

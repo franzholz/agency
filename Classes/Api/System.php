@@ -224,7 +224,7 @@ class System implements LoggerAwareInterface
             ) {
                 $sessionData = $this->userSession->getData();
                 // Create a new session with a fixated user
-                $this->userSession = $this->createUserSession($user, $frontendUser->userid_column);
+                $this->userSession = $frontendUser->createUserSession($user);
 
                 // Preserve session data on login
                 if ($anonymousSession || $isExistingSession) {
@@ -329,43 +329,6 @@ class System implements LoggerAwareInterface
         }
 
         return $result;
-    }
-
-    /**
-     * Creates a user session record and returns its values.
-     *
-     * @param array $userRecord User data array
-     * @return UserSession The session data for the newly created session.
-     */
-    public function createUserSession(array &$userRecord, $userid_column): UserSession
-    {
-        $userRecordId = (int)($userRecord[$userid_column] ?? 0);
-        $session =
-            $this->userSessionManager->elevateToFixatedUserSession(
-                $this->userSession,
-                $userRecordId
-            );
-        $frontendUser = $this->controlData->getFrontendUser();
-
-        // Updating lastLogin_column carrying information about last login.
-        $this->updateLoginTimestamp($userRecord, $frontendUser, $userRecordId);
-        return $session;
-    }
-
-    /**
-     * Updates the last login column in the user with the given id
-     */
-    protected function updateLoginTimestamp(&$userRecord, FrontendUserAuthentication $frontendUser, int $userId)
-    {
-        if ($frontendUser->lastLogin_column) {
-            $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($frontendUser->user_table);
-            $connection->update(
-                $frontendUser->user_table,
-                [$frontendUser->lastLogin_column => $GLOBALS['EXEC_TIME']],
-                [$frontendUser->userid_column => $userId]
-            );
-            $userRecord[$frontendUser->lastLogin_column] = $GLOBALS['EXEC_TIME'];
-        }
     }
 
     public function removePasswordAdditions(

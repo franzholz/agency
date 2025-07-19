@@ -25,13 +25,16 @@ namespace JambageCom\Agency\Hooks;
 *  This copyright notice MUST APPEAR in all copies of the script!
 */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+
 use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Controller\Setfixed;
 use JambageCom\Agency\Domain\Data;
 use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\View\Marker;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 
 /**
 * Example of hooks for extension Front End User Registration (sr_feuser_register)
@@ -76,11 +79,11 @@ class RegistrationProcessHooks
                 $lastName = ($lastName ?: $nameArray[1]);
             }
             $dataArray['username'] = substr(strtolower($firstName), 0, 5) . substr(strtolower($lastName), 0, 5);
-            $DBrows = $GLOBALS['TSFE']->sys_page->getRecordsByField($theTable, 'username', $dataArray['username'], 'LIMIT 1');
+            $DBrows = PageRepository::getRecordsByField($theTable, 'username', $dataArray['username'], 'LIMIT 1');
             $counter = 0;
             while($DBrows) {
                 $counter = $counter + 1;
-                $DBrows = $GLOBALS['TSFE']->sys_page->getRecordsByField($theTable, 'username', $dataArray['username'] . $counter, 'LIMIT 1');
+                $DBrows = PageRepository::getRecordsByField($theTable, 'username', $dataArray['username'] . $counter, 'LIMIT 1');
             }
             if ($counter) {
                 $dataArray['username'] = $dataArray['username'] . $counter;
@@ -130,7 +133,7 @@ class RegistrationProcessHooks
         array $row,
         $newFieldList,
         SetFixed $pObj,
-        &$errorCode
+        array &$errorCode
     ): void {
         // in the case of this hook, the record array is passed by reference
         // you may not see this echo if the page is redirected to auto-login

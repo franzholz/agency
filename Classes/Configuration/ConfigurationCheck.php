@@ -43,6 +43,7 @@ namespace JambageCom\Agency\Configuration;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Psr\Http\Message\ServerRequestInterface;
 
 use TYPO3\CMS\Core\Crypto\PasswordHashing\SaltedPasswordsUtility;
 use TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory;
@@ -158,7 +159,7 @@ class ConfigurationCheck implements LoggerAwareInterface
     * @return string Error message, if error found, empty string otherwise
     */
     public function checkDeprecatedMarkers(
-        $cObj,
+        ServerRequestInterface $request,
         array $conf,
         $extensionKey
     ) {
@@ -166,6 +167,7 @@ class ConfigurationCheck implements LoggerAwareInterface
         $templateCode = FrontendUtility::fileResource($conf['templateFile'], '', false);
         $messages =
             Marker::checkDeprecatedMarkers(
+                $request,
                 $templateCode,
                 $extensionKey,
                 $conf['templateFile']

@@ -86,7 +86,7 @@ class RegisterPluginController extends AbstractPlugin
         // Check presence of deprecated markers
         $content .=
             $configurationCheck->checkDeprecatedMarkers(
-                $this->cObj,
+                $request,
                 $conf,
                 $this->extKey
             );

@@ -123,7 +123,7 @@ class Email implements SingletonInterface
         $pidLock,
         $templateCode,
         $failure,
-        &$errorCode
+        array &$errorCode
     ) {
         $content = false;
         $conf = $confObj->getConf();
@@ -228,7 +228,7 @@ class Email implements SingletonInterface
 
                 if (
                     !$emailHasBeenSent &&
-                    is_array($errorCode)
+                    !empty($errorCode)
                 ) {
                     $errorText = $languageObj->getLabel($errorCode[0], $dummy, '', false, true);
                     $errorContent = sprintf($errorText, $errorCode[1]);
@@ -342,9 +342,9 @@ class Email implements SingletonInterface
         $templateCode,
         array $errorFieldArray,
         array $setFixedConfig,
-        &$errorCode
+        array &$errorCode
     ) {
-        $errorCode = '';
+        $errorCode = [];
         $conf = $confObj->getConf();
         $useAdditionalFields = true;
         $extKey = $controlData->getExtensionKey();

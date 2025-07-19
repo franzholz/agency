@@ -320,7 +320,7 @@ class Template
     * @return string  the template with substituted parts and markers
     */
     public function getPlainTemplate(
-        &$errorCode,
+        array &$errorCode,
         $conf,
         ContentObjectRenderer $cObj,
         Localization $languageObj,
