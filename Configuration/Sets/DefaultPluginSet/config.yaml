@@ -1,0 +1,6 @@
+name: jambagecom/agency-default-plugin-set
+label: Agency Registration Plugin Set
+settings:
+  website:
+    background:
+      color: '#386492'

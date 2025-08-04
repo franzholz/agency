@@ -344,3 +344,8 @@ plugin.tx_agency {
 	}
 }
 
+
+tt_content.agency =< lib.contentElement
+tt_content.agency.templateName = generic
+tt_content.agency.20 < plugin.tx_agency
+
