@@ -190,7 +190,7 @@ class SetFixedUrls
                 }
                 $urlConf = [];
                 $urlConf['disableGroupAccessCheck'] = true;
-                $confirmType = (MathUtility::canBeInterpretedAsInteger($confirmType) ? intval($confirmType) : $controlData->getType();
+                $confirmType = (MathUtility::canBeInterpretedAsInteger($confirmType) ? intval($confirmType) : $controlData->getType());
                 $url =
                     FrontendUtility::getTypoLink_URL(
                         $cObj,
