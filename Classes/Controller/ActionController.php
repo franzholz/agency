@@ -1075,10 +1075,10 @@ class ActionController implements SingletonInterface
 
                 if (
                     !$bEmailSent &&
-                    is_array($errorCode)
+                    isset($errorCode[0])
                 ) {
                     $errorText = $languageObj->getLabel($errorCode[0], $dummy, '', false, true);
-                    $errorContent = sprintf($errorText, $errorCode[1]);
+                    $errorContent = sprintf($errorText, $errorCode[1] ?? '');
                 }
             }
 
@@ -1283,12 +1283,13 @@ class ActionController implements SingletonInterface
 
                     if (
                         $content == '' &&
-                        is_array($errorCode)
+                        isset($errorCode[0])
                     ) {
                         $content = $languageObj->getLabel($errorCode[0]);
                     }
                     break;
                 case 'delete':
+                    $errorCode = [];
                     $markerObj->addGeneralHiddenFieldsMarkers(
                         $markerArray,
                         $cmd,
@@ -1425,8 +1426,7 @@ class ActionController implements SingletonInterface
             }
 
             if (
-                isset($errorCode) &&
-                !empty($errorCode)
+                isset($errorCode[0]))
             ) {
                 $errorText = $languageObj->getLabel($errorCode[0]);
                 if (isset($errorCode[1])) {
