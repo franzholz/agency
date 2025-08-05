@@ -2,23 +2,36 @@
 
 defined('TYPO3') || die('Access denied.');
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
 use JambageCom\Agency\Constants\Extension;
 
 call_user_func(function ($extensionKey, $table): void {
-    $listType = $extensionKey;
+    $pluginSignature = $extensionKey;
     $languageSubpath = '/Resources/Private/Language/';
 
-    $GLOBALS['TCA'][$table]['types']['list']['subtypes_excludelist'][$listType] = 'layout';
-    $GLOBALS['TCA'][$table]['types']['list']['subtypes_addlist'][$listType] = 'pi_flexform';
-
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue($listType, 'FILE:EXT:' . $extensionKey  . '/Configuration/FlexForms/flexform_ds.xml');
-
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPlugin(
+    ExtensionManagementUtility::addPlugin(
         [
             'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:tt_content.list_type',
-            $listType
+            $pluginSignature,
+            '',
+            'plugin'
         ],
-        'list_type',
+        'CType',
         $extensionKey
+    );
+
+    +// Activate the display of the FlexForm field
+    ExtensionManagementUtility::addToAllTCAtypes(
+        'tt_content',
+        '--div--;Configuration,pi_flexform,',
+        $pluginSignature,
+        'after:subheader',
+    );
+
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
+        '*',
+        'FILE:EXT:' . $extensionKey  . '/Configuration/FlexForms/flexform_ds.xml',
+        $pluginSignature,
     );
 }, Extension::KEY, basename(__FILE__, '.php'));

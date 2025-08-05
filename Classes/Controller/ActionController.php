@@ -531,6 +531,7 @@ class ActionController implements SingletonInterface
         $templateCode,
         &$errorMessage
     ) {
+        $errorCode = [];
         $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
         $dataArray = $dataObj->getDataArray();
         $conf = $confObj->getConf();
@@ -992,7 +993,6 @@ class ActionController implements SingletonInterface
 
             if ($errorContent == '') {
                 $markerArray = $markerObj->getArray(); // uses its own markerArray
-                $errorCode = [];
                 $bEmailSent = false;
 
                 if (
@@ -1075,10 +1075,14 @@ class ActionController implements SingletonInterface
 
                 if (
                     !$bEmailSent &&
-                    is_array($errorCode)
+                    isset($errorCode[0])
                 ) {
                     $errorText = $languageObj->getLabel($errorCode[0], $dummy, '', false, true);
-                    $errorContent = sprintf($errorText, $errorCode[1]);
+                    if (isset($errorCode[1])) {
+                        $errorContent = sprintf($errorText, $errorCode[1]);
+                    } else {
+                        $errorContent = $errorText;
+                    }
                 }
             }
 
@@ -1246,7 +1250,6 @@ class ActionController implements SingletonInterface
                         $controlData->setSetfixedEnabled(1);
                     }
                     $origArray = $dataObj->parseIncomingData($origArray, false);
-                    $errorCode = [];
                     $email = GeneralUtility::makeInstance(Email::class);
                     $fetch = $controlData->getFeUserData('fetch');
                     $pidLock = '';
@@ -1283,7 +1286,7 @@ class ActionController implements SingletonInterface
 
                     if (
                         $content == '' &&
-                        is_array($errorCode)
+                        isset($errorCode[0])
                     ) {
                         $content = $languageObj->getLabel($errorCode[0]);
                     }
@@ -1424,8 +1427,7 @@ class ActionController implements SingletonInterface
             }
 
             if (
-                isset($errorCode) &&
-                !empty($errorCode)
+                isset($errorCode[0])
             ) {
                 $errorText = $languageObj->getLabel($errorCode[0]);
                 if (isset($errorCode[1])) {

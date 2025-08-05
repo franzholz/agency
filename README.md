@@ -7,6 +7,10 @@ Use the forum at https://www.jambage.com to ask questions and find answers.
 A documentation manual.odt is available in the doc folder.
 
 
+## Upgrade Requirement
+
+In version 0.15.0 you must execute the Upgrade Wizard to convert the agency list type plugin into content elements identified by the CType agency.
+
 
 ## Compatibility
 

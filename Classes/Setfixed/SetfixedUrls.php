@@ -103,7 +103,7 @@ class SetFixedUrls
                     if (isset($data[$fieldname])) {
                         $fieldValue = $data[$fieldname];
 
-                        if ($fieldname == 'usergroup' && $data['usergroup.']) {
+                        if ($fieldname == 'usergroup' && !empty($data['usergroup.'])) {
                             $tablesObj = GeneralUtility::makeInstance(Tables::class);
                             $addressObj = $tablesObj->get('address');
                             $userGroupObj = $addressObj->getFieldObj('usergroup');
@@ -190,7 +190,7 @@ class SetFixedUrls
                 }
                 $urlConf = [];
                 $urlConf['disableGroupAccessCheck'] = true;
-                $confirmType = (MathUtility::canBeInterpretedAsInteger($confirmType) ? intval($confirmType) : $controlData->getType();
+                $confirmType = (MathUtility::canBeInterpretedAsInteger($confirmType) ? intval($confirmType) : $controlData->getType());
                 $url =
                     FrontendUtility::getTypoLink_URL(
                         $cObj,
