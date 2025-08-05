@@ -1426,7 +1426,7 @@ class ActionController implements SingletonInterface
             }
 
             if (
-                isset($errorCode[0]))
+                isset($errorCode[0])
             ) {
                 $errorText = $languageObj->getLabel($errorCode[0]);
                 if (isset($errorCode[1])) {
