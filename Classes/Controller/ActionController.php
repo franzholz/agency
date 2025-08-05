@@ -1322,6 +1322,7 @@ class ActionController implements SingletonInterface
                     break;
                 case 'edit':
                 case 'password':
+                    $errorCode = [];
                     $markerObj->addGeneralHiddenFieldsMarkers(
                         $markerArray,
                         $cmd,
