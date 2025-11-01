@@ -56,8 +56,8 @@ use JambageCom\Agency\Api\Localization;
 use JambageCom\Agency\Api\ParameterApi;
 use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Constants\Mode;
-use JambageCom\Agency\Domain\Tca;
-use JambageCom\Agency\Domain\Data;
+use JambageCom\Agency\Database\Tca;
+use JambageCom\Agency\Database\Data;
 use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Security\SecuredData;
 

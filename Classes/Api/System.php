@@ -65,7 +65,7 @@ use JambageCom\Div2007\Utility\SystemUtility;
 
 use JambageCom\Agency\Api\Url;
 use JambageCom\Agency\Authentication\AuthenticationService;
-use JambageCom\Agency\Domain\Data;
+use JambageCom\Agency\Database\Data;
 use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Utility\SessionUtility;
 

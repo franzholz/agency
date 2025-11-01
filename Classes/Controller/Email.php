@@ -43,7 +43,7 @@ namespace JambageCom\Agency\Controller;
  *
  *
  */
-use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Database\Repository\PageRepository;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -58,9 +58,9 @@ use JambageCom\Div2007\Utility\TableUtility;
 use JambageCom\Agency\Api\Localization;
 use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Configuration\ConfigurationStore;
-use JambageCom\Agency\Domain\Tca;
+use JambageCom\Agency\Database\Tca;
 use JambageCom\Agency\View\Marker;
-use JambageCom\Agency\Domain\Data;
+use JambageCom\Agency\Database\Data;
 use JambageCom\Agency\View\Template;
 use JambageCom\Agency\Security\Authentication;
 use JambageCom\Agency\Setfixed\SetfixedUrls;

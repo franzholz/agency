@@ -30,7 +30,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 
 use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Controller\Setfixed;
-use JambageCom\Agency\Domain\Data;
+use JambageCom\Agency\Database\Data;
 use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\View\Marker;
 
