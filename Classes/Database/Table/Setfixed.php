@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JambageCom\Agency\Domain\Table;
+namespace JambageCom\Agency\Database\Table;
 
 /***************************************************************
 *  Copyright notice

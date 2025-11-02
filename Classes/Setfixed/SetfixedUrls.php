@@ -51,7 +51,7 @@ use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Agency\Api\ParameterApi;
 use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Security\Authentication;
-use JambageCom\Agency\Domain\Tables;
+use JambageCom\Agency\Database\Tables;
 
 class SetFixedUrls
 {

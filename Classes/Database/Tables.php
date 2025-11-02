@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JambageCom\Agency\Domain;
+namespace JambageCom\Agency\Database;
 
 /***************************************************************
 *  Copyright notice
@@ -46,8 +46,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 use JambageCom\Agency\Constants\Extension;
-use JambageCom\Agency\Domain\Table\FeUsers;
-use JambageCom\Agency\Domain\Table\Setfixed;
+use JambageCom\Agency\Database\Table\FeUsers;
+use JambageCom\Agency\Database\Table\Setfixed;
 
 
 class Tables implements SingletonInterface

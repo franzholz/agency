@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace JambageCom\Agency\Domain\Table;
+namespace JambageCom\Agency\Database\Table;
 
-use JambageCom\Agency\Domain\Field\UserGroup;
+use JambageCom\Agency\Database\Field\UserGroup;
 
 /***************************************************************
 *  Copyright notice

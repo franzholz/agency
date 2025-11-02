@@ -54,7 +54,7 @@ use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Agency\Api\Localization;
 use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Constants\Field;
-use JambageCom\Agency\Domain\Tca;
+use JambageCom\Agency\Database\Tca;
 use JambageCom\Agency\Request\Parameters;
 
 class Template

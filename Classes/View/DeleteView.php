@@ -52,8 +52,8 @@ use JambageCom\Div2007\Utility\HtmlUtility;
 
 use JambageCom\Agency\Api\Localization;
 use JambageCom\Agency\Configuration\ConfigurationStore;
-use JambageCom\Agency\Domain\Tca;
-use JambageCom\Agency\Domain\Data;
+use JambageCom\Agency\Database\Tca;
+use JambageCom\Agency\Database\Data;
 use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Security\Authentication;
 
