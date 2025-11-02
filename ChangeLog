@@ -1,5 +1,6 @@
 2025-11-01 Franz Holzinger  <franz@ttproducts.de>
     * Rename folder and domain part Domain into Database for a difference to Extbase
+    * fix namespace for PageRepository: TYPO3\CMS\Core\Domain\Repository\PageRepository .
 
 2025-08-03 Franz Holzinger  <franz@ttproducts.de>
     * Deprecation no. 105076. Convert plugin list_type agency => CType agency
