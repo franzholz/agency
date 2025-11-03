@@ -563,7 +563,6 @@ class Data implements SingletonInterface
                 $this->missing[$theField] = true;
             }
         }
-
         $pid = intval($dataArray['pid'] ?? '');
 
         // Evaluate: This evaluates for more advanced things than "required" does. But it returns the same error code, so you must let the required-message tell, if further evaluation has failed!
@@ -773,7 +772,10 @@ class Data implements SingletonInterface
                                         intval($pars[2])
                                     );
 
-                                    if (!$pid_list || !GeneralUtility::inList($pid_list, $dataArray[$theField])) {
+                                    if (
+                                        !$pid_list ||
+                                        !GeneralUtility::inList($pid_list, $dataArray[$theField])
+                                    ) {
                                         $failureArray[] = $theField;
                                         $this->inError[$theField] = true;
                                         $this->evalErrors[$theField][] = $theCmd;
@@ -1112,6 +1114,7 @@ class Data implements SingletonInterface
                     in_array($theField, $displayFieldArray) ||
                     in_array($theField, $failureArray)
                 ) {
+                    $errorMsg = '';
                     if (
                         (
                             is_string($failureMsg[$theField]) &&
@@ -1119,16 +1122,18 @@ class Data implements SingletonInterface
                         ) ||
                         (
                             is_array($failureMsg[$theField]) &&
-                            !empty($failureMsg[$theField]['0'])
+                            !empty($failureMsg[$theField][0])
                         )
                     ) {
                         $xhtmlFix = HtmlUtility::determineXhtmlFix();
                         $markerOut = $markContentArray['###EVAL_ERROR_saved###'] ?? '';
                         $markerOut .= '<br' . $xhtmlFix . '>';
-                        $errorMsg = implode('<br' . $xhtmlFix . '>', $failureMsg[$theField]);
+                        if (is_string($failureMsg[$theField])) {
+                            $errorMsg = $failureMsg[$theField];
+                        } else {
+                            $errorMsg = implode('<br' . $xhtmlFix . '>', $failureMsg[$theField]);
+                        }
                         $markContentArray['###EVAL_ERROR_saved###'] = $markerOut . $errorMsg;
-                    } else {
-                        $errorMsg = '';
                     }
                     $markContentArray['###EVAL_ERROR_FIELD_' . $theField . '###'] = ($errorMsg != '' ? $errorMsg : '<!--no error-->');
                 }
@@ -1154,6 +1159,19 @@ class Data implements SingletonInterface
                 unset($this->missing['zone']);
                 $k = array_search('zone', $failureArray);
                 unset($failureArray[$k]);
+            }
+        }
+        if (!empty($this->missing)) {
+            foreach ($this->missing as $theField => $value) {
+                $errorMsg = $this->getFailureText(
+                    $dataArray,
+                    $theField,
+                    'required',
+                    'evalErrors_required'
+                );
+                $this->evalErrors[$theField][] = 'required';
+                $this->inError[$theField] = true;
+                $markContentArray['###EVAL_ERROR_FIELD_' . $theField . '###'] = $errorMsg;
             }
         }
 
