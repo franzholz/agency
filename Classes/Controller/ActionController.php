@@ -670,6 +670,7 @@ class ActionController implements SingletonInterface
                 $checkFieldArray = $finalDataArray;
                 if (
                     isset($finalDataArray['password']) &&
+                    !empty($savePassword) &&
                     $savePassword == $finalDataArray['password']
                 ) {
                     unset($checkFieldArray['password']);
