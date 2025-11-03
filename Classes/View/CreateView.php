@@ -160,7 +160,6 @@ class CreateView
 
             $templateCode = $templateService->getSubpart($templateCode, $subpartKey);
             $failure = $parameterApi->getParameter('noWarnings') ? false : $controlData->getFailure();
-
             if ($failure == false) {
                 $templateCode = $templateService->substituteSubpart(
                     $templateCode,
