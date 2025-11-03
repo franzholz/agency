@@ -160,7 +160,6 @@ class Template
                     );
             }
         }
-
         $infoFields = array_unique($infoFields);
 
         foreach ($infoFields as $k => $theField) {
@@ -197,7 +196,6 @@ class Template
                 }
             } else {
                 // Remove field included subpart, if field is not included and is not in failure list
-
                 if (
                     !in_array($theField, $includedFields) &&
                     !GeneralUtility::inList($failure, $theField)
