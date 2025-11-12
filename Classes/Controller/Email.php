@@ -198,7 +198,7 @@ class Email implements SingletonInterface
                     );
                 } elseif (GeneralUtility::validEmail($fetch)) {
                     $key = 'INFOMAIL_NORECORD';
-                    $fetchArray = ['0' => ['email' => $fetch]];
+                    $fetchArray = [0 => ['email' => $fetch]];
                     $emailHasBeenSent = $this->compile(
                         $key,
                         $cObj,
@@ -413,7 +413,7 @@ class Email implements SingletonInterface
                 $conf['infomail'] &&
                 in_array($key, $infomailArray) &&
                     // Silently refuse to not send infomail to non-subscriber, if so requested
-                !($key == 'INFOMAIL_NORECORD' && intval($conf['email.'][$key]) == '0')
+                !($key == 'INFOMAIL_NORECORD' && intval($conf['email.'][$key]) == 0)
             )
         ) {
             $checkEmailSent = true;

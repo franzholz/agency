@@ -396,7 +396,7 @@ class Marker
         $infoFieldArray = GeneralUtility::trimExplode(',', $infoFields, true);
         $specialFieldArray = GeneralUtility::trimExplode(',', $this->data->getSpecialFieldList(), true);
 
-        if (!empty($specialFieldArray['0'])) {
+        if (!empty($specialFieldArray[0])) {
             $infoFieldArray = array_merge($infoFieldArray, $specialFieldArray);
             $requiredArray = array_merge($requiredArray, $specialFieldArray);
         }

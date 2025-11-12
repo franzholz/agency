@@ -209,7 +209,7 @@ class Setfixed implements SingletonInterface
             !(
                 $setFixedKey == 'APPROVE' &&
                 !empty($origArray) &&
-                $origArray['disable'] == '0'
+                $origArray['disable'] == 0
             )
         ) {
             if ($setFixedKey == 'EDIT') {

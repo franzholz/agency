@@ -171,7 +171,7 @@ class UserGroup extends Base
             $deniedUserGroupArray
         );
 
-        if ($allowedUserGroupArray['0'] != 'ALL') {
+        if ($allowedUserGroupArray[0] != 'ALL') {
             $uidArray = $GLOBALS['TYPO3_DB']->fullQuoteArray($allowedUserGroupArray, $theTable);
             $subgroupWhereClauseArray[] = 'uid ' . ($bAllow ? 'IN' : 'NOT IN') . ' (' . implode(',', $uidArray) . ')';
         }

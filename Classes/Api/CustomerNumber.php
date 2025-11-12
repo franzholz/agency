@@ -68,10 +68,10 @@ class CustomerNumber implements SingletonInterface
 
             if (
                 is_array($rows) &&
-                isset($rows['0']) &&
-                !empty($rows['0']['cnum'])
+                isset($rows[0]) &&
+                !empty($rows[0]['cnum'])
             ) {
-                $cnum = $rows['0']['cnum'];
+                $cnum = $rows[0]['cnum'];
                 $found = preg_match_all('/([\d]+)/', $cnum, $match);
                 $index = $found - 1;
                 if (

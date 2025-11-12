@@ -64,6 +64,7 @@ use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Database\Tca;
 use JambageCom\Agency\Database\Tables;
 use JambageCom\Agency\Database\Data;
+use JambageCom\Agency\Domain\Model\FrontendUser;
 use JambageCom\Agency\Security\Authentication;
 use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Utility\LocalizationUtility;

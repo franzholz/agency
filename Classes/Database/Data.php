@@ -352,8 +352,8 @@ class Data implements SingletonInterface
                                 ) {
                                     continue;
                                 }
-                                $whereField = $whereParts['0'];
-                                $whereValue = $whereParts['1'];
+                                $whereField = $whereParts[0];
+                                $whereValue = $whereParts[1];
 
                                 if (
                                     $dataArray[$whereField] == $whereValue
@@ -2484,7 +2484,7 @@ class Data implements SingletonInterface
         $error_code
     ) {
         $result = false;
-        if ($error_code == '0') {
+        if ($error_code == 0) {
             $result = true;
             // File upload okay
         } elseif ($error_code == '1') {

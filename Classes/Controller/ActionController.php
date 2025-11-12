@@ -92,7 +92,6 @@ class ActionController implements SingletonInterface
     // Commands that may be processed when no user is logged in
     public $noLoginCommands = ['create', 'invite', 'setfixed', 'infomail', 'login'];
 
-
     public function init(
         ConfigurationStore $confObj,
         Localization $languageObj,
