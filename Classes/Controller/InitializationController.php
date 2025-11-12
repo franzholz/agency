@@ -151,14 +151,9 @@ class InitializationController implements SingletonInterface
         }
 
         $urlObj = GeneralUtility::makeInstance(Url::class);
-        $coreQuery = GeneralUtility::makeInstance(
-            CoreQuery::class,
-            $request->getAttribute('frontend.controller')
-        );
         $dataObj =
             GeneralUtility::makeInstance(
-                Data::class,
-                $coreQuery
+                Data::class
             );
         $markerObj = GeneralUtility::makeInstance(Marker::class);
         $actionController = GeneralUtility::makeInstance(ActionController::class);
@@ -216,8 +211,13 @@ class InitializationController implements SingletonInterface
                     $controlData,
                     $urlObj
                 );
+                $coreQuery = GeneralUtility::makeInstance(
+                    CoreQuery::class,
+                    $request->getAttribute('frontend.controller')
+                );
 
                 $dataObj->init(
+                    $coreQuery,
                     $languageObj,
                     $tcaObj,
                     $actionController,

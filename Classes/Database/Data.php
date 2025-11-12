@@ -62,6 +62,7 @@ use JambageCom\Div2007\Utility\TableUtility;
 use JambageCom\Agency\Api\ParameterApi;
 use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Constants\Field;
+use JambageCom\Agency\Domain\Repository\FrontendUserRepository;
 use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Security\Authentication;
 use JambageCom\Agency\Security\SecuredData;
@@ -98,17 +99,16 @@ class Data implements SingletonInterface
      * @var CoreQuery
      */
     protected $coreQuery;
+    protected ?FrontendUserRepository $frontendUserRepository = null;
 
-
-    /**
-     * @param CoreQuery $coreQuery
-     */
-    public function __construct(CoreQuery $coreQuery = null)
-    {
-        $this->coreQuery = $coreQuery;
+    public function __construct(
+        FrontendUserRepository $frontendUserRepository
+    ) {
+        $this->frontendUserRepository = $frontendUserRepository;
     }
 
     public function init(
+        $coreQuery,
         $lang,
         $tca,
         $control,
@@ -117,6 +117,7 @@ class Data implements SingletonInterface
         Parameters $controlData,
         $staticInfoObj
     ): void {
+        $this->coreQuery = $coreQuery;
         $this->lang = $lang;
         $this->tca = $tca;
         $this->control = $control;
@@ -146,6 +147,11 @@ class Data implements SingletonInterface
             $feDataArray = $fe[$theTable];
             $this->setDataArray($feDataArray);
         }
+    }
+
+    public function getFrontendUserRepository(): ?FrontendUserRepository
+    {
+        return $this->frontendUserRepository;
     }
 
     public function getCoreQuery()

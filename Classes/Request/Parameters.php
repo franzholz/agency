@@ -113,7 +113,6 @@ class Parameters implements SingletonInterface
      * @var TypoScriptFrontendController|null
      */
     protected $typoScriptFrontendController;
-
     protected ?Context $context = null;
 
     public function injectContext(Context $context)
