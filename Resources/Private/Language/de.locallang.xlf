@@ -141,7 +141,7 @@
       </trans-unit>
       <trans-unit id="name" resname="name">
         <source>Name</source>
-        <target state="needs-translation">Name</target>
+        <target state="translated">Name</target>
       </trans-unit>
       <trans-unit id="tooltip_name" resname="tooltip_name">
         <source>Enter your full name.</source>
