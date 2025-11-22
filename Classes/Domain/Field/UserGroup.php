@@ -155,7 +155,6 @@ class UserGroup extends Base
         }
 
         if (
-            is_array($pidArray) &&
             count($pidArray) > 0)
         {
             $whereClause = ' pid IN (' . implode(',', $pidArray) . ') ';
