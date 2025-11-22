@@ -154,7 +154,10 @@ class UserGroup extends Base
             }
         }
 
-        if (count($pidArray) > 0) {
+        if (
+            is_array($pidArray) &&
+            count($pidArray) > 0)
+        {
             $whereClause = ' pid IN (' . implode(',', $pidArray) . ') ';
         } else {
             $whereClause = ' pid=' . intval($pid) . ' ';
