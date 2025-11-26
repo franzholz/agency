@@ -153,20 +153,11 @@ class Email implements SingletonInterface
                     $key = 'INFOMAIL';
 
                     if ($theTable == 'fe_users') {
-                        $key = 'SETFIXED_PASSWORD';
-                        $outGoingData = [];
-                        // add a r
-                        $outGoingData['lost_password'] = '1';
 
-                        $extraList = 'lost_password';
-                        $result =
-                            $dataObj->getCoreQuery()->DBgetUpdate(
-                                $theTable,
-                                $DBrows[0]['uid'],
-                                $outGoingData,
-                                $extraList,
-                                true
-                            );
+                        $key = 'SETFIXED_PASSWORD';
+                        $dataObj->activateLostPassword(
+                            $DBrows[0]['uid']
+                        );
                     }
 
                     $recipient = $DBrows[0][$conf['email.']['field']];
@@ -365,12 +356,12 @@ class Email implements SingletonInterface
         ) {
             if (
                 (
-                    ExtensionManagementUtility::isLoaded('direct_mail') ||
-                    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['enableDirectMail']
+                    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['enableMail'] ||
+                    ExtensionManagementUtility::isLoaded('mail')
                 ) &&
-                isset($DBrows[0]['module_sys_dmail_html'])
+                isset($DBrows[0]['mail_html'])
             ) {
-                $useHtml = $DBrows[0]['module_sys_dmail_html'];
+                $useHtml = $DBrows[0]['mail_html'];
             } else {
                 $useHtml = true;
             }
@@ -640,7 +631,8 @@ class Email implements SingletonInterface
             }
 
             $markerArray['###SYS_AUTHCODE###'] = $authObj->generateAuthCode($row);
-            SetfixedUrls::compute(
+            $setfixedUrls = GeneralUtility::makeInstance(SetfixedUrls::class);
+            $setfixedUrls->compute(
                 $cmd,
                 $prefixId,
                 $cObj,

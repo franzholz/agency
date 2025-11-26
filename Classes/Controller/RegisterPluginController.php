@@ -43,7 +43,6 @@ namespace JambageCom\Agency\Controller;
 
 use Psr\Http\Message\ServerRequestInterface;
 
-use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Div2007\Compatibility\AbstractPlugin;
@@ -59,7 +58,6 @@ class RegisterPluginController extends AbstractPlugin
     public $prefixId = Extension::KEY;
     public $scriptRelPath = 'Classes/Controller/RegisterPluginController.php'; // Path to this script relative to the extension dir.
     public $extKey = Extension::KEY;		// Extension key.
-    protected ?Context $context = null;
 
     public function main(
         $content,

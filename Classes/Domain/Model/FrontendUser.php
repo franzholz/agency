@@ -17,7 +17,7 @@ use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
-final class FrontendUser extends AbstractEntity
+class FrontendUser extends AbstractEntity
 {
     /**
      * @var int
@@ -69,13 +69,13 @@ final class FrontendUser extends AbstractEntity
     protected string $firstName = '';
     protected string $image = '';
     protected string $lastName = '';
-    protected DateTime $lastlogin = null;
+    protected ?\DateTime $lastlogin = null;
     protected string $middleName = '';
     protected string $name = '';
     protected string $password = '';
     protected string $telephone = '';
     protected string $title = '';
-    protected ObjectStorage $usergroup = null;
+    protected ?\ObjectStorage $usergroup = null;
     protected string $username = '';
     protected string $www = '';
     protected string $zip = '';
@@ -416,5 +416,3 @@ final class FrontendUser extends AbstractEntity
         $this->lostPassword = $lostPassword;
     }
 }
-
-

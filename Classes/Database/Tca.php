@@ -41,13 +41,19 @@ namespace JambageCom\Agency\Database;
  *
  *
  */
+use Doctrine\DBAL\ArrayParameterType;
+
 use TYPO3\CMS\Core\Context\LanguageAspect;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+
 use JambageCom\Agency\Api\Localization;
 use JambageCom\Agency\Constants\Mode;
+use JambageCom\Agency\Domain\Repository\FrontendGroupRepository;
+use JambageCom\Agency\Domain\Repository\FrontendUserRepository;
 use JambageCom\Agency\Request\Parameters;
 
 use JambageCom\Div2007\Api\Css;
@@ -57,6 +63,13 @@ use JambageCom\Div2007\Utility\TableUtility;
 
 class Tca implements SingletonInterface
 {
+    public function __construct(
+        protected readonly ConnectionPool $connectionPool,
+        protected readonly FrontendGroupRepository $frontendGroupRepository,
+        protected readonly FrontendUserRepository $frontendUserRepository
+    ) {
+    }
+
     public function init($extKey, $theTable): void
     {
         // nothing
@@ -64,7 +77,6 @@ class Tca implements SingletonInterface
 
     public function getForeignTable($theTable, $colName)
     {
-
         $result = false;
 
         if (
@@ -80,6 +92,64 @@ class Tca implements SingletonInterface
         }
         return $result;
     }
+
+    function getRelatedUids(string $table, string $foreignField, string $localField, array $uidArray, string $orderBy = '') {
+
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
+        $result = $queryBuilder
+            ->select($foreignField)
+            ->from($table)
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'uid_local', $localField,
+                    $queryBuilder->createNamedParameter(
+                        $uidArray,
+                        ArrayParameterType::INTEGER)
+                )
+            );
+
+        if ($orderBy != '') {
+            $queryBuilder->orderBy($orderBy);
+        }
+
+        $result = $queryBuilder->executeQuery();
+
+        while ($row = $result->fetchAssociative()) {
+            $valueArray[] = $row[$foreignField];
+        }
+
+        return $valueArray;
+    }
+
+    function getRowsByUids(string $table, string $selectFields, array $uidArray, string $orderBy = '')
+    {
+        $rows = [];
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
+        $result = $queryBuilder
+            ->select($selectFields)
+            ->from($table)
+            ->where(
+                $queryBuilder->expr()->in(
+                    'uid',
+                    $queryBuilder->createNamedParameter(
+                        $uidArray,
+                        ArrayParameterType::INTEGER)
+                )
+            );
+
+        if ($orderBy != '') {
+            $queryBuilder->orderBy($orderBy);
+        }
+
+        $result = $queryBuilder->executeQuery();
+
+        while ($row = $result->fetchAssociative()) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
 
     /**
     * Adds the fields coming from other tables via MM tables
@@ -108,17 +178,16 @@ class Tca implements SingletonInterface
             switch ($colConfig['type']) {
                 case 'select':
                     if (isset($colConfig['MM']) && isset($colConfig['foreign_table'])) {
-                        $where = 'uid_local = ' . $dataArray['uid'];
-                        $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-                            'uid_foreign',
-                            $colConfig['MM'],
-                            $where
-                        );
-                        $valueArray = [];
-
-                        while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                            $valueArray[] = $row['uid_foreign'];
-                        }
+                        // $where = 'uid_local = ' . $dataArray['uid'];
+                        $valueArray =
+                            $this->getRelatedUids(
+                                $colConfig['MM'],
+                                'uid_foreign',
+                                'uid_local',
+                                [
+                                    'uid_local' => $dataArray['uid']
+                                ]
+                            );
                         $rcArray[$colName] = implode(',', $valueArray);
                         $modArray[$colName] = $rcArray[$colName];
                     }
@@ -150,7 +219,6 @@ class Tca implements SingletonInterface
         ) {
             return false;
         }
-
 
         $dataFieldList = array_keys($dataArray);
         foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
@@ -190,17 +258,27 @@ class Tca implements SingletonInterface
                         if ($value == '' || is_array($value)) {
                             // the value contains the count of elements from a mm table
                         } elseif ($bColumnIsCount) {
-                            $valuesArray = [];
-                            $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-                                'uid_local,uid_foreign,sorting',
-                                $colConfig['MM'],
-                                'uid_local=' . intval($dataArray['uid']),
-                                '',
-                                'sorting'
-                            );
-                            while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                                $valuesArray[] = $row['uid_foreign'];
-                            }
+                            // $valuesArray = [];
+                            // $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+                            //     'uid_local,uid_foreign,sorting',
+                            //     $colConfig['MM'],
+                            //     'uid_local=' . intval($dataArray['uid']),
+                            //     '',
+                            //     'sorting'
+                            // );
+                            // while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+                            //     $valuesArray[] = $row['uid_foreign'];
+                            // }
+
+                            $valueArray =
+                                $this->getRelatedUids(
+                                    $colConfig['MM'],
+                                    'uid_foreign',
+                                    'uid_local',
+                                    ['uid_local' => $dataArray['uid']],
+                                    'sorting'
+                                );
+
                             $dataArray[$colName] = $valuesArray;
                         } else {
                             // the values from the mm table are already available as an array
@@ -261,48 +339,6 @@ class Tca implements SingletonInterface
         return true;
     } // modifyRow
 
-    /**
-    * Replaces the markers in the foreign table where clause
-    *
-    * @param string  $whereClause: foreign table where clause
-    * @param array  $colConfig: $TCA column configuration
-    * @return string    foreign table where clause with replaced markers
-    */
-    public function replaceForeignWhereMarker(
-        $whereClause,
-        $colConfig
-    ) {
-        $foreignWhere = $colConfig['foreign_table_where'] ?? '';
-
-        if ($foreignWhere) {
-            $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
-            $TSconfig = $pageTSConfig['TCEFORM.'][$theTable . '.'][$colName . '.'] ?? '';
-
-            if ($TSconfig) {
-
-                // substitute whereClause
-                $foreignWhere = str_replace('###PAGE_TSCONFIG_ID###', intval($TSconfig['PAGE_TSCONFIG_ID']), $foreignWhere);
-                $foreignWhere =
-                    str_replace(
-                        '###PAGE_TSCONFIG_IDLIST###',
-                        $GLOBALS['TYPO3_DB']->cleanIntList($TSconfig['PAGE_TSCONFIG_IDLIST']),
-                        $foreignWhere
-                    );
-            }
-
-            // have all markers in the foreign where been replaced?
-            if (strpos($foreignWhere, '###') === false) {
-                $orderbyPos = stripos($foreignWhere, 'ORDER BY');
-                if ($orderbyPos !== false) {
-                    $whereClause .= ' ' . substr($foreignWhere, 0, $orderbyPos);
-                } else {
-                    $whereClause .= ' ' . $foreignWhere;
-                }
-            }
-        }
-
-        return $whereClause;
-    }
 
     protected function mergeItems(
         $itemArray,
@@ -399,7 +435,7 @@ class Tca implements SingletonInterface
             $mrow = $row;
         }
 
-        $fields = !empty($cmdKey) && isset($conf[$cmdKey . '.']['fields']) ? $conf[$cmdKey . '.']['fields'] : '';
+        $fields = (!empty($cmdKey) && isset($conf[$cmdKey . '.']['fields']) ? $conf[$cmdKey . '.']['fields'] : '');
 
         if ($mode == Mode::PREVIEW) {
             if ($activity == '') {
@@ -455,6 +491,8 @@ class Tca implements SingletonInterface
 
                     if ($theTable == 'fe_users' && $colName == 'usergroup') {
                         $userGroupObj = $addressObj->getFieldObj('usergroup');
+                    } else if (isset($userGroupObj)) {
+                        unset($userGroupObj);
                     }
 
                     if (
@@ -582,6 +620,7 @@ class Tca implements SingletonInterface
                                 }
                                 break;
 
+                            case 'category':
                             case 'select':
                                 if (
                                     isset($mrow[$colName]) &&
@@ -636,14 +675,15 @@ class Tca implements SingletonInterface
                                         $firstValue = current($valuesArray);
 
                                         if (!empty($firstValue) || count($valuesArray) > 1) {
-                                            $titleField = $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['label'];
-                                            $where = 'uid IN (' . implode(',', $valuesArray) . ')';
 
-                                            $foreignRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-                                                '*',
-                                                $colConfig['foreign_table'],
-                                                $where
-                                            );
+                                           $foreignRows =
+                                                $this->getRowsByUids(
+                                                    $colConfig['foreign_table'],
+                                                    '*',
+                                                    $valuesArray
+                                                );
+                                                //  HIER ++++
+
 
                                             if (
                                                 is_array($foreignRows) &&
@@ -656,6 +696,7 @@ class Tca implements SingletonInterface
                                                     $colConfig['foreign_table']
                                                 );
                                                 $languageAspect = new LanguageAspect($language, $language);
+                                                $titleField = $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['label'];
 
                                                 for ($i = 0; $i < count($foreignRows); $i++) {
                                                     if ($theTable == 'fe_users' && $colName == 'usergroup') {
@@ -1020,8 +1061,9 @@ class Tca implements SingletonInterface
                                     isset($GLOBALS['TCA'][$colConfig['foreign_table']])
                                 ) {
                                     $titleField = $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['label'];
+                                    $whereArray = [];
                                     $reservedValues = [];
-                                    $whereClause = '1=1';
+                                    // $whereClause = '1=1';
 
                                     if (
                                         isset($userGroupObj) &&
@@ -1029,12 +1071,41 @@ class Tca implements SingletonInterface
                                     ) {
                                         $reservedValues = $userGroupObj->getReservedValues($conf);
                                         $foreignTable = $this->getForeignTable($theTable, $colName);
-                                        $whereClause = $userGroupObj->getAllowedWhereClause(
-                                            $foreignTable,
-                                            $controlData->getPid(),
+                                        $allowedUserGroupArray = [];
+                                        $allowedSubgroupArray = [];
+                                        $deniedUserGroupArray = [];
+
+                                        $userGroupObj->getAllowedValues(
+                                            $allowedUserGroupArray,
+                                            $allowedSubgroupArray,
+                                            $deniedUserGroupArray,
                                             $conf,
-                                            $cmdKey
+                                            $cmdKey,
                                         );
+
+                                        $pidArray = $userGroupObj->getPidArray(
+                                            $controlData->getPid()
+                                        );
+
+                                        $queryBuilder =
+                                            $this->frontendGroupRepository
+                                                ->getUserGroupWhereClause(
+                                                $whereArray,
+                                                $pidArray,
+                                                $conf,
+                                                $cmdKey,
+                                                $allowedUserGroupArray,
+                                                $allowedSubgroupArray,
+                                                $deniedUserGroupArray,
+                                                true
+                                            );
+
+                                        // $whereClause = $userGroupObj->getAllowedWhereClause(
+                                        //     $foreignTable,
+                                        //     $controlData->getPid(),
+                                        //     $conf,
+                                        //     $cmdKey
+                                        // );
                                     }
 
                                     if (
@@ -1043,13 +1114,19 @@ class Tca implements SingletonInterface
                                         $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['languageField'] &&
                                         $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['transOrigPointerField']
                                     ) {
-                                        $whereClause .= ' AND ' . $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['transOrigPointerField'] . '=0';
+                                        // $whereClause .= ' AND ' . $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['transOrigPointerField'] . '=0';
+                                        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($colConfig['foreign_table']);
+                                        $whereArray['where'] = $queryBuilder->expr()
+                                            ->eq(
+                                                $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['transOrigPointerField'],
+                                                 0
+                                            );
                                     }
 
                                     if (
-                                        $colName == 'module_sys_dmail_category' &&
-                                        $colConfig['foreign_table'] == 'sys_dmail_category' &&
-                                        $conf['module_sys_dmail_category_PIDLIST']
+                                        // $colName == 'categories' &&
+                                        $colConfig['foreign_table'] == 'sys_category' &&
+                                        !empty($conf['categories_PIDLIST'])
                                     ) {
                                         $language =
                                             $controlData->getSysLanguageUid(
@@ -1060,7 +1137,7 @@ class Tca implements SingletonInterface
                                         $tmpArray =
                                             GeneralUtility::trimExplode(
                                                 ',',
-                                                $conf['module_sys_dmail_category_PIDLIST']
+                                                $conf['categories_PIDLIST']
                                             );
                                         $pidArray = [];
                                         foreach ($tmpArray as $v) {
@@ -1068,11 +1145,58 @@ class Tca implements SingletonInterface
                                                 $pidArray[] = $v;
                                             }
                                         }
-                                        $whereClause .= ' AND sys_dmail_category.pid IN (' . implode(',', $pidArray) . ')' . ($conf['useLocalization'] ? ' AND sys_language_uid=' . intval($language) : '');
+                                        // $whereClause .= ' AND sys_category.pid IN (' . implode(',', $pidArray) . ')' . ($conf['useLocalization'] ? ' AND sys_language_uid=' . intval($language) : '');
+
+
+                                        $whereArray['where'] = $queryBuilder->expr()
+                                            ->in(
+                                                'pid',
+                                                $queryBuilder->createNamedParameter($pidArray, Connection::PARAM_INT_ARRAY)
+                                            );
+                                        if (!empty($conf['useLocalization'])) {
+                                            $whereArray['where'] = $queryBuilder->expr()
+                                                ->eq(
+                                                    'sys_language_uid',
+                                                        $queryBuilder->createNamedParameter(
+                                                            $language, Connection::PARAM_INT
+                                                        )
+                                                );
+                                        }
+
                                     }
-                                    $whereClause .= TableUtility::enableFields($colConfig['foreign_table']);
-                                    $whereClause = $this->replaceForeignWhereMarker($whereClause, $colConfig);
-                                    $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $colConfig['foreign_table'], $whereClause, '', $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['sortby'] ?? '');
+                                    // $whereClause .= TableUtility::enableFields($colConfig['foreign_table']);
+                                    //
+
+                                    // $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $colConfig['foreign_table'], $whereClause, '', $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['sortby'] ?? '');
+
+                                    $queryBuilder
+                                        ->select('*')
+                                        ->from($colConfig['foreign_table']);
+
+                                    if (!empty($whereArray['where'])) {
+                                        $queryBuilder->where(
+                                            ...$whereArray['where']
+                                        );
+                                    }
+                                    if (!empty($whereArray['OR'])) {
+                                        $queryBuilder->orWhere(
+                                            ...$whereArray['OR']
+                                        );
+                                    }
+                                    if (!empty($whereArray['AND'])) {
+                                        $queryBuilder->andWhere(
+                                            ...$whereArray['AND']
+                                        );
+                                    }
+
+                                    $orderBy = $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['sortby'] ?? '';
+
+                                    if ($orderBy != '') {
+                                        $queryBuilder->orderBy($orderBy);
+                                    }
+
+                                    $result = $queryBuilder->executeQuery();
+
 
                                     if (
                                         !in_array(
@@ -1081,8 +1205,9 @@ class Tca implements SingletonInterface
                                         )
                                     ) {
                                         if (
-                                            $colConfig['renderMode'] == 'checkbox' ||
-                                            $colContent
+                                            $colContent ||
+                                            isset($colConfig['renderMode']) &&
+                                            $colConfig['renderMode'] == 'checkbox'
                                         ) {
                                             // nothing
                                         } else {
@@ -1093,7 +1218,7 @@ class Tca implements SingletonInterface
                                     $selectedValue = false;
                                     $i = 0;
 
-                                    while ($row2 = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+                                    while ($row2 = $result->fetchAssociative()) {
                                         $i++;
                                         // Handle usergroup case
                                         if (
@@ -1189,6 +1314,10 @@ class Tca implements SingletonInterface
                                 }
                                 break;
 
+                            case 'category':
+                                // TODO +++
+                                break;
+
                             default:
                                 $colContent .= $colConfig['type'] . ':' . $languageObj->getLabel('unsupported');
                                 break;
@@ -1271,15 +1400,36 @@ class Tca implements SingletonInterface
             }
 
             if (count($fieldArr)) {
-                $cObj = FrontendUtility::getContentObjectRenderer();
+                // $whereClause = 'fe_group=' . intval($fe_groups_uid) . ' ' .
+                    // 'AND sys_language_uid=' . intval($language) . ' ' .
+                     // TableUtility::enableFields('fe_groups_language_overlay');
+                // $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(implode(',', $fieldArr), 'fe_groups_language_overlay', $whereClause);
 
-                $whereClause = 'fe_group=' . intval($fe_groups_uid) . ' ' .
-                    'AND sys_language_uid=' . intval($language) . ' ' .
-                     TableUtility::enableFields('fe_groups_language_overlay');
-                $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(implode(',', $fieldArr), 'fe_groups_language_overlay', $whereClause);
-                if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)) {
-                    $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-                }
+                $table = 'fe_groups_language_overlay';
+                $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
+                $result = $queryBuilder
+                    ->select(implode(',', $fieldArr))
+                    ->from($table)
+                    ->where(
+                        $queryBuilder->expr()->eq(
+                            'fe_group',
+                            $queryBuilder->createNamedParameter(
+                                $fe_groups_uid,
+                                Connection::PARAM_INT
+                            )
+                        ),
+                        $queryBuilder->expr()->eq(
+                            'sys_language_uid',
+                            $queryBuilder->createNamedParameter(
+                                $language,
+                                Connection::PARAM_INT
+                            )
+                        )
+                    )
+                    ->setMaxResults(1);
+
+                $result = $queryBuilder->executeQuery();
+                $row = $result->fetchAssociative();
             }
         }
 

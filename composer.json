@@ -24,13 +24,14 @@
   ],
   "require": {
     "typo3/cms-core": "^13.4",
-    "jambagecom/div2007": "^2.2",
-    "friendsoftypo3/rdct": "^3.0",
+    "jambagecom/div2007": "^2.3.11",
+    "friendsoftypo3/rdct": "^3.2",
     "friendsoftypo3/typo3db-legacy": "^1.3"
   },
   "suggest": {
     "typo3/cms-felogin": "^13.4",
-    "sjbr/static-info-tables": "^13.4"
+    "sjbr/static-info-tables": "^13.4",
+    "mediaessenz/mail": "3.9"
   },
   "autoload": {
     "psr-4": {

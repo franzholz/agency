@@ -45,10 +45,20 @@ namespace JambageCom\Agency\Api;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use JambageCom\Agency\Domain\Repository\FrontendUserRepository;
+
 
 class CustomerNumber implements SingletonInterface
 {
-    public static function generate(
+    protected ?FrontendUserRepository $frontendUserRepository = null;
+
+    public function __construct(
+        FrontendUserRepository $frontendUserRepository
+    ) {
+        $this->frontendUserRepository = $frontendUserRepository;
+    }
+
+    public function generate(
         $theTable,
         $config
     ) {
@@ -56,34 +66,18 @@ class CustomerNumber implements SingletonInterface
         $result = $prefix . '1';
 
         if ($prefix != '') {
-            $newNumber = 1;
-            $rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-                'uid,cnum',
-                $theTable,
-                'cnum > \'\' AND deleted=0',
-                '',
-                'uid DESC',
-                '1'
-            );
+            $maxCustomerNumber =
+                $this->frontendUserRepository->maxCustomerNumber();
 
+            $found = preg_match_all('/([\d]+)/', $maxCustomerNumber, $match);
+            $index = $found - 1;
             if (
-                is_array($rows) &&
-                isset($rows[0]) &&
-                !empty($rows[0]['cnum'])
+                $found &&
+                isset($match[$index]) &&
+                is_array($match[$index])
             ) {
-                $cnum = $rows[0]['cnum'];
-                $found = preg_match_all('/([\d]+)/', $cnum, $match);
-                $index = $found - 1;
-                if (
-                    $found &&
-                    isset($match) &&
-                    is_array($match) &&
-                    isset($match[$index]) &&
-                    is_array($match[$index])
-                ) {
-                    $index2 = count($match[$index]) - 1;
-                    $result = $prefix . ($match[$index][$index2] + 1);
-                }
+                $index2 = count($match[$index]) - 1;
+                $result = $prefix . ($match[$index][$index2] + 1);
             }
         }
 

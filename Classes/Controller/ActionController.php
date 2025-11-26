@@ -70,8 +70,10 @@ use JambageCom\Agency\Controller\Email;
 use JambageCom\Agency\Database\Data;
 use JambageCom\Agency\Database\Tca;
 use JambageCom\Agency\Database\Tables;
+use JambageCom\Agency\Domain\Repository\FrontendUserRepository;
 use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Security\SecuredData;
+use JambageCom\Agency\Setfixed\SetfixedUrls;
 use JambageCom\Agency\Utility\SessionUtility;
 use JambageCom\Agency\View\Template;
 use JambageCom\Agency\View\CreateView;
@@ -91,6 +93,13 @@ class ActionController implements SingletonInterface
     public $controlData;
     // Commands that may be processed when no user is logged in
     public $noLoginCommands = ['create', 'invite', 'setfixed', 'infomail', 'login'];
+    protected ?FrontendUserRepository $frontendUserRepository = null;
+
+    public function __construct(
+        FrontendUserRepository $frontendUserRepository
+    ) {
+        $this->frontendUserRepository = $frontendUserRepository;
+    }
 
     public function init(
         ConfigurationStore $confObj,
@@ -281,8 +290,8 @@ class ActionController implements SingletonInterface
             if (
                 ExtensionManagementUtility::isLoaded('direct_mail')
             ) {
-                $conf[$cmdKey.'.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true), ['module_sys_dmail_category,module_sys_dmail_newsletter']));
-                $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], true), ['module_sys_dmail_category, module_sys_dmail_newsletter']));
+                $conf[$cmdKey.'.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true), ['categories']));
+                $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], true), ['categories']));
             }
 
             $fieldConfArray = ['fields', 'required'];
@@ -627,6 +636,7 @@ class ActionController implements SingletonInterface
             !in_array($cmd, $noSaveCommands)
         ) {
             if (
+                !isset($origArray['cnum']) &&
                 $conf[$cmdKey . '.']['generateCustomerNumber']
             ) {
                 $customerNumberApi = GeneralUtility::makeInstance(CustomerNumber::class);
@@ -638,6 +648,8 @@ class ActionController implements SingletonInterface
                 if ($customerNumber != '') {
                     $finalDataArray['cnum'] = $customerNumber;
                 }
+            } else {
+                $finalDataArray['cnum'] = ($origArray['cnum'] ?? '');
             }
 
             $dataObj->setName(
@@ -1456,7 +1468,8 @@ class ActionController implements SingletonInterface
             $controlData->getValidRegHash()
         ) {
             $regHash = $controlData->getRegHash();
-            $controlData->deleteShortUrl($regHash);
+            $setfixedUrls = GeneralUtility::makeInstance(SetfixedUrls::class);
+            $setfixedUrls->deleteShortUrl($regHash);
         }
 
         return $content;

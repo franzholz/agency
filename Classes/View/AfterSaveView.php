@@ -175,7 +175,8 @@ class AfterSaveView
                 isset($conf[$cmdKey . '.']['marker.']['computeUrl']) &&
                 $conf[$cmdKey . '.']['marker.']['computeUrl'] == '1'
             ) {
-                SetfixedUrls::compute(
+                $setfixedUrls = GeneralUtility::makeInstance(SetfixedUrls::class);
+                $setfixedUrls->compute(
                     $cmd,
                     $prefixId,
                     $cObj,

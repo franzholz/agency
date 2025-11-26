@@ -59,6 +59,7 @@ use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Controller\Email;
 use JambageCom\Agency\Database\Data;
 use JambageCom\Agency\Database\Tca;
+use JambageCom\Agency\Domain\Repository\FrontendUserRepository;
 use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Security\Authentication;
 use JambageCom\Agency\Security\SecuredData;
@@ -72,6 +73,14 @@ use JambageCom\Agency\View\DeleteView;
 
 class Setfixed implements SingletonInterface
 {
+    protected ?FrontendUserRepository $frontendUserRepository = null;
+
+    public function __construct(
+        FrontendUserRepository $frontendUserRepository
+    ) {
+        $this->frontendUserRepository = $frontendUserRepository;
+    }
+
     /**
     * Process the front end user reply to the confirmation request
     *
@@ -158,6 +167,7 @@ class Setfixed implements SingletonInterface
         $origUsergroup = $row['usergroup'] ?? 0;
         $setfixedUsergroup = '';
         $setfixedSuffix = $setFixedKey = $controlData->getFeUserData('sFK');
+
         $fD = $controlData->getFd();
         $setfixedConfig = [];
         if (
@@ -288,10 +298,8 @@ class Setfixed implements SingletonInterface
                             $row
                         );
                     }
-                    $res = $dataObj->getCoreQuery()->DBgetDelete(
-                        $theTable,
-                        $uid,
-                        true
+                    $this->frontendUserRepository->delete(
+                        $uid
                     );
                     $dataObj->deleteMMRelations(
                         $theTable,
@@ -380,12 +388,10 @@ class Setfixed implements SingletonInterface
                         $setFixedKey != 'ENTER' &&
                         $newFieldList != ''
                     ) {
-                        $res = $dataObj->getCoreQuery()->DBgetUpdate(
-                            $theTable,
+                        $this->frontendUserRepository->update(
                             $uid,
                             $row,
                             $newFieldList,
-                            true
                         );
                     }
 
@@ -396,14 +402,15 @@ class Setfixed implements SingletonInterface
 
                         $errorCode = [];
                         $errorMessage = '';
+                        $password = $cryptedPassword;
                         \JambageCom\Agency\Security\SecuredData::getStorageSecurity()
                             ->decryptPasswordForAutoLogin(
-                                $cryptedPassword,
+                                $password,
                                 $errorCode,
                                 $errorMessage,
                                 $autoLoginKey
                             );
-                        $markerArray['###ENCRYPTION###'] = $cryptedPassword;
+                        $markerArray['###ENCRYPTION###'] = $password;
                     }
 
                     $modArray = [];
@@ -752,8 +759,7 @@ class Setfixed implements SingletonInterface
                             );
 
                         // delete password helper fields
-                        $systemObj->removePasswordAdditions(
-                            $dataObj,
+                        $dataObj->removePasswordAdditions(
                             $theTable,
                             $uid,
                             $row

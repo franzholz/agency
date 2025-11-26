@@ -41,12 +41,20 @@ namespace JambageCom\Agency\Database\Field;
  *
  */
 
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
-class UserGroup extends Base
+use JambageCom\Agency\Domain\Repository\FrontendGroupRepository;
+
+class UserGroup extends Base implements SingletonInterface
 {
     protected $savedReservedValues = [];
+
+    public function __construct(
+        protected readonly FrontendGroupRepository $frontendGroupRepository
+    ) {
+    }
 
     /*
     * Modifies the form fields configuration depending on the $cmdKey
@@ -87,11 +95,11 @@ class UserGroup extends Base
     * @return void
     */
     public function getAllowedValues(
-        $conf,
-        $cmdKey,
         &$allowedUserGroupArray,
         &$allowedSubgroupArray,
-        &$deniedUserGroupArray
+        &$deniedUserGroupArray,
+        $conf,
+        $cmdKey
     ): void {
         $allowedUserGroupArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['allowedUserGroups'], true);
         $allowedSubgroupArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['allowedSubgroups'], true);
@@ -133,18 +141,10 @@ class UserGroup extends Base
         }
     }
 
-    public function getAllowedWhereClause(
-        $theTable,
-        $pid,
-        $conf,
-        $cmdKey,
-        $bAllow = true
-    ) {
-        $whereClause = '';
-        $subgroupWhereClauseArray = [];
-        $subgroupWhereClause = '';
+    public function getPidArray(int $pid, string $userGroupsPidList = ''): array
+    {
         $pidArray = [];
-        $tmpArray = GeneralUtility::trimExplode(',', $conf['userGroupsPidList'], true);
+        $tmpArray = GeneralUtility::trimExplode(',', $userGroupsPidList, true);
         if (count($tmpArray)) {
             foreach($tmpArray as $value) {
                 $valueIsInt = MathUtility::canBeInterpretedAsInteger($value);
@@ -153,51 +153,12 @@ class UserGroup extends Base
                 }
             }
         }
-
-        if (count($pidArray) > 0) {
-            $whereClause = ' pid IN (' . implode(',', $pidArray) . ') ';
-        } else {
-            $whereClause = ' pid=' . intval($pid) . ' ';
+        if (empty($pidArray)) {
+            $pidArray[] = $pid;
         }
-
-        $whereClausePart2 = '';
-        $whereClausePart2Array = [];
-
-        $this->getAllowedValues(
-            $conf,
-            $cmdKey,
-            $allowedUserGroupArray,
-            $allowedSubgroupArray,
-            $deniedUserGroupArray
-        );
-
-        if ($allowedUserGroupArray[0] != 'ALL') {
-            $uidArray = $GLOBALS['TYPO3_DB']->fullQuoteArray($allowedUserGroupArray, $theTable);
-            $subgroupWhereClauseArray[] = 'uid ' . ($bAllow ? 'IN' : 'NOT IN') . ' (' . implode(',', $uidArray) . ')';
-        }
-
-        if (count($allowedSubgroupArray)) {
-            $subgroupArray = $GLOBALS['TYPO3_DB']->fullQuoteArray($allowedSubgroupArray, $theTable);
-            $subgroupWhereClauseArray[] = 'subgroup ' . ($bAllow ? 'IN' : 'NOT IN') . ' (' . implode(',', $subgroupArray) . ')';
-        }
-
-        if (count($subgroupWhereClauseArray)) {
-            $subgroupWhereClause .= implode(' ' . ($bAllow ? 'OR' : 'AND') . ' ', $subgroupWhereClauseArray);
-            $whereClausePart2Array[] = '( ' . $subgroupWhereClause . ' )';
-        }
-
-        if (count($deniedUserGroupArray)) {
-            $uidArray = $GLOBALS['TYPO3_DB']->fullQuoteArray($deniedUserGroupArray, $theTable);
-            $whereClausePart2Array[] = 'uid ' . ($bAllow ? 'NOT IN' : 'IN') . ' (' . implode(',', $uidArray) . ')';
-        }
-
-        if (count($whereClausePart2Array)) {
-            $whereClausePart2 = implode(' ' . ($bAllow ? 'AND' : 'OR') . ' ', $whereClausePart2Array);
-            $whereClause .= ' AND (' . $whereClausePart2 . ')';
-        }
-
-        return $whereClause;
+        return $pidArray;
     }
+
 
     public function parseOutgoingData(
         $theTable,
@@ -227,28 +188,61 @@ class UserGroup extends Base
                 $valuesArray = $origArray[$fieldname];
 
                 if ($conf[$cmdKey . '.']['keepUnselectableUserGroups']) {
-                    $whereClause =
-                        $this->getAllowedWhereClause(
+                    $allowedUserGroupArray = [];
+                    $allowedSubgroupArray = [];
+                    $deniedUserGroupArray = [];
+
+                    $this->getAllowedValues(
+                        $allowedUserGroupArray,
+                        $allowedSubgroupArray,
+                        $deniedUserGroupArray,
+                        $conf,
+                        $cmdKey,
+                    );
+
+                    $pidArray = $this->getPidArray(
+                        $conf['userGroupsPidList']
+                    );
+
+                    $whereArray = [];
+                    $queryBuilder =
+                        $this->frontendGroupRepository->getUserGroupWhereClause(
+                            $whereArray,
                             $foreignTable,
-                            $pid,
+                            $pidArray,
                             $conf,
                             $cmdKey,
+                            $allowedUserGroupArray,
+                            $allowedSubgroupArray,
+                            $deniedUserGroupArray,
                             false
                         );
-                    $rowArray =
-                        $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-                            'uid',
-                            $foreignTable,
-                            $whereClause,
-                            '',
-                            '',
-                            '',
-                            'uid'
-                        );
 
-                    if ($rowArray && is_array($rowArray) && count($rowArray)) {
+                    $keepValues = $this->frontendGroupRepository->getSearchedUids(
+                        'uid',
+                        $foreignTable,
+                        $whereArray,
+                        '',
+                        '',
+                        '',
+                        'uid'
+                    );
+
+                    // $rowArray =
+                    //     $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+                    //         'uid',
+                    //         $foreignTable,
+                    //         $whereClause,
+                    //         '',
+                    //         '',
+                    //         '',
+                    //         'uid'
+                    //     );
+                    //
+                    /*
+                    if (isset($rowArray) && is_array($rowArray) && count($rowArray)) {
                         $keepValues = array_keys($rowArray);
-                    }
+                    }*/
                 } else {
                     $keepValues = $this->getReservedValues($conf);
                 }

@@ -1,3 +1,7 @@
+2025-11-26 Franz Holzinger  <franz@ttproducts.de>
+    * Version number 1.0.0. It is stable enough for most use cases. Working under Doctrine.
+    * Replace Direct Mail extension by Mail
+
 2025-11-01 Franz Holzinger  <franz@ttproducts.de>
     * Rename folder and domain part Domain into Database for a difference to Extbase
     * fix namespace for PageRepository: TYPO3\CMS\Core\Domain\Repository\PageRepository .

@@ -109,14 +109,13 @@ class Template
             $infoFields = array_merge($infoFields, $specialFields);
         }
 
-        $directMailFields = [
-            'module_sys_dmail_category',
-            'module_sys_dmail_newsletter',
-            'module_sys_dmail_html',
+        $mailFields = [
+            'categories',
+            'mail_html',
         ];
-        $infoFields = array_merge($infoFields, $directMailFields); // add always the Direct Mail fields because its markers are present in the HTML template
+        $infoFields = array_merge($infoFields, $mailFields); // add always the Direct Mail fields because its markers are present in the HTML template
 
-        foreach ($directMailFields as $theField) {
+        foreach ($mailFields as $theField) {
             if (
                 is_array($includedFields) &&
                 !isset($GLOBALS['TCA'][$theTable]['columns'][$theField])

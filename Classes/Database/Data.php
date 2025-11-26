@@ -43,6 +43,7 @@ namespace JambageCom\Agency\Database;
  */
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Resource\Security\FileNameValidator;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -53,6 +54,8 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 use JambageCom\Div2007\Captcha\CaptchaInterface;
 use JambageCom\Div2007\Captcha\CaptchaManager;
 use JambageCom\Div2007\Database\CoreQuery;
+use JambageCom\Div2007\Database\QueryBuilderApi;
+use JambageCom\Div2007\Utility\ArrayUtility;
 use JambageCom\Div2007\Utility\CompatibilityUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\HtmlUtility;
@@ -66,7 +69,6 @@ use JambageCom\Agency\Domain\Repository\FrontendUserRepository;
 use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Security\Authentication;
 use JambageCom\Agency\Security\SecuredData;
-
 
 
 class Data implements SingletonInterface
@@ -99,12 +101,11 @@ class Data implements SingletonInterface
      * @var CoreQuery
      */
     protected $coreQuery;
-    protected ?FrontendUserRepository $frontendUserRepository = null;
 
     public function __construct(
-        FrontendUserRepository $frontendUserRepository
+        protected readonly ConnectionPool $connectionPool,
+        protected readonly FrontendUserRepository $frontendUserRepository
     ) {
-        $this->frontendUserRepository = $frontendUserRepository;
     }
 
     public function init(
@@ -637,27 +638,33 @@ class Data implements SingletonInterface
                             case 'uniqueDeletedGlobal':
                             case 'uniqueLocal':
                             case 'uniqueDeletedLocal':
-                                $where = $theField . '=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($dataArray[$theField], $theTable);
 
+                                $showDeleted = true;
+                                $showPid = 0;
                                 if ($theCmd == 'uniqueLocal' || $theCmd == 'uniqueGlobal') {
-                                    $where .= TableUtility::deleteClause($theTable);
+                                    $showDeleted = false;
                                 }
                                 if ($theCmd == 'uniqueLocal' || $theCmd == 'uniqueDeletedLocal') {
-                                    $where .= ' AND pid IN (' . $recordTestPid . ')';
+                                    $showPid = $recordTestPid;
                                 }
-                                $DBrows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,' . $theField, $theTable, $where, '', '', '1');
+
+                                $DBrow =
+                                    $this->frontendUserRepository->getSpecificRecord(
+                                        $showPid,
+                                        $theField,
+                                        (string) $dataArray[$theField],
+                                        $showDeleted
+                                    );
 
                                 if (
                                     !is_array($dataArray[$theField]) &&
                                     trim($dataArray[$theField]) != '' &&
-                                    isset($DBrows) &&
-                                    is_array($DBrows) &&
-                                    isset($DBrows[0]) &&
-                                    is_array($DBrows[0])
+                                    isset($DBrow) &&
+                                    is_array($DBrow)
                                 ) {
                                     if (
                                         !$bRecordExists ||
-                                        $DBrows[0]['uid'] != $dataArray['uid']
+                                        $DBrow['uid'] != $dataArray['uid']
                                     ) {
                                         // Only issue an error if the record is not existing (if new...) and if the record with the false value selected was not our self.
                                         $failureArray[] = $theField;
@@ -1569,15 +1576,22 @@ class Data implements SingletonInterface
 
                     if (
                         $aCAuth ||
-                        $this->coreQuery->DBmayFEUserEdit(
+                        QueryBuilderApi::accessGranted(
+                            $controlData->getContext(),
                             $theTable,
                             $origArray,
                             $feUser,
-                            $conf['allowedGroups'] ?? '',
-                            $conf['fe_userEditSelf'] ?? ''
+                            !empty($conf['fe_userEditSelf'])
                         )
+                        // $this->coreQuery->DBmayFEUserEdit(
+                        //     $theTable,
+                        //     $origArray,
+                        //     $feUser,
+                        //     $conf['allowedGroups'] ?? '',
+                        //     $conf['fe_userEditSelf'] ?? ''
+                        // )
                     ) {
-                        $outGoingData =
+                        $parsedData =
                             $this->parseOutgoingData(
                                 $theTable,
                                 $cmdKey,
@@ -1587,6 +1601,12 @@ class Data implements SingletonInterface
                                 $origArray
                             );
 
+                        $differences = ArrayUtility::arrayDifference($origArray, $parsedData);
+                        $outGoingData = $differences['insertions'] ?? [];
+
+                        // foreach ($parsedData as $key => $value) {
+                        // } +++
+                        //
                         if ($theTable == 'fe_users' && isset($dataArray['password'])) {
                             // Do not set the outgoing password if the incoming password was unset
                             $outGoingData['password'] = $password;
@@ -1598,15 +1618,12 @@ class Data implements SingletonInterface
                             // Could be set conditional to adminReview or user confirm
                             $newFieldList .= ',token';
                         }
-                        $res =
-                            $this->coreQuery->DBgetUpdate(
-                                $theTable,
-                                $theUid,
-                                $outGoingData,
-                                $newFieldList,
-                                true
-                            );
-                        $this->updateMMRelations($theTable, $dataArray);
+                        $this->frontendUserRepository->update(
+                            $theUid,
+                            $outGoingData,
+                            $newFieldList,
+                        );
+                        $this->frontendUserRepository->updateMMRelations($dataArray);
                         $this->setSaved(true);
                         $newRow = $this->parseIncomingData($outGoingData);
                         $this->tca->modifyRow(
@@ -1719,15 +1736,18 @@ class Data implements SingletonInterface
                         $parsedArray['token'] = $token;
                         $newFieldList  .= ',token';
                     }
-                    $res =
-                        $this->coreQuery->DBgetInsert(
-                            $theTable,
-                            $this->controlData->getPid(),
-                            $parsedArray,
-                            $newFieldList,
-                            true
-                        );
-                    $newId = $GLOBALS['TYPO3_DB']->sql_insert_id();
+
+                    $insertFields = [];
+                    foreach ($parsedArray as $f => $v) {
+                        if (GeneralUtility::inList($newFieldList, $f)) {
+                            $insertFields[$f] = $v;
+                        }
+                    }
+                    $newId = $this->frontendUserRepository->save(
+                        $this->controlData->getPid(),
+                        $insertFields,
+                        // $newFieldList,
+                    );
                     $result = $newId;
 
                     // Enable users to own themselves.
@@ -1757,18 +1777,15 @@ class Data implements SingletonInterface
                         }
 
                         if (count($tmpDataArray)) {
-                            $res =
-                                $this->coreQuery->DBgetUpdate(
-                                    $theTable,
-                                    $newId,
-                                    $tmpDataArray,
-                                    $extraList,
-                                    true
-                                );
+                            $this->frontendUserRepository->update(
+                                $newId,
+                                $tmpDataArray,
+                                $extraList,
+                            );
                         }
                     }
                     $dataArray['uid'] = $newId;
-                    $this->updateMMRelations($theTable, $dataArray);
+                    $this->frontendUserRepository->updateMMRelations($dataArray);
                     $this->setSaved(true);
                     $newRow = $GLOBALS['TSFE']->sys_page->getRawRecord($theTable, $newId);
 
@@ -1859,13 +1876,20 @@ class Data implements SingletonInterface
 
                     if (
                         $aCAuth ||
-                        $this->coreQuery->DBmayFEUserEdit(
+                        QueryBuilderApi::accessGranted(
+                            $controlData->getContext(),
                             $theTable,
                             $origArray,
                             $feUser,
-                            $conf['allowedGroups'] ?? '',
-                            $conf['fe_userEditSelf'] ?? ''
+                            !empty($conf['fe_userEditSelf'])
                         )
+                        // $this->coreQuery->DBmayFEUserEdit(
+                        //     $theTable,
+                        //     $origArray,
+                        //     $feUser,
+                        //     $conf['allowedGroups'] ?? '',
+                        //     $conf['fe_userEditSelf'] ?? ''
+                        // )
                     ) {
                         // Delete the record and display form, if access granted.
                         $extKey = $controlData->getExtensionKey();
@@ -1899,12 +1923,9 @@ class Data implements SingletonInterface
                             // If the record is being fully deleted... then remove the images or files attached.
                             $this->deleteFilesFromRecord($theTable, $origArray);
                         }
-                        $res =
-                            $this->coreQuery->DBgetDelete(
-                                $theTable,
-                                $this->getRecUid(),
-                                true
-                            );
+                        $this->frontendUserRepository->delete(
+                            $this->getRecUid()
+                        );
                         $this->deleteMMRelations(
                             $theTable,
                             $this->getRecUid(),
@@ -1944,14 +1965,11 @@ class Data implements SingletonInterface
                 isset($row[$field])
             ) {
                 $updateFields[$field] = '';
-                $res =
-                    $this->coreQuery->DBgetUpdate(
-                        $theTable,
-                        $uid,
-                        $updateFields,
-                        $field,
-                        true
-                    );
+                $this->frontendUserRepository->update(
+                    $uid,
+                    $updateFields,
+                    $field,
+                );
                 unset($updateFields[$field]);
                 $delFileArr = $row[$field];
                 if (!is_array($delFileArr)) {
@@ -2058,43 +2076,43 @@ class Data implements SingletonInterface
     *
     * @return void
     */
-    public function updateMMRelations(
-        $theTable,
-        array $row
-    ): void {
-        // update the MM relation
-        $fieldsList = array_keys($row);
-        foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
-
-            if (
-                in_array($colName, $fieldsList) &&
-                $colSettings['config']['type'] == 'select' &&
-                isset($colSettings['config']['MM'])
-            ) {
-                $valuesArray = $row[$colName];
-                if (isset($valuesArray) && is_array($valuesArray)) {
-                    $res =
-                        $GLOBALS['TYPO3_DB']->exec_DELETEquery(
-                            $colSettings['config']['MM'],
-                            'uid_local=' . intval($row['uid'])
-                        );
-                    $insertFields = [];
-                    $insertFields['uid_local'] = intval($row['uid']);
-                    $insertFields['tablenames'] = '';
-                    $insertFields['sorting'] = 0;
-                    foreach($valuesArray as $theValue) {
-                        $insertFields['uid_foreign'] = intval($theValue);
-                        $insertFields['sorting']++;
-                        $res =
-                            $GLOBALS['TYPO3_DB']->exec_INSERTquery(
-                                $colSettings['config']['MM'],
-                                $insertFields
-                            );
-                    }
-                }
-            }
-        }
-    }   // updateMMRelations
+    // public function updateMMRelations(
+    //     $theTable,
+    //     array $row
+    // ): void {
+    //     // update the MM relation
+    //     $fieldsList = array_keys($row);
+    //     foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
+    //
+    //         if (
+    //             in_array($colName, $fieldsList) &&
+    //             $colSettings['config']['type'] == 'select' &&
+    //             isset($colSettings['config']['MM'])
+    //         ) {
+    //             $valuesArray = $row[$colName];
+    //             if (isset($valuesArray) && is_array($valuesArray)) {
+    //                 $res =
+    //                     $GLOBALS['TYPO3_DB']->exec_DELETEquery(
+    //                         $colSettings['config']['MM'],
+    //                         'uid_local=' . intval($row['uid'])
+    //                     );
+    //                 $insertFields = [];
+    //                 $insertFields['uid_local'] = intval($row['uid']);
+    //                 $insertFields['tablenames'] = '';
+    //                 $insertFields['sorting'] = 0;
+    //                 foreach($valuesArray as $theValue) {
+    //                     $insertFields['uid_foreign'] = intval($theValue);
+    //                     $insertFields['sorting']++;
+    //                     $res =
+    //                         $GLOBALS['TYPO3_DB']->exec_INSERTquery(
+    //                             $colSettings['config']['MM'],
+    //                             $insertFields
+    //                         );
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }   // updateMMRelations
 
     /**
     * Delete MM relations
@@ -2102,23 +2120,33 @@ class Data implements SingletonInterface
     * @return void
     */
     public function deleteMMRelations(
-        $theTable,
-        $uid,
+        string $theTable,
+        int $uid,
         array $row = []
     ): void {
         // update the MM relation
         $fieldsList = array_keys($row);
+
         foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
             if (
                 in_array($colName, $fieldsList) &&
                 $colSettings['config']['type'] == 'select' &&
                 isset($colSettings['config']['MM'])
             ) {
-                $res =
-                    $GLOBALS['TYPO3_DB']->exec_DELETEquery(
-                        $colSettings['config']['MM'],
-                        'uid_local=' . intval($uid)
-                    );
+                $mmTable = $colSettings['config']['MM'];
+                $connection = $this->connectionPool
+                    ->getConnectionForTable($mmTable);
+                $result = $connection->delete(
+                    $mmTable,
+                    [
+                        'uid_local' => $uid
+                    ]
+                );
+
+                // $GLOBALS['TYPO3_DB']->exec_DELETEquery(
+                //     $colSettings['config']['MM'],
+                //     'uid_local=' . intval($uid)
+                // );
             }
         }
     }   // deleteMMRelations
@@ -2287,7 +2315,6 @@ class Data implements SingletonInterface
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
 
-        $parsedArray = [];
         $parsedArray = $origArray;
         if (count($origArray) && is_array($conf['parseFromDBValues.'])) {
             foreach($conf['parseFromDBValues.'] as $theField => $theValue) {
@@ -2299,13 +2326,16 @@ class Data implements SingletonInterface
                         switch($theCmd) {
                             case 'date':
                             case 'adodb_date':
-                                if ($origArray[$theField]) {
+                                if (!empty($origArray[$theField])) {
                                     $parsedArray[$theField] = date(
                                         $conf['dateFormat'],
                                         $origArray[$theField]
                                     );
                                 }
-                                if (!$parsedArray[$theField]) {
+                                if (
+                                    isset($parsedArray[$theField]) &&
+                                    $parsedArray[$theField] == 0
+                                ) {
                                     if ($bUnsetZero) {
                                         unset($parsedArray[$theField]);
                                     } else {
@@ -2451,6 +2481,7 @@ class Data implements SingletonInterface
                     in_array($colName, $fieldsList)
                 ) {
                     if (
+                        $colSettings['config']['type'] == 'category' ||
                         $colSettings['config']['type'] == 'select' &&
                         isset($colSettings['config']['MM'])
                     ) {
@@ -2458,7 +2489,7 @@ class Data implements SingletonInterface
                         if ($parsedArray[$colName]) {
                             $parsedArray[$colName] = count($parsedArray[$colName]);
                         } else {
-                            $parsedArray[$colName] = '';
+                            $parsedArray[$colName] = 0;
                         }
                     } elseif (
                         isset($colSettings['config']['type']) &&
@@ -2558,5 +2589,41 @@ class Data implements SingletonInterface
                 $dataArray[$theField] = '';
             }
         }
+    }
+
+    public function removePasswordAdditions(
+        $theTable,
+        $uid,
+        $row
+    ): void {
+        $deleteFields = [
+            'lost_password',
+            'tx_agency_password'
+        ];
+        foreach ($deleteFields as $field) {
+            $row[$field] = '';
+        }
+        $newFieldList = implode(',', $deleteFields);
+        $this->frontendUserRepository->update(
+            $uid,
+            $row,
+            $newFieldList
+        );
+    }
+
+    public function activateLostPassword(
+        $uid
+    )
+    {
+        $outGoingData = [];
+        $outGoingData['lost_password'] = '1';
+
+        $extraList = 'lost_password';
+        $result =
+        $this->frontendUserRepository->update(
+            $uid,
+            $outGoingData,
+            $extraList
+        );
     }
 }

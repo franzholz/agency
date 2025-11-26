@@ -47,6 +47,7 @@ use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
+use JambageCom\Div2007\Database\QueryBuilderApi;
 use JambageCom\Div2007\Utility\CompatibilityUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\HtmlUtility;
@@ -408,13 +409,21 @@ class EditView
                     is_string($authCode) &&
                         !strcmp($authCode, $theAuthCode) ||
                     $aCAuth ||
-                    $dataObj->getCoreQuery()->DBmayFEUserEdit(
+                    QueryBuilderApi::accessGranted(
+                        $controlData->getContext(),
                         $theTable,
                         $origArray,
                         $frontendUser->user,
-                        $conf['allowedGroups'] ?? '',
-                        $conf['fe_userEditSelf'] ?? false
+                        !empty($conf['fe_userEditSelf'])
                     )
+
+                    // $dataObj->getCoreQuery()->DBmayFEUserEdit(
+                    //     $theTable,
+                    //     $origArray,
+                    //     $frontendUser->user,
+                    //     // $conf['allowedGroups'] ?? '',
+                    //     $conf['fe_userEditSelf'] ?? false
+                    // )
                 ) {
                     // Display the form, if access granted.
                     $content = $this->renderForm(

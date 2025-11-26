@@ -43,18 +43,29 @@ namespace JambageCom\Agency\Setfixed;
 *
 */
 use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
 use JambageCom\Div2007\Utility\FrontendUtility;
+
+use FoT3\Rdct\Repository\CacheMd5paramsRepository;
 
 use JambageCom\Agency\Api\ParameterApi;
 use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Security\Authentication;
 use JambageCom\Agency\Database\Tables;
 
-class SetFixedUrls
+class SetFixedUrls implements SingletonInterface
 {
+    protected ?CacheMd5paramsRepository $cacheMd5ParamsRepository = null;
+
+    public function __construct(
+        CacheMd5paramsRepository $cacheMd5ParamsRepository
+    ) {
+        $this->cacheMd5ParamsRepository = $cacheMd5ParamsRepository;
+    }
+
     /**
     * Computes the setfixed url's
     *
@@ -65,7 +76,7 @@ class SetFixedUrls
     * @param array $autoLoginKey: the auto-login key
     * @return void
     */
-    public static function compute(
+    public function compute(
         $nextCmd,
         $prefixId,
         $cObj,
@@ -185,7 +196,7 @@ class SetFixedUrls
                 }
 
                 if ($useShortUrls) {
-                    $theHash = self::storeFixedPiVars($setfixedpiVars);
+                    $theHash = $this->storeFixedPiVars($setfixedpiVars);
                     $setfixedpiVars = [$prefixId . '%5BregHash%5D' => $theHash];
                 }
                 $urlConf = [];
@@ -211,34 +222,136 @@ class SetFixedUrls
     /**
     *  Store the setfixed vars and return a replacement hash
     */
-    public static function storeFixedPiVars(array $params)
+    public function storeFixedPiVars(array $params)
     {
         $hashCalculator = GeneralUtility::makeInstance(CacheHashCalculator::class);
         $calc = $hashCalculator->calculateCacheHash($params);
         $regHash_calc = substr($calc, 0, 20);
 
         // and store it with a serialized version of the array in the DB
-        $res =
-            $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-                'md5hash',
-                'cache_md5params',
-                'md5hash=' .
-                    $GLOBALS['TYPO3_DB']->fullQuoteStr(
-                        $regHash_calc,
-                        'cache_md5params'
-                    )
-            );
+        // $res =
+        //     $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+        //         'md5hash',
+        //         'cache_md5params',
+        //         'md5hash=' .
+        //             $GLOBALS['TYPO3_DB']->fullQuoteStr(
+        //                 $regHash_calc,
+        //                 'cache_md5params'
+        //             )
+        //     );
 
-        if (!$GLOBALS['TYPO3_DB']->sql_num_rows($res)) {
-            $insertFields = ['md5hash' => $regHash_calc, 'tstamp' => time(), 'type' => 99, 'params' => serialize($params)];
+        $count =
+            $this->cacheMd5ParamsRepository
+                ->countByMd5hash(
+                    $regHash_calc
+                );
 
-            $GLOBALS['TYPO3_DB']->exec_INSERTquery(
-                'cache_md5params',
-                $insertFields
-            );
+        if (!$count) {
+            // $insertFields = ['md5hash' => $regHash_calc, 'tstamp' => time(), 'type' => 99, 'params' => serialize($params)];
+            //
+            // $GLOBALS['TYPO3_DB']->exec_INSERTquery(
+            //     'cache_md5params',
+            //     $insertFields
+            // );
+
+            $this->cacheMd5ParamsRepository
+                ->insert(
+                    $regHash_calc,
+                    time(),
+                    serialize($params),
+                    99
+                  );
         }
-        $GLOBALS['TYPO3_DB']->sql_free_result($res);
+        // $GLOBALS['TYPO3_DB']->sql_free_result($res);
 
         return $regHash_calc;
     }
+
+    /*************************************
+     * SHORT URL HANDLING
+     *************************************/
+    /**
+     *  Get the stored variables using the hash value to access the database
+     */
+    public function getShortUrl($regHash)
+    {
+        // get the serialised array from the DB based on the passed hash value
+        // $varArray = [];
+        // $res =
+        // $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+        //     'params',
+        //     'cache_md5params',
+        //     'md5hash=' . $GLOBALS['TYPO3_DB']->fullQuoteStr(
+        //         $regHash,
+        //         'cache_md5params'
+        //     )
+        // );
+        $row =
+            $this->cacheMd5ParamsRepository
+                ->fetchRedirectRecord(
+                    $regHash
+                );
+        $varArray = unserialize($row['params']);
+
+        // while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+        //     $varArray = unserialize($row['params']);
+        // }
+        // $GLOBALS['TYPO3_DB']->sql_free_result($res);
+
+        // convert the array to one that will be properly incorporated into the GET global array.
+        $retArray = [];
+        foreach($varArray as $key => $val) {
+            if (is_string($val)) {
+                $val = str_replace('%2C', ',', $val);
+            }
+            $search = ['[%5D]', '[%5B]'];
+            $replace = ['\']', '\'][\''];
+            $newkey = "['" . preg_replace($search, $replace, $key);
+            if (!preg_match('/' . preg_quote(']') . '$/', $newkey)) {
+                $newkey .= "']";
+            }
+            eval("\$retArray" . $newkey . "='$val';");
+        }
+        return $retArray;
+    }   // getShortUrl
+
+    /**
+     *  Get the stored variables using the hash value to access the database
+     */
+    public function deleteShortUrl($regHash): void
+    {
+        $this->cacheMd5ParamsRepository
+            ->delete(
+                $regHash
+            );
+
+        // if ($regHash != '') {
+        //     // get the serialised array from the DB based on the passed hash value
+        //     $GLOBALS['TYPO3_DB']->exec_DELETEquery(
+        //         'cache_md5params',
+        //         'md5hash=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($regHash, 'cache_md5params')
+        //     );
+        // }
+    }
+
+    /**
+     *  Clears obsolete hashes used for short url's
+     */
+    public function cleanShortUrlCache($shortUrlLife): void
+    {
+        $this->cacheMd5ParamsRepository
+            ->deleteOutdatedHours(
+                $shortUrlLife * 24,
+                99
+            );
+
+        // $max_life = time() - (86400 * intval($shortUrlLife));
+        // if (is_object($GLOBALS['TYPO3_DB'])) {
+        //     $res =
+        //     $GLOBALS['TYPO3_DB']->exec_DELETEquery(
+        //         'cache_md5params',
+        //         'tstamp<' . $max_life . ' AND type=99'
+        //     );
+        // }
+    }   // cleanShortUrlCache
 }

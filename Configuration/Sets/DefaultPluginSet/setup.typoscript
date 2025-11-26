@@ -29,7 +29,7 @@ plugin.tx_agency {
 	loginPID = {$plugin.tx_agency.loginPID}
 	linkToPID = {$plugin.tx_agency.linkToPID}
 	linkToPIDAddButton = {$plugin.tx_agency.linkToPIDAddButton}
-	module_sys_dmail_category_PIDLIST = {$plugin.tx_agency.module_sys_dmail_category_PIDLIST}
+	categories_PIDLIST = {$plugin.tx_agency.categories_PIDLIST}
 	defaultCODE = {$plugin.tx_agency.defaultCODE}
 	useShortUrls = {$plugin.tx_agency.useShortUrls}
 	shortUrlLife = {$plugin.tx_agency.shortUrlLife}
@@ -85,7 +85,7 @@ plugin.tx_agency {
 		}
 
 		defaultValues {
-			module_sys_dmail_html = {$plugin.tx_agency.dmailCheckedUponRegistration}
+			mail_html = {$plugin.tx_agency.mailCheckedUponRegistration}
 			usergroup = {$plugin.tx_agency.userGroupUponRegistration}
 			disable = {$plugin.tx_agency.enableEmailConfirmation}
 			by_invitation = 0
@@ -122,9 +122,8 @@ plugin.tx_agency {
 			www = wwwURL
 			comments =
 			status =
-			module_sys_dmail_category =
-			module_sys_dmail_html =
-			module_sys_dmail_newsletter =
+			categories =
+			mail_html =
 			usergroup =
 			by_invitation =
 			has_privileges =
@@ -135,7 +134,7 @@ plugin.tx_agency {
 
 	select {
 		email {
-			module_sys_dmail_category.wrap = | <br/>
+			categories.wrap = | <br/>
 		}
 	}
 
@@ -191,9 +190,8 @@ plugin.tx_agency {
 		defaultValues {
 			disable = 0
 			usergroup >
-			module_sys_dmail_html >
-			module_sys_dmail_category >
-			module_sys_dmail_newsletter >
+			mail_html >
+			categories >
 			by_invitation >
 		}
 
@@ -249,10 +247,9 @@ plugin.tx_agency {
 		zip = trim
 		image = files
 			## setEmptyIfAbsent is required for any checkbox
-	#	module_sys_dmail_html = setEmptyIfAbsent
-	#	module_sys_dmail_newsletter = setEmptyIfAbsent
+	#	mail_html = setEmptyIfAbsent
 	#	terms_acknowledged = setEmptyIfAbsent
-		module_sys_dmail_category = multiple
+		categories = multiple
 		www = wwwURL
 		usergroup = multiple
 	}

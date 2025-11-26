@@ -6,23 +6,9 @@ use JambageCom\Agency\Constants\Extension;
 
 $extensionKey = Extension::KEY;
 $result = false;
-$tableExists = true;
 $table = 'fe_groups_language_overlay';
 $languageSubpath = '/Resources/Private/Language/';
 $languageLglPath = 'LLL:EXT:core' . $languageSubpath . 'locallang_general.xlf:LGL.';
-
-if (is_object($GLOBALS['TYPO3_DB'])) {
-    $queryResult =
-        $GLOBALS['TYPO3_DB']->admin_query(
-            'SELECT * FROM INFORMATION_SCHEMA.TABLES ' .
-            'WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=\'' . $table . '\''
-        );
-    $tableExists = $GLOBALS['TYPO3_DB']->sql_num_rows($queryResult) > 0;
-}
-
-if (!$tableExists) {
-    return $result;
-}
 
 $result = [
     'ctrl' => [

@@ -51,9 +51,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use SJBR\StaticInfoTables\PiBaseApi;
 
 use JambageCom\Div2007\Compatibility\AbstractPlugin;
+use JambageCom\Div2007\Database\CoreQuery;
 use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
-use JambageCom\Div2007\Database\CoreQuery;
 
 use JambageCom\Agency\Configuration\ConfigurationStore;
 
@@ -131,7 +131,7 @@ class InitializationController implements SingletonInterface
 
         if (
             ExtensionManagementUtility::isLoaded(
-                STATIC_INFO_TABLES_EXT
+                'static_info_tables'
             )
         ) {
             // Initialise static info library
@@ -168,10 +168,6 @@ class InitializationController implements SingletonInterface
             'EXT:' . Extension::KEY . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf',
             false
         );
-        $tmpText = $languageObj->getLabel('unsupported');
-        if ($tmpText == '') {
-            $result = false;
-        }
 
         $languageObj->setSalutation($conf['salutation']);
         $urlObj->init(

@@ -46,6 +46,7 @@ namespace JambageCom\Agency\View;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
+use JambageCom\Div2007\Database\QueryBuilderApi;
 use JambageCom\Div2007\Utility\CompatibilityUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\HtmlUtility;
@@ -124,13 +125,21 @@ class DeleteView
                 // If the recUid selects a record.... (no check here)
                 if (is_array($origArray)) {
                     $bMayEdit =
-                        $dataObj->getCoreQuery()->DBmayFEUserEdit(
+                        QueryBuilderApi::accessGranted(
+                            $controlData->getContext(),
                             $theTable,
                             $origArray,
                             $feUser,
-                            $conf['allowedGroups'] ?? '',
-                            $conf['fe_userEditSelf'] ?? ''
+                            !empty($conf['fe_userEditSelf'])
                         );
+
+                        // $dataObj->getCoreQuery()->DBmayFEUserEdit(
+                        //     $theTable,
+                        //     $origArray,
+                        //     $feUser,
+                            // $conf['allowedGroups'] ?? '',
+                            // $conf['fe_userEditSelf'] ?? ''
+                        // );
 
                     if ($aCAuth || $bMayEdit) {
                         //                         $markerArray = $markerObj->getArray();
