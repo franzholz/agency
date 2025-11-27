@@ -75,19 +75,19 @@ class Tca implements SingletonInterface
         // nothing
     }
 
-    public function getForeignTable($theTable, $colName)
+    public function getForeignTable($theTable, $columnName)
     {
         $result = false;
 
         if (
             isset($GLOBALS['TCA'][$theTable]) &&
             isset($GLOBALS['TCA'][$theTable]['columns']) &&
-            isset($GLOBALS['TCA'][$theTable]['columns'][$colName])
+            isset($GLOBALS['TCA'][$theTable]['columns'][$columnName])
         ) {
-            $colSettings = $GLOBALS['TCA'][$theTable]['columns'][$colName];
-            $colConfig = $colSettings['config'];
-            if ($colConfig['foreign_table']) {
-                $result = $colConfig['foreign_table'];
+            $columnSettings = $GLOBALS['TCA'][$theTable]['columns'][$columnName];
+            $columnConfig = $columnSettings['config'];
+            if ($columnConfig['foreign_table']) {
+                $result = $columnConfig['foreign_table'];
             }
         }
         return $result;
@@ -171,25 +171,25 @@ class Tca implements SingletonInterface
 
         $rcArray = $dataArray;
 
-        foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
-            $colConfig = $colSettings['config'];
+        foreach ($GLOBALS['TCA'][$theTable]['columns'] as $columnName => $columnSettings) {
+            $columnConfig = $columnSettings['config'];
 
             // Configure preview based on input type
-            switch ($colConfig['type']) {
+            switch ($columnConfig['type']) {
                 case 'select':
-                    if (isset($colConfig['MM']) && isset($colConfig['foreign_table'])) {
+                    if (isset($columnConfig['MM']) && isset($columnConfig['foreign_table'])) {
                         // $where = 'uid_local = ' . $dataArray['uid'];
                         $valueArray =
                             $this->getRelatedUids(
-                                $colConfig['MM'],
+                                $columnConfig['MM'],
                                 'uid_foreign',
                                 'uid_local',
                                 [
                                     'uid_local' => $dataArray['uid']
                                 ]
                             );
-                        $rcArray[$colName] = implode(',', $valueArray);
-                        $modArray[$colName] = $rcArray[$colName];
+                        $rcArray[$columnName] = implode(',', $valueArray);
+                        $modArray[$columnName] = $rcArray[$columnName];
                     }
                     break;
             }
@@ -221,38 +221,38 @@ class Tca implements SingletonInterface
         }
 
         $dataFieldList = array_keys($dataArray);
-        foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
-            $colConfig = $colSettings['config'];
+        foreach ($GLOBALS['TCA'][$theTable]['columns'] as $columnName => $columnSettings) {
+            $columnConfig = $columnSettings['config'];
             if (
-                !$colConfig ||
-                !is_array($colConfig) ||
-                !GeneralUtility::inList($fieldList, $colName)
+                !$columnConfig ||
+                !is_array($columnConfig) ||
+                !GeneralUtility::inList($fieldList, $columnName)
             ) {
                 continue;
             }
 
             if (
-                isset($colConfig['maxitems']) &&
-                $colConfig['maxitems'] > 1
+                isset($columnConfig['maxitems']) &&
+                $columnConfig['maxitems'] > 1
             ) {
                 $bMultipleValues = true;
             } else {
                 $bMultipleValues = false;
             }
 
-            switch ($colConfig['type']) {
+            switch ($columnConfig['type']) {
                 case 'group':
                     $bMultipleValues = true;
                     break;
                 case 'select':
-                    $value = $dataArray[$colName] ?? '';
+                    $value = $dataArray[$columnName] ?? '';
                     if ($value == 'Array') {    // checkbox from which nothing has been selected
-                        $dataArray[$colName] = $value = '';
+                        $dataArray[$columnName] = $value = '';
                     }
 
                     if (
-                        in_array($colName, $dataFieldList) &&
-                        !empty($colConfig['MM']) &&
+                        in_array($columnName, $dataFieldList) &&
+                        !empty($columnConfig['MM']) &&
                         isset($value)
                     ) {
                         if ($value == '' || is_array($value)) {
@@ -261,7 +261,7 @@ class Tca implements SingletonInterface
                             // $valuesArray = [];
                             // $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
                             //     'uid_local,uid_foreign,sorting',
-                            //     $colConfig['MM'],
+                            //     $columnConfig['MM'],
                             //     'uid_local=' . intval($dataArray['uid']),
                             //     '',
                             //     'sorting'
@@ -272,43 +272,43 @@ class Tca implements SingletonInterface
 
                             $valueArray =
                                 $this->getRelatedUids(
-                                    $colConfig['MM'],
+                                    $columnConfig['MM'],
                                     'uid_foreign',
                                     'uid_local',
                                     ['uid_local' => $dataArray['uid']],
                                     'sorting'
                                 );
 
-                            $dataArray[$colName] = $valuesArray;
+                            $dataArray[$columnName] = $valuesArray;
                         } else {
                             // the values from the mm table are already available as an array
-                            $dataArray[$colName] = GeneralUtility::trimExplode(',', $value, true);
+                            $dataArray[$columnName] = GeneralUtility::trimExplode(',', $value, true);
                         }
                     }
                     break;
                 case 'check':
                     if (
-                        isset($colConfig['items']) &&
-                        is_array($colConfig['items'])
+                        isset($columnConfig['items']) &&
+                        is_array($columnConfig['items'])
                     ) {
-                        $value = $dataArray[$colName] ?? '';
+                        $value = $dataArray[$columnName] ?? '';
                         if(is_array($value)) {
-                            $dataArray[$colName] = 0;
+                            $dataArray[$columnName] = 0;
                             foreach ($value as $dec) {  // Combine values to one hexidecimal number
-                                $dataArray[$colName] |= (1 << $dec);
+                                $dataArray[$columnName] |= (1 << $dec);
                             }
                         }
                     } else {
                         if (
-                            isset($dataArray[$colName]) &&
+                            isset($dataArray[$columnName]) &&
                             (
-                                $dataArray[$colName] == 1 ||
-                                (string) $dataArray[$colName] == 'on'
+                                $dataArray[$columnName] == 1 ||
+                                (string) $dataArray[$columnName] == 'on'
                             )
                         ) {
-                            $dataArray[$colName] = 1;
+                            $dataArray[$columnName] = 1;
                         } else {
-                            $dataArray[$colName] = 0;
+                            $dataArray[$columnName] = 0;
                         }
                     }
                     break;
@@ -318,10 +318,10 @@ class Tca implements SingletonInterface
             }
 
             if ($bMultipleValues) {
-                $value = $dataArray[$colName] ?? '';
+                $value = $dataArray[$columnName] ?? '';
 
                 if (!empty($value) && !is_array($value)) {
-                    $dataArray[$colName] = GeneralUtility::trimExplode(',', $value, true);
+                    $dataArray[$columnName] = GeneralUtility::trimExplode(',', $value, true);
                 }
             }
         }
@@ -362,6 +362,282 @@ class Tca implements SingletonInterface
             }
         }
         return $result;
+    }
+
+    // Configure preview based on input type
+    protected function generatePreviewContent(
+        Localization $languageObj,
+        Parameters $controlData,
+        $theTable,
+        array $conf,
+        string $type,
+        string $columnName,
+        $columnValue,
+        array $columnConfig,
+        bool $bStdWrap,
+        array $stdWrap,
+        bool $bListWrap,
+        array $listWrap,
+        bool $HSC,
+        $bNotLast
+    ): string
+    {
+        $cObj = FrontendUtility::getContentObjectRenderer();
+        $xhtmlFix = HtmlUtility::determineXhtmlFix();
+        $columnContent = '';
+
+        switch ($type) {
+            case 'input':
+            case 'text':
+                if (
+                    isset($columnValue) &&
+                    (string) $columnValue != ''
+                ) {
+                    $columnContent =
+                        ($HSC && is_string($columnValue) ?
+                            nl2br(htmlspecialchars($columnValue)) :
+                            (string) $columnValue
+                        );
+                }
+                break;
+
+            case 'check':
+                $label = '';
+                if (
+                    isset($columnConfig['items'])
+                ) {
+                    if (!$bStdWrap) {
+                        $stdWrap['wrap'] = '<li>|</li>';
+                    }
+
+                    if (!$bListWrap) {
+                        $listWrap['wrap'] = '<ul class="agency-multiple-checked-values">|</ul>';
+                    }
+                    $bCheckedArray = [];
+                    if (
+                        isset($columnValue)
+                    ) {
+                        if (
+                            is_array($columnValue)
+                        ) {
+                            foreach($columnValue as $key => $value) {
+                                $bCheckedArray[$value] = true;
+                            }
+                        } else if ((string) $columnValue != '') {
+                            foreach($columnConfig['items'] as $key => $value) {
+                                $checked = ($columnValue & (1 << $key));
+                                if ($checked) {
+                                    $bCheckedArray[$key] = true;
+                                }
+                            }
+                        }
+                    }
+
+                    $count = 0;
+                    $checkedCount = 0;
+                    foreach($columnConfig['items'] as $key => $value) {
+                        $count++;
+                        $checked = (!empty($bCheckedArray[$key]));
+
+                        if ($checked) {
+                            $checkedCount++;
+                            $label = $languageObj->getLabelFromString($columnConfig['items'][$key]['label']);
+                            if ($HSC) {
+                                $label =
+                                htmlspecialchars($label);
+                            }
+                            $label = ($checked ? $label : '');
+                            $columnContent .= ((!$bNotLast || $checkedCount < count($bCheckedArray)) ? $cObj->stdWrap($label, $stdWrap) : $label);
+                        }
+                    }
+                    $columnContent = $cObj->stdWrap($columnContent, $listWrap);
+                } else {
+                    if (
+                        !empty($columnValue)
+                    ) {
+                        $label = $languageObj->getLabel('yes');
+                    } else {
+                        $label = $languageObj->getLabel('no');
+                    }
+
+                    if ($HSC) {
+                        $label = htmlspecialchars($label);
+                    }
+                    $columnContent = $label;
+                }
+                break;
+
+                case 'radio':
+                    $itemArray = [];
+
+                    if (
+                        isset($columnValue) &&
+                        (string) $columnValue != ''
+                    ) {
+                        $valuesArray = is_array($columnValue) ? $columnValue : explode(',', (string) $columnValue);
+                        $textSchema = $theTable . '.' . $columnName . '.I.';
+                        $labelItemArray = $languageObj->getItemsLL($textSchema, true);
+
+                        if (isset($conf['mergeLabels']) || !count($labelItemArray)) {
+                            if (isset($columnConfig['itemsProcFunc'])) {
+                                $itemArray = GeneralUtility::callUserFunction($columnConfig['itemsProcFunc'], $columnConfig, $this);
+                            }
+                            $itemArray = $columnConfig['items'];
+                            if (isset($conf['mergeLabels'])) {
+                                $itemArray = $this->mergeItems($itemArray, $labelItemArray);
+                            }
+                        } else {
+                            $itemArray = $labelItemArray;
+                        }
+
+                        if (
+                            is_array($itemArray) &&
+                            count($itemArray)
+                        ) {
+                            $itemKeyArray = $this->getItemKeyArray($itemArray);
+
+                            if (!$bStdWrap) {
+                                $stdWrap['wrap'] = '| ';
+                            }
+
+                            for ($i = 0; $i < count($valuesArray); $i++) {
+                                $label = $languageObj->getLabelFromString($itemKeyArray[$valuesArray[$i]]['label']);
+                                if ($HSC) {
+                                    $label = htmlspecialchars($label);
+                                }
+                                $columnContent .= ((!$bNotLast || $i < count($valuesArray) - 1) ? $cObj->stdWrap($label, $stdWrap) : $label);
+                            }
+                        }
+                    }
+                    break;
+
+                case 'select':
+                    $itemArray = [];
+
+                    if (
+                        isset($columnValue) &&
+                        (
+                            !empty($columnValue) ||
+                            is_string($columnValue) &&
+                            $columnValue == '0'
+                        )
+                    ) {
+                        $valuesArray = is_array($columnValue) ? $columnValue : explode(',', (string) $columnValue);
+                        $textSchema = $theTable . '.' . $columnName . '.I.';
+                        $labelItemArray = $languageObj->getItemsLL($textSchema, true);
+
+                        if (isset($conf['mergeLabels']) || !count($labelItemArray)) {
+                            if (isset($columnConfig['itemsProcFunc'])) {
+                                $itemArray = GeneralUtility::callUserFunction($columnConfig['itemsProcFunc'], $columnConfig, $this);
+                            }
+                            $itemArray = $columnConfig['items'] ?? [];
+                            if (isset($conf['mergeLabels'])) {
+                                $itemArray = $this->mergeItems($itemArray, $labelItemArray);
+                            }
+                        } else {
+                            $itemArray = $labelItemArray;
+                        }
+
+                        if (!$bStdWrap) {
+                            $stdWrap['wrap'] = '|<br' . $xhtmlFix . '>';
+                        }
+
+                        if (is_array($itemArray)) {
+                            $itemKeyArray = $this->getItemKeyArray($itemArray);
+                            for ($i = 0; $i < count($valuesArray); $i++) {
+                                $label = '';
+                                if (empty($itemKeyArray)) {
+                                    $label = $valuesArray[$i];
+                                } else {
+                                    $label = $languageObj->getLabelFromString($itemKeyArray[$valuesArray[$i]]['label']);
+                                }
+                                if ($HSC) {
+                                    $label = htmlspecialchars($label);
+                                }
+                                $columnContent .=
+                                    ((!$bNotLast || $i < count($valuesArray) - 1) ?
+                                        $cObj->stdWrap($label, $stdWrap) :
+                                        $label
+                                    );
+                            }
+                        }
+
+                        if (isset($columnConfig['foreign_table'])) {
+                            $reservedValues = [];
+                            if (isset($userGroupObj) && is_object($userGroupObj)) {
+                                $reservedValues = $userGroupObj->getReservedValues($conf);
+                                $valuesArray = array_diff($valuesArray, $reservedValues);
+                            }
+                            $valuesArray = array_filter($valuesArray, 'strlen'); // removes null values
+                            $firstValue = current($valuesArray);
+
+                            if (!empty($firstValue) || count($valuesArray) > 1) {
+
+                                $foreignRows =
+                                    $this->getRowsByUids(
+                                        $columnConfig['foreign_table'],
+                                        '*',
+                                        $valuesArray
+                                    );
+                                //  HIER ++++
+
+                                if (
+                                    is_array($foreignRows) &&
+                                    count($foreignRows) > 0
+                                ) {
+
+                                    $language = $controlData->getSysLanguageUid(
+                                        $conf,
+                                        'ALL',
+                                        $columnConfig['foreign_table']
+                                    );
+                                    $languageAspect = new LanguageAspect($language, $language);
+                                    $titleField = $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['label'];
+
+                                    for ($i = 0; $i < count($foreignRows); $i++) {
+                                        if ($theTable == 'fe_users' && $columnName == 'usergroup') {
+                                            $foreignRows[$i] = $this->getUsergroupOverlay($conf, $controlData, $foreignRows[$i]);
+                                        } elseif (
+                                            $localizedRow =
+                                                $GLOBALS['TSFE']->sys_page->getLanguageOverlay(
+                                                    $columnConfig['foreign_table'],
+                                                    $foreignRows[$i],
+                                                    $languageAspect)
+                                                  ) {
+                                            $foreignRows[$i] = $localizedRow;
+                                        }
+                                        $text = $foreignRows[$i][$titleField];
+                                        if ($HSC) {
+                                            $text = htmlspecialchars($text);
+                                        }
+
+                                        $columnContent .=
+                                        (
+                                            ($bNotLast || $i < count($foreignRows) - 1) ?
+                                            $cObj->stdWrap($text, $stdWrap) :
+                                            $text
+                                        );
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+
+                    case 'category':
+                        break;
+
+                    default:
+                        // unsupported input type
+                        $label = $languageObj->getLabel('unsupported');
+                        if ($HSC) {
+                            $label = htmlspecialchars($label);
+                        }
+                        $columnContent .= $columnConfig['type'] . ':' . $label;
+                        break;
+                }
+
+        return $columnContent;
     }
 
     /**
@@ -445,16 +721,16 @@ class Tca implements SingletonInterface
             $activity = 'input';
         }
 
-        foreach ($GLOBALS['TCA'][$theTable]['columns'] as $colName => $colSettings) {
+        foreach ($GLOBALS['TCA'][$theTable]['columns'] as $columnName => $columnSettings) {
             if (
-                GeneralUtility::inList($fields, $colName) ||
+                GeneralUtility::inList($fields, $columnName) ||
                 $useMissingFields
             ) {
-                $colConfig = $colSettings['config'];
-                $colContent = '';
+                $columnConfig = $columnSettings['config'];
+                $columnContent = '';
 
-                if (!$bChangesOnly || isset($mrow[$colName])) {
-                    $type = $colConfig['type'];
+                if (!$bChangesOnly || isset($mrow[$columnName])) {
+                    $type = $columnConfig['type'];
 
                     // check for a setup of wraps:
                     $stdWrap = [];
@@ -464,12 +740,12 @@ class Tca implements SingletonInterface
                     if (
                         isset($conf[$type . '.']) &&
                         isset($conf[$type . '.'][$activity . '.']) &&
-                        isset($conf[$type . '.'][$activity . '.'][$colName . '.']) &&
-                        isset($conf[$type . '.'][$activity . '.'][$colName . '.']['item.'])
+                        isset($conf[$type . '.'][$activity . '.'][$columnName . '.']) &&
+                        isset($conf[$type . '.'][$activity . '.'][$columnName . '.']['item.'])
                     ) {
-                        $stdWrap = $conf[$type . '.'][$activity . '.'][$colName . '.']['item.'];
+                        $stdWrap = $conf[$type . '.'][$activity . '.'][$columnName . '.']['item.'];
                         $bStdWrap = true;
-                        if ($conf[$type . '.'][$activity . '.'][$colName . '.']['item.']['notLast']) {
+                        if ($conf[$type . '.'][$activity . '.'][$columnName . '.']['item.']['notLast']) {
                             $bNotLast = true;
                         }
                     }
@@ -480,16 +756,16 @@ class Tca implements SingletonInterface
                     if (
                         isset($conf[$type . '.']) &&
                         isset($conf[$type . '.'][$activity.'.']) &&
-                        isset($conf[$type . '.'][$activity . '.'][$colName . '.']) &&
-                        isset($conf[$type . '.'][$activity . '.'][$colName . '.']['list.'])
+                        isset($conf[$type . '.'][$activity . '.'][$columnName . '.']) &&
+                        isset($conf[$type . '.'][$activity . '.'][$columnName . '.']['list.'])
                     ) {
-                        $listWrap = $conf[$type . '.'][$activity . '.'][$colName . '.']['list.'];
+                        $listWrap = $conf[$type . '.'][$activity . '.'][$columnName . '.']['list.'];
                         $bListWrap = true;
                     } else {
                         $listWrap['wrap'] = '<ul class="agency-multiple-checked-values">|</ul>';
                     }
 
-                    if ($theTable == 'fe_users' && $colName == 'usergroup') {
+                    if ($theTable == 'fe_users' && $columnName == 'usergroup') {
                         $userGroupObj = $addressObj->getFieldObj('usergroup');
                     } else if (isset($userGroupObj)) {
                         unset($userGroupObj);
@@ -499,259 +775,44 @@ class Tca implements SingletonInterface
                         $mode == Mode::PREVIEW ||
                         $viewOnly
                     ) {
-                        // Configure preview based on input type
-
-                        switch ($type) {
-                            case 'input':
-                            case 'text':
-                                if (
-                                    isset($mrow[$colName]) &&
-                                    $mrow[$colName] != ''
-                                ) {
-                                    $colContent = ($HSC && is_string($mrow[$colName]) ? nl2br(htmlspecialchars($mrow[$colName])) : $mrow[$colName]);
-                                }
-                                break;
-
-                            case 'check':
-                                if (
-                                    isset($colConfig['items'])
-                                ) {
-                                    if (!$bStdWrap) {
-                                        $stdWrap['wrap'] = '<li>|</li>';
-                                    }
-
-                                    if (!$bListWrap) {
-                                        $listWrap['wrap'] = '<ul class="agency-multiple-checked-values">|</ul>';
-                                    }
-                                    $bCheckedArray = [];
-                                    if (
-                                        isset($mrow[$colName]) &&
-                                        (string) $mrow[$colName] != ''
-                                    ) {
-                                        if (
-                                            isset($mrow[$colName]) &&
-                                            is_array($mrow[$colName])
-                                        ) {
-                                            foreach($mrow[$colName] as $key => $value) {
-                                                $bCheckedArray[$value] = true;
-                                            }
-                                        } else {
-                                            foreach($colConfig['items'] as $key => $value) {
-                                                $checked = ($mrow[$colName] & (1 << $key));
-                                                if ($checked) {
-                                                    $bCheckedArray[$key] = true;
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    $count = 0;
-                                    $checkedCount = 0;
-                                    foreach($colConfig['items'] as $key => $value) {
-                                        $count++;
-                                        $checked = (!empty($bCheckedArray[$key]));
-
-                                        if ($checked) {
-                                            $checkedCount++;
-                                            $label = $languageObj->getLabelFromString($colConfig['items'][$key]['label']);
-                                            if ($HSC) {
-                                                $label =
-                                                    htmlspecialchars($label);
-                                            }
-                                            $label = ($checked ? $label : '');
-                                            $colContent .= ((!$bNotLast || $checkedCount < count($bCheckedArray)) ? $cObj->stdWrap($label, $stdWrap) : $label);
-                                        }
-                                    }
-                                    $colContent = $cObj->stdWrap($colContent, $listWrap);
-                                } else {
-                                    if (
-                                        isset($mrow[$colName]) &&
-                                        (string) $mrow[$colName] != '' &&
-                                        (string) $mrow[$colName] != '0'
-                                    ) {
-                                        $label = $languageObj->getLabel('yes');
-                                    } else {
-                                        $label = $languageObj->getLabel('no');
-                                    }
-
-                                    if ($HSC) {
-                                        $label = htmlspecialchars($label);
-                                    }
-                                    $colContent = $label;
-                                }
-                                break;
-
-                            case 'radio':
-                                if (
-                                    isset($mrow[$colName]) &&
-                                    (string) $mrow[$colName] != ''
-                                ) {
-                                    $valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', (string) $mrow[$colName]);
-                                    $textSchema = $theTable . '.' . $colName . '.I.';
-                                    $labelItemArray = $languageObj->getItemsLL($textSchema, true);
-
-                                    if (isset($conf['mergeLabels']) || !count($labelItemArray)) {
-                                        if (isset($colConfig['itemsProcFunc'])) {
-                                            $itemArray = GeneralUtility::callUserFunction($colConfig['itemsProcFunc'], $colConfig, $this);
-                                        }
-                                        $itemArray = $colConfig['items'];
-                                        if (isset($conf['mergeLabels'])) {
-                                            $itemArray = $this->mergeItems($itemArray, $labelItemArray);
-                                        }
-                                    } else {
-                                        $itemArray = $labelItemArray;
-                                    }
-
-                                    if (is_array($itemArray)) {
-                                        $itemKeyArray = $this->getItemKeyArray($itemArray);
-
-                                        if (!$bStdWrap) {
-                                            $stdWrap['wrap'] = '| ';
-                                        }
-
-                                        for ($i = 0; $i < count($valuesArray); $i++) {
-                                            $label = $languageObj->getLabelFromString($itemKeyArray[$valuesArray[$i]]['label']);
-                                            if ($HSC) {
-                                                $label = htmlspecialchars($label);
-                                            }
-                                            $colContent .= ((!$bNotLast || $i < count($valuesArray) - 1) ? $cObj->stdWrap($label, $stdWrap) : $label);
-                                        }
-                                    }
-                                }
-                                break;
-
-                            case 'category':
-                            case 'select':
-                                if (
-                                    isset($mrow[$colName]) &&
-                                    (
-                                        !empty($mrow[$colName]) ||
-                                        is_string($mrow[$colName]) &&
-                                        $mrow[$colName] == '0'
-                                    )
-                                ) {
-                                    $valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', (string) $mrow[$colName]);
-                                    $textSchema = $theTable . '.' . $colName . '.I.';
-                                    $labelItemArray = $languageObj->getItemsLL($textSchema, true);
-
-                                    if (isset($conf['mergeLabels']) || !count($labelItemArray)) {
-                                        if (isset($colConfig['itemsProcFunc'])) {
-                                            $itemArray = GeneralUtility::callUserFunction($colConfig['itemsProcFunc'], $colConfig, $this);
-                                        }
-                                        $itemArray = $colConfig['items'] ?? [];
-                                        if (isset($conf['mergeLabels'])) {
-                                            $itemArray = $this->mergeItems($itemArray, $labelItemArray);
-                                        }
-                                    } else {
-                                        $itemArray = $labelItemArray;
-                                    }
-
-                                    if (!$bStdWrap) {
-                                        $stdWrap['wrap'] = '|<br' . $xhtmlFix . '>';
-                                    }
-
-                                    if (is_array($itemArray)) {
-                                        $itemKeyArray = $this->getItemKeyArray($itemArray);
-                                        for ($i = 0; $i < count($valuesArray); $i++) {
-                                            if (empty($itemKeyArray)) {
-                                                $label = $valuesArray[$i];
-                                            } else {
-                                                $label = $languageObj->getLabelFromString($itemKeyArray[$valuesArray[$i]]['label']);
-                                            }
-                                            if ($HSC) {
-                                                $label = htmlspecialchars($label);
-                                            }
-                                            $colContent .= ((!$bNotLast || $i < count($valuesArray) - 1) ? $cObj->stdWrap($label, $stdWrap) : $label);
-                                        }
-                                    }
-
-                                    if (isset($colConfig['foreign_table'])) {
-                                        $reservedValues = [];
-                                        if (isset($userGroupObj) && is_object($userGroupObj)) {
-                                            $reservedValues = $userGroupObj->getReservedValues($conf);
-                                            $valuesArray = array_diff($valuesArray, $reservedValues);
-                                        }
-                                        $valuesArray = array_filter($valuesArray, 'strlen'); // removes null values
-                                        $firstValue = current($valuesArray);
-
-                                        if (!empty($firstValue) || count($valuesArray) > 1) {
-
-                                           $foreignRows =
-                                                $this->getRowsByUids(
-                                                    $colConfig['foreign_table'],
-                                                    '*',
-                                                    $valuesArray
-                                                );
-                                                //  HIER ++++
-
-
-                                            if (
-                                                is_array($foreignRows) &&
-                                                count($foreignRows) > 0
-                                            ) {
-
-                                                $language = $controlData->getSysLanguageUid(
-                                                    $conf,
-                                                    'ALL',
-                                                    $colConfig['foreign_table']
-                                                );
-                                                $languageAspect = new LanguageAspect($language, $language);
-                                                $titleField = $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['label'];
-
-                                                for ($i = 0; $i < count($foreignRows); $i++) {
-                                                    if ($theTable == 'fe_users' && $colName == 'usergroup') {
-                                                        $foreignRows[$i] = $this->getUsergroupOverlay($conf, $controlData, $foreignRows[$i]);
-                                                    } elseif ($localizedRow = $GLOBALS['TSFE']->sys_page->getLanguageOverlay($colConfig['foreign_table'], $foreignRows[$i], $languageAspect)) {
-                                                        $foreignRows[$i] = $localizedRow;
-                                                    }
-                                                    $text = $foreignRows[$i][$titleField];
-                                                    if ($HSC) {
-                                                        $text = htmlspecialchars($text);
-                                                    }
-
-                                                    $colContent .=
-                                                        (
-                                                            ($bNotLast || $i < count($foreignRows) - 1) ?
-                                                            $cObj->stdWrap($text, $stdWrap) :
-                                                            $text
-                                                        );
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                break;
-
-                            default:
-                                // unsupported input type
-                                $label = $languageObj->getLabel('unsupported');
-                                if ($HSC) {
-                                    $label = htmlspecialchars($label);
-                                }
-                                $colContent .= $colConfig['type'] . ':' . $label;
-                                break;
-                        }
+                        $columnContent =
+                            $this->generatePreviewContent(
+                                $languageObj,
+                                $controlData,
+                                $theTable,
+                                $conf,
+                                $type,
+                                $columnName,
+                                $mrow[$columnName] ?? null,
+                                $columnConfig,
+                                $bStdWrap,
+                                $stdWrap,
+                                $bListWrap,
+                                $listWrap,
+                                $HSC,
+                                $bNotLast
+                            );
                     } else {
                         $itemArray = '';
                         // Configure inputs based on TCA type
                         if (in_array($type, ['check', 'radio', 'select'])) {
                             $valuesArray = [];
 
-                            if (isset($mrow[$colName])) {
-                                $valuesArray = is_array($mrow[$colName]) ? $mrow[$colName] : explode(',', (string) $mrow[$colName]);
+                            if (isset($mrow[$columnName])) {
+                                $valuesArray = is_array($mrow[$columnName]) ? $mrow[$columnName] : explode(',', (string) $mrow[$columnName]);
                             }
 
-                            if (empty($valuesArray[0]) && isset($colConfig['default'])) {
-                                $valuesArray[] = $colConfig['default'];
+                            if (empty($valuesArray[0]) && isset($columnConfig['default'])) {
+                                $valuesArray[] = $columnConfig['default'];
                             }
-                            $textSchema = $theTable . '.' . $colName . '.I.';
+                            $textSchema = $theTable . '.' . $columnName . '.I.';
                             $labelItemArray = $languageObj->getItemsLL($textSchema, true);
 
                             if ($conf['mergeLabels'] || !count($labelItemArray)) {
-                                if (isset($colConfig['itemsProcFunc'])) {
-                                    $itemArray = GeneralUtility::callUserFunction($colConfig['itemsProcFunc'], $colConfig, $this);
+                                if (isset($columnConfig['itemsProcFunc'])) {
+                                    $itemArray = GeneralUtility::callUserFunction($columnConfig['itemsProcFunc'], $columnConfig, $this);
                                 }
-                                $itemArray = $colConfig['items'] ?? [];
+                                $itemArray = $columnConfig['items'] ?? [];
                                 if (isset($conf['mergeLabels'])) {
                                     $itemArray =
                                         $this->mergeItems($itemArray, $labelItemArray);
@@ -763,40 +824,40 @@ class Tca implements SingletonInterface
 
                         switch ($type) {
                             case 'input':
-                                $colContent = '<input ' .
-                                'class="' . $css->getClassName($colName, 'input') . '" ' .
-                                'type="input" name="FE[' . $theTable . '][' . $colName . ']"' .
-                                    ' title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($colName, 'upper') . '###"' .
-                                    ' size="' . ($colConfig['size'] ?: 30) . '"';
-                                if ($colConfig['max']) {
-                                    $colContent .= ' maxlength="' . $colConfig['max'] . '"';
+                                $columnContent = '<input ' .
+                                'class="' . $css->getClassName($columnName, 'input') . '" ' .
+                                'type="input" name="FE[' . $theTable . '][' . $columnName . ']"' .
+                                    ' title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($columnName, 'upper') . '###"' .
+                                    ' size="' . ($columnConfig['size'] ?: 30) . '"';
+                                if ($columnConfig['max']) {
+                                    $columnContent .= ' maxlength="' . $columnConfig['max'] . '"';
                                 }
-                                if (isset($colConfig['default'])) {
-                                    $label = $languageObj->getLabelFromString($colConfig['default']);
+                                if (isset($columnConfig['default'])) {
+                                    $label = $languageObj->getLabelFromString($columnConfig['default']);
                                     $label = htmlspecialchars($label);
-                                    $colContent .= ' value="' . $label . '"';
+                                    $columnContent .= ' value="' . $label . '"';
                                 }
-                                $colContent .= $xhtmlFix . '>';
+                                $columnContent .= $xhtmlFix . '>';
                                 break;
 
                             case 'text':
-                                $label = (isset($colConfig['default']) ? $languageObj->getLabelFromString($colConfig['default']) : '');
+                                $label = (isset($columnConfig['default']) ? $languageObj->getLabelFromString($columnConfig['default']) : '');
                                 $label = htmlspecialchars($label);
-                                $colContent = '<textarea id="' .
+                                $columnContent = '<textarea id="' .
                                     FrontendUtility::getClassName(
-                                        $colName,
+                                        $columnName,
                                         $prefixId
                                     ) .
-                                    '" class="' . $css->getClassName($colName, 'input') .
-                                    '" name="FE[' . $theTable . '][' . $colName . ']"' .
-                                    ' title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($colName, 'upper') . '###"' .
-                                    ' cols="' . ($colConfig['cols'] ?: 30) . '"' .
-                                    ' rows="' . ($colConfig['rows'] ?: 5) . '"' .
+                                    '" class="' . $css->getClassName($columnName, 'input') .
+                                    '" name="FE[' . $theTable . '][' . $columnName . ']"' .
+                                    ' title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($columnName, 'upper') . '###"' .
+                                    ' cols="' . ($columnConfig['cols'] ?: 30) . '"' .
+                                    ' rows="' . ($columnConfig['rows'] ?: 5) . '"' .
                                     '>' . $label . '</textarea>';
                                 break;
 
                             case 'check':
-                                $label = $languageObj->getLabel('tooltip_' . $colName);
+                                $label = $languageObj->getLabel('tooltip_' . $columnName);
                                 $label = htmlspecialchars($label);
 
                                 if (
@@ -806,7 +867,7 @@ class Tca implements SingletonInterface
                                 ) {
                                     $uidText =
                                         FrontendUtility::getClassName(
-                                            $colName,
+                                            $columnName,
                                             $prefixId
                                         );
                                     if (
@@ -816,19 +877,19 @@ class Tca implements SingletonInterface
                                     ) {
                                         $uidText .= '-' . $mrow['uid'];
                                     }
-                                    $colContent = '<ul id="' . $uidText . '" class="' . $css->getClassName('agency-multiple-checkboxes', 'ul') . '">';
+                                    $columnContent = '<ul id="' . $uidText . '" class="' . $css->getClassName('agency-multiple-checkboxes', 'ul') . '">';
 
                                     if (
-                                        isset($mrow[$colName]) &&
+                                        isset($mrow[$columnName]) &&
                                         (
                                             $controlData->getSubmit() ||
                                             $controlData->getDoNotSave() ||
                                             $cmd == 'edit'
                                         )
                                     ) {
-                                        $startVal = $mrow[$colName];
+                                        $startVal = $mrow[$columnName];
                                     } else {
-                                        $startVal = $colConfig['default'] ?? '0';
+                                        $startVal = $columnConfig['default'] ?? '0';
                                     }
 
                                     $i = 0;
@@ -850,47 +911,47 @@ class Tca implements SingletonInterface
                                         $label = htmlspecialchars($label);
                                         $newContent = '<li><input type="checkbox"' .
                                             ' id="' . $uidText . '-' . $key .
-                                            '" class="' . $css->getClassName($colName, 'input-' . $i) .
-                                            '" name="FE[' . $theTable . '][' . $colName . '][]" value="' . $key . '"' .
+                                            '" class="' . $css->getClassName($columnName, 'input-' . $i) .
+                                            '" name="FE[' . $theTable . '][' . $columnName . '][]" value="' . $key . '"' .
                                             $checkedHtml . $xhtmlFix . '><label for="' . $uidText . '-' . $key . $xhtmlFix . '">' .
                                             $label .
                                             '</label></li>';
-                                        $colContent .= $newContent;
+                                        $columnContent .= $newContent;
                                     }
-                                    $colContent .= '</ul>';
+                                    $columnContent .= '</ul>';
                                 } else {
                                     $checkedHtml = ($useXHTML ? ' checked="checked"' : ' checked');
-                                    $colContent =
+                                    $columnContent =
                                         '<input type="checkbox"' .
                                         ' id="' .
                                         FrontendUtility::getClassName(
-                                            $colName,
+                                            $columnName,
                                             $prefixId
                                         ) .
-                                        '" class="' . $css->getClassName($colName, 'input') .
-                                        '" name="FE[' . $theTable . '][' . $colName . ']" title="' .
-                                        $label . '"' . (isset($mrow[$colName]) && $mrow[$colName] != '' ? ' value="on"' . $checkedHtml : '') .
+                                        '" class="' . $css->getClassName($columnName, 'input') .
+                                        '" name="FE[' . $theTable . '][' . $columnName . ']" title="' .
+                                        $label . '"' . (isset($mrow[$columnName]) && $mrow[$columnName] != '' ? ' value="on"' . $checkedHtml : '') .
                                         $xhtmlFix . '>';
                                 }
                                 break;
 
                             case 'radio':
                                 if (
-                                    isset($mrow[$colName]) &&
+                                    isset($mrow[$columnName]) &&
                                     (
                                         $controlData->getSubmit() ||
                                         $controlData->getDoNotSave() ||
                                         $cmd == 'edit'
                                     )
                                 ) {
-                                    $startVal = $mrow[$colName];
+                                    $startVal = $mrow[$columnName];
                                 } else {
-                                    $startVal = $colConfig['default'] ?? '';
+                                    $startVal = $columnConfig['default'] ?? '';
                                 }
 
-                                if (empty($startVal) && isset($colConfig['items'])) {
-                                    reset($colConfig['items']);
-                                    [$startConf] = $colConfig['items'];
+                                if (empty($startVal) && isset($columnConfig['items'])) {
+                                    reset($columnConfig['items']);
+                                    [$startConf] = $columnConfig['items'];
                                     $startVal = $startConf['value'];
                                 }
 
@@ -909,21 +970,21 @@ class Tca implements SingletonInterface
                                         $itemOut = '<input type="radio"' .
                                         ' id="'.
                                         FrontendUtility::getClassName(
-                                            $colName,
+                                            $columnName,
                                             $prefixId
                                         ) .
                                         '-' . $i .
-                                        '" class="' . $css->getClassName($colName, 'input') .
-                                        '" name="FE[' . $theTable . '][' . $colName . ']"' .
+                                        '" class="' . $css->getClassName($columnName, 'input') .
+                                        '" name="FE[' . $theTable . '][' . $columnName . ']"' .
                                             ' value="' . $value . '" ' . ($value == $startVal ? $checkedHtml : '') . $xhtmlFix . '>' .
                                             '<label for="' .
                                             FrontendUtility::getClassName(
-                                                $colName,
+                                                $columnName,
                                                 $prefixId
                                             ) .
                                             '-' . $i . '">' . $label . '</label>';
                                         $i++;
-                                        $colContent .=
+                                        $columnContent .=
                                             ((!$bNotLast || $i < count($itemArray) - 1) ?
                                             $cObj->stdWrap($itemOut, $stdWrap) :
                                             $itemOut);
@@ -932,17 +993,17 @@ class Tca implements SingletonInterface
                                 break;
 
                             case 'select':
-                                $colContent = '';
+                                $columnContent = '';
                                 $attributeMultiple = '';
                                 $attributeClassName = '';
                                 $checkedHtml =  ($useXHTML ? ' checked="checked"' : ' checked');
                                 $selectedHtml = ($useXHTML ? ' selected="selected"' : ' selected');
 
                                 if (
-                                    isset($colConfig['maxitems']) &&
-                                    $colConfig['maxitems'] > 1 &&
+                                    isset($columnConfig['maxitems']) &&
+                                    $columnConfig['maxitems'] > 1 &&
                                     (
-                                        $colName != 'usergroup' ||
+                                        $columnName != 'usergroup' ||
                                         !empty($conf['allowMultipleUserGroupSelection']) ||
                                         $theTable != 'fe_users'
                                     )
@@ -956,26 +1017,26 @@ class Tca implements SingletonInterface
 
                                 $attributeIdName = ' id="' .
                                     FrontendUtility::getClassName(
-                                        $colName,
+                                        $columnName,
                                         $prefixId
                                     ) .
-                                    '" name="FE[' . $theTable . '][' . $colName . ']';
+                                    '" name="FE[' . $theTable . '][' . $columnName . ']';
 
                                 if ($attributeMultiple != '') {
                                     $attributeIdName .= '[]';
                                 }
                                 $attributeIdName .= '"';
 
-                                $attributeTitle = ' title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($colName, 'upper') . '###"';
+                                $attributeTitle = ' title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($columnName, 'upper') . '###"';
 
-                                $attributeClassName = $css->getClassName($colName, 'input');
+                                $attributeClassName = $css->getClassName($columnName, 'input');
 
                                 if (
-                                    isset($colConfig['renderMode']) &&
-                                    $colConfig['renderMode'] == 'checkbox'
+                                    isset($columnConfig['renderMode']) &&
+                                    $columnConfig['renderMode'] == 'checkbox'
                                 ) {
                                     $attributeClass = ' class="' . $attributeClassName . '"';
-                                    $colContent .= '
+                                    $columnContent .= '
                                         <input' . $attributeIdName . ' value="" type="hidden"' . $attributeClass . $xhtmlFix . '>';
 
                                     $attributeClass = '';
@@ -986,12 +1047,12 @@ class Tca implements SingletonInterface
                                         $attributeClass = ' class="' . $attributeClassName . '"';
                                     }
 
-                                    $colContent .= '
+                                    $columnContent .= '
                                         <div ';
                                     if ($attributeClass != '') {
-                                        $colContent .= $attributeClass;
+                                        $columnContent .= $attributeClass;
                                     }
-                                    $colContent .=
+                                    $columnContent .=
                                         $attributeTitle .
                                         $xhtmlFix . '>';
                                 } else {
@@ -1001,18 +1062,24 @@ class Tca implements SingletonInterface
                                         $attributeClassName .= ' ' . $css->getClassName('multiple-select', '');
                                     }
                                     $attributeClass = ' class="' . $attributeClassName . '"';
-                                    $colContent .= '<select' . $attributeIdName;
+                                    $columnContent .= '<select' . $attributeIdName;
                                     if ($attributeClass != '') {
-                                        $colContent .= $attributeClass;
+                                        $columnContent .= $attributeClass;
                                     }
 
-                                    $colContent .=
+                                    $columnContent .=
                                         $attributeMultiple .
                                         $attributeTitle .
                                         '>';
                                 }
 
-                                if (is_array($itemArray)) {
+                                if (
+                                    is_array($itemArray)
+                                ) {
+/*
+                                    $columnContent = $this->getContent($itemArray);  +++
+                                    public function getContent($itemArray);*/
+
                                     $itemArray = $this->getItemKeyArray($itemArray);
                                     $i = 0;
 
@@ -1020,47 +1087,47 @@ class Tca implements SingletonInterface
                                         $label = $languageObj->getLabelFromString($item['label'], true);
                                         $label = htmlspecialchars($label);
                                         if (
-                                            isset($colConfig['renderMode']) &&
-                                            $colConfig['renderMode'] == 'checkbox'
+                                            isset($columnConfig['renderMode']) &&
+                                            $columnConfig['renderMode'] == 'checkbox'
                                         ) {
-                                            $colContent .= '<div class="' . $css->getClassName($colName, 'divInput-' . ($i + 1)) . '">' .
+                                            $columnContent .= '<div class="' . $css->getClassName($columnName, 'divInput-' . ($i + 1)) . '">' .
                                             '<input class="' .
-                                            $css->getClassName('checkbox-checkboxes', 'input') . ' ' . $css->getClassName($colName, 'input-' . ($i + 1)) .
+                                            $css->getClassName('checkbox-checkboxes', 'input') . ' ' . $css->getClassName($columnName, 'input-' . ($i + 1)) .
                                              '" id="' .
                                             FrontendUtility::getClassName(
-                                                $colName,
+                                                $columnName,
                                                 $prefixId
                                             ) .
-                                            '-' . $i . '" name="FE[' . $theTable . '][' . $colName . '][' . $k . ']" value="' . $k .
+                                            '-' . $i . '" name="FE[' . $theTable . '][' . $columnName . '][' . $k . ']" value="' . $k .
                                             '" type="checkbox"  ' . (in_array($k, $valuesArray) ? $checkedHtml : '') . $xhtmlFix . '></div>' .
-                                                '<div class="viewLabel ' . $css->getClassName($colName, 'divLabel') . '">' .
+                                                '<div class="viewLabel ' . $css->getClassName($columnName, 'divLabel') . '">' .
                                                 '<label for="' .
                                                 FrontendUtility::getClassName(
-                                                    $colName,
+                                                    $columnName,
                                                     $prefixId
                                                 ) .
                                                 '-' . $i . '"' .
-                                                ' class="' .  $css->getClassName($colName, 'label') . '"' .
+                                                ' class="' .  $css->getClassName($columnName, 'label') . '"' .
                                                 '>' . $label . '</label></div>';
                                         } else {
-                                            $colContent .= '<option value="' . $k . '" ' . (in_array($k, $valuesArray) ? $selectedHtml : '') . '>' . $label . '</option>';
+                                            $columnContent .= '<option value="' . $k . '" ' . (in_array($k, $valuesArray) ? $selectedHtml : '') . '>' . $label . '</option>';
                                         }
                                         $i++;
                                     }
 
                                     if (
-                                        isset($colConfig['renderMode']) &&
-                                        $colConfig['renderMode'] == 'checkbox'
+                                        isset($columnConfig['renderMode']) &&
+                                        $columnConfig['renderMode'] == 'checkbox'
                                     ) {
-                                        $colContent .= '</div>';
+                                        $columnContent .= '</div>';
                                     }
                                 }
 
                                 if (
-                                    !empty($colConfig['foreign_table']) &&
-                                    isset($GLOBALS['TCA'][$colConfig['foreign_table']])
+                                    !empty($columnConfig['foreign_table']) &&
+                                    isset($GLOBALS['TCA'][$columnConfig['foreign_table']])
                                 ) {
-                                    $titleField = $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['label'];
+                                    $titleField = $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['label'];
                                     $whereArray = [];
                                     $reservedValues = [];
                                     // $whereClause = '1=1';
@@ -1070,7 +1137,7 @@ class Tca implements SingletonInterface
                                         is_object($userGroupObj)
                                     ) {
                                         $reservedValues = $userGroupObj->getReservedValues($conf);
-                                        $foreignTable = $this->getForeignTable($theTable, $colName);
+                                        $foreignTable = $this->getForeignTable($theTable, $columnName);
                                         $allowedUserGroupArray = [];
                                         $allowedSubgroupArray = [];
                                         $deniedUserGroupArray = [];
@@ -1110,29 +1177,29 @@ class Tca implements SingletonInterface
 
                                     if (
                                         $conf['useLocalization'] &&
-                                        $GLOBALS['TCA'][$colConfig['foreign_table']] &&
-                                        $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['languageField'] &&
-                                        $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['transOrigPointerField']
+                                        $GLOBALS['TCA'][$columnConfig['foreign_table']] &&
+                                        $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['languageField'] &&
+                                        $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['transOrigPointerField']
                                     ) {
-                                        // $whereClause .= ' AND ' . $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['transOrigPointerField'] . '=0';
-                                        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($colConfig['foreign_table']);
+                                        // $whereClause .= ' AND ' . $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['transOrigPointerField'] . '=0';
+                                        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($columnConfig['foreign_table']);
                                         $whereArray['where'] = $queryBuilder->expr()
                                             ->eq(
-                                                $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['transOrigPointerField'],
+                                                $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['transOrigPointerField'],
                                                  0
                                             );
                                     }
 
                                     if (
-                                        // $colName == 'categories' &&
-                                        $colConfig['foreign_table'] == 'sys_category' &&
+                                        // $columnName == 'categories' &&
+                                        $columnConfig['foreign_table'] == 'sys_category' &&
                                         !empty($conf['categories_PIDLIST'])
                                     ) {
                                         $language =
                                             $controlData->getSysLanguageUid(
                                                 $conf,
                                                 'ALL',
-                                                $colConfig['foreign_table']
+                                                $columnConfig['foreign_table']
                                             );
                                         $tmpArray =
                                             GeneralUtility::trimExplode(
@@ -1164,14 +1231,14 @@ class Tca implements SingletonInterface
                                         }
 
                                     }
-                                    // $whereClause .= TableUtility::enableFields($colConfig['foreign_table']);
+                                    // $whereClause .= TableUtility::enableFields($columnConfig['foreign_table']);
                                     //
 
-                                    // $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $colConfig['foreign_table'], $whereClause, '', $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['sortby'] ?? '');
+                                    // $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $columnConfig['foreign_table'], $whereClause, '', $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['sortby'] ?? '');
 
                                     $queryBuilder
                                         ->select('*')
-                                        ->from($colConfig['foreign_table']);
+                                        ->from($columnConfig['foreign_table']);
 
                                     if (!empty($whereArray['where'])) {
                                         $queryBuilder->where(
@@ -1189,7 +1256,7 @@ class Tca implements SingletonInterface
                                         );
                                     }
 
-                                    $orderBy = $GLOBALS['TCA'][$colConfig['foreign_table']]['ctrl']['sortby'] ?? '';
+                                    $orderBy = $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['sortby'] ?? '';
 
                                     if ($orderBy != '') {
                                         $queryBuilder->orderBy($orderBy);
@@ -1200,18 +1267,18 @@ class Tca implements SingletonInterface
 
                                     if (
                                         !in_array(
-                                            $colName,
+                                            $columnName,
                                             $controlData->getRequiredArray()
                                         )
                                     ) {
                                         if (
-                                            $colContent ||
-                                            isset($colConfig['renderMode']) &&
-                                            $colConfig['renderMode'] == 'checkbox'
+                                            $columnContent ||
+                                            isset($columnConfig['renderMode']) &&
+                                            $columnConfig['renderMode'] == 'checkbox'
                                         ) {
                                             // nothing
                                         } else {
-                                            $colContent .= '<option value=""' . ($valuesArray[0] ? '' : $selectedHtml) . '></option>';
+                                            $columnContent .= '<option value=""' . ($valuesArray[0] ? '' : $selectedHtml) . '></option>';
                                         }
                                     }
 
@@ -1222,7 +1289,7 @@ class Tca implements SingletonInterface
                                         $i++;
                                         // Handle usergroup case
                                         if (
-                                            $colName == 'usergroup' &&
+                                            $columnName == 'usergroup' &&
                                             isset($userGroupObj) &&
                                             is_object($userGroupObj)
                                         ) {
@@ -1239,39 +1306,39 @@ class Tca implements SingletonInterface
                                                 $selectedValue = ($selected ? true : $selectedValue);
 
                                                 if (
-                                                    isset($colConfig['renderMode']) &&
-                                                    $colConfig['renderMode'] == 'checkbox'
+                                                    isset($columnConfig['renderMode']) &&
+                                                    $columnConfig['renderMode'] == 'checkbox'
                                                 ) {
-                                                    $colContent .= '<div class="' . $css->getClassName($colName, 'divInput-' . $i) . '">';
-                                                    $colContent .= '<input  class="' .
-                                                    $css->getClassName($colName, 'input-' . ($i)) .
+                                                    $columnContent .= '<div class="' . $css->getClassName($columnName, 'divInput-' . $i) . '">';
+                                                    $columnContent .= '<input  class="' .
+                                                    $css->getClassName($columnName, 'input-' . ($i)) .
                                                     '" id="'.
                                                     FrontendUtility::getClassName(
-                                                        $colName,
+                                                        $columnName,
                                                         $prefixId
                                                     ) .
-                                                    '-' . $row2['uid'] . '" name="FE[' . $theTable . '][' . $colName . '][' . $row2['uid'] . ']" value="' . $row2['uid'] .
+                                                    '-' . $row2['uid'] . '" name="FE[' . $theTable . '][' . $columnName . '][' . $row2['uid'] . ']" value="' . $row2['uid'] .
                                                     '" type="checkbox"' . ($selected ? $checkedHtml : '') . $xhtmlFix . '></div>' .
-                                                    '<div class="viewLabel ' . $css->getClassName($colName, 'divLabel-' . $i) . '"><label for="' .
+                                                    '<div class="viewLabel ' . $css->getClassName($columnName, 'divLabel-' . $i) . '"><label for="' .
                                                     FrontendUtility::getClassName(
-                                                        $colName,
+                                                        $columnName,
                                                         $prefixId
                                                     ) . '-' . $row2['uid'] .
-                                                    '" class="' . $css->getClassName($colName, 'label') . '">' . $titleText . '</label></div>';
+                                                    '" class="' . $css->getClassName($columnName, 'label') . '">' . $titleText . '</label></div>';
                                                 } else {
-                                                    $colContent .= '<option value="' . $row2['uid'] . '"' . $selected . '>' . $titleText . '</option>';
+                                                    $columnContent .= '<option value="' . $row2['uid'] . '"' . $selected . '>' . $titleText . '</option>';
                                                 }
                                             }
                                         } else {
                                             $language = $controlData->getSysLanguageUid(
                                                 $conf,
                                                 'ALL',
-                                                $colConfig['foreign_table']
+                                                $columnConfig['foreign_table']
                                             );
                                             $languageAspect = new LanguageAspect($language, $language);
                                             if ($localizedRow =
                                                 $GLOBALS['TSFE']->sys_page->getLanguageOverlay(
-                                                    $colConfig['foreign_table'],
+                                                    $columnConfig['foreign_table'],
                                                     $row2,
                                                     $languageAspect
                                                 )
@@ -1280,37 +1347,37 @@ class Tca implements SingletonInterface
                                             }
                                             $titleText = htmlspecialchars($row2[$titleField]);
 
-                                            if ($colConfig['renderMode'] == 'checkbox') {
-                                                $colContent .= '<div class="' . $css->getClassName($colName, 'divInput-' . $i) . '">';
-                                                $colContent .= '<input class="' .
+                                            if ($columnConfig['renderMode'] == 'checkbox') {
+                                                $columnContent .= '<div class="' . $css->getClassName($columnName, 'divInput-' . $i) . '">';
+                                                $columnContent .= '<input class="' .
                                                 $css->getClassName(
                                                     'checkbox'
                                                 ) .
                                                 '" id="'.
                                                 FrontendUtility::getClassName(
-                                                    $colName,
+                                                    $columnName,
                                                     $prefixId
                                                 ) .
-                                                '-' . $row2['uid'] . '" name="FE[' . $theTable . '][' .  $colName . '][' . $row2['uid'] . ']" value="' . $row2['uid'] . '" type="checkbox"' . (in_array($row2['uid'], $valuesArray) ? $checkedHtml : '') . $xhtmlFix . '></div>' .
-                                                '<div class="viewLabel ' . $css->getClassName($colName, 'divLabel-' . $i) . '"><label for="' .
+                                                '-' . $row2['uid'] . '" name="FE[' . $theTable . '][' .  $columnName . '][' . $row2['uid'] . ']" value="' . $row2['uid'] . '" type="checkbox"' . (in_array($row2['uid'], $valuesArray) ? $checkedHtml : '') . $xhtmlFix . '></div>' .
+                                                '<div class="viewLabel ' . $css->getClassName($columnName, 'divLabel-' . $i) . '"><label for="' .
                                                 FrontendUtility::getClassName(
-                                                    $colName,
+                                                    $columnName,
                                                     $prefixId
                                                 ) . '-' . $row2['uid'] . '">' . $titleText . '</label></div>';
                                             } else {
-                                                $colContent .= '<option value="' . $row2['uid'] . '"' . (in_array($row2['uid'], $valuesArray) ? $selectedHtml : '') . '>' . $titleText . '</option>';
+                                                $columnContent .= '<option value="' . $row2['uid'] . '"' . (in_array($row2['uid'], $valuesArray) ? $selectedHtml : '') . '>' . $titleText . '</option>';
                                             }
                                         }
                                     }
                                 }
 
                                 if (
-                                    isset($colConfig['renderMode']) &&
-                                    $colConfig['renderMode'] == 'checkbox'
+                                    isset($columnConfig['renderMode']) &&
+                                    $columnConfig['renderMode'] == 'checkbox'
                                 ) {
-                                    $colContent .= '</div>';
+                                    $columnContent .= '</div>';
                                 } else {
-                                    $colContent .= '</select>';
+                                    $columnContent .= '</select>';
                                 }
                                 break;
 
@@ -1319,7 +1386,7 @@ class Tca implements SingletonInterface
                                 break;
 
                             default:
-                                $colContent .= $colConfig['type'] . ':' . $languageObj->getLabel('unsupported');
+                                $columnContent .= $columnConfig['type'] . ':' . $languageObj->getLabel('unsupported');
                                 break;
                         }
                     }
@@ -1328,13 +1395,13 @@ class Tca implements SingletonInterface
                         unset($userGroupObj);
                     }
                 } else {
-                    $colContent = '';
+                    $columnContent = '';
                 }
 
                 if ($mode == Mode::PREVIEW || $viewOnly) {
-                    $markerArray['###TCA_INPUT_VALUE_' . $colName . '###'] = $colContent;
+                    $markerArray['###TCA_INPUT_VALUE_' . $columnName . '###'] = $columnContent;
                 }
-                $markerArray['###TCA_INPUT_' . $colName . '###'] = $colContent;
+                $markerArray['###TCA_INPUT_' . $columnName . '###'] = $columnContent;
             } else {
                 // field not in form fields list
             }
@@ -1348,15 +1415,15 @@ class Tca implements SingletonInterface
     */
     public function getItemKeyArray($itemArray)
     {
-        $rc = [];
+        $result = [];
 
         if (is_array($itemArray)) {
-            foreach ($itemArray as $k => $row) {
+            foreach ($itemArray as $row) {
                 $key = $row['value'];
-                $rc[$key] = $row;
+                $result[$key] = $row;
             }
         }
-        return $rc;
+        return $result;
     }   // getItemKeyArray
 
     /**
