@@ -1081,6 +1081,7 @@ class Tca implements SingletonInterface
                                         )
                                     ) {
                                         if (
+                                            isset($colConfig['renderMode']) &&
                                             $colConfig['renderMode'] == 'checkbox' ||
                                             $colContent
                                         ) {
@@ -1155,7 +1156,10 @@ class Tca implements SingletonInterface
                                             }
                                             $titleText = htmlspecialchars($row2[$titleField]);
 
-                                            if ($colConfig['renderMode'] == 'checkbox') {
+                                            if (
+                                                isset($colConfig['renderMode']) &&
+                                                $colConfig['renderMode'] == 'checkbox'
+                                            ) {
                                                 $colContent .= '<div class="' . $css->getClassName($colName, 'divInput-' . $i) . '">';
                                                 $colContent .= '<input class="' .
                                                 $css->getClassName(
