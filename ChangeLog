@@ -1,4 +1,5 @@
 2025-11-26 Franz Holzinger  <franz@ttproducts.de>
+    * remove the enableMail feature. The Mail extension must be activated if Mail tables are used.
     * Version number 1.0.0. It is stable enough for most use cases. Working under Doctrine.
     * Replace Direct Mail extension by Mail
 

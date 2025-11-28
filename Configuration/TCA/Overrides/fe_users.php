@@ -201,45 +201,6 @@ call_user_func(function ($extensionKey, $table): void {
         ];
     }
 
-    $mailTemporaryColumns = [];
-
-    if ( // Mail tables exist but Mail shall not be used
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['enableMail'] &&
-        !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('mail')
-    ) {
-        // fe_users modified
-        $mailTemporaryColumns = [
-            'mail_active' => [
-                'label' => 'LLL:EXT:mail/Resources/Private/Language/locallang_tca.xlf:mail_active',
-               'exclude' => true,
-               'config' => [
-                   'type' => 'check'
-               ]
-            ],
-            'mail_html' => [
-                'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.mail_html',
-                'exclude' => true,
-                'config' => [
-                    'type' => 'check',
-                ]
-            ],
-            'mail_salutation' => [
-                'label' => 'LLL:EXT:mail/Resources/Private/Language/locallang_tca.xlf:mail_salutation',
-               'exclude' => true,
-               'config' => [
-                   'type' => 'input'
-               ]
-            ],
-            'categories' => [
-                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_category.categories',
-               'exclude' => true,
-               'config' => [
-                   'type' => 'category'
-               ]
-            ],
-        ];
-    }
-
     $columns = array_keys($temporaryColumns);
 
     foreach ($columns as $column) {
@@ -248,8 +209,6 @@ call_user_func(function ($extensionKey, $table): void {
         }
     }
 
-    $columns = array_keys($temporaryColumns);
-
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, $temporaryColumns);
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
         $table,
@@ -257,18 +216,6 @@ call_user_func(function ($extensionKey, $table): void {
         '',
         'after:www,'
     );
-
-    if ( // Direct Mail tables exist but Direct Mail shall not be used
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['enableMail'] &&
-        !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('mail')
-    ) {
-        $columns = array_keys($mailTemporaryColumns);
-
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
-            $table,
-            '--div--;Direct mail, ' . implode(',', $columns)
-        );
-    }
 
     $GLOBALS['TCA'][$table]['columns']['username']['config']['eval'] = 'nospace,uniqueInPid,required';
     $GLOBALS['TCA'][$table]['columns']['name']['config']['max'] = '100';
@@ -351,4 +298,6 @@ call_user_func(function ($extensionKey, $table): void {
     $searchFields = explode(',', $GLOBALS['TCA'][$table]['ctrl']['searchFields'] . ',cnum,comments');
     $searchFields = array_unique($searchFields);
     $GLOBALS['TCA'][$table]['ctrl']['searchFields'] = implode(',', $searchFields);
+
+
 }, Extension::KEY, basename(__FILE__, '.php'));

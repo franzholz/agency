@@ -22,7 +22,6 @@ call_user_func(function ($extensionKey): void {
 
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['imageMaxSize'] = $extensionConfiguration['imageMaxSize'] ?? 250;
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['imageTypes'] = $extensionConfiguration['imageTypes'] ?? 'png,jpeg,jpg,gif,tif,tiff';
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['enableMail'] = $extensionConfiguration['enableMail'] ?? 0;
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['forceGender'] = $extensionConfiguration['forceGender'] ?? 0;
     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['endtimeYear'] = $extensionConfiguration['endtimeYear'] ?? 2030;
 

@@ -49,7 +49,6 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
 use JambageCom\Agency\Api\Localization;
 use JambageCom\Agency\Constants\Mode;
 use JambageCom\Agency\Domain\Repository\FrontendGroupRepository;
@@ -1257,6 +1256,7 @@ class Tca implements SingletonInterface
                     break;
 
                 case 'category':
+
                     // TODO +++
                     break;
 

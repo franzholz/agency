@@ -356,7 +356,6 @@ class Email implements SingletonInterface
         ) {
             if (
                 (
-                    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['enableMail'] ||
                     ExtensionManagementUtility::isLoaded('mail')
                 ) &&
                 isset($DBrows[0]['mail_html'])
