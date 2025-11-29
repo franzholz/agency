@@ -15,6 +15,7 @@ $EM_CONF[$_EXTKEY] = [
             'div2007' => '2.3.11-0.0.0',
             'rdct' => '3.2.0-0.0.0',
             'typo3db_legacy' => '1.3.0-1.3.99',
+            'mail' => '3.9.0-0.0.0'
         ],
         'conflicts' => [
             'sr_feuser_register' => '',

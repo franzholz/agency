@@ -45,27 +45,30 @@ use Doctrine\DBAL\ArrayParameterType;
 
 use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-
-use JambageCom\Agency\Api\Localization;
-use JambageCom\Agency\Constants\Mode;
-use JambageCom\Agency\Domain\Repository\FrontendGroupRepository;
-use JambageCom\Agency\Domain\Repository\FrontendUserRepository;
-use JambageCom\Agency\Request\Parameters;
 
 use JambageCom\Div2007\Api\Css;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\TableUtility;
 
+use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Constants\Mode;
+use JambageCom\Agency\Database\Field\Category;
+use JambageCom\Agency\Domain\Repository\FrontendGroupRepository;
+use JambageCom\Agency\Domain\Repository\FrontendUserRepository;
+use JambageCom\Agency\Request\Parameters;
+
+
 class Tca implements SingletonInterface
 {
     public function __construct(
         protected readonly ConnectionPool $connectionPool,
+        protected readonly FrontendUserRepository $frontendUserRepository,
         protected readonly FrontendGroupRepository $frontendGroupRepository,
-        protected readonly FrontendUserRepository $frontendUserRepository
     ) {
     }
 
@@ -92,8 +95,13 @@ class Tca implements SingletonInterface
         return $result;
     }
 
-    function getRelatedUids(string $table, string $foreignField, string $localField, array $uidArray, string $orderBy = '') {
-
+    public function getRelatedUids(
+        string $table,
+        string $foreignField,
+        string $localField,
+        array $uidArray,
+        string $orderBy = ''
+    ) {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
         $result = $queryBuilder
             ->select($foreignField)
@@ -120,7 +128,7 @@ class Tca implements SingletonInterface
         return $valueArray;
     }
 
-    function getRowsByUids(string $table, string $selectFields, array $uidArray, string $orderBy = '')
+    public function getRowsByUids(string $table, string $selectFields, array $uidArray, string $orderBy = '')
     {
         $rows = [];
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
@@ -176,7 +184,10 @@ class Tca implements SingletonInterface
             // Configure preview based on input type
             switch ($columnConfig['type']) {
                 case 'select':
-                    if (isset($columnConfig['MM']) && isset($columnConfig['foreign_table'])) {
+                    if (
+                        isset($columnConfig['MM']) &&
+                        isset($columnConfig['foreign_table'])
+                    ) {
                         // $where = 'uid_local = ' . $dataArray['uid'];
                         $valueArray =
                             $this->getRelatedUids(
@@ -384,6 +395,12 @@ class Tca implements SingletonInterface
         $cObj = FrontendUtility::getContentObjectRenderer();
         $xhtmlFix = HtmlUtility::determineXhtmlFix();
         $columnContent = '';
+
+        if ($theTable == 'fe_users' && $columnName == 'usergroup') {
+            $tablesObj = GeneralUtility::makeInstance(Tables::class);
+            $addressObj = $tablesObj->get('address');
+            $userGroupObj = $addressObj->getFieldObj('usergroup');
+        }
 
         switch ($type) {
             case 'input':
@@ -595,7 +612,7 @@ class Tca implements SingletonInterface
 
                                     for ($i = 0; $i < count($foreignRows); $i++) {
                                         if ($theTable == 'fe_users' && $columnName == 'usergroup') {
-                                            $foreignRows[$i] = $this->getUsergroupOverlay($conf, $controlData, $foreignRows[$i]);
+                                            $foreignRows[$i] = $userGroupObj->getUsergroupOverlay($conf, $controlData, $foreignRows[$i]);
                                         } elseif (
                                             $localizedRow =
                                                 $GLOBALS['TSFE']->sys_page->getLanguageOverlay(
@@ -639,11 +656,57 @@ class Tca implements SingletonInterface
         return $columnContent;
     }
 
+
+    public function getSelectCheckColumn (&$previouslySelected, $columnName, $index, $prefixId, $uid, $title, $valuesArray, $renderMode, $allowMultipleSelection)
+    {
+        $css = GeneralUtility::makeInstance(Css::class);
+        $useXHTML = HtmlUtility::useXHTML();
+        $xhtmlFix = HtmlUtility::determineXhtmlFix();
+        $titleText = htmlspecialchars($title);
+        $selectedHtml = ($useXHTML ? ' selected="selected"' : ' selected');
+        $selected = (in_array($uid, $valuesArray) ? $selectedHtml : '');
+        $columnContent = '';
+
+        if (
+            !$allowMultipleSelection &&
+            $previouslySelected
+        ) {
+            $selected = '';
+        }
+        $previouslySelected = ($previouslySelected || $selected);
+
+        if (
+            $renderMode == 'checkbox'
+        ) {
+            $columnContent .= '<div class="' . $css->getClassName($columnName, 'divInput-' . $index) . '">';
+            $columnContent .= '<input  class="' .
+            $css->getClassName($columnName, 'input-' . ($index)) .
+            '" id="'.
+            FrontendUtility::getClassName(
+                $columnName,
+                $prefixId
+            ) .
+            '-' . $uid . '" name="FE[' . $theTable . '][' . $columnName . '][' . $uid . ']" value="' . $uid .
+            '" type="checkbox"' . ($selected ? $checkedHtml : '') . $xhtmlFix . '></div>' .
+            '<div class="viewLabel ' . $css->getClassName($columnName, 'divLabel-' . $index) . '"><label for="' .
+            FrontendUtility::getClassName(
+                $columnName,
+                $prefixId
+            ) . '-' . $uid .
+            '" class="' . $css->getClassName($columnName, 'label') . '">' . $titleText . '</label></div>';
+        } else {
+            $columnContent .= '<option value="' . $uid . '"' . $selected . '>' . $titleText . '</option>';
+        }
+        return $columnContent;
+    }
+
+
     protected function generateContent(
         $languageObj,
         $controlData,
         $theTable,
         $cmd,
+        $cmdKey,
         $conf,
         $type,
         $columnName,
@@ -661,8 +724,23 @@ class Tca implements SingletonInterface
         $css = GeneralUtility::makeInstance(Css::class);
         $cObj = FrontendUtility::getContentObjectRenderer();
 
+        if ($theTable == 'fe_users' && $columnName == 'usergroup') {
+            $tablesObj = GeneralUtility::makeInstance(Tables::class);
+            $addressObj = $tablesObj->get('address');
+            $userGroupObj = $addressObj->getFieldObj('usergroup');
+        }
+
+        if (isset($columnConfig['foreign_table'])) {
+            $language = $controlData->getSysLanguageUid(
+                $conf,
+                'ALL',
+                $columnConfig['foreign_table']
+            );
+            $languageAspect = new LanguageAspect($language, $language);
+        }
+
         // Configure inputs based on TCA type
-        if (in_array($type, ['check', 'radio', 'select'])) {
+        if (in_array($type, ['check', 'radio', 'select', 'category'])) {
             $valuesArray = [];
 
             if (isset($columnValue)) {
@@ -677,7 +755,12 @@ class Tca implements SingletonInterface
 
             if ($conf['mergeLabels'] || !count($labelItemArray)) {
                 if (isset($columnConfig['itemsProcFunc'])) {
-                    $itemArray = GeneralUtility::callUserFunction($columnConfig['itemsProcFunc'], $columnConfig, $this);
+                    $itemArray =
+                        GeneralUtility::callUserFunction(
+                            $columnConfig['itemsProcFunc'],
+                            $columnConfig,
+                            $this
+                        );
                 }
                 $itemArray = $columnConfig['items'] ?? [];
                 if (isset($conf['mergeLabels'])) {
@@ -991,8 +1074,7 @@ class Tca implements SingletonInterface
                     }
 
                     if (
-                        !empty($columnConfig['foreign_table']) &&
-                        isset($GLOBALS['TCA'][$columnConfig['foreign_table']])
+                        !empty($columnConfig['foreign_table'])
                     ) {
                         $titleField = $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['label'];
                         $whereArray = [];
@@ -1018,8 +1100,9 @@ class Tca implements SingletonInterface
                                 $cmdKey,
                             );
 
-                            $pidArray = $userGroupObj->getPidArray(
-                                $controlData->getPid()
+                            $pidArray = $userGroupObj->getConfigPidArray(
+                                $controlData->getPid(),
+                                $conf['userGroupsPidList']
                             );
 
                             $queryBuilder =
@@ -1051,11 +1134,11 @@ class Tca implements SingletonInterface
                         ) {
                             // $whereClause .= ' AND ' . $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['transOrigPointerField'] . '=0';
                             $queryBuilder = $this->connectionPool->getQueryBuilderForTable($columnConfig['foreign_table']);
-                            $whereArray['where'] = $queryBuilder->expr()
-                            ->eq(
-                                $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['transOrigPointerField'],
+                                $whereArray['where'] = $queryBuilder->expr()
+                                ->eq(
+                                    $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['transOrigPointerField'],
                                     0
-                            );
+                                );
                         }
 
                         if (
@@ -1063,45 +1146,34 @@ class Tca implements SingletonInterface
                             $columnConfig['foreign_table'] == 'sys_category' &&
                             !empty($conf['categories_PIDLIST'])
                         ) {
-                            $language =
-                            $controlData->getSysLanguageUid(
-                                $conf,
-                                'ALL',
-                                $columnConfig['foreign_table']
-                            );
-                            $tmpArray =
-                            GeneralUtility::trimExplode(
-                                ',',
+                            $categoryObj = GeneralUtility::makeInstance(Category::class); // +++
+                            $pidArray = $categoryObj->getConfigPidArray(
+                                $controlData->getPid(),
                                 $conf['categories_PIDLIST']
                             );
-                            $pidArray = [];
-                            foreach ($tmpArray as $v) {
-                                if (is_numeric($v)) {
-                                    $pidArray[] = $v;
-                                }
-                            }
-                            // $whereClause .= ' AND sys_category.pid IN (' . implode(',', $pidArray) . ')' . ($conf['useLocalization'] ? ' AND sys_language_uid=' . intval($language) : '');
-
-
                             $whereArray['where'] = $queryBuilder->expr()
                                 ->in(
                                     'pid',
-                                    $queryBuilder->createNamedParameter($pidArray, Connection::PARAM_INT_ARRAY)
+                                    $queryBuilder->createNamedParameter(
+                                        $pidArray,
+                                        Connection::PARAM_INT_ARRAY
+                                    )
                             );
+
                             if (!empty($conf['useLocalization'])) {
                                 $whereArray['where'] = $queryBuilder->expr()
-                                ->eq(
-                                    'sys_language_uid',
-                                        $queryBuilder->createNamedParameter(
-                                            $language, Connection::PARAM_INT
-                                        )
-                                );
+                                    ->eq(
+                                        'sys_language_uid',
+                                            $queryBuilder->createNamedParameter(
+                                                $language, Connection::PARAM_INT
+                                            )
+                                    );
                             }
                         }
                         // $whereClause .= TableUtility::enableFields($columnConfig['foreign_table']);
                         //
 
-                        // $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $columnConfig['foreign_table'], $whereClause, '', $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['sortby'] ?? '');
+                        // $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $columnConfig['foreign_table'], $whereClause, '', $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['sortby']y ?? '');
 
                         if (!isset($queryBuilder)) {
                             $table = $columnConfig['foreign_table'];
@@ -1153,69 +1225,52 @@ class Tca implements SingletonInterface
                             }
                         }
 
-                        $selectedValue = false;
-                        $i = 0;
+                        $outputArray = [];
 
                         while ($row2 = $result->fetchAssociative()) {
+                            if ($localizedRow =
+                                $GLOBALS['TSFE']->sys_page->getLanguageOverlay(
+                                    $columnConfig['foreign_table'],
+                                    $row2,
+                                    $languageAspect
+                                )
+                            ) {
+                                $row2 = $localizedRow;
+                            }
+
+                            if ($columnName == 'usergroup') {
+                                $row2 = $userGroupObj->getUsergroupOverlay($conf, $controlData, $row2);
+                            }
+
+                            if (!in_array($row2['uid'], $reservedValues)) {
+                                $outputArray[$row2['uid']] = $row2[$titleField];
+                            }
+                        }
+
+                        $i = 0;
+                        $previouslySelected = false;
+
+                        foreach ($outputArray as $uid => $title) {
                             $i++;
+
                             // Handle usergroup case
                             if (
-                                $columnName == 'usergroup' &&
-                                isset($userGroupObj) &&
-                                is_object($userGroupObj)
+                                $columnName == 'usergroup'
                             ) {
-                                if (!in_array($row2['uid'], $reservedValues)) {
-                                    $row2 = $this->getUsergroupOverlay($conf, $controlData, $row2);
-                                    $titleText = htmlspecialchars($row2[$titleField]);
-                                    $selected = (in_array($row2['uid'], $valuesArray) ? $selectedHtml : '');
-                                    if (
-                                        !$conf['allowMultipleUserGroupSelection'] &&
-                                        $selectedValue
-                                    ) {
-                                        $selected = '';
-                                    }
-                                    $selectedValue = ($selected ? true : $selectedValue);
-
-                                    if (
-                                        isset($columnConfig['renderMode']) &&
-                                        $columnConfig['renderMode'] == 'checkbox'
-                                    ) {
-                                        $columnContent .= '<div class="' . $css->getClassName($columnName, 'divInput-' . $i) . '">';
-                                        $columnContent .= '<input  class="' .
-                                        $css->getClassName($columnName, 'input-' . ($i)) .
-                                        '" id="'.
-                                        FrontendUtility::getClassName(
-                                            $columnName,
-                                            $prefixId
-                                        ) .
-                                        '-' . $row2['uid'] . '" name="FE[' . $theTable . '][' . $columnName . '][' . $row2['uid'] . ']" value="' . $row2['uid'] .
-                                        '" type="checkbox"' . ($selected ? $checkedHtml : '') . $xhtmlFix . '></div>' .
-                                        '<div class="viewLabel ' . $css->getClassName($columnName, 'divLabel-' . $i) . '"><label for="' .
-                                        FrontendUtility::getClassName(
-                                            $columnName,
-                                            $prefixId
-                                        ) . '-' . $row2['uid'] .
-                                        '" class="' . $css->getClassName($columnName, 'label') . '">' . $titleText . '</label></div>';
-                                    } else {
-                                        $columnContent .= '<option value="' . $row2['uid'] . '"' . $selected . '>' . $titleText . '</option>';
-                                    }
-                                }
+                                $columnContent .=
+                                    $this->getSelectCheckColumn(
+                                        $previouslySelected,
+                                        $columnName,
+                                        $i,
+                                        $prefixId,
+                                        $uid,
+                                        $title,
+                                        $valuesArray,
+                                        $columnConfig['renderMode'] ?? '',
+                                        $conf['allowMultipleUserGroupSelection']
+                                    );
+                                    // +++++++++++ HIER
                             } else {
-                                $language = $controlData->getSysLanguageUid(
-                                    $conf,
-                                    'ALL',
-                                    $columnConfig['foreign_table']
-                                );
-                                $languageAspect = new LanguageAspect($language, $language);
-                                if ($localizedRow =
-                                    $GLOBALS['TSFE']->sys_page->getLanguageOverlay(
-                                        $columnConfig['foreign_table'],
-                                        $row2,
-                                        $languageAspect
-                                    )
-                                ) {
-                                    $row2 = $localizedRow;
-                                }
                                 $titleText = htmlspecialchars($row2[$titleField]);
 
                                 if (
@@ -1258,6 +1313,16 @@ class Tca implements SingletonInterface
                 case 'category':
 
                     // TODO +++
+                    $categoryObj = GeneralUtility::makeInstance(Category::class);
+                    $pidArray = $categoryObj->getConfigPidArray(
+                        $controlData->getPid(),
+                        $conf['categories_PIDLIST']
+                    );
+                    $categories = $categoryObj->findRecords($pidArray);
+                    $categoryTitles = [];
+                    foreach ($categories as $category) {
+                        $categoryTitles[$category->getUid()] = $category->getTitle();
+                    }
                     break;
 
                 default:
@@ -1315,8 +1380,6 @@ class Tca implements SingletonInterface
         }
 
         $mode = $controlData->getMode();
-        $tablesObj = GeneralUtility::makeInstance(Tables::class);
-        $addressObj = $tablesObj->get('address');
 
         if ($bChangesOnly && is_array($origRow)) {
             $mrow = [];
@@ -1387,12 +1450,6 @@ class Tca implements SingletonInterface
                         $listWrap['wrap'] = '<ul class="agency-multiple-checked-values">|</ul>';
                     }
 
-                    if ($theTable == 'fe_users' && $columnName == 'usergroup') {
-                        $userGroupObj = $addressObj->getFieldObj('usergroup');
-                    } else if (isset($userGroupObj)) {
-                        unset($userGroupObj);
-                    }
-
                     if (
                         $mode == Mode::PREVIEW ||
                         $viewOnly
@@ -1421,6 +1478,7 @@ class Tca implements SingletonInterface
                                 $controlData,
                                 $theTable,
                                 $cmd,
+                                $cmdKey,
                                 $conf,
                                 $type,
                                 $columnName,
@@ -1431,10 +1489,6 @@ class Tca implements SingletonInterface
                                 $stdWrap,
                                 $bNotLast
                             );
-                    }
-
-                    if (isset($userGroupObj)) {
-                        unset($userGroupObj);
                     }
                 }
 
@@ -1466,86 +1520,4 @@ class Tca implements SingletonInterface
         return $result;
     }   // getItemKeyArray
 
-    /**
-    * Returns the relevant usergroup overlay record fields
-    * Adapted from t3lib_page.php
-    *
-    * @param array $controlData: the object of the control data
-    * @param    mixed       If $usergroup is an integer, it's the uid of the usergroup overlay record and thus the usergroup overlay record is returned. If $usergroup is an array, it's a usergroup record and based on this usergroup record the language overlay record is found and gespeichert.OVERLAYED before the usergroup record is returned.
-    * @param    integer     Language UID if you want to set an alternative value to $this->controlData->sys_language_content which is default. Should be >=0
-    * @return   array       usergroup row which is overlayed with language_overlay record (or the overlay record alone)
-    */
-    public function getUsergroupOverlay(
-        $conf,
-        Parameters $controlData,
-        $usergroup,
-        $language = ''
-    ) {
-        $row = false;
-
-        // Initialize:
-        if ($language == '') {
-            $language =
-                $controlData->getSysLanguageUid(
-                    $conf,
-                    'ALL',
-                    'fe_groups_language_overlay'
-                );
-        }
-
-        // If language UID is different from zero, do overlay:
-        if ($language) {
-            $fieldArr = ['title'];
-            if (is_array($usergroup)) {
-                $fe_groups_uid = $usergroup['uid'];
-                // Was the whole record
-                $fieldArr = array_intersect($fieldArr, array_keys($usergroup));
-                // Make sure that only fields which exist in the incoming record are overlaid!
-            } else {
-                $fe_groups_uid = $usergroup;
-                // Was the uid
-            }
-
-            if (count($fieldArr)) {
-                // $whereClause = 'fe_group=' . intval($fe_groups_uid) . ' ' .
-                    // 'AND sys_language_uid=' . intval($language) . ' ' .
-                     // TableUtility::enableFields('fe_groups_language_overlay');
-                // $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(implode(',', $fieldArr), 'fe_groups_language_overlay', $whereClause);
-
-                $table = 'fe_groups_language_overlay';
-                $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
-                $result = $queryBuilder
-                    ->select(implode(',', $fieldArr))
-                    ->from($table)
-                    ->where(
-                        $queryBuilder->expr()->eq(
-                            'fe_group',
-                            $queryBuilder->createNamedParameter(
-                                $fe_groups_uid,
-                                Connection::PARAM_INT
-                            )
-                        ),
-                        $queryBuilder->expr()->eq(
-                            'sys_language_uid',
-                            $queryBuilder->createNamedParameter(
-                                $language,
-                                Connection::PARAM_INT
-                            )
-                        )
-                    )
-                    ->setMaxResults(1);
-
-                $result = $queryBuilder->executeQuery();
-                $row = $result->fetchAssociative();
-            }
-        }
-
-        // Create output:
-        if (is_array($usergroup)) {
-            return is_array($row) ? array_merge($usergroup, $row) : $usergroup;
-            // If the input was an array, simply overlay the newfound array and return...
-        } else {
-            return is_array($row) ? $row : []; // always an array in return
-        }
-    }   // getUsergroupOverlay
 }

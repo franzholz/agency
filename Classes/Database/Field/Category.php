@@ -32,7 +32,7 @@ namespace JambageCom\Agency\Database\Field;
 /**
  * Part of the agency (Agency Registration) extension.
  *
- * base class for all database table fields classes
+ * class the usergroup field
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
@@ -41,63 +41,25 @@ namespace JambageCom\Agency\Database\Field;
  *
  */
 
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+
+use MEDIAESSENZ\Mail\Domain\Repository\CategoryRepository;
 
 
-class Base
+class Category extends Base implements SingletonInterface
 {
-    public $hasBeenInitialised = false;
+    protected $savedReservedValues = [];
 
-    public function init(): void
-    {
-        $this->hasBeenInitialised = true;
+    public function __construct(
+        protected readonly CategoryRepository $categoryRepository,
+    ) {
     }
 
-    public function needsInit()
+    public function findRecords(array $pidArray): QueryResultInterface|array
     {
-        return !$this->hasBeenInitialised;
-    }
-
-    public function modifyConf(&$conf, $cmdKey): void
-    {
-    }
-
-    public function get($row, $fieldname)
-    {
-        return $row[$fieldname];
-    }
-
-    public function getConfigPidArray(int $pid, string $userGroupsPidList = ''): array
-    {
-        $pidArray = [];
-        $tmpArray = GeneralUtility::trimExplode(',', $userGroupsPidList, true);
-        if (count($tmpArray)) {
-            foreach($tmpArray as $value) {
-                $valueIsInt = MathUtility::canBeInterpretedAsInteger($value);
-                if ($valueIsInt) {
-                    $pidArray[] = intval($value);
-                }
-            }
-        }
-        if (empty($pidArray)) {
-            $pidArray[] = $pid;
-        }
-        return $pidArray;
-    }
-
-
-    public function parseOutgoingData(
-        $theTable,
-        $fieldname,
-        $foreignTable,
-        $cmdKey,
-        $pid,
-        $conf,
-        $dataArray,
-        $origArray,
-        &$parsedArr
-    ): void {
-        $parsedArr[$fieldname] = $dataArray[$fieldname];	// just copied the original value
+        $records = $this->categoryRepository->findByPidList($pidArray, ['title' => 'ASC']);
+        return $records;
     }
 }
