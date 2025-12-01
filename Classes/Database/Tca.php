@@ -657,7 +657,17 @@ class Tca implements SingletonInterface
     }
 
 
-    public function getSelectCheckColumn (&$previouslySelected, $columnName, $index, $prefixId, $uid, $title, $valuesArray, $renderMode, $allowMultipleSelection)
+    public function getSelectCheckMainPart (
+        &$previouslySelected,
+        $columnName,
+        $index,
+        $prefixId,
+        $uid,
+        $title,
+        $valuesArray,
+        $renderMode,
+        $allowMultipleSelection
+    )
     {
         $css = GeneralUtility::makeInstance(Css::class);
         $useXHTML = HtmlUtility::useXHTML();
@@ -700,6 +710,106 @@ class Tca implements SingletonInterface
         return $columnContent;
     }
 
+    protected function getSelectCheckStartPart(
+        $theTable,
+        $columnName,
+        $prefixId,
+        $renderMode,
+        $allowMultipleSelection,
+        $markerSuffix
+    ) {
+        $columnContent = '';
+        $attributeMultiple = '';
+        $attributeClassName = '';
+        $useXHTML = HtmlUtility::useXHTML();
+        $xhtmlFix = HtmlUtility::determineXhtmlFix();
+        $cObj = FrontendUtility::getContentObjectRenderer();
+        $css = GeneralUtility::makeInstance(Css::class);
+
+        if (
+            $allowMultipleSelection
+        ) {
+            if ($useXHTML) {
+                $attributeMultiple = ' multiple="multiple"';
+            } else {
+                $attributeMultiple = ' multiple';
+            }
+        }
+
+        $attributeIdName = ' id="' .
+            FrontendUtility::getClassName(
+                $columnName,
+                $prefixId
+            ) .
+            '" name="FE[' . $theTable . '][' . $columnName . ']';
+
+        if ($attributeMultiple != '') {
+            $attributeIdName .= '[]';
+        }
+        $attributeIdName .= '"';
+        $attributeTitle = ' title="###TOOLTIP_' . $markerSuffix .
+            $cObj->caseshift($columnName, 'upper') . '###"';
+        $attributeClassName = $css->getClassName($columnName, 'input');
+
+        if (
+            isset($renderMode) &&
+            $renderMode == 'checkbox'
+        ) {
+            $attributeClass = ' class="' . $attributeClassName . '"';
+            $columnContent .= '
+                <input' . $attributeIdName . ' value="" type="hidden"' . $attributeClass . $xhtmlFix . '>';
+
+            $attributeClass = '';
+            if (
+                $attributeMultiple != ''
+            ) {
+                $attributeClassName = $css->getClassName('multiple-checkboxes', '');
+                $attributeClass = ' class="' . $attributeClassName . '"';
+            }
+
+            $columnContent .= '
+                <div ';
+        if ($attributeClass != '') {
+            $columnContent .= $attributeClass;
+        }
+        $columnContent .=
+            $attributeTitle .
+            $xhtmlFix . '>';
+        } else {
+            if (
+                $attributeMultiple != ''
+            ) {
+                $attributeClassName .= ' ' . $css->getClassName('multiple-select', '');
+            }
+            $attributeClass = ' class="' . $attributeClassName . '"';
+            $columnContent .= '<select' . $attributeIdName;
+            if ($attributeClass != '') {
+                $columnContent .= $attributeClass;
+            }
+
+            $columnContent .=
+                $attributeMultiple .
+                $attributeTitle .
+                '>';
+        }
+        return $columnContent;
+    }
+
+    protected function getSelectCheckEndPart(
+        $renderMode,
+    ) {
+        $columnContent = '';
+
+        if (
+            $renderMode == 'checkbox'
+        ) {
+            $columnContent .= '</div>';
+        } else {
+            $columnContent .= '</select>';
+        }
+
+        return $columnContent;
+    }
 
     protected function generateContent(
         $languageObj,
@@ -943,85 +1053,27 @@ class Tca implements SingletonInterface
                 break;
 
                 case 'select':
-                    $columnContent = '';
-                    $attributeMultiple = '';
-                    $attributeClassName = '';
                     $checkedHtml =  ($useXHTML ? ' checked="checked"' : ' checked');
                     $selectedHtml = ($useXHTML ? ' selected="selected"' : ' selected');
 
-                    if (
+                    $allowMultipleSelection =
                         isset($columnConfig['maxitems']) &&
                         $columnConfig['maxitems'] > 1 &&
                         (
                             $columnName != 'usergroup' ||
                             !empty($conf['allowMultipleUserGroupSelection']) ||
                             $theTable != 'fe_users'
-                        )
-                    ) {
-                        if ($useXHTML) {
-                            $attributeMultiple = ' multiple="multiple"';
-                        } else {
-                            $attributeMultiple = ' multiple';
-                        }
-                    }
+                        );
 
-                    $attributeIdName = ' id="' .
-                        FrontendUtility::getClassName(
+                    $columnContent .=
+                        $this->getSelectCheckStartPart(
+                            $theTable,
                             $columnName,
-                            $prefixId
-                        ) .
-                        '" name="FE[' . $theTable . '][' . $columnName . ']';
-
-                    if ($attributeMultiple != '') {
-                        $attributeIdName .= '[]';
-                    }
-                    $attributeIdName .= '"';
-
-                    $attributeTitle = ' title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($columnName, 'upper') . '###"';
-
-                    $attributeClassName = $css->getClassName($columnName, 'input');
-
-                    if (
-                        isset($columnConfig['renderMode']) &&
-                        $columnConfig['renderMode'] == 'checkbox'
-                    ) {
-                        $attributeClass = ' class="' . $attributeClassName . '"';
-                        $columnContent .= '
-                            <input' . $attributeIdName . ' value="" type="hidden"' . $attributeClass . $xhtmlFix . '>';
-
-                        $attributeClass = '';
-                        if (
-                            $attributeMultiple != ''
-                        ) {
-                            $attributeClassName = $css->getClassName('multiple-checkboxes', '');
-                            $attributeClass = ' class="' . $attributeClassName . '"';
-                        }
-
-                        $columnContent .= '
-                            <div ';
-                        if ($attributeClass != '') {
-                            $columnContent .= $attributeClass;
-                        }
-                        $columnContent .=
-                        $attributeTitle .
-                        $xhtmlFix . '>';
-                    } else {
-                        if (
-                            $attributeMultiple != ''
-                        ) {
-                            $attributeClassName .= ' ' . $css->getClassName('multiple-select', '');
-                        }
-                        $attributeClass = ' class="' . $attributeClassName . '"';
-                        $columnContent .= '<select' . $attributeIdName;
-                        if ($attributeClass != '') {
-                            $columnContent .= $attributeClass;
-                        }
-
-                        $columnContent .=
-                        $attributeMultiple .
-                        $attributeTitle .
-                        '>';
-                    }
+                            $prefixId,
+                            $columnConfig['renderMode'] ?? '',
+                            $allowMultipleSelection,
+                            (($cmd == 'invite') ? 'INVITATION_' : '')
+                        );
 
                     if (
                         is_array($itemArray)
@@ -1029,7 +1081,6 @@ class Tca implements SingletonInterface
                         /*
                             *    TODO $columnContent = $this->getContent($itemArray);  +++
                             *    public function getContent($itemArray);*/
-
                         $itemArray = $this->getItemKeyArray($itemArray);
                         $i = 0;
 
@@ -1079,7 +1130,6 @@ class Tca implements SingletonInterface
                         $titleField = $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['label'];
                         $whereArray = [];
                         $reservedValues = [];
-                        // $whereClause = '1=1';
                         $queryBuilder = null;
 
                         if (
@@ -1144,6 +1194,7 @@ class Tca implements SingletonInterface
                         if (
                             // $columnName == 'categories' &&
                             $columnConfig['foreign_table'] == 'sys_category' &&
+                            isset($GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['languageField']) &&
                             !empty($conf['categories_PIDLIST'])
                         ) {
                             $categoryObj = GeneralUtility::makeInstance(Category::class); // +++
@@ -1163,7 +1214,7 @@ class Tca implements SingletonInterface
                             if (!empty($conf['useLocalization'])) {
                                 $whereArray['where'] = $queryBuilder->expr()
                                     ->eq(
-                                        'sys_language_uid',
+                                            $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['languageField'],
                                             $queryBuilder->createNamedParameter(
                                                 $language, Connection::PARAM_INT
                                             )
@@ -1258,7 +1309,7 @@ class Tca implements SingletonInterface
                                 $columnName == 'usergroup'
                             ) {
                                 $columnContent .=
-                                    $this->getSelectCheckColumn(
+                                    $this->getSelectCheckMainPart(
                                         $previouslySelected,
                                         $columnName,
                                         $i,
@@ -1269,15 +1320,14 @@ class Tca implements SingletonInterface
                                         $columnConfig['renderMode'] ?? '',
                                         $conf['allowMultipleUserGroupSelection']
                                     );
-                                    // +++++++++++ HIER
                             } else {
-                                $titleText = htmlspecialchars($row2[$titleField]);
+                                $titleText = htmlspecialchars($title);
 
                                 if (
                                     isset($columnConfig['renderMode']) &&
                                     $columnConfig['renderMode'] == 'checkbox'
                                 ) {
-                                    $columnContent .= '<div class="' . $css->getClassName($columnName, 'divInput-' . $i) . '">';
+                                    $columnContent .= '<div class="' . $css->getClassName($columnName, 'divInput-' . $i) . '">';+
                                     $columnContent .= '<input class="' .
                                     $css->getClassName(
                                         'checkbox'
@@ -1287,42 +1337,63 @@ class Tca implements SingletonInterface
                                         $columnName,
                                         $prefixId
                                     ) .
-                                    '-' . $row2['uid'] . '" name="FE[' . $theTable . '][' .  $columnName . '][' . $row2['uid'] . ']" value="' . $row2['uid'] . '" type="checkbox"' . (in_array($row2['uid'], $valuesArray) ? $checkedHtml : '') . $xhtmlFix . '></div>' .
+                                    '-' . $uid . '" name="FE[' . $theTable . '][' .  $columnName . '][' . $uid . ']" value="' . $uid . '" type="checkbox"' . (in_array($uid, $valuesArray) ? $checkedHtml : '') . $xhtmlFix . '></div>' .
                                     '<div class="viewLabel ' . $css->getClassName($columnName, 'divLabel-' . $i) . '"><label for="' .
                                     FrontendUtility::getClassName(
                                         $columnName,
                                         $prefixId
-                                    ) . '-' . $row2['uid'] . '">' . $titleText . '</label></div>';
+                                    ) . '-' . $uid . '">' . $titleText . '</label></div>';
                                 } else {
-                                    $columnContent .= '<option value="' . $row2['uid'] . '"' . (in_array($row2['uid'], $valuesArray) ? $selectedHtml : '') . '>' . $titleText . '</option>';
+                                    $columnContent .= '<option value="' . $uid . '"' . (in_array($uid, $valuesArray) ? $selectedHtml : '') . '>' . $titleText . '</option>';
                                 }
                             }
                         }
                     }
 
-                    if (
-                        isset($columnConfig['renderMode']) &&
-                        $columnConfig['renderMode'] == 'checkbox'
-                    ) {
-                        $columnContent .= '</div>';
-                    } else {
-                        $columnContent .= '</select>';
-                    }
+                    // HIER neu Anfang ++++++++++++++++++++++++++++
+                    $columnContent .= $this->getSelectCheckEndPart($columnConfig['renderMode'] ?? '');
+                    // HIER neu Ende ++++++++++++++++++++++++++++
+
                     break;
 
                 case 'category':
 
-                    // TODO +++
+                    // TODO HIER +++++++++++
+                    $columnContent .=
+                        $this->getSelectCheckStartPart(
+                            $theTable,
+                            $columnName,
+                            $prefixId,
+                            $columnConfig['renderMode'] ?? '',
+                            true,
+                            (($cmd == 'invite') ? 'INVITATION_' : '')
+                        );
+
                     $categoryObj = GeneralUtility::makeInstance(Category::class);
                     $pidArray = $categoryObj->getConfigPidArray(
                         $controlData->getPid(),
                         $conf['categories_PIDLIST']
                     );
                     $categories = $categoryObj->findRecords($pidArray);
-                    $categoryTitles = [];
+                    $previouslySelected = false;
+                    $index = 0;
+
                     foreach ($categories as $category) {
-                        $categoryTitles[$category->getUid()] = $category->getTitle();
+                        $index++;
+
+                        $columnContent .= $this->getSelectCheckMainPart(
+                            $previouslySelected,
+                            $columnName,
+                            $index,
+                            $prefixId,
+                            $category->getUid(),
+                            $category->getTitle(),
+                            $valuesArray,
+                            $columnConfig['renderMode'] ?? '',
+                            true
+                        );
                     }
+                    $columnContent .= $this->getSelectCheckEndPart($columnConfig['renderMode'] ?? '');
                     break;
 
                 default:
