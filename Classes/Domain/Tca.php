@@ -552,12 +552,12 @@ class Tca implements SingletonInterface
                                     $textSchema = $theTable . '.' . $colName . '.I.';
                                     $labelItemArray = $languageObj->getItemsLL($textSchema, true);
 
-                                    if (isset($conf['mergeLabels']) || !count($labelItemArray)) {
+                                    if (!empty($conf['mergeLabels']) || !count($labelItemArray)) {
                                         if (isset($colConfig['itemsProcFunc'])) {
                                             $itemArray = GeneralUtility::callUserFunction($colConfig['itemsProcFunc'], $colConfig, $this);
                                         }
                                         $itemArray = $colConfig['items'];
-                                        if (isset($conf['mergeLabels'])) {
+                                        if (!empty($conf['mergeLabels'])) {
                                             $itemArray = $this->mergeItems($itemArray, $labelItemArray);
                                         }
                                     } else {
@@ -595,12 +595,12 @@ class Tca implements SingletonInterface
                                     $textSchema = $theTable . '.' . $colName . '.I.';
                                     $labelItemArray = $languageObj->getItemsLL($textSchema, true);
 
-                                    if (isset($conf['mergeLabels']) || !count($labelItemArray)) {
+                                    if (!empty($conf['mergeLabels']) || !count($labelItemArray)) {
                                         if (isset($colConfig['itemsProcFunc'])) {
                                             $itemArray = GeneralUtility::callUserFunction($colConfig['itemsProcFunc'], $colConfig, $this);
                                         }
                                         $itemArray = $colConfig['items'] ?? [];
-                                        if (isset($conf['mergeLabels'])) {
+                                        if (!empty($conf['mergeLabels'])) {
                                             $itemArray = $this->mergeItems($itemArray, $labelItemArray);
                                         }
                                     } else {
@@ -706,12 +706,12 @@ class Tca implements SingletonInterface
                             $textSchema = $theTable . '.' . $colName . '.I.';
                             $labelItemArray = $languageObj->getItemsLL($textSchema, true);
 
-                            if ($conf['mergeLabels'] || !count($labelItemArray)) {
+                            if (!empty($conf['mergeLabels']) || !count($labelItemArray)) {
                                 if (isset($colConfig['itemsProcFunc'])) {
                                     $itemArray = GeneralUtility::callUserFunction($colConfig['itemsProcFunc'], $colConfig, $this);
                                 }
                                 $itemArray = $colConfig['items'] ?? [];
-                                if (isset($conf['mergeLabels'])) {
+                                if (!empty($conf['mergeLabels'])) {
                                     $itemArray =
                                         $this->mergeItems($itemArray, $labelItemArray);
                                 }
