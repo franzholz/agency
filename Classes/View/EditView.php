@@ -416,14 +416,6 @@ class EditView
                         $frontendUser->user,
                         !empty($conf['fe_userEditSelf'])
                     )
-
-                    // $dataObj->getCoreQuery()->DBmayFEUserEdit(
-                    //     $theTable,
-                    //     $origArray,
-                    //     $frontendUser->user,
-                    //     // $conf['allowedGroups'] ?? '',
-                    //     $conf['fe_userEditSelf'] ?? false
-                    // )
                 ) {
                     // Display the form, if access granted.
                     $content = $this->renderForm(

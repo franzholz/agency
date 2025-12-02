@@ -1626,6 +1626,7 @@ class Data implements SingletonInterface
                         $this->frontendUserRepository->updateMMRelations($dataArray);
                         $this->setSaved(true);
                         $newRow = $this->parseIncomingData($outGoingData);
+                        $newRow['uid'] = $theUid;
                         $this->tca->modifyRow(
                             $staticInfoObj,
                             $theTable,
@@ -1791,6 +1792,7 @@ class Data implements SingletonInterface
 
                     if (is_array($newRow)) {
                         // Post-create processing: call user functions and hooks
+
                         $newRow = $this->parseIncomingData($newRow);
                         $this->tca->modifyRow(
                             $staticInfoObj,
@@ -2139,7 +2141,7 @@ class Data implements SingletonInterface
                 $result = $connection->delete(
                     $mmTable,
                     [
-                        'uid_local' => $uid
+                        'uid_foreign' => $uid
                     ]
                 );
 

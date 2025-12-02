@@ -66,40 +66,44 @@ class FrontendUserRepository
         // update the MM relation
         $fieldsList = array_keys($row);
         foreach ($GLOBALS['TCA'][self::TABLE]['columns'] as $colName => $colSettings) {
-
             if (
                 in_array($colName, $fieldsList) &&
-                $colSettings['config']['type'] == 'select' &&
+                in_array($colSettings['config']['type'], ['select', 'category']) &&
                 isset($colSettings['config']['MM'])
             ) {
+                $tablenames = $colSettings['config']['MM_match_fields']['tablenames'] ?? 'fe_users';
+                $fieldname = $colSettings['config']['MM_match_fields']['fieldname'] ?? $colName;
                 $valuesArray = $row[$colName];
                 if (isset($valuesArray) && is_array($valuesArray)) {
-                    $queryBuilder = $this->getQueryBuilder();
+                    $queryBuilder = $this->connectionPool->getQueryBuilderForTable(
+                        $colSettings['config']['MM']
+                    );
                     $queryBuilder
                         ->delete($colSettings['config']['MM'])
-                        -where(
+                        ->where(
                             $queryBuilder->expr()->eq(
-                                'uid_local',
+                                'uid_foreign',
                                 $queryBuilder->createNamedParameter($row['uid'], Connection::PARAM_INT)
                             ),
                         )
                         ->executeStatement();
 
                     $insertFields = [];
-                    $insertFields['uid_local'] = intval($row['uid']);
-                    $insertFields['tablenames'] = '';
-                    $insertFields['sorting'] = 0;
+                    $insertFields['uid_foreign'] = intval($row['uid']);
+                    $insertFields['tablenames'] = $tablenames;
+                    $insertFields['fieldname'] = $fieldname;
+                    $insertFields['sorting_foreign'] = 0;
+                    $connectionRecordMm =
+                        $this->getConnectionPool()
+                        ->getConnectionForTable($colSettings['config']['MM']);
+
                     foreach($valuesArray as $theValue) {
-                        $insertFields['uid_foreign'] = intval($theValue);
-                        $insertFields['sorting']++;
-                        $queryBuilder = $this->connection->createQueryBuilder();
-                        $queryBuilder
-                            ->insert($colSettings['config']['MM'])
-                            ->values(
-                                $insertFields
-                            )
-                            ->executeStatement();
-                        $insertId = $queryBuilder->getConnection()->lastInsertId();
+                        $insertFields['uid_local'] = intval($theValue);
+                        $insertFields['sorting_foreign']++;
+                        $insertCount = $connectionRecordMm
+                            ->insert($colSettings['config']['MM'],
+                                     $insertFields
+                              );
                     }
                 }
             }
@@ -121,7 +125,7 @@ class FrontendUserRepository
      * @return string the query, ready to execute unless $doExec was TRUE in which case the return value is FALSE
      *
      */
-    public function update(int $uid, array $dataArray, string $fieldList): int|bool
+    public function update(int &$uid, array $dataArray, string $fieldList): int|bool
     {
         // uid can never be set
         unset($dataArray['uid']);
@@ -253,6 +257,11 @@ class FrontendUserRepository
 
     public function getQueryBuilder(): QueryBuilder
     {
-        return $this->connectionPool->getQueryBuilderForTable(self::TABLE);
+        return $this->getConnectionPool()->getQueryBuilderForTable(self::TABLE);
+    }
+
+    protected function getConnectionPool(): ConnectionPool
+    {
+        return GeneralUtility::makeInstance(ConnectionPool::class);
     }
 }

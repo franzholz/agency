@@ -101,14 +101,15 @@ class Tca implements SingletonInterface
         string $localField,
         array $uidArray,
         string $orderBy = ''
-    ) {
+    ): array {
+        $valueArray = [];
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
         $result = $queryBuilder
-            ->select($foreignField)
+            ->select($localField)
             ->from($table)
             ->where(
-                $queryBuilder->expr()->eq(
-                    'uid_local', $localField,
+                $queryBuilder->expr()->in(
+                    $foreignField,
                     $queryBuilder->createNamedParameter(
                         $uidArray,
                         ArrayParameterType::INTEGER)
@@ -122,7 +123,7 @@ class Tca implements SingletonInterface
         $result = $queryBuilder->executeQuery();
 
         while ($row = $result->fetchAssociative()) {
-            $valueArray[] = $row[$foreignField];
+            $valueArray[] = $row[$localField];
         }
 
         return $valueArray;
@@ -195,7 +196,7 @@ class Tca implements SingletonInterface
                                 'uid_foreign',
                                 'uid_local',
                                 [
-                                    'uid_local' => $dataArray['uid']
+                                    'uid_foreign' => $dataArray['uid']
                                 ]
                             );
                         $rcArray[$columnName] = implode(',', $valueArray);
@@ -254,6 +255,7 @@ class Tca implements SingletonInterface
                 case 'group':
                     $bMultipleValues = true;
                     break;
+                case 'category':
                 case 'select':
                     $value = $dataArray[$columnName] ?? '';
                     if ($value == 'Array') {    // checkbox from which nothing has been selected
@@ -264,31 +266,18 @@ class Tca implements SingletonInterface
                         in_array($columnName, $dataFieldList) &&
                         !empty($columnConfig['MM']) &&
                         isset($value)
-                    ) {
+                    ) { // getAssignedToRecord($uid, $table)
                         if ($value == '' || is_array($value)) {
                             // the value contains the count of elements from a mm table
                         } elseif ($bColumnIsCount) {
-                            // $valuesArray = [];
-                            // $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-                            //     'uid_local,uid_foreign,sorting',
-                            //     $columnConfig['MM'],
-                            //     'uid_local=' . intval($dataArray['uid']),
-                            //     '',
-                            //     'sorting'
-                            // );
-                            // while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                            //     $valuesArray[] = $row['uid_foreign'];
-                            // }
-
-                            $valueArray =
+                            $valuesArray =
                                 $this->getRelatedUids(
                                     $columnConfig['MM'],
                                     'uid_foreign',
                                     'uid_local',
-                                    ['uid_local' => $dataArray['uid']],
-                                    'sorting'
+                                    ['uid_foreign' => $dataArray['uid']],
+                                    'sorting_foreign'
                                 );
-
                             $dataArray[$columnName] = $valuesArray;
                         } else {
                             // the values from the mm table are already available as an array
@@ -341,7 +330,10 @@ class Tca implements SingletonInterface
             !empty($dataArray['static_info_country'])
         ) {
             // empty zone if it does not fit to the provided country
-            $zoneArray = $staticInfoObj->initCountrySubdivisions($dataArray['static_info_country']);
+            $zoneArray =
+                $staticInfoObj->initCountrySubdivisions(
+                    $dataArray['static_info_country']
+                );
             if (!isset($zoneArray[$dataArray['zone']])) {
                 $dataArray['zone'] = '';
             }
@@ -374,6 +366,73 @@ class Tca implements SingletonInterface
         return $result;
     }
 
+    // HIER Anfang +++
+    function generateSelectionPreviewContent(
+        Localization $languageObj,
+        string $theTable,
+        string $columnName,
+        array $valuesArray,
+        array $columnConfig,
+        bool $mergeLabels,
+        bool $bStdWrap,
+        array $stdWrap,
+        bool $HSC,
+        bool $bNotLast
+    ) {
+        $cObj = FrontendUtility::getContentObjectRenderer();
+        $xhtmlFix = HtmlUtility::determineXhtmlFix();
+        $columnContent = '';
+        $itemArray = [];
+        $textSchema = $theTable . '.' . $columnName . '.I.';
+        $labelItemArray = $languageObj->getItemsLL($textSchema, true);
+
+        if ($mergeLabels || !count($labelItemArray)) {
+            if (isset($columnConfig['itemsProcFunc'])) {
+                $itemArray = GeneralUtility::callUserFunction(
+                    $columnConfig['itemsProcFunc'],
+                    $columnConfig,
+                    $this
+                );
+            }
+            $itemArray = $columnConfig['items'] ?? [];
+            if ($mergeLabels) {
+                $itemArray = $this->mergeItems($itemArray, $labelItemArray);
+            }
+        } else {
+            $itemArray = $labelItemArray;
+        }
+
+        if (!$bStdWrap) {
+            $stdWrap['wrap'] = '|<br' . $xhtmlFix . '>';
+        }
+
+        if (is_array($itemArray)) {
+            $itemKeyArray = $this->getItemKeyArray($itemArray);
+            for ($i = 0; $i < count($valuesArray); $i++) {
+                $label = '';
+                if (empty($itemKeyArray)) {
+                    $label = $valuesArray[$i];
+                } else {
+                    $label =
+                        $languageObj->getLabelFromString(
+                            $itemKeyArray[$valuesArray[$i]]['label']
+                        );
+                }
+                if ($HSC && is_string($label)) {
+                    $label = htmlspecialchars($label);
+                }
+                $columnContent .=
+                    ((!$bNotLast || $i < count($valuesArray) - 1) ?
+                    $cObj->stdWrap($label, $stdWrap) :
+                    $label
+                );
+            }
+        }
+
+        return $columnContent;
+            // HIER Ende +++
+    }
+
     // Configure preview based on input type
     protected function generatePreviewContent(
         Localization $languageObj,
@@ -389,7 +448,7 @@ class Tca implements SingletonInterface
         bool $bListWrap,
         array $listWrap,
         bool $HSC,
-        $bNotLast
+        bool $bNotLast
     ): string
     {
         $cObj = FrontendUtility::getContentObjectRenderer();
@@ -494,12 +553,12 @@ class Tca implements SingletonInterface
                         $textSchema = $theTable . '.' . $columnName . '.I.';
                         $labelItemArray = $languageObj->getItemsLL($textSchema, true);
 
-                        if (isset($conf['mergeLabels']) || !count($labelItemArray)) {
+                        if (!empty($conf['mergeLabels']) || !count($labelItemArray)) {
                             if (isset($columnConfig['itemsProcFunc'])) {
                                 $itemArray = GeneralUtility::callUserFunction($columnConfig['itemsProcFunc'], $columnConfig, $this);
                             }
                             $itemArray = $columnConfig['items'];
-                            if (isset($conf['mergeLabels'])) {
+                            if (!empty($conf['mergeLabels'])) {
                                 $itemArray = $this->mergeItems($itemArray, $labelItemArray);
                             }
                         } else {
@@ -528,7 +587,6 @@ class Tca implements SingletonInterface
                     break;
 
                 case 'select':
-                    $itemArray = [];
 
                     if (
                         isset($columnValue) &&
@@ -539,47 +597,34 @@ class Tca implements SingletonInterface
                         )
                     ) {
                         $valuesArray = is_array($columnValue) ? $columnValue : explode(',', (string) $columnValue);
-                        $textSchema = $theTable . '.' . $columnName . '.I.';
-                        $labelItemArray = $languageObj->getItemsLL($textSchema, true);
+                        $columnContent .=
+                            $this->generateSelectionPreviewContent(
+                                $languageObj,
+                                $theTable,
+                                $columnName,
+                                $valuesArray,
+                                $columnConfig,
+                                !empty($conf['mergeLabels']),
+                                $bStdWrap,
+                                $stdWrap,
+                                $HSC,
+                                $bNotLast
+                            );
 
-                        if (isset($conf['mergeLabels']) || !count($labelItemArray)) {
-                            if (isset($columnConfig['itemsProcFunc'])) {
-                                $itemArray = GeneralUtility::callUserFunction($columnConfig['itemsProcFunc'], $columnConfig, $this);
+                        if (
+                            // check if a language overlay must be used
+                            isset($columnConfig['foreign_table'])
+                        ) {
+                            $language = $controlData->getSysLanguageUid(
+                                $conf,
+                                'ALL',
+                                $columnConfig['foreign_table']
+                            );
+
+                            if ($language == 0) {
+                                break;
                             }
-                            $itemArray = $columnConfig['items'] ?? [];
-                            if (isset($conf['mergeLabels'])) {
-                                $itemArray = $this->mergeItems($itemArray, $labelItemArray);
-                            }
-                        } else {
-                            $itemArray = $labelItemArray;
-                        }
 
-                        if (!$bStdWrap) {
-                            $stdWrap['wrap'] = '|<br' . $xhtmlFix . '>';
-                        }
-
-                        if (is_array($itemArray)) {
-                            $itemKeyArray = $this->getItemKeyArray($itemArray);
-                            for ($i = 0; $i < count($valuesArray); $i++) {
-                                $label = '';
-                                if (empty($itemKeyArray)) {
-                                    $label = $valuesArray[$i];
-                                } else {
-                                    $label = $languageObj->getLabelFromString($itemKeyArray[$valuesArray[$i]]['label']);
-                                }
-                                if ($HSC) {
-                                    $label = htmlspecialchars($label);
-                                }
-                                $columnContent .=
-                                    ((!$bNotLast || $i < count($valuesArray) - 1) ?
-                                        $cObj->stdWrap($label, $stdWrap) :
-                                        $label
-                                    );
-                            }
-                        }
-
-                        if (isset($columnConfig['foreign_table'])) {
-                            $reservedValues = [];
                             if (isset($userGroupObj) && is_object($userGroupObj)) {
                                 $reservedValues = $userGroupObj->getReservedValues($conf);
                                 $valuesArray = array_diff($valuesArray, $reservedValues);
@@ -595,24 +640,25 @@ class Tca implements SingletonInterface
                                         '*',
                                         $valuesArray
                                     );
-                                //  HIER ++++
 
                                 if (
                                     is_array($foreignRows) &&
                                     count($foreignRows) > 0
                                 ) {
-
-                                    $language = $controlData->getSysLanguageUid(
-                                        $conf,
-                                        'ALL',
-                                        $columnConfig['foreign_table']
-                                    );
                                     $languageAspect = new LanguageAspect($language, $language);
                                     $titleField = $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['label'];
 
                                     for ($i = 0; $i < count($foreignRows); $i++) {
-                                        if ($theTable == 'fe_users' && $columnName == 'usergroup') {
-                                            $foreignRows[$i] = $userGroupObj->getUsergroupOverlay($conf, $controlData, $foreignRows[$i]);
+                                        if (
+                                            $theTable == 'fe_users' &&
+                                            $columnName == 'usergroup'
+                                        ) {
+                                            $foreignRows[$i] =
+                                                $userGroupObj->getUsergroupOverlay(
+                                                    $conf,
+                                                    $controlData,
+                                                    $foreignRows[$i]
+                                                );
                                         } elseif (
                                             $localizedRow =
                                                 $GLOBALS['TSFE']->sys_page->getLanguageOverlay(
@@ -640,22 +686,35 @@ class Tca implements SingletonInterface
                     }
                     break;
 
-                    case 'category':
-                        break;
+                case 'category':
+                    $valuesArray = is_array($columnValue) ? $columnValue : explode(',', (string) $columnValue);
+                    $columnContent .=
+                        $this->generateSelectionPreviewContent(
+                            $languageObj,
+                            $theTable,
+                            $columnName,
+                            $valuesArray,
+                            $columnConfig,
+                            !empty($conf['mergeLabels']),
+                            $bStdWrap,
+                            $stdWrap,
+                            $HSC,
+                            $bNotLast
+                        );
+                    break;
 
-                    default:
-                        // unsupported input type
-                        $label = $languageObj->getLabel('unsupported');
-                        if ($HSC) {
-                            $label = htmlspecialchars($label);
-                        }
-                        $columnContent .= $columnConfig['type'] . ':' . $label;
-                        break;
-                }
+                default:
+                    // unsupported input type
+                    $label = $languageObj->getLabel('unsupported');
+                    if ($HSC) {
+                        $label = htmlspecialchars($label);
+                    }
+                    $columnContent .= $columnConfig['type'] . ':' . $label;
+                    break;
+            }
 
         return $columnContent;
     }
-
 
     public function getSelectCheckMainPart (
         &$previouslySelected,
@@ -863,7 +922,7 @@ class Tca implements SingletonInterface
             $textSchema = $theTable . '.' . $columnName . '.I.';
             $labelItemArray = $languageObj->getItemsLL($textSchema, true);
 
-            if ($conf['mergeLabels'] || !count($labelItemArray)) {
+            if (!empty($conf['mergeLabels']) || !count($labelItemArray)) {
                 if (isset($columnConfig['itemsProcFunc'])) {
                     $itemArray =
                         GeneralUtility::callUserFunction(
@@ -873,7 +932,7 @@ class Tca implements SingletonInterface
                         );
                 }
                 $itemArray = $columnConfig['items'] ?? [];
-                if (isset($conf['mergeLabels'])) {
+                if (!empty($conf['mergeLabels'])) {
                     $itemArray =
                     $this->mergeItems($itemArray, $labelItemArray);
                 }
@@ -904,16 +963,16 @@ class Tca implements SingletonInterface
                 $label = (isset($columnConfig['default']) ? $languageObj->getLabelFromString($columnConfig['default']) : '');
                 $label = htmlspecialchars($label);
                 $columnContent = '<textarea id="' .
-                FrontendUtility::getClassName(
-                    $columnName,
-                    $prefixId
-                ) .
-                '" class="' . $css->getClassName($columnName, 'input') .
-                '" name="FE[' . $theTable . '][' . $columnName . ']"' .
-                ' title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($columnName, 'upper') . '###"' .
-                ' cols="' . ($columnConfig['cols'] ?: 30) . '"' .
-                ' rows="' . ($columnConfig['rows'] ?: 5) . '"' .
-                '>' . $label . '</textarea>';
+                    FrontendUtility::getClassName(
+                        $columnName,
+                        $prefixId
+                    ) .
+                    '" class="' . $css->getClassName($columnName, 'input') .
+                    '" name="FE[' . $theTable . '][' . $columnName . ']"' .
+                    ' title="###TOOLTIP_' . (($cmd == 'invite') ? 'INVITATION_' : '') . $cObj->caseshift($columnName, 'upper') . '###"' .
+                    ' cols="' . ($columnConfig['cols'] ?: 30) . '"' .
+                    ' rows="' . ($columnConfig['rows'] ?: 5) . '"' .
+                    '>' . $label . '</textarea>';
                 break;
 
             case 'check':
@@ -970,12 +1029,12 @@ class Tca implements SingletonInterface
                         $label = $languageObj->getLabelFromString($value['label']);
                         $label = htmlspecialchars($label);
                         $newContent = '<li><input type="checkbox"' .
-                        ' id="' . $uidText . '-' . $key .
-                        '" class="' . $css->getClassName($columnName, 'input-' . $i) .
-                        '" name="FE[' . $theTable . '][' . $columnName . '][]" value="' . $key . '"' .
-                        $checkedHtml . $xhtmlFix . '><label for="' . $uidText . '-' . $key . $xhtmlFix . '">' .
-                        $label .
-                        '</label></li>';
+                            ' id="' . $uidText . '-' . $key .
+                            '" class="' . $css->getClassName($columnName, 'input-' . $i) .
+                            '" name="FE[' . $theTable . '][' . $columnName . '][]" value="' . $key . '"' .
+                            $checkedHtml . $xhtmlFix . '><label for="' . $uidText . '-' . $key . $xhtmlFix . '">' .
+                            $label .
+                            '</label></li>';
                         $columnContent .= $newContent;
                     }
                     $columnContent .= '</ul>';
@@ -1357,8 +1416,6 @@ class Tca implements SingletonInterface
                     break;
 
                 case 'category':
-
-                    // TODO HIER +++++++++++
                     $columnContent .=
                         $this->getSelectCheckStartPart(
                             $theTable,
