@@ -1585,6 +1585,7 @@ class Data implements SingletonInterface
                         $this->updateMMRelations($theTable, $dataArray);
                         $this->setSaved(true);
                         $newRow = $this->parseIncomingData($outGoingData);
+                        $newRow['uid'] = $theUid;
                         $this->tca->modifyRow(
                             $staticInfoObj,
                             $theTable,
