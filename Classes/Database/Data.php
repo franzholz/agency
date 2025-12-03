@@ -1604,9 +1604,6 @@ class Data implements SingletonInterface
                         $differences = ArrayUtility::arrayDifference($origArray, $parsedData);
                         $outGoingData = $differences['insertions'] ?? [];
 
-                        // foreach ($parsedData as $key => $value) {
-                        // } +++
-                        //
                         if ($theTable == 'fe_users' && isset($dataArray['password'])) {
                             // Do not set the outgoing password if the incoming password was unset
                             $outGoingData['password'] = $password;

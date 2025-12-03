@@ -1192,9 +1192,6 @@ class Tca implements SingletonInterface
                 if (
                     is_array($itemArray)
                 ) {
-                    /*
-                        *    TODO $columnContent = $this->getContent($itemArray);  +++
-                        *    public function getContent($itemArray);*/
                     $itemArray = $this->getItemKeyArray($itemArray);
                     $i = 0;
 
@@ -1303,7 +1300,7 @@ class Tca implements SingletonInterface
                         isset($GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['languageField']) &&
                         !empty($conf['categories_PIDLIST'])
                     ) {
-                        $categoryObj = GeneralUtility::makeInstance(Category::class); // +++
+                        $categoryObj = GeneralUtility::makeInstance(Category::class);
                         $pidArray = $categoryObj->getConfigPidArray(
                             $controlData->getPid(),
                             $conf['categories_PIDLIST']
@@ -1451,10 +1448,7 @@ class Tca implements SingletonInterface
                     }
                 }
 
-                // HIER neu Anfang ++++++++++++++++++++++++++++
                 $columnContent .= $this->getSelectCheckEndPart($columnConfig['renderMode'] ?? '');
-                // HIER neu Ende ++++++++++++++++++++++++++++
-
                 break;
 
             case 'category':
