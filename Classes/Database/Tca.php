@@ -621,10 +621,6 @@ class Tca implements SingletonInterface
                                 $columnConfig['foreign_table']
                             );
 
-                            if ($language == 0) {
-                                break;
-                            }
-
                             if (isset($userGroupObj) && is_object($userGroupObj)) {
                                 $reservedValues = $userGroupObj->getReservedValues($conf);
                                 $valuesArray = array_diff($valuesArray, $reservedValues);
