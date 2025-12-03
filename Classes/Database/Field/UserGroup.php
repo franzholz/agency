@@ -50,6 +50,7 @@ use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Domain\Repository\FrontendGroupRepository;
 
 
+
 class UserGroup extends Base implements SingletonInterface
 {
     protected $savedReservedValues = [];

@@ -221,7 +221,6 @@ class EditView
         );
 
         foreach ($GLOBALS['TCA'][$theTable]['columns'] as $theField => $fieldConfig) {
-
             if (
                 isset($fieldConfig['config']['internal_type']) &&
                 $fieldConfig['config']['internal_type'] == 'file' &&

@@ -60,7 +60,7 @@ class FrontendGroupRepository
         $whereArray[CompositeExpression::TYPE_OR] = [];
         $subgroupWhereArray = [];
 
-        $whereArray['where'][] = $queryBuilder->expr()->in(
+        $whereArray[CompositeExpression::TYPE_AND][] = $queryBuilder->expr()->in(
             'pid',
             $queryBuilder->createNamedParameter($pidArray, ArrayParameterType::INTEGER)
         );

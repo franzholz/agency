@@ -42,6 +42,7 @@ namespace JambageCom\Agency\Database;
  *
  */
 use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Query\Expression\CompositeExpression;
 
 use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -58,6 +59,7 @@ use JambageCom\Div2007\Utility\TableUtility;
 use JambageCom\Agency\Api\Localization;
 use JambageCom\Agency\Constants\Mode;
 use JambageCom\Agency\Database\Field\Category;
+use JambageCom\Agency\Database\Field\UserGroup;
 use JambageCom\Agency\Domain\Repository\FrontendGroupRepository;
 use JambageCom\Agency\Domain\Repository\FrontendUserRepository;
 use JambageCom\Agency\Request\Parameters;
@@ -366,7 +368,6 @@ class Tca implements SingletonInterface
         return $result;
     }
 
-    // HIER Anfang +++
     function generateSelectionPreviewContent(
         Localization $languageObj,
         string $theTable,
@@ -418,6 +419,7 @@ class Tca implements SingletonInterface
                             $itemKeyArray[$valuesArray[$i]]['label']
                         );
                 }
+
                 if ($HSC && is_string($label)) {
                     $label = htmlspecialchars($label);
                 }
@@ -430,7 +432,83 @@ class Tca implements SingletonInterface
         }
 
         return $columnContent;
-            // HIER Ende +++
+    }
+
+    public function generateSelectedTitlesPreviewContent(
+        Localization $languageObj,
+        ?UserGroup $userGroupObj,
+        Parameters $controlData,
+        $theTable,
+        array $conf,
+        string $columnName,
+        array $columnConfig,
+        array $valuesArray,
+        array $stdWrap,
+        bool $bNotLast,
+        bool $HSC,
+    )
+    {
+        $cObj = FrontendUtility::getContentObjectRenderer();
+        $columnContent = '';
+        $valuesArray = array_filter($valuesArray, 'strlen'); // removes null values
+        $firstValue = current($valuesArray);
+
+        if (!empty($firstValue) || count($valuesArray) > 1) {
+            $foreignRows =
+                $this->getRowsByUids(
+                    $columnConfig['foreign_table'],
+                    '*',
+                    $valuesArray
+                );
+
+            if (
+                is_array($foreignRows) &&
+                count($foreignRows) > 0
+            ) {
+                $language = $controlData->getSysLanguageUid(
+                    $conf,
+                    'ALL',
+                    $columnConfig['foreign_table']
+                );
+                $languageAspect = new LanguageAspect($language, $language);
+                $titleField = $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['label'];
+
+                for ($i = 0; $i < count($foreignRows); $i++) {
+                    if (
+                        $theTable == 'fe_users' &&
+                        $columnName == 'usergroup'
+                    ) {
+                        $foreignRows[$i] =
+                            $userGroupObj->getUsergroupOverlay(
+                                $conf,
+                                $controlData,
+                                $foreignRows[$i]
+                            );
+                    } elseif (
+                        $localizedRow =
+                            $GLOBALS['TSFE']->sys_page->getLanguageOverlay(
+                                $columnConfig['foreign_table'],
+                                $foreignRows[$i],
+                                $languageAspect)
+                    ) {
+                        $foreignRows[$i] = $localizedRow;
+                    }
+                    $text = $foreignRows[$i][$titleField];
+                    if ($HSC) {
+                        $text = htmlspecialchars($text);
+                    }
+
+                    $columnContent .=
+                    (
+                        ($bNotLast || $i < count($foreignRows) - 1) ?
+                            $cObj->stdWrap($text, $stdWrap) :
+                            $text
+                    );
+                }
+            }
+        }
+
+        return $columnContent;
     }
 
     // Configure preview based on input type
@@ -454,6 +532,7 @@ class Tca implements SingletonInterface
         $cObj = FrontendUtility::getContentObjectRenderer();
         $xhtmlFix = HtmlUtility::determineXhtmlFix();
         $columnContent = '';
+        $userGroupObj = null;
 
         if ($theTable == 'fe_users' && $columnName == 'usergroup') {
             $tablesObj = GeneralUtility::makeInstance(Tables::class);
@@ -555,11 +634,17 @@ class Tca implements SingletonInterface
 
                         if (!empty($conf['mergeLabels']) || !count($labelItemArray)) {
                             if (isset($columnConfig['itemsProcFunc'])) {
-                                $itemArray = GeneralUtility::callUserFunction($columnConfig['itemsProcFunc'], $columnConfig, $this);
+                                $itemArray =
+                                    GeneralUtility::callUserFunction(
+                                        $columnConfig['itemsProcFunc'],
+                                        $columnConfig,
+                                        $this
+                                    );
                             }
                             $itemArray = $columnConfig['items'];
                             if (!empty($conf['mergeLabels'])) {
-                                $itemArray = $this->mergeItems($itemArray, $labelItemArray);
+                                $itemArray =
+                                    $this->mergeItems($itemArray, $labelItemArray);
                             }
                         } else {
                             $itemArray = $labelItemArray;
@@ -576,7 +661,10 @@ class Tca implements SingletonInterface
                             }
 
                             for ($i = 0; $i < count($valuesArray); $i++) {
-                                $label = $languageObj->getLabelFromString($itemKeyArray[$valuesArray[$i]]['label']);
+                                $label =
+                                    $languageObj->getLabelFromString(
+                                        $itemKeyArray[$valuesArray[$i]]['label']
+                                    );
                                 if ($HSC) {
                                     $label = htmlspecialchars($label);
                                 }
@@ -597,6 +685,11 @@ class Tca implements SingletonInterface
                         )
                     ) {
                         $valuesArray = is_array($columnValue) ? $columnValue : explode(',', (string) $columnValue);
+                        if (isset($userGroupObj) && is_object($userGroupObj)) {
+                            $reservedValues = $userGroupObj->getReservedValues($conf);
+                            $valuesArray = array_diff($valuesArray, $reservedValues);
+                        }
+
                         $columnContent .=
                             $this->generateSelectionPreviewContent(
                                 $languageObj,
@@ -612,72 +705,24 @@ class Tca implements SingletonInterface
                             );
 
                         if (
+                            count($valuesArray) &&
                             // check if a language overlay must be used
                             isset($columnConfig['foreign_table'])
                         ) {
-                            $language = $controlData->getSysLanguageUid(
-                                $conf,
-                                'ALL',
-                                $columnConfig['foreign_table']
-                            );
-
-                            if (isset($userGroupObj) && is_object($userGroupObj)) {
-                                $reservedValues = $userGroupObj->getReservedValues($conf);
-                                $valuesArray = array_diff($valuesArray, $reservedValues);
-                            }
-                            $valuesArray = array_filter($valuesArray, 'strlen'); // removes null values
-                            $firstValue = current($valuesArray);
-
-                            if (!empty($firstValue) || count($valuesArray) > 1) {
-
-                                $foreignRows =
-                                    $this->getRowsByUids(
-                                        $columnConfig['foreign_table'],
-                                        '*',
-                                        $valuesArray
+                            $columnContent .=
+                                $this->generateSelectedTitlesPreviewContent(
+                                        $languageObj,
+                                        $userGroupObj,
+                                        $controlData,
+                                        $theTable,
+                                        $conf,
+                                        $columnName,
+                                        $columnConfig,
+                                        $valuesArray,
+                                        $stdWrap,
+                                        $bNotLast,
+                                        $HSC,
                                     );
-
-                                if (
-                                    is_array($foreignRows) &&
-                                    count($foreignRows) > 0
-                                ) {
-                                    $languageAspect = new LanguageAspect($language, $language);
-                                    $titleField = $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['label'];
-
-                                    for ($i = 0; $i < count($foreignRows); $i++) {
-                                        if (
-                                            $theTable == 'fe_users' &&
-                                            $columnName == 'usergroup'
-                                        ) {
-                                            $foreignRows[$i] =
-                                                $userGroupObj->getUsergroupOverlay(
-                                                    $conf,
-                                                    $controlData,
-                                                    $foreignRows[$i]
-                                                );
-                                        } elseif (
-                                            $localizedRow =
-                                                $GLOBALS['TSFE']->sys_page->getLanguageOverlay(
-                                                    $columnConfig['foreign_table'],
-                                                    $foreignRows[$i],
-                                                    $languageAspect)
-                                                  ) {
-                                            $foreignRows[$i] = $localizedRow;
-                                        }
-                                        $text = $foreignRows[$i][$titleField];
-                                        if ($HSC) {
-                                            $text = htmlspecialchars($text);
-                                        }
-
-                                        $columnContent .=
-                                        (
-                                            ($bNotLast || $i < count($foreignRows) - 1) ?
-                                            $cObj->stdWrap($text, $stdWrap) :
-                                            $text
-                                        );
-                                    }
-                                }
-                            }
                         }
                     }
                     break;
@@ -696,6 +741,20 @@ class Tca implements SingletonInterface
                             $stdWrap,
                             $HSC,
                             $bNotLast
+                        );
+                    $columnContent .=
+                        $this->generateSelectedTitlesPreviewContent(
+                            $languageObj,
+                            $userGroupObj,
+                            $controlData,
+                            $theTable,
+                            $conf,
+                            $columnName,
+                            $columnConfig,
+                            $valuesArray,
+                            $stdWrap,
+                            $bNotLast,
+                            $HSC,
                         );
                     break;
 
@@ -762,6 +821,7 @@ class Tca implements SingletonInterface
         } else {
             $columnContent .= '<option value="' . $uid . '"' . $selected . '>' . $titleText . '</option>';
         }
+
         return $columnContent;
     }
 
@@ -888,6 +948,7 @@ class Tca implements SingletonInterface
         $xhtmlFix = HtmlUtility::determineXhtmlFix();
         $css = GeneralUtility::makeInstance(Css::class);
         $cObj = FrontendUtility::getContentObjectRenderer();
+        $userGroupObj = null;
 
         if ($theTable == 'fe_users' && $columnName == 'usergroup') {
             $tablesObj = GeneralUtility::makeInstance(Tables::class);
@@ -1107,351 +1168,336 @@ class Tca implements SingletonInterface
                 }
                 break;
 
-                case 'select':
-                    $checkedHtml =  ($useXHTML ? ' checked="checked"' : ' checked');
-                    $selectedHtml = ($useXHTML ? ' selected="selected"' : ' selected');
+            case 'select':
+                $checkedHtml =  ($useXHTML ? ' checked="checked"' : ' checked');
+                $selectedHtml = ($useXHTML ? ' selected="selected"' : ' selected');
 
-                    $allowMultipleSelection =
-                        isset($columnConfig['maxitems']) &&
-                        $columnConfig['maxitems'] > 1 &&
-                        (
-                            $columnName != 'usergroup' ||
-                            !empty($conf['allowMultipleUserGroupSelection']) ||
-                            $theTable != 'fe_users'
-                        );
+                $allowMultipleSelection =
+                    isset($columnConfig['maxitems']) &&
+                    $columnConfig['maxitems'] > 1 &&
+                    (
+                        $columnName != 'usergroup' ||
+                        !empty($conf['allowMultipleUserGroupSelection']) ||
+                        $theTable != 'fe_users'
+                    );
+                $columnContent .=
+                    $this->getSelectCheckStartPart(
+                        $theTable,
+                        $columnName,
+                        $prefixId,
+                        $columnConfig['renderMode'] ?? '',
+                        $allowMultipleSelection,
+                        (($cmd == 'invite') ? 'INVITATION_' : '')
+                    );
+                if (
+                    is_array($itemArray)
+                ) {
+                    /*
+                        *    TODO $columnContent = $this->getContent($itemArray);  +++
+                        *    public function getContent($itemArray);*/
+                    $itemArray = $this->getItemKeyArray($itemArray);
+                    $i = 0;
 
-                    $columnContent .=
-                        $this->getSelectCheckStartPart(
-                            $theTable,
-                            $columnName,
-                            $prefixId,
-                            $columnConfig['renderMode'] ?? '',
-                            $allowMultipleSelection,
-                            (($cmd == 'invite') ? 'INVITATION_' : '')
-                        );
-
-                    if (
-                        is_array($itemArray)
-                    ) {
-                        /*
-                            *    TODO $columnContent = $this->getContent($itemArray);  +++
-                            *    public function getContent($itemArray);*/
-                        $itemArray = $this->getItemKeyArray($itemArray);
-                        $i = 0;
-
-                        foreach ($itemArray as $k => $item) {
-                            $label = $languageObj->getLabelFromString($item['label'], true);
-                            $label = htmlspecialchars($label);
-                            if (
-                                isset($columnConfig['renderMode']) &&
-                                $columnConfig['renderMode'] == 'checkbox'
-                            ) {
-                                $columnContent .= '<div class="' . $css->getClassName($columnName, 'divInput-' . ($i + 1)) . '">' .
-                                '<input class="' .
-                                $css->getClassName('checkbox-checkboxes', 'input') . ' ' . $css->getClassName($columnName, 'input-' . ($i + 1)) .
-                                '" id="' .
-                                FrontendUtility::getClassName(
-                                    $columnName,
-                                    $prefixId
-                                ) .
-                                '-' . $i . '" name="FE[' . $theTable . '][' . $columnName . '][' . $k . ']" value="' . $k .
-                                '" type="checkbox"  ' . (in_array($k, $valuesArray) ? $checkedHtml : '') . $xhtmlFix . '></div>' .
-                                '<div class="viewLabel ' . $css->getClassName($columnName, 'divLabel') . '">' .
-                                '<label for="' .
-                                FrontendUtility::getClassName(
-                                    $columnName,
-                                    $prefixId
-                                ) .
-                                '-' . $i . '"' .
-                                ' class="' .  $css->getClassName($columnName, 'label') . '"' .
-                                '>' . $label . '</label></div>';
-                            } else {
-                                $columnContent .= '<option value="' . $k . '" ' . (in_array($k, $valuesArray) ? $selectedHtml : '') . '>' . $label . '</option>';
-                            }
-                            $i++;
-                        }
-
+                    foreach ($itemArray as $k => $item) {
+                        $label = $languageObj->getLabelFromString($item['label'], true);
+                        $label = htmlspecialchars($label);
                         if (
                             isset($columnConfig['renderMode']) &&
                             $columnConfig['renderMode'] == 'checkbox'
                         ) {
-                            $columnContent .= '</div>';
+                            $columnContent .= '<div class="' . $css->getClassName($columnName, 'divInput-' . ($i + 1)) . '">' .
+                            '<input class="' .
+                            $css->getClassName('checkbox-checkboxes', 'input') . ' ' . $css->getClassName($columnName, 'input-' . ($i + 1)) .
+                            '" id="' .
+                            FrontendUtility::getClassName(
+                                $columnName,
+                                $prefixId
+                            ) .
+                            '-' . $i . '" name="FE[' . $theTable . '][' . $columnName . '][' . $k . ']" value="' . $k .
+                            '" type="checkbox"  ' . (in_array($k, $valuesArray) ? $checkedHtml : '') . $xhtmlFix . '></div>' .
+                            '<div class="viewLabel ' . $css->getClassName($columnName, 'divLabel') . '">' .
+                            '<label for="' .
+                            FrontendUtility::getClassName(
+                                $columnName,
+                                $prefixId
+                            ) .
+                            '-' . $i . '"' .
+                            ' class="' .  $css->getClassName($columnName, 'label') . '"' .
+                            '>' . $label . '</label></div>';
+                        } else {
+                            $columnContent .= '<option value="' . $k . '" ' . (in_array($k, $valuesArray) ? $selectedHtml : '') . '>' . $label . '</option>';
                         }
+                        $i++;
                     }
 
                     if (
-                        !empty($columnConfig['foreign_table'])
+                        isset($columnConfig['renderMode']) &&
+                        $columnConfig['renderMode'] == 'checkbox'
                     ) {
-                        $titleField = $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['label'];
-                        $whereArray = [];
-                        $reservedValues = [];
-                        $queryBuilder = null;
+                        $columnContent .= '</div>';
+                    }
+                }
 
-                        if (
-                            isset($userGroupObj) &&
-                            is_object($userGroupObj)
-                        ) {
-                            $reservedValues = $userGroupObj->getReservedValues($conf);
-                            $foreignTable = $this->getForeignTable($theTable, $columnName);
-                            $allowedUserGroupArray = [];
-                            $allowedSubgroupArray = [];
-                            $deniedUserGroupArray = [];
+                if (
+                    !empty($columnConfig['foreign_table'])
+                ) {
+                    $titleField = $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['label'];
+                    $whereArray = [];
+                    $reservedValues = [];
+                    $queryBuilder = null;
 
-                            $userGroupObj->getAllowedValues(
-                                $allowedUserGroupArray,
-                                $allowedSubgroupArray,
-                                $deniedUserGroupArray,
-                                $conf,
-                                $cmdKey,
+                    if (
+                        isset($userGroupObj) &&
+                        is_object($userGroupObj)
+                    ) {
+                        $reservedValues = $userGroupObj->getReservedValues($conf);
+                        $foreignTable = $this->getForeignTable($theTable, $columnName);
+                        $allowedUserGroupArray = [];
+                        $allowedSubgroupArray = [];
+                        $deniedUserGroupArray = [];
+
+                        $userGroupObj->getAllowedValues(
+                            $allowedUserGroupArray,
+                            $allowedSubgroupArray,
+                            $deniedUserGroupArray,
+                            $conf,
+                            $cmdKey,
+                        );
+
+                        $pidArray = $userGroupObj->getConfigPidArray(
+                            $controlData->getPid(),
+                            $conf['userGroupsPidList']
+                        );
+
+                        $queryBuilder =
+                            $this->frontendGroupRepository
+                                ->getUserGroupWhereClause(
+                                    $whereArray,
+                                    $pidArray,
+                                    $conf,
+                                    $cmdKey,
+                                    $allowedUserGroupArray,
+                                    $allowedSubgroupArray,
+                                    $deniedUserGroupArray,
+                                    true
+                                );
+                    }
+
+                    if (
+                        $conf['useLocalization'] &&
+                        $GLOBALS['TCA'][$columnConfig['foreign_table']] &&
+                        $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['languageField'] &&
+                        $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['transOrigPointerField']
+                    ) {
+                        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($columnConfig['foreign_table']);
+                            $whereArray[CompositeExpression::TYPE_AND] = $queryBuilder->expr()
+                            ->eq(
+                                $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['transOrigPointerField'],
+                                0
                             );
+                    }
 
-                            $pidArray = $userGroupObj->getConfigPidArray(
-                                $controlData->getPid(),
-                                $conf['userGroupsPidList']
-                            );
+                    if (
+                        // $columnName == 'categories' &&
+                        $columnConfig['foreign_table'] == 'sys_category' &&
+                        isset($GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['languageField']) &&
+                        !empty($conf['categories_PIDLIST'])
+                    ) {
+                        $categoryObj = GeneralUtility::makeInstance(Category::class); // +++
+                        $pidArray = $categoryObj->getConfigPidArray(
+                            $controlData->getPid(),
+                            $conf['categories_PIDLIST']
+                        );
+                        $whereArray[CompositeExpression::TYPE_AND] = $queryBuilder->expr()
+                            ->in(
+                                'pid',
+                                $queryBuilder->createNamedParameter(
+                                    $pidArray,
+                                    Connection::PARAM_INT_ARRAY
+                                )
+                        );
 
-                            $queryBuilder =
-                                $this->frontendGroupRepository
-                                    ->getUserGroupWhereClause(
-                                        $whereArray,
-                                        $pidArray,
-                                        $conf,
-                                        $cmdKey,
-                                        $allowedUserGroupArray,
-                                        $allowedSubgroupArray,
-                                        $deniedUserGroupArray,
-                                        true
-                                    );
-
-                            // $whereClause = $userGroupObj->getAllowedWhereClause(
-                            //     $foreignTable,
-                            //     $controlData->getPid(),
-                            //     $conf,
-                            //     $cmdKey
-                            // );
-                        }
-
-                        if (
-                            $conf['useLocalization'] &&
-                            $GLOBALS['TCA'][$columnConfig['foreign_table']] &&
-                            $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['languageField'] &&
-                            $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['transOrigPointerField']
-                        ) {
-                            // $whereClause .= ' AND ' . $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['transOrigPointerField'] . '=0';
-                            $queryBuilder = $this->connectionPool->getQueryBuilderForTable($columnConfig['foreign_table']);
-                                $whereArray['where'] = $queryBuilder->expr()
+                        if (!empty($conf['useLocalization'])) {
+                            $whereArray[CompositeExpression::TYPE_AND] = $queryBuilder->expr()
                                 ->eq(
-                                    $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['transOrigPointerField'],
-                                    0
+                                        $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['languageField'],
+                                        $queryBuilder->createNamedParameter(
+                                            $language, Connection::PARAM_INT
+                                        )
                                 );
                         }
+                    }
 
+                    if (!isset($queryBuilder)) {
+                        $table = $columnConfig['foreign_table'];
+                        $queryBuilder = $this->connectionPool
+                            ->getQueryBuilderForTable($table);
+                    }
+                    $queryBuilder
+                        ->select('*')
+                        ->from($columnConfig['foreign_table']);
+
+                    if (!empty($whereArray['where'])) {
+                        $queryBuilder->where(
+                            ...$whereArray['where']
+                        );
+                    }
+                    if (!empty($whereArray[CompositeExpression::TYPE_OR])) {
+                        $queryBuilder->orWhere(
+                            ...$whereArray[CompositeExpression::TYPE_OR]
+                        );
+                    }
+                    if (!empty($whereArray[CompositeExpression::TYPE_AND])) {
+                        $queryBuilder->andWhere(
+                            ...$whereArray[CompositeExpression::TYPE_AND]
+                        );
+                    }
+
+                    $orderBy = $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['sortby'] ?? '';
+
+                    if ($orderBy != '') {
+                        $queryBuilder->orderBy($orderBy);
+                    }
+                    $result = $queryBuilder->executeQuery();
+
+                    if (
+                        !in_array(
+                            $columnName,
+                            $controlData->getRequiredArray()
+                        )
+                    ) {
                         if (
-                            // $columnName == 'categories' &&
-                            $columnConfig['foreign_table'] == 'sys_category' &&
-                            isset($GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['languageField']) &&
-                            !empty($conf['categories_PIDLIST'])
+                            $columnContent ||
+                            isset($columnConfig['renderMode']) &&
+                            $columnConfig['renderMode'] == 'checkbox'
                         ) {
-                            $categoryObj = GeneralUtility::makeInstance(Category::class); // +++
-                            $pidArray = $categoryObj->getConfigPidArray(
-                                $controlData->getPid(),
-                                $conf['categories_PIDLIST']
-                            );
-                            $whereArray['where'] = $queryBuilder->expr()
-                                ->in(
-                                    'pid',
-                                    $queryBuilder->createNamedParameter(
-                                        $pidArray,
-                                        Connection::PARAM_INT_ARRAY
-                                    )
-                            );
-
-                            if (!empty($conf['useLocalization'])) {
-                                $whereArray['where'] = $queryBuilder->expr()
-                                    ->eq(
-                                            $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['languageField'],
-                                            $queryBuilder->createNamedParameter(
-                                                $language, Connection::PARAM_INT
-                                            )
-                                    );
-                            }
+                            // nothing
+                        } else {
+                            $columnContent .= '<option value=""' . ($valuesArray[0] ? '' : $selectedHtml) . '></option>';
                         }
-                        // $whereClause .= TableUtility::enableFields($columnConfig['foreign_table']);
-                        //
+                    }
 
-                        // $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $columnConfig['foreign_table'], $whereClause, '', $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['sortby']y ?? '');
+                    $outputArray = [];
 
-                        if (!isset($queryBuilder)) {
-                            $table = $columnConfig['foreign_table'];
-                            $queryBuilder = $this->connectionPool
-                                ->getQueryBuilderForTable($table);
-                        }
-                        $queryBuilder
-                            ->select('*')
-                            ->from($columnConfig['foreign_table']);
-
-                        if (!empty($whereArray['where'])) {
-                            $queryBuilder->where(
-                                ...$whereArray['where']
-                            );
-                        }
-                        if (!empty($whereArray['OR'])) {
-                            $queryBuilder->orWhere(
-                                ...$whereArray['OR']
-                            );
-                        }
-                        if (!empty($whereArray['AND'])) {
-                            $queryBuilder->andWhere(
-                                ...$whereArray['AND']
-                            );
-                        }
-
-                        $orderBy = $GLOBALS['TCA'][$columnConfig['foreign_table']]['ctrl']['sortby'] ?? '';
-
-                        if ($orderBy != '') {
-                            $queryBuilder->orderBy($orderBy);
-                        }
-
-                        $result = $queryBuilder->executeQuery();
-
-                        if (
-                            !in_array(
-                                $columnName,
-                                $controlData->getRequiredArray()
+                    while ($row2 = $result->fetchAssociative()) {
+                        if ($localizedRow =
+                            $GLOBALS['TSFE']->sys_page->getLanguageOverlay(
+                                $columnConfig['foreign_table'],
+                                $row2,
+                                $languageAspect
                             )
                         ) {
+                            $row2 = $localizedRow;
+                        }
+
+                        if ($columnName == 'usergroup') {
+                            $row2 = $userGroupObj->getUsergroupOverlay($conf, $controlData, $row2);
+                        }
+
+                        if (!in_array($row2['uid'], $reservedValues)) {
+                            $outputArray[$row2['uid']] = $row2[$titleField];
+                        }
+                    }
+
+                    $i = 0;
+                    $previouslySelected = false;
+
+                    foreach ($outputArray as $uid => $title) {
+                        $i++;
+
+                        // Handle usergroup case
+                        if (
+                            $columnName == 'usergroup'
+                        ) {
+                            $columnContent .=
+                                $this->getSelectCheckMainPart(
+                                    $previouslySelected,
+                                    $columnName,
+                                    $i,
+                                    $prefixId,
+                                    $uid,
+                                    $title,
+                                    $valuesArray,
+                                    $columnConfig['renderMode'] ?? '',
+                                    $conf['allowMultipleUserGroupSelection']
+                                );
+                        } else {
+                            $titleText = htmlspecialchars($title);
+
                             if (
-                                $columnContent ||
                                 isset($columnConfig['renderMode']) &&
                                 $columnConfig['renderMode'] == 'checkbox'
                             ) {
-                                // nothing
+                                $columnContent .= '<div class="' . $css->getClassName($columnName, 'divInput-' . $i) . '">';+
+                                $columnContent .= '<input class="' .
+                                $css->getClassName(
+                                    'checkbox'
+                                ) .
+                                '" id="'.
+                                FrontendUtility::getClassName(
+                                    $columnName,
+                                    $prefixId
+                                ) .
+                                '-' . $uid . '" name="FE[' . $theTable . '][' .  $columnName . '][' . $uid . ']" value="' . $uid . '" type="checkbox"' . (in_array($uid, $valuesArray) ? $checkedHtml : '') . $xhtmlFix . '></div>' .
+                                '<div class="viewLabel ' . $css->getClassName($columnName, 'divLabel-' . $i) . '"><label for="' .
+                                FrontendUtility::getClassName(
+                                    $columnName,
+                                    $prefixId
+                                ) . '-' . $uid . '">' . $titleText . '</label></div>';
                             } else {
-                                $columnContent .= '<option value=""' . ($valuesArray[0] ? '' : $selectedHtml) . '></option>';
-                            }
-                        }
-
-                        $outputArray = [];
-
-                        while ($row2 = $result->fetchAssociative()) {
-                            if ($localizedRow =
-                                $GLOBALS['TSFE']->sys_page->getLanguageOverlay(
-                                    $columnConfig['foreign_table'],
-                                    $row2,
-                                    $languageAspect
-                                )
-                            ) {
-                                $row2 = $localizedRow;
-                            }
-
-                            if ($columnName == 'usergroup') {
-                                $row2 = $userGroupObj->getUsergroupOverlay($conf, $controlData, $row2);
-                            }
-
-                            if (!in_array($row2['uid'], $reservedValues)) {
-                                $outputArray[$row2['uid']] = $row2[$titleField];
-                            }
-                        }
-
-                        $i = 0;
-                        $previouslySelected = false;
-
-                        foreach ($outputArray as $uid => $title) {
-                            $i++;
-
-                            // Handle usergroup case
-                            if (
-                                $columnName == 'usergroup'
-                            ) {
-                                $columnContent .=
-                                    $this->getSelectCheckMainPart(
-                                        $previouslySelected,
-                                        $columnName,
-                                        $i,
-                                        $prefixId,
-                                        $uid,
-                                        $title,
-                                        $valuesArray,
-                                        $columnConfig['renderMode'] ?? '',
-                                        $conf['allowMultipleUserGroupSelection']
-                                    );
-                            } else {
-                                $titleText = htmlspecialchars($title);
-
-                                if (
-                                    isset($columnConfig['renderMode']) &&
-                                    $columnConfig['renderMode'] == 'checkbox'
-                                ) {
-                                    $columnContent .= '<div class="' . $css->getClassName($columnName, 'divInput-' . $i) . '">';+
-                                    $columnContent .= '<input class="' .
-                                    $css->getClassName(
-                                        'checkbox'
-                                    ) .
-                                    '" id="'.
-                                    FrontendUtility::getClassName(
-                                        $columnName,
-                                        $prefixId
-                                    ) .
-                                    '-' . $uid . '" name="FE[' . $theTable . '][' .  $columnName . '][' . $uid . ']" value="' . $uid . '" type="checkbox"' . (in_array($uid, $valuesArray) ? $checkedHtml : '') . $xhtmlFix . '></div>' .
-                                    '<div class="viewLabel ' . $css->getClassName($columnName, 'divLabel-' . $i) . '"><label for="' .
-                                    FrontendUtility::getClassName(
-                                        $columnName,
-                                        $prefixId
-                                    ) . '-' . $uid . '">' . $titleText . '</label></div>';
-                                } else {
-                                    $columnContent .= '<option value="' . $uid . '"' . (in_array($uid, $valuesArray) ? $selectedHtml : '') . '>' . $titleText . '</option>';
-                                }
+                                $columnContent .= '<option value="' . $uid . '"' . (in_array($uid, $valuesArray) ? $selectedHtml : '') . '>' . $titleText . '</option>';
                             }
                         }
                     }
+                }
 
-                    // HIER neu Anfang ++++++++++++++++++++++++++++
-                    $columnContent .= $this->getSelectCheckEndPart($columnConfig['renderMode'] ?? '');
-                    // HIER neu Ende ++++++++++++++++++++++++++++
+                // HIER neu Anfang ++++++++++++++++++++++++++++
+                $columnContent .= $this->getSelectCheckEndPart($columnConfig['renderMode'] ?? '');
+                // HIER neu Ende ++++++++++++++++++++++++++++
 
-                    break;
+                break;
 
-                case 'category':
-                    $columnContent .=
-                        $this->getSelectCheckStartPart(
-                            $theTable,
-                            $columnName,
-                            $prefixId,
-                            $columnConfig['renderMode'] ?? '',
-                            true,
-                            (($cmd == 'invite') ? 'INVITATION_' : '')
-                        );
-
-                    $categoryObj = GeneralUtility::makeInstance(Category::class);
-                    $pidArray = $categoryObj->getConfigPidArray(
-                        $controlData->getPid(),
-                        $conf['categories_PIDLIST']
+            case 'category':
+                $columnContent .=
+                    $this->getSelectCheckStartPart(
+                        $theTable,
+                        $columnName,
+                        $prefixId,
+                        $columnConfig['renderMode'] ?? '',
+                        true,
+                        (($cmd == 'invite') ? 'INVITATION_' : '')
                     );
-                    $categories = $categoryObj->findRecords($pidArray);
-                    $previouslySelected = false;
-                    $index = 0;
 
-                    foreach ($categories as $category) {
-                        $index++;
+                $categoryObj = GeneralUtility::makeInstance(Category::class);
+                $pidArray = $categoryObj->getConfigPidArray(
+                    $controlData->getPid(),
+                    $conf['categories_PIDLIST']
+                );
+                $categories = $categoryObj->findRecords($pidArray);
+                $previouslySelected = false;
+                $index = 0;
 
-                        $columnContent .= $this->getSelectCheckMainPart(
-                            $previouslySelected,
-                            $columnName,
-                            $index,
-                            $prefixId,
-                            $category->getUid(),
-                            $category->getTitle(),
-                            $valuesArray,
-                            $columnConfig['renderMode'] ?? '',
-                            true
-                        );
-                    }
-                    $columnContent .= $this->getSelectCheckEndPart($columnConfig['renderMode'] ?? '');
-                    break;
+                foreach ($categories as $category) {
+                    $index++;
 
-                default:
-                    $columnContent .= $columnConfig['type'] . ':' . $languageObj->getLabel('unsupported');
-                    break;
+                    $columnContent .= $this->getSelectCheckMainPart(
+                        $previouslySelected,
+                        $columnName,
+                        $index,
+                        $prefixId,
+                        $category->getUid(),
+                        $category->getTitle(),
+                        $valuesArray,
+                        $columnConfig['renderMode'] ?? '',
+                        true
+                    );
+                }
+                $columnContent .= $this->getSelectCheckEndPart($columnConfig['renderMode'] ?? '');
+                break;
+
+            default:
+                $columnContent .= $columnConfig['type'] . ':' . $languageObj->getLabel('unsupported');
+                break;
         }
 
         return $columnContent;
