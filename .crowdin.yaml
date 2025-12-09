@@ -1,0 +1,5 @@
+files:
+  - source: /Resources/Private/Language/locallang*.xlf
+    ignore:
+      - /Resources/Private/Language/de.*
+    translation: /Resources/Private/Language/%two_letters_code%.%original_file_name%
