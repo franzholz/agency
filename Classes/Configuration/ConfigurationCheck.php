@@ -71,7 +71,9 @@ class ConfigurationCheck implements LoggerAwareInterface
     ) {
         $content = '';
         $requiredExtensions = [];
-        $requiredExtensions[] = 'typo3db_legacy';
+        $requiredExtensions[] = 'div2007';
+        $requiredExtensions[] = 'mail';
+        $requiredExtensions[] = 'rdct';
 
         // Check if all required extensions are available
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['constraints']['depends'])) {
