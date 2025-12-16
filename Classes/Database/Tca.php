@@ -7,7 +7,7 @@ namespace JambageCom\Agency\Database;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2025 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -50,6 +50,8 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use SJBR\StaticInfoTables\PiBaseApi;
 
 use JambageCom\Div2007\Api\Css;
 use JambageCom\Div2007\Utility\FrontendUtility;
@@ -219,12 +221,15 @@ class Tca implements SingletonInterface
     * @return void
     */
     public function modifyRow(
-        $staticInfoObj,
-        $theTable,
-        &$dataArray,
-        $fieldList,
-        $bColumnIsCount = true
+        array &$dataArray,
+        ?PiBaseApi $staticInfoObj,
+        string $theTable,
+        string $fieldList,
+        bool $usePrivacyPolicy = false,
+        bool $bColumnIsCount = true
     ): bool {
+        debug ($dataArray, 'modifyRow Start $dataArray');
+        debug ($fieldList, 'modifyRow $fieldList');
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
             !is_array($GLOBALS['TCA'][$theTable]['columns']) ||
@@ -232,6 +237,7 @@ class Tca implements SingletonInterface
         ) {
             return false;
         }
+
 
         $dataFieldList = array_keys($dataArray);
         foreach ($GLOBALS['TCA'][$theTable]['columns'] as $columnName => $columnSettings) {
@@ -293,13 +299,16 @@ class Tca implements SingletonInterface
                         is_array($columnConfig['items'])
                     ) {
                         $value = $dataArray[$columnName] ?? '';
+                        debug ($value, '$value');
                         if(is_array($value)) {
                             $dataArray[$columnName] = 0;
                             foreach ($value as $dec) {  // Combine values to one hexidecimal number
                                 $dataArray[$columnName] |= (1 << $dec);
                             }
+                            debug ($dataArray[$columnName], 'Pos 1 $dataArray['.$columnName.']');
                         }
                     } else {
+                        debug ($dataArray[$columnName] ?? '', '$dataArray['.$columnName.']');
                         if (
                             isset($dataArray[$columnName]) &&
                             (
@@ -308,8 +317,10 @@ class Tca implements SingletonInterface
                             )
                         ) {
                             $dataArray[$columnName] = 1;
+                            debug ($dataArray[$columnName], 'Pos 2 $dataArray['.$columnName.']');
                         } else {
                             $dataArray[$columnName] = 0;
+                            debug ($dataArray[$columnName], 'Pos 3 $dataArray['.$columnName.']');
                         }
                     }
                     break;
@@ -340,6 +351,15 @@ class Tca implements SingletonInterface
                 $dataArray['zone'] = '';
             }
         }
+
+        if (
+            !$usePrivacyPolicy &&
+            isset($dataArray['privacy_policy_acknowledged'])
+        ) {
+            unset($dataArray['privacy_policy_acknowledged']);
+        }
+
+        debug ($dataArray, 'modifyRow ENDE $dataArray');
         return true;
     } // modifyRow
 
@@ -1666,6 +1686,30 @@ class Tca implements SingletonInterface
         }
     }
 
+    public function getCheckboxFields($theTable, $fieldList) {
+        $checkFields = [];
+
+        foreach ($GLOBALS['TCA'][$theTable]['columns'] as $columnName => $columnSettings) {
+            $columnConfig = $columnSettings['config'];
+            if (
+                !$columnConfig ||
+                !is_array($columnConfig) ||
+                !GeneralUtility::inList($fieldList, $columnName)
+            ) {
+                continue;
+            }
+
+            switch ($columnConfig['type']) {
+                case 'check':
+                    $checkFields[] = $columnName;
+                    break;
+            }
+        }
+
+        return $checkFields;
+    }
+
+
     /**
     * Transfers the item array to one where the key corresponds to the value
     * @param    array   array of selectable items like found in TCA
@@ -1683,5 +1727,4 @@ class Tca implements SingletonInterface
         }
         return $result;
     }   // getItemKeyArray
-
 }

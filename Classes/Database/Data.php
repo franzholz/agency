@@ -1510,6 +1510,7 @@ class Data implements SingletonInterface
     * @return void  sets $this->saved
     */
     public function save(
+        array &$newRow,
         $staticInfoObj,
         Parameters $controlData,
         $theTable,
@@ -1517,7 +1518,6 @@ class Data implements SingletonInterface
         array $origArray,
         $feUser,
         $token,
-        array &$newRow,
         $cmd,
         $cmdKey,
         $pid,
@@ -1528,6 +1528,13 @@ class Data implements SingletonInterface
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
         $result = 0;
+        $includedFields = $confObj->getIncludedFields($cmdKey);
+        debug ($includedFields, '$includedFields');
+        $usePrivacyPolicy =
+            ($cmdKey == 'create') &&
+            in_array('privacy_policy_acknowledged', $includedFields);
+        debug ($usePrivacyPolicy, '$usePrivacyPolicy +++');
+
 
         switch($cmdKey) {
             case 'edit':
@@ -1600,21 +1607,31 @@ class Data implements SingletonInterface
                                 $dataArray,
                                 $origArray
                             );
+                        debug ($parsedData, '$parsedData');
 
-                        $differences = ArrayUtility::arrayDifference($origArray, $parsedData);
+                        $differences =
+                            ArrayUtility::arrayDifference(
+                                $origArray,
+                                $parsedData
+                            );
+                        debug ($differences, '$differences');
                         $outGoingData = $differences['insertions'] ?? [];
 
                         if ($theTable == 'fe_users' && isset($dataArray['password'])) {
                             // Do not set the outgoing password if the incoming password was unset
                             $outGoingData['password'] = $password;
                         }
+                        debug ($dataArray, '$dataArray +++ HIER');
+
                         $newFieldList = implode(',', $newFieldArray);
+                        debug ($newFieldList, '$newFieldList');
                         if (isset($GLOBALS['TCA'][$theTable]['ctrl']['token'])) {
                             // Save token in record
                             $outGoingData['token'] = $token;
                             // Could be set conditional to adminReview or user confirm
                             $newFieldList .= ',token';
                         }
+                        debug ($outGoingData, '$outGoingData');
                         $this->frontendUserRepository->update(
                             $theUid,
                             $outGoingData,
@@ -1622,15 +1639,50 @@ class Data implements SingletonInterface
                         );
                         $this->frontendUserRepository->updateMMRelations($dataArray);
                         $this->setSaved(true);
+                        debug ($outGoingData, '$outGoingData');
                         $newRow = $this->parseIncomingData($outGoingData);
+                        debug ($newRow, '$newRow nach parseIncomingData');
                         $newRow['uid'] = $theUid;
+                        debug ($newRow, '$newRow +++ HIER müssen alle Felder mit Checkbox-Werten eingetragen werden');
+                        $fieldList = $this->getFieldList();
+                        $checkFields =
+                            $this->tca->getCheckboxFields($theTable, $fieldList);
+                        debug ($checkFields, '$checkFields TODO: HIER +++');
+                        $removeFields = [];
+                        foreach ($checkFields as $checkField) {
+                            // Missing checked fields must not be unset
+                            if (
+                                isset($outGoingData[$checkField])
+                            ) {
+                                $newRow[$checkField] = $outGoingData[$checkField];
+                                debug($checkField, '$checkField +++');
+                            } else if (isset($dataArray[$checkField])) {
+                                $removeFields[] = $checkField;
+                            }
+                        }
+                        debug ($newRow, '$newRow nach Erweiterung checkbox');
+                        debug ($removeFields, '$removeFields +++');
+
+                        $modifyFieldList =
+                            implode(
+                                ',',
+                                array_diff(
+                                    explode(',', $newFieldList),
+                                    $removeFields
+                                )
+                            );
+                    debug ($modifyFieldList, '$modifyFieldList +++');
+
                         $this->tca->modifyRow(
+                            $newRow,
                             $staticInfoObj,
                             $theTable,
-                            $newRow,
-                            $this->getFieldList(),
+                            $modifyFieldList,
+                            $usePrivacyPolicy,
                             true
                         );
+
+                        debug ($newRow, '$newRow nach modifyRow');
                         $newRow = array_merge($origArray, $newRow);
                         SystemUtility::userProcess(
                             $this->control,
@@ -1792,10 +1844,11 @@ class Data implements SingletonInterface
 
                         $newRow = $this->parseIncomingData($newRow);
                         $this->tca->modifyRow(
+                            $newRow,
                             $staticInfoObj,
                             $theTable,
-                            $newRow,
                             $this->getFieldList(),
+                            $usePrivacyPolicy,
                             true
                         );
 
@@ -2367,6 +2420,8 @@ class Data implements SingletonInterface
         array $dataArray,
         array $origArray
     ) {
+        debug ($dataArray, 'parseOutgoingData $dataArray');
+        debug ($origArray, 'parseOutgoingData $origArray');
         $tablesObj = GeneralUtility::makeInstance(Tables::class);
         $addressObj = $tablesObj->get('address');
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
@@ -2435,7 +2490,8 @@ class Data implements SingletonInterface
                                 if (is_array($dataArray[$theField])) {
                                     $updatedFiles = $dataArray[$theField];
                                 } elseif ($dataArray[$theField]) {
-                                    $updatedFiles = GeneralUtility::trimExplode(',', $dataArray[$theField], true);
+                                    $updatedFiles =
+                                        GeneralUtility::trimExplode(',', $dataArray[$theField], true);
                                 }
                                 $unReferencedFiles = array_diff($origFiles, $updatedFiles);
                                 foreach ($unReferencedFiles as $file) {
@@ -2506,6 +2562,7 @@ class Data implements SingletonInterface
                 }
             }
         }
+        debug ($parsedArray, 'parseOutgoingData ENDE $parsedArray');
 
         return $parsedArray;
     }   // parseOutgoingData

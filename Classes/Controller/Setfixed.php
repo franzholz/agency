@@ -641,6 +641,7 @@ class Setfixed implements SingletonInterface
                 ) {
                     $errorCode = [];
                     $subpart = SETFIXED_PREFIX . $setfixedSuffix;
+                    debug ($template, '$template');
                     // Compiling email
                     $emailResult = $email->compile(
                         $subpart,

@@ -177,13 +177,15 @@ class ActionController implements SingletonInterface
             !empty($dataArray)
         ) {
             $tcaObj->modifyRow(
+                $dataArray,
                 $staticInfoObj,
                 $theTable,
-                $dataArray,
                 $fieldlist,
+                true,
                 false
             );
         }
+
         $feUserdata = $controlData->getFeUserData();
         $theUid = 0;
         $setFixedUid = false;
@@ -214,11 +216,10 @@ class ActionController implements SingletonInterface
 
             if (isset($newOrigArray) && is_array($newOrigArray)) {
                 $tcaObj->modifyRow(
+                    $newOrigArray,
                     $staticInfoObj,
                     $theTable,
-                    $newOrigArray,
-                    $dataObj->getFieldList(),
-                    true
+                    $dataObj->getFieldList()
                 );
                 $origArray = $newOrigArray;
             }
@@ -819,6 +820,7 @@ class ActionController implements SingletonInterface
 
                 $newDataArray = [];
                 $theUid = $dataObj->save(
+                    $newDataArray,
                     $staticInfoObj,
                     $controlData,
                     $theTable,
@@ -826,7 +828,6 @@ class ActionController implements SingletonInterface
                     $origArray,
                     $frontendUser->user,
                     $controlData->readToken(),
-                    $newDataArray,
                     $cmd,
                     $cmdKey,
                     $controlData->getPid(),
@@ -834,6 +835,7 @@ class ActionController implements SingletonInterface
                     $extraFields,
                     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['registrationProcess']
                 );
+                debug ($newDataArray, '$newDataArray');
 
                 if ($newDataArray) {
                     $dataArray = $newDataArray;
@@ -1056,6 +1058,8 @@ class ActionController implements SingletonInterface
                         $finalDataArray[$emailField] :
                         $origArray[$emailField];
                     $email = GeneralUtility::makeInstance(Email::class);
+                    debug ($dataArray, '$dataArray vor compile');
+                    debug ($origArray, '$origArray');
 
                     // Send email message(s)
                     $bEmailSent = $email->compile(

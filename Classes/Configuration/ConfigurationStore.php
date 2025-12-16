@@ -98,7 +98,8 @@ class ConfigurationStore implements SingletonInterface
 
     public function getIncludedFields(
         $cmdKey
-    ) {
+    ): array
+    {
         $result = [];
 
         if (!empty($cmdKey)) {
