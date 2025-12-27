@@ -683,6 +683,14 @@
         <source>A valid e-mail is required.</source>
         <target state="needs-translation">A valid e-mail is required.</target>
       </trans-unit>
+      <trans-unit id="mail_html" resname="mail_html">
+        <source>Receive HTML e-mails?</source>
+        <target state="needs-translation">Receive HTML e-mails?</target>
+      </trans-unit>
+      <trans-unit id="mail_html_informal" resname="mail_html_informal">
+        <source>Receive HTML e-mails?</source>
+        <target state="needs-translation">Receive HTML e-mails?</target>
+      </trans-unit>
       <trans-unit id="module_sys_dmail_html" resname="module_sys_dmail_html">
         <source>Receive HTML e-mails?</source>
         <target state="needs-translation">Receive HTML e-mails?</target>
