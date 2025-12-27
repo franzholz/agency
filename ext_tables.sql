@@ -31,10 +31,6 @@ CREATE TABLE fe_users (
 	privacy_policy_date int(11) DEFAULT '0' NOT NULL,
 	tx_agency_password blob,
 	lost_password tinyint(4) unsigned DEFAULT '0' NOT NULL,
-    mail_active     tinyint(1) unsigned DEFAULT '0' NOT NULL,
-    mail_html       tinyint(1) unsigned DEFAULT '0' NOT NULL,
-    mail_salutation varchar(255)        DEFAULT ''  NOT NULL,
-    categories      int(3) unsigned     DEFAULT '0' NOT NULL,
     KEY mail (mail_active, email, mail_html)
 );
 

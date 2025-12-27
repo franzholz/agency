@@ -101,6 +101,7 @@ class Data implements SingletonInterface
      * @var CoreQuery
      */
     protected $coreQuery;
+    // protected ?FrontendUserRepository $frontendUserRepository = null;
 
     public function __construct(
         protected readonly ConnectionPool $connectionPool,
@@ -1213,6 +1214,7 @@ class Data implements SingletonInterface
 
             foreach($conf['parseValues.'] as $theField => $theValue) {
                 $listOfCommands = GeneralUtility::trimExplode(',', $theValue, true);
+
                 if (in_array('setEmptyIfAbsent', $listOfCommands)) {
                     $this->setEmptyIfAbsent($theTable, $theField, $dataArray);
                 }
@@ -1225,8 +1227,8 @@ class Data implements SingletonInterface
                 ) {
                     foreach($listOfCommands as $cmd) {
                         $cmdParts = preg_split('/\[|\]/', $cmd); // Point is to enable parameters after each command enclosed in brackets [..]. These will be in position 1 in the array.
-                        $theCmd = trim($cmdParts['0']);
-                        $parameter = trim($cmdParts['1'] ?? '');
+                        $theCmd = trim($cmdParts[0]);
+                        $parameter = trim($cmdParts[1] ?? '');
                         $bValueAssigned = true;
                         if (
                             $theField == 'password' &&
@@ -1290,6 +1292,7 @@ class Data implements SingletonInterface
                                 break;
                             case 'multiple':
                                 $fieldDataArray = [];
+
                                 if (
                                     !empty($dataArray[$theField]) ||
                                     (
@@ -1300,12 +1303,13 @@ class Data implements SingletonInterface
                                     if (is_array($dataArray[$theField])) {
                                         $fieldDataArray = $dataArray[$theField];
                                     } elseif (
-                                        is_string($dataArray[$theField])
+                                        is_string($dataArray[$theField]) ||
+                                        is_int($dataArray[$theField])
                                     ) {
                                         $fieldDataArray =
                                             GeneralUtility::trimExplode(
                                                 ',',
-                                                $dataArray[$theField],
+                                                (string) $dataArray[$theField],
                                                 true
                                             );
                                     }
@@ -1317,9 +1321,7 @@ class Data implements SingletonInterface
                                     $newDataValue = 0;
                                     foreach($dataValue as $kk => $vv) {
                                         $kk = (
-                                            class_exists('t3lib_utility_Math') ?
-                                                t3lib_utility_Math::forceIntegerInRange($kk, 0) :
-                                                GeneralUtility::intInRange($kk, 0)
+                                            MathUtility::forceIntegerInRange($kk, 0)
                                         );
 
                                         if ($kk <= 30) {
@@ -1385,7 +1387,7 @@ class Data implements SingletonInterface
                                 } elseif (!isset($dataArray[$theField])) {
                                     $bValueAssigned = false;
                                 } elseif (!$dataValue) {
-                                    $dataValue = '0';
+                                    $dataValue = '';
                                 }
                                 break;
                             default:
@@ -1504,6 +1506,23 @@ class Data implements SingletonInterface
         return $fileNameArray;
     }
 
+    public function fetchRow($theTable, $theUid)
+    {
+        $result = null;
+
+        if ($theTable == 'fe_users') {
+            $result = $this->frontendUserRepository->findRowByUid($theUid);
+        } else {
+            $result =
+                $GLOBALS['TSFE']->sys_page->getRawRecord(
+                    $theTable,
+                    $theUid
+                );
+        }
+
+        return $result;
+    }
+
     /**
     * Saves the data into the database
     *
@@ -1529,12 +1548,9 @@ class Data implements SingletonInterface
         $conf = $confObj->getConf();
         $result = 0;
         $includedFields = $confObj->getIncludedFields($cmdKey);
-        debug ($includedFields, '$includedFields');
         $usePrivacyPolicy =
             ($cmdKey == 'create') &&
             in_array('privacy_policy_acknowledged', $includedFields);
-        debug ($usePrivacyPolicy, '$usePrivacyPolicy +++');
-
 
         switch($cmdKey) {
             case 'edit':
@@ -1590,64 +1606,70 @@ class Data implements SingletonInterface
                             $feUser,
                             !empty($conf['fe_userEditSelf'])
                         )
-                        // $this->coreQuery->DBmayFEUserEdit(
-                        //     $theTable,
-                        //     $origArray,
-                        //     $feUser,
-                        //     $conf['allowedGroups'] ?? '',
-                        //     $conf['fe_userEditSelf'] ?? ''
-                        // )
                     ) {
-                        $parsedData =
+                        $newFieldList = implode(',', $newFieldArray);
+
+                        $wouldBeDataArray = $this->parseOutgoingData(
+                            $theTable,
+                            $cmdKey,
+                            $pid,
+                            $conf,
+                            $dataArray,
+                            $origArray
+                        );
+
+                        $this->tca->modifyRow(
+                            $wouldBeDataArray,
+                            $staticInfoObj,
+                            $theTable,
+                            $newFieldList,
+                            $usePrivacyPolicy,
+                            true
+                        );
+
+                        $differences =
+                            ArrayUtility::arrayDifference(
+                                $origArray,
+                                $wouldBeDataArray,
+                                array_merge(explode(',', $this->getFieldList()), range(1, 100))
+                                // array_merge(array_keys($origArray), range(1, 100))
+                            );
+                        // $outGoingData = $differences['insertions'] ?? [];
+                        $outGoingData =
                             $this->parseOutgoingData(
                                 $theTable,
                                 $cmdKey,
                                 $pid,
                                 $conf,
-                                $dataArray,
+                                $differences['insertions'] ?? [],
                                 $origArray
                             );
-                        debug ($parsedData, '$parsedData');
-
-                        $differences =
-                            ArrayUtility::arrayDifference(
-                                $origArray,
-                                $parsedData
-                            );
-                        debug ($differences, '$differences');
-                        $outGoingData = $differences['insertions'] ?? [];
 
                         if ($theTable == 'fe_users' && isset($dataArray['password'])) {
                             // Do not set the outgoing password if the incoming password was unset
                             $outGoingData['password'] = $password;
                         }
-                        debug ($dataArray, '$dataArray +++ HIER');
 
-                        $newFieldList = implode(',', $newFieldArray);
-                        debug ($newFieldList, '$newFieldList');
                         if (isset($GLOBALS['TCA'][$theTable]['ctrl']['token'])) {
                             // Save token in record
                             $outGoingData['token'] = $token;
                             // Could be set conditional to adminReview or user confirm
                             $newFieldList .= ',token';
                         }
-                        debug ($outGoingData, '$outGoingData');
-                        $this->frontendUserRepository->update(
+
+                        $this->frontendUserRepository->updateByUid(
                             $theUid,
                             $outGoingData,
                             $newFieldList,
                         );
                         $this->frontendUserRepository->updateMMRelations($dataArray);
                         $this->setSaved(true);
-                        debug ($outGoingData, '$outGoingData');
                         $newRow = $this->parseIncomingData($outGoingData);
-                        debug ($newRow, '$newRow nach parseIncomingData');
                         $newRow['uid'] = $theUid;
-                        debug ($newRow, '$newRow +++ HIER müssen alle Felder mit Checkbox-Werten eingetragen werden');
                         $fieldList = $this->getFieldList();
                         $checkFields =
                             $this->tca->getCheckboxFields($theTable, $fieldList);
-                        debug ($checkFields, '$checkFields TODO: HIER +++');
+
                         $removeFields = [];
                         foreach ($checkFields as $checkField) {
                             // Missing checked fields must not be unset
@@ -1660,18 +1682,15 @@ class Data implements SingletonInterface
                                 $removeFields[] = $checkField;
                             }
                         }
-                        debug ($newRow, '$newRow nach Erweiterung checkbox');
-                        debug ($removeFields, '$removeFields +++');
 
                         $modifyFieldList =
                             implode(
                                 ',',
                                 array_diff(
                                     explode(',', $newFieldList),
-                                    $removeFields
+                                        $removeFields
                                 )
                             );
-                    debug ($modifyFieldList, '$modifyFieldList +++');
 
                         $this->tca->modifyRow(
                             $newRow,
@@ -1682,7 +1701,6 @@ class Data implements SingletonInterface
                             true
                         );
 
-                        debug ($newRow, '$newRow nach modifyRow');
                         $newRow = array_merge($origArray, $newRow);
                         SystemUtility::userProcess(
                             $this->control,
@@ -1827,7 +1845,7 @@ class Data implements SingletonInterface
                         }
 
                         if (count($tmpDataArray)) {
-                            $this->frontendUserRepository->update(
+                            $this->frontendUserRepository->updateByUid(
                                 $newId,
                                 $tmpDataArray,
                                 $extraList,
@@ -2017,7 +2035,7 @@ class Data implements SingletonInterface
                 isset($row[$field])
             ) {
                 $updateFields[$field] = '';
-                $this->frontendUserRepository->update(
+                $this->frontendUserRepository->updateByUid(
                     $uid,
                     $updateFields,
                     $field,
@@ -2070,14 +2088,14 @@ class Data implements SingletonInterface
                 // j - day of the month without leading zeros; i.e. "1" to "31"
                 case 'd':
                 case 'j':
-                    $resultArray['d'] = intval($dateValueArray[$i]);
+                    $resultArray['d'] = intval($dateValueArray[$i] ?? 0);
                     break;
                     // month
                     // m - month; i.e. "01" to "12"
                     // n - month without leading zeros; i.e. "1" to "12"
                 case 'm':
                 case 'n':
-                    $resultArray['m'] = intval($dateValueArray[$i]);
+                    $resultArray['m'] = intval($dateValueArray[$i] ?? 0);
                     break;
                     // M - month, textual, 3 letters; e.g. "Jan"
                     // F - month, textual, long; e.g. "January"
@@ -2086,11 +2104,11 @@ class Data implements SingletonInterface
 
                     // Y - year, 4 digits; e.g. "1999"
                 case 'Y':
-                    $resultArray['y'] = intval($dateValueArray[$i]);
+                    $resultArray['y'] = intval($dateValueArray[$i] ?? 0);
                     break;
                     // y - year, 2 digits; e.g. "99"
                 case 'y':
-                    $yearVal = intval($dateValueArray[$i]);
+                    $yearVal = intval($dateValueArray[$i] ?? 0);
                     if($yearVal <= 11) {
                         $resultArray['y'] = '20' . $yearVal;
                     } else {
@@ -2384,6 +2402,7 @@ class Data implements SingletonInterface
                                         $origArray[$theField]
                                     );
                                 }
+
                                 if (
                                     isset($parsedArray[$theField]) &&
                                     $parsedArray[$theField] == 0
@@ -2420,8 +2439,6 @@ class Data implements SingletonInterface
         array $dataArray,
         array $origArray
     ) {
-        debug ($dataArray, 'parseOutgoingData $dataArray');
-        debug ($origArray, 'parseOutgoingData $origArray');
         $tablesObj = GeneralUtility::makeInstance(Tables::class);
         $addressObj = $tablesObj->get('address');
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
@@ -2437,21 +2454,26 @@ class Data implements SingletonInterface
                     $cmdParts = preg_split('/\[|\]/', $cmd); // Point is to enable parameters after each command enclosed in brackets [..]. These will be in position 1 in the array.
                     $theCmd = trim($cmdParts[0]);
                     if (
-                        ($theCmd == 'date' || $theCmd == 'adodb_date') &&
-                        $dataArray[$theField]
+                        ($theCmd == 'date' || $theCmd == 'adodb_date')
                     ) {
-                        if(strlen($dataArray[$theField]) == 8) {
-                            $parsedArray[$theField] = substr($dataArray[$theField], 0, 4) . '-' . substr($dataArray[$theField], 4, 2) . '-' . substr($dataArray[$theField], 6, 2);
-                        } else {
-                            $parsedArray[$theField] = $dataArray[$theField];
+                        if (!empty($dataArray[$theField])) {
+                            if(strlen($dataArray[$theField]) == 8) {
+                                $parsedArray[$theField] = substr($dataArray[$theField], 0, 4) . '-' . substr($dataArray[$theField], 4, 2) . '-' . substr($dataArray[$theField], 6, 2);
+                            } else {
+                                $parsedArray[$theField] = $dataArray[$theField];
+                            }
                         }
-                        $dateArray = $this->fetchDate($parsedArray[$theField], $conf['dateFormat']);
                     }
 
                     switch ($theCmd) {
                         case 'date':
                         case 'adodb_date':
-                            if ($dataArray[$theField]) {
+                            if (!empty($dataArray[$theField])) {
+                                $dateArray =
+                                    $this->fetchDate(
+                                        $parsedArray[$theField],
+                                        $conf['dateFormat']
+                                    );
                                 $parsedArray[$theField] =
                                     mktime(
                                         0,
@@ -2469,6 +2491,8 @@ class Data implements SingletonInterface
                                 if (!empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['serverTimeZone'])) {
                                     $parsedArray[$theField] += ($GLOBALS['TYPO3_CONF_VARS']['SYS']['serverTimeZone'] * 3600);
                                 }
+                            } else {
+                                $parsedArray[$theField] = 0;
                             }
                             break;
                         case 'deleteUnreferencedFiles':
@@ -2481,6 +2505,7 @@ class Data implements SingletonInterface
                             ) {
                                 $uploadPath = $fieldConfig['uploadfolder'];
                                 $origFiles = [];
+
                                 if (is_array($origArray[$theField])) {
                                     $origFiles = $origArray[$theField];
                                 } elseif ($origArray[$theField]) {
@@ -2562,7 +2587,6 @@ class Data implements SingletonInterface
                 }
             }
         }
-        debug ($parsedArray, 'parseOutgoingData ENDE $parsedArray');
 
         return $parsedArray;
     }   // parseOutgoingData
@@ -2613,7 +2637,11 @@ class Data implements SingletonInterface
         $theField,
         array &$dataArray
     ) {
-        if (!isset($dataArray[$theField])) {
+        if (
+            !isset($dataArray[$theField]) ||
+            $dataArray[$theField] == 0 ||
+            $dataArray[$theField] == '01-01-1970'
+        ) {
             $fieldConfig = $GLOBALS['TCA'][$theTable]['columns'][$theField]['config'];
             if (is_array($fieldConfig)) {
                 $type = $fieldConfig['type'];
@@ -2660,7 +2688,7 @@ class Data implements SingletonInterface
             $row[$field] = '';
         }
         $newFieldList = implode(',', $deleteFields);
-        $this->frontendUserRepository->update(
+        $this->frontendUserRepository->updateByUid(
             $uid,
             $row,
             $newFieldList
@@ -2676,7 +2704,7 @@ class Data implements SingletonInterface
 
         $extraList = 'lost_password';
         $result =
-        $this->frontendUserRepository->update(
+        $this->frontendUserRepository->updateByUid(
             $uid,
             $outGoingData,
             $extraList

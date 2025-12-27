@@ -240,7 +240,7 @@ plugin.tx_agency {
 		first_name = trim
 		middle_name = trim
 		last_name = trim
-		date_of_birth = date
+		date_of_birth = date, setEmptyIfAbsent
 		title = trim
 		company = trim
 		city = trim

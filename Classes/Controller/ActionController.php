@@ -136,15 +136,15 @@ class ActionController implements SingletonInterface
 
     /* write the global $conf only here */
     public function init2(
+        &$adminFieldList,
+        array &$origArray,
+        &$errorMessage,
+        Data &$dataObj,
         ConfigurationStore $confObj,
         $staticInfoObj,
         $theTable,
         Parameters $controlData,
-        Data &$dataObj,
-        Tca $tcaObj,
-        &$adminFieldList,
-        array &$origArray,
-        &$errorMessage
+        Tca $tcaObj
     ) {
         $conf = $confObj->getConf();
         $tablesObj = GeneralUtility::makeInstance(Tables::class);
@@ -208,11 +208,7 @@ class ActionController implements SingletonInterface
         if ($theUid) {
             $theUid = intval($theUid);
             $dataObj->setRecUid($theUid);
-            $newOrigArray =
-                $GLOBALS['TSFE']->sys_page->getRawRecord(
-                    $theTable,
-                    $theUid
-                );
+            $newOrigArray = $dataObj->fetchRow($theTable, $theUid);
 
             if (isset($newOrigArray) && is_array($newOrigArray)) {
                 $tcaObj->modifyRow(
@@ -577,7 +573,7 @@ class ActionController implements SingletonInterface
                 ) &&
                 !in_array($cmd, $this->noLoginCommands)
             )
-        ) {
+            ) {
             $controlData->setCmd($cmd);
             $origArray = [];
             $dataObj->setOrigArray($origArray);
@@ -670,7 +666,6 @@ class ActionController implements SingletonInterface
                 $cmdKey,
                 $conf[$cmdKey . '.']
             );
-
             if (
                 $parseResult &&
                 (
@@ -702,7 +697,6 @@ class ActionController implements SingletonInterface
                     $checkFieldArray,
                     $controlData->getCaptcha()
                 );
-
                 // If the two password fields are not equal, clear session data
                 if (
                     isset($evalErrors['password']) &&
@@ -835,10 +829,10 @@ class ActionController implements SingletonInterface
                     $extraFields,
                     $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['registrationProcess']
                 );
-                debug ($newDataArray, '$newDataArray');
 
                 if ($newDataArray) {
                     $dataArray = $newDataArray;
+                    $dataObj->setDataArray($dataArray);
                 }
 
                 if ($dataObj->getSaved()) {
@@ -1058,8 +1052,6 @@ class ActionController implements SingletonInterface
                         $finalDataArray[$emailField] :
                         $origArray[$emailField];
                     $email = GeneralUtility::makeInstance(Email::class);
-                    debug ($dataArray, '$dataArray vor compile');
-                    debug ($origArray, '$origArray');
 
                     // Send email message(s)
                     $bEmailSent = $email->compile(
@@ -1348,6 +1340,7 @@ class ActionController implements SingletonInterface
                         '',
                         $fD
                     );
+
                     $content = $editView->render(
                         $errorCode,
                         $markerArray,

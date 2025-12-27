@@ -195,7 +195,6 @@ class UserGroup extends Base implements SingletonInterface
                     $queryBuilder =
                         $this->frontendGroupRepository->getUserGroupWhereClause(
                             $whereArray,
-                            $foreignTable,
                             $pidArray,
                             $conf,
                             $cmdKey,
@@ -206,13 +205,7 @@ class UserGroup extends Base implements SingletonInterface
                         );
 
                     $keepValues = $this->frontendGroupRepository->getSearchedUids(
-                        'uid',
-                        $foreignTable,
                         $whereArray,
-                        '',
-                        '',
-                        '',
-                        'uid'
                     );
 
                     // $rowArray =

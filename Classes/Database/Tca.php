@@ -50,6 +50,7 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
 
 use SJBR\StaticInfoTables\PiBaseApi;
 
@@ -59,11 +60,11 @@ use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\TableUtility;
 
 use JambageCom\Agency\Api\Localization;
+use JambageCom\Agency\Constants\Field;
 use JambageCom\Agency\Constants\Mode;
 use JambageCom\Agency\Database\Field\Category;
 use JambageCom\Agency\Database\Field\UserGroup;
 use JambageCom\Agency\Domain\Repository\FrontendGroupRepository;
-use JambageCom\Agency\Domain\Repository\FrontendUserRepository;
 use JambageCom\Agency\Request\Parameters;
 
 
@@ -71,7 +72,6 @@ class Tca implements SingletonInterface
 {
     public function __construct(
         protected readonly ConnectionPool $connectionPool,
-        protected readonly FrontendUserRepository $frontendUserRepository,
         protected readonly FrontendGroupRepository $frontendGroupRepository,
     ) {
     }
@@ -228,8 +228,6 @@ class Tca implements SingletonInterface
         bool $usePrivacyPolicy = false,
         bool $bColumnIsCount = true
     ): bool {
-        debug ($dataArray, 'modifyRow Start $dataArray');
-        debug ($fieldList, 'modifyRow $fieldList');
         if (
             !is_array($GLOBALS['TCA'][$theTable]) ||
             !is_array($GLOBALS['TCA'][$theTable]['columns']) ||
@@ -238,8 +236,8 @@ class Tca implements SingletonInterface
             return false;
         }
 
-
         $dataFieldList = array_keys($dataArray);
+
         foreach ($GLOBALS['TCA'][$theTable]['columns'] as $columnName => $columnSettings) {
             $columnConfig = $columnSettings['config'];
             if (
@@ -261,13 +259,18 @@ class Tca implements SingletonInterface
 
             switch ($columnConfig['type']) {
                 case 'group':
-                    $bMultipleValues = true;
-                    break;
                 case 'category':
                 case 'select':
                     $value = $dataArray[$columnName] ?? '';
                     if ($value == 'Array') {    // checkbox from which nothing has been selected
                         $dataArray[$columnName] = $value = '';
+                    }
+
+                    if (
+                        isset($columnConfig['renderType']) &&
+                        $columnConfig['renderType'] == 'selectMultipleSideBySide'
+                    ) {
+                        $bMultipleValues = true;
                     }
 
                     if (
@@ -289,8 +292,23 @@ class Tca implements SingletonInterface
                             $dataArray[$columnName] = $valuesArray;
                         } else {
                             // the values from the mm table are already available as an array
-                            $dataArray[$columnName] = GeneralUtility::trimExplode(',', $value, true);
+                            $valuesArray = GeneralUtility::trimExplode(',', $value, true);
+                            $newValues = [];
+                            foreach ($valuesArray as $theValue) {
+                                $newValues[] = (int) $theValue;
+                            }
+                            $dataArray[$columnName] = $newValues;
                         }
+                    }
+
+                    if (
+                        isset($dataArray[$columnName]) &&
+                        (
+                            $dataArray[$columnName] == '' ||
+                            MathUtility::canBeInterpretedAsInteger($dataArray[$columnName])
+                        )
+                    ) {
+                        $dataArray[$columnName] = (int) $dataArray[$columnName];
                     }
                     break;
                 case 'check':
@@ -299,16 +317,16 @@ class Tca implements SingletonInterface
                         is_array($columnConfig['items'])
                     ) {
                         $value = $dataArray[$columnName] ?? '';
-                        debug ($value, '$value');
+
                         if(is_array($value)) {
                             $dataArray[$columnName] = 0;
                             foreach ($value as $dec) {  // Combine values to one hexidecimal number
                                 $dataArray[$columnName] |= (1 << $dec);
                             }
-                            debug ($dataArray[$columnName], 'Pos 1 $dataArray['.$columnName.']');
+                        } else {
+                            $dataArray[$columnName] = (int) $value;
                         }
                     } else {
-                        debug ($dataArray[$columnName] ?? '', '$dataArray['.$columnName.']');
                         if (
                             isset($dataArray[$columnName]) &&
                             (
@@ -317,11 +335,31 @@ class Tca implements SingletonInterface
                             )
                         ) {
                             $dataArray[$columnName] = 1;
-                            debug ($dataArray[$columnName], 'Pos 2 $dataArray['.$columnName.']');
                         } else {
                             $dataArray[$columnName] = 0;
-                            debug ($dataArray[$columnName], 'Pos 3 $dataArray['.$columnName.']');
                         }
+                    }
+                    break;
+                case 'email':
+                case 'input' :
+                case 'password' :
+                case 'text' :
+                    $value = $dataArray[$columnName] ?? null;
+
+                    if (
+                        isset($value)
+                    ) {
+                        $dataArray[$columnName] = (string) $value;
+                    } else {
+                        // nothing
+                    }
+                    break;
+                case 'file' :
+                case 'radio' :
+                    if (
+                        isset($value)
+                    ) {
+                        $dataArray[$columnName] = (int) $value;
                     }
                     break;
                 default:
@@ -332,8 +370,13 @@ class Tca implements SingletonInterface
             if ($bMultipleValues) {
                 $value = $dataArray[$columnName] ?? '';
 
-                if (!empty($value) && !is_array($value)) {
-                    $dataArray[$columnName] = GeneralUtility::trimExplode(',', $value, true);
+                if (!empty($value) && is_string($value)) {
+                    $values = GeneralUtility::trimExplode(',', $value, true);
+                    $newValues = [];
+                    foreach ($values as $theValue) {
+                        $newValues[] = (int) $theValue;
+                    }
+                    $dataArray[$columnName] = $newValues;
                 }
             }
         }
@@ -359,7 +402,12 @@ class Tca implements SingletonInterface
             unset($dataArray['privacy_policy_acknowledged']);
         }
 
-        debug ($dataArray, 'modifyRow ENDE $dataArray');
+        if (
+            isset($dataArray[Field::CAPTCHA])
+        ) {
+            unset($dataArray[Field::CAPTCHA]);
+        }
+
         return true;
     } // modifyRow
 

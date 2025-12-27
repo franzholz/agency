@@ -388,7 +388,7 @@ class Setfixed implements SingletonInterface
                         $setFixedKey != 'ENTER' &&
                         $newFieldList != ''
                     ) {
-                        $this->frontendUserRepository->update(
+                        $this->frontendUserRepository->updateByUid(
                             $uid,
                             $row,
                             $newFieldList,
@@ -641,7 +641,7 @@ class Setfixed implements SingletonInterface
                 ) {
                     $errorCode = [];
                     $subpart = SETFIXED_PREFIX . $setfixedSuffix;
-                    debug ($template, '$template');
+
                     // Compiling email
                     $emailResult = $email->compile(
                         $subpart,

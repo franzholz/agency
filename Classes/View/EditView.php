@@ -106,6 +106,7 @@ class EditView
         } else {
             $currentArray = $origArray;
         }
+
         if (!isset($markerArray['###HIDDENFIELDS###'])) {
             $markerArray['###HIDDENFIELDS###'] = '';
         }
@@ -130,7 +131,9 @@ class EditView
                     ''
                 );
         }
-        $failure = $parameterApi->getParameter('noWarnings') ? '' : $controlData->getFailure();
+        $failure = $parameterApi->getParameter('noWarnings') ?
+            '' :
+            $controlData->getFailure();
 
         if (!$failure) {
             $templateCode =
@@ -420,7 +423,7 @@ class EditView
                     $content = $this->renderForm(
                         $markerArray,
                         $conf,
-                        $prefixId,
+                        $prefixId,´
                         $cObj,
                         $languageObj,
                         $controlData,

@@ -224,15 +224,15 @@ class InitializationController implements SingletonInterface
                 );
 
                 $resultInit = $actionController->init2( // only here the $conf is changed
+                    $adminFieldList,
+                    $origArray,
+                    $errorMessage,
+                    $dataObj,
                     $confObj,
                     $staticInfoObj,
                     $theTable,
                     $controlData,
-                    $dataObj,
-                    $tcaObj,
-                    $adminFieldList,
-                    $origArray,
-                    $errorMessage
+                    $tcaObj
                 );
 
                 if ($resultInit === false) {

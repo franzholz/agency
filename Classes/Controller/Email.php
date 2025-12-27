@@ -335,9 +335,6 @@ class Email implements SingletonInterface
         array $setFixedConfig,
         array &$errorCode
     ) {
-        debug ($key, 'compile $key');
-        debug ($DBrows, 'compile $DBrows');
-        debug ($origRows, 'compile $origRows');
         $errorCode = [];
         $conf = $confObj->getConf();
         $useAdditionalFields = true;
@@ -539,7 +536,6 @@ class Email implements SingletonInterface
         if ($content['admin']['all']) {
             $content['admin']['rec'] =
                 $templateService->getSubpart($content['admin']['all'], '###SUB_RECORD###');
-            debug ($content['admin']['rec'], '$content[\'admin\'][\'rec\']');
             $contentIndexArray['text'][] = 'admin';
         }
         if ($content['adminhtml']['all']) {
@@ -604,9 +600,7 @@ class Email implements SingletonInterface
             );
 
         foreach ($DBrows as $k => $row) {
-            debug ($row, '$row');
             $origRow = $origRows[$k];
-            debug ($origRow, '$origRow');
 
             if (isset($origRow) && is_array($origRow)) {
                 if (isset($row) && is_array($row)) {
@@ -617,12 +611,9 @@ class Email implements SingletonInterface
             } else {
                 $currentRow = $row;
             }
-            debug ($currentRow, '$currentRow');
 
             if ($bChangesOnly) {
-                debug ($bChangesOnly, '$bChangesOnly +++ HIER +++');
                 $mrow = [];
-                debug ($origRow, '$origRow');
                 foreach ($row as $field => $v) {
                     if (in_array($field, $keepFields)) {
                         $mrow[$field] = $v;
@@ -631,16 +622,12 @@ class Email implements SingletonInterface
                             isset($origRow[$field]) &&
                             $v != $origRow[$field]
                         ) {
-                            debug ($origRow[$field], '$origRow['.$field.']');
-                            debug ($v, '$v');
                             $mrow[$field] = $v;
-                            debug ($mrow[$field], '$mrow['.$field.'] NEU +++');
                         } else {
                             $mrow[$field] = ''; // needed to empty the ###FIELD_...### markers
                         }
                     }
                 }
-                debug ($mrow, '$mrow +++');
             } else {
                 $mrow = $currentRow;
             }
@@ -756,8 +743,6 @@ class Email implements SingletonInterface
                 $markerArray = array_merge($markerArray, $fieldMarkerArray);
 
                 foreach ($indexArray as $index) {
-                    debug ($index, '$index');
-                    debug ($content[$index]['rec'], 'REC Pos 1 $content['.$index.'][\'rec\']');
                     if (!isset($content[$index]['accum'])) {
                         $content[$index]['accum'] = '';
                     }
@@ -768,19 +753,16 @@ class Email implements SingletonInterface
                             $markerArray,
                             $viewOnly
                         );
-                    debug ($content[$index]['rec'], 'REC Pos 2 $content['.$index.'][\'rec\']');
-
                     $content[$index]['accum'] .=
                         $templateService->substituteMarkerArray(
                             $content[$index]['rec'],
                             $markerArray
                         );
-                    debug ( $content[$index]['accum'], 'ACCUM Pos 1 $content['.$index.'][\'accum\']');
-                        if ($emailType == 'text') {
+
+                    if ($emailType == 'text') {
                         $content[$index]['accum'] =
                             htmlSpecialChars_decode($content[$index]['accum'], ENT_QUOTES);
                     }
-                    debug ( $content[$index]['accum'], 'ACCUM Pos 2 $content['.$index.'][\'accum\']');
                 }
             }
         }
@@ -892,7 +874,6 @@ class Email implements SingletonInterface
                 $key != 'SETFIXED_REVIEW'
             )
         ) {
-            debug ($content, '$content vor send');
             $result = $this->send(
                 $conf,
                 $recipient,

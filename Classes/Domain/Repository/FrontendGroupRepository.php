@@ -130,16 +130,23 @@ class FrontendGroupRepository
         $uidArray = [];
         $queryBuilder = $this->getQueryBuilder();
 
-        $result = $queryBuilder
-        ->select('uid',  $theField)
-        ->from(self::TABLE)
-        ->orWhere(
-            ...$whereArray['CompositeExpression::TYPE_OR']
-        )
-        ->andWhere(
-            ...$whereArray['CompositeExpression::TYPE_AND']
-        )
-        ->executeQuery();
+        $queryBuilder
+            ->select('uid')
+            ->from(self::TABLE);
+
+        if (isset($whereArray['CompositeExpression::TYPE_OR'])) {
+            $queryBuilder->orWhere(
+                ...$whereArray['CompositeExpression::TYPE_OR']
+            );
+        }
+
+        if (isset($whereArray['CompositeExpression::TYPE_AND'])) {
+            $queryBuilder->andWhere(
+                ...$whereArray['CompositeExpression::TYPE_AND']
+            );
+        }
+
+        $result = $queryBuilder->executeQuery();
 
         while ($row = $result->fetchAssociative()) {
             // Do something with that single row

@@ -17,10 +17,17 @@ use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
+use TYPO3\CMS\Extbase\Persistence\Generic\Storage\BackendInterface;
+use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use TYPO3\CMS\Extbase\Persistence\Repository;
+
 /**
  * FrontendUser repository with all the callable functionality
  */
-class FrontendUserRepository
+class FrontendUserRepository extends Repository
 {
     private const TABLE = 'fe_users';
     protected readonly Connection $connection;
@@ -29,12 +36,48 @@ class FrontendUserRepository
         protected readonly Context $context,
         protected readonly ConnectionPool $connectionPool,
     ) {
+        parent::__construct();
         $this->connection = $connectionPool->getConnectionForTable(self::TABLE);
     }
 
     public function getConnection()
     {
         return $this->connection;
+    }
+
+
+    protected function getFindByQuery(int $uid): QueryInterface
+    {
+        $query = $this->createQuery();
+        // $query = $this->connection->createQueryBuilder();
+        $query->getQuerySettings()->setRespectStoragePage(false);
+
+        $query->matching(
+            $query->logicalAnd(
+                $query->equals('uid', $uid),
+                    $query->equals('deleted', 0)
+            )
+        );
+
+        return $query;
+    }
+
+    /**
+     * Override default findByUid function to enable also the option to turn off
+     * the enableField setting
+     *
+     * @param int $uid id of record
+     */
+    public function findRowByUid($uid): array
+    {
+        $query = $this->getFindByQuery($uid);
+
+        $rows = $query->execute(true);
+
+        $result = $rows[0];
+        // ->execute(true);
+
+        return $result;
     }
 
     /**
@@ -116,7 +159,6 @@ class FrontendUserRepository
      * If a "tstamp" field is configured for the $table tablename in $GLOBALS['TCA'] then that field is automatically updated to the current time.
      * Notice: It is YOUR responsibility to make sure the data being updated is valid according the tablefield types etc.
      *
-     * @param string $table The table name, should be in $GLOBALS['TCA']
      * @param int $uid The UID of the record from $table which we are going to update
      * @param array $dataArray the data array where key/value pairs are fieldnames/values for the record to update
      * @param string $fieldList Comma list of fieldnames which are allowed to be updated. Only values from the data record for fields in this list will be updated!!
@@ -125,7 +167,7 @@ class FrontendUserRepository
      * @return string the query, ready to execute unless $doExec was TRUE in which case the return value is FALSE
      *
      */
-    public function update(int &$uid, array $dataArray, string $fieldList): int|bool
+    public function updateByUid(int $uid, array $dataArray, string $fieldList): int|bool
     {
         // uid can never be set
         unset($dataArray['uid']);

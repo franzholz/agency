@@ -1,3 +1,6 @@
+2025-12-27 Franz Holzinger  <franz@ttproducts.de>
+    * fix email to send the differences of the changed user data
+
 2025-12-09 Franz Holzinger  <franz@ttproducts.de>
     * fix dependencies. No typo3db_legacy is needed!
 
