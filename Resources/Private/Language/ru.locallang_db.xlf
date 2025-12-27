@@ -83,6 +83,10 @@
         <source>Subscribe to categories</source>
         <target state="needs-translation">Subscribe to categories</target>
       </trans-unit>
+      <trans-unit id="fe_users.mail_html" resname="fe_users.mail_html">
+        <source>Receive emails in HTML format?</source>
+        <target state="needs-translation">Receive emails in HTML format?</target>
+      </trans-unit>
       <trans-unit id="fe_users.module_sys_dmail_html" resname="fe_users.module_sys_dmail_html">
         <source>Receive emails in HTML format?</source>
         <target state="translated">Получать эл.почту в формате HTML?</target>
