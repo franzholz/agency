@@ -41,12 +41,25 @@ namespace JambageCom\Agency\Database\Field;
  *
  */
 
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\MathUtility;
 
-class UserGroup extends Base
+use JambageCom\Agency\Request\Parameters;
+use JambageCom\Agency\Domain\Repository\FrontendGroupRepository;
+
+
+
+class UserGroup extends Base implements SingletonInterface
 {
     protected $savedReservedValues = [];
+
+    public function __construct(
+        protected readonly ConnectionPool $connectionPool,
+        protected readonly FrontendGroupRepository $frontendGroupRepository,
+    ) {
+    }
 
     /*
     * Modifies the form fields configuration depending on the $cmdKey
@@ -87,11 +100,11 @@ class UserGroup extends Base
     * @return void
     */
     public function getAllowedValues(
-        $conf,
-        $cmdKey,
         &$allowedUserGroupArray,
         &$allowedSubgroupArray,
-        &$deniedUserGroupArray
+        &$deniedUserGroupArray,
+        $conf,
+        $cmdKey
     ): void {
         $allowedUserGroupArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['allowedUserGroups'], true);
         $allowedSubgroupArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['allowedSubgroups'], true);
@@ -133,72 +146,6 @@ class UserGroup extends Base
         }
     }
 
-    public function getAllowedWhereClause(
-        $theTable,
-        $pid,
-        $conf,
-        $cmdKey,
-        $bAllow = true
-    ) {
-        $whereClause = '';
-        $subgroupWhereClauseArray = [];
-        $subgroupWhereClause = '';
-        $pidArray = [];
-        $tmpArray = GeneralUtility::trimExplode(',', $conf['userGroupsPidList'], true);
-        if (count($tmpArray)) {
-            foreach($tmpArray as $value) {
-                $valueIsInt = MathUtility::canBeInterpretedAsInteger($value);
-                if ($valueIsInt) {
-                    $pidArray[] = intval($value);
-                }
-            }
-        }
-
-        if (count($pidArray) > 0) {
-            $whereClause = ' pid IN (' . implode(',', $pidArray) . ') ';
-        } else {
-            $whereClause = ' pid=' . intval($pid) . ' ';
-        }
-
-        $whereClausePart2 = '';
-        $whereClausePart2Array = [];
-
-        $this->getAllowedValues(
-            $conf,
-            $cmdKey,
-            $allowedUserGroupArray,
-            $allowedSubgroupArray,
-            $deniedUserGroupArray
-        );
-
-        if ($allowedUserGroupArray['0'] != 'ALL') {
-            $uidArray = $GLOBALS['TYPO3_DB']->fullQuoteArray($allowedUserGroupArray, $theTable);
-            $subgroupWhereClauseArray[] = 'uid ' . ($bAllow ? 'IN' : 'NOT IN') . ' (' . implode(',', $uidArray) . ')';
-        }
-
-        if (count($allowedSubgroupArray)) {
-            $subgroupArray = $GLOBALS['TYPO3_DB']->fullQuoteArray($allowedSubgroupArray, $theTable);
-            $subgroupWhereClauseArray[] = 'subgroup ' . ($bAllow ? 'IN' : 'NOT IN') . ' (' . implode(',', $subgroupArray) . ')';
-        }
-
-        if (count($subgroupWhereClauseArray)) {
-            $subgroupWhereClause .= implode(' ' . ($bAllow ? 'OR' : 'AND') . ' ', $subgroupWhereClauseArray);
-            $whereClausePart2Array[] = '( ' . $subgroupWhereClause . ' )';
-        }
-
-        if (count($deniedUserGroupArray)) {
-            $uidArray = $GLOBALS['TYPO3_DB']->fullQuoteArray($deniedUserGroupArray, $theTable);
-            $whereClausePart2Array[] = 'uid ' . ($bAllow ? 'NOT IN' : 'IN') . ' (' . implode(',', $uidArray) . ')';
-        }
-
-        if (count($whereClausePart2Array)) {
-            $whereClausePart2 = implode(' ' . ($bAllow ? 'AND' : 'OR') . ' ', $whereClausePart2Array);
-            $whereClause .= ' AND (' . $whereClausePart2 . ')';
-        }
-
-        return $whereClause;
-    }
-
     public function parseOutgoingData(
         $theTable,
         $fieldname,
@@ -227,28 +174,55 @@ class UserGroup extends Base
                 $valuesArray = $origArray[$fieldname];
 
                 if ($conf[$cmdKey . '.']['keepUnselectableUserGroups']) {
-                    $whereClause =
-                        $this->getAllowedWhereClause(
-                            $foreignTable,
-                            $pid,
+                    $allowedUserGroupArray = [];
+                    $allowedSubgroupArray = [];
+                    $deniedUserGroupArray = [];
+
+                    $this->getAllowedValues(
+                        $allowedUserGroupArray,
+                        $allowedSubgroupArray,
+                        $deniedUserGroupArray,
+                        $conf,
+                        $cmdKey,
+                    );
+
+                    $pidArray = $this->getConfigPidArray(
+                        $pid,
+                        $conf['userGroupsPidList']
+                    );
+
+                    $whereArray = [];
+                    $queryBuilder =
+                        $this->frontendGroupRepository->getUserGroupWhereClause(
+                            $whereArray,
+                            $pidArray,
                             $conf,
                             $cmdKey,
+                            $allowedUserGroupArray,
+                            $allowedSubgroupArray,
+                            $deniedUserGroupArray,
                             false
                         );
-                    $rowArray =
-                        $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-                            'uid',
-                            $foreignTable,
-                            $whereClause,
-                            '',
-                            '',
-                            '',
-                            'uid'
-                        );
 
-                    if ($rowArray && is_array($rowArray) && count($rowArray)) {
+                    $keepValues = $this->frontendGroupRepository->getSearchedUids(
+                        $whereArray,
+                    );
+
+                    // $rowArray =
+                    //     $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+                    //         'uid',
+                    //         $foreignTable,
+                    //         $whereClause,
+                    //         '',
+                    //         '',
+                    //         '',
+                    //         'uid'
+                    //     );
+                    //
+                    /*
+                    if (isset($rowArray) && is_array($rowArray) && count($rowArray)) {
                         $keepValues = array_keys($rowArray);
-                    }
+                    }*/
                 } else {
                     $keepValues = $this->getReservedValues($conf);
                 }
@@ -368,4 +342,88 @@ class UserGroup extends Base
 
         return $value;
     }
+
+
+    /**
+     * Returns the relevant usergroup overlay record fields
+     * Adapted from t3lib_page.php
+     *
+     * @param array $controlData: the object of the control data
+     * @param    mixed       If $usergroup is an integer, it's the uid of the usergroup overlay record and thus the usergroup overlay record is returned. If $usergroup is an array, it's a usergroup record and based on this usergroup record the language overlay record is found and gespeichert.OVERLAYED before the usergroup record is returned.
+     * @param    integer     Language UID if you want to set an alternative value to $this->controlData->sys_language_content which is default. Should be >=0
+     * @return   array       usergroup row which is overlayed with language_overlay record (or the overlay record alone)
+     */
+    public function getUsergroupOverlay(
+        $conf,
+        Parameters $controlData,
+        $usergroup,
+        $language = ''
+    ) {
+        $row = false;
+
+        // Initialize:
+        if ($language == '') {
+            $language =
+            $controlData->getSysLanguageUid(
+                $conf,
+                'ALL',
+                'fe_groups_language_overlay'
+            );
+        }
+
+        // If language UID is different from zero, do overlay:
+        if ($language) {
+            $fieldArr = ['title'];
+            if (is_array($usergroup)) {
+                $fe_groups_uid = $usergroup['uid'];
+                // Was the whole record
+                $fieldArr = array_intersect($fieldArr, array_keys($usergroup));
+                // Make sure that only fields which exist in the incoming record are overlaid!
+            } else {
+                $fe_groups_uid = $usergroup;
+                // Was the uid
+            }
+
+            if (count($fieldArr)) {
+                // $whereClause = 'fe_group=' . intval($fe_groups_uid) . ' ' .
+                // 'AND sys_language_uid=' . intval($language) . ' ' .
+                // TableUtility::enableFields('fe_groups_language_overlay');
+                // $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(implode(',', $fieldArr), 'fe_groups_language_overlay', $whereClause);
+
+                $table = 'fe_groups_language_overlay';
+                $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
+                $result = $queryBuilder
+                    ->select(implode(',', $fieldArr))
+                    ->from($table)
+                    ->where(
+                        $queryBuilder->expr()->eq(
+                            'fe_group',
+                            $queryBuilder->createNamedParameter(
+                                $fe_groups_uid,
+                                Connection::PARAM_INT
+                            )
+                        ),
+                        $queryBuilder->expr()->eq(
+                            'sys_language_uid',
+                            $queryBuilder->createNamedParameter(
+                                $language,
+                                Connection::PARAM_INT
+                            )
+                        )
+                    )
+                    ->setMaxResults(1);
+
+                $result = $queryBuilder->executeQuery();
+                $row = $result->fetchAssociative();
+            }
+        }
+
+        // Create output:
+        if (is_array($usergroup)) {
+            return is_array($row) ? array_merge($usergroup, $row) : $usergroup;
+            // If the input was an array, simply overlay the newfound array and return...
+        } else {
+            return is_array($row) ? $row : []; // always an array in return
+        }
+    }   // getUsergroupOverlax
 }

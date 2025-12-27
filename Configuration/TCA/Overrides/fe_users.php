@@ -201,52 +201,6 @@ call_user_func(function ($extensionKey, $table): void {
         ];
     }
 
-    $directMailTemporaryColumns = [];
-
-    if ( // Direct Mail tables exist but Direct Mail shall not be used
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['enableDirectMail'] &&
-        !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('direct_mail')
-    ) {
-        // fe_users modified
-        $directMailTemporaryColumns = [
-            'module_sys_dmail_newsletter' => [
-                'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.module_sys_dmail_newsletter',
-                'exclude' => '1',
-                'config' => [
-                        'type' => 'check',
-                        'default' => '0'
-                    ]
-                ],
-            'module_sys_dmail_category' => [
-                'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.module_sys_dmail_category',
-                'exclude' => '1',
-                'config' => [
-                    'type' => 'select',
-                    'renderType' => 'selectSingle',
-                    'allowed' => 'sys_dmail_category',
-                    'MM' => 'sys_dmail_feuser_category_mm',
-                    'foreign_table' => 'sys_dmail_category',
-                    'foreign_table_where' =>
-                        'AND sys_dmail_category.pid IN ' .
-                        '(###PAGE_TSCONFIG_IDLIST###) ORDER BY sys_dmail_category.sorting',
-                    'size' => 10,
-                    'renderMode' => 'check',
-                    'minitems' => 0,
-                    'maxitems' => 1000,
-                    'default' => '0'
-                ]
-            ],
-            'module_sys_dmail_html' => [
-                'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.module_sys_dmail_html',
-                'exclude' => '1',
-                'config' => [
-                    'type' => 'check',
-                    'default' => '0'
-                ]
-            ]
-        ];
-    }
-
     $columns = array_keys($temporaryColumns);
 
     foreach ($columns as $column) {
@@ -255,8 +209,6 @@ call_user_func(function ($extensionKey, $table): void {
         }
     }
 
-    $columns = array_keys($temporaryColumns);
-
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, $temporaryColumns);
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
         $table,
@@ -264,18 +216,6 @@ call_user_func(function ($extensionKey, $table): void {
         '',
         'after:www,'
     );
-
-    if ( // Direct Mail tables exist but Direct Mail shall not be used
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['enableDirectMail'] &&
-        !\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('direct_mail')
-    ) {
-        $columns = array_keys($directMailTemporaryColumns);
-
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
-            $table,
-            '--div--;Direct mail, module_sys_dmail_newsletter;;;;1-1-1, ' . implode(',', $columns)
-        );
-    }
 
     $GLOBALS['TCA'][$table]['columns']['username']['config']['eval'] = 'nospace,uniqueInPid,required';
     $GLOBALS['TCA'][$table]['columns']['name']['config']['max'] = '100';
@@ -358,4 +298,6 @@ call_user_func(function ($extensionKey, $table): void {
     $searchFields = explode(',', $GLOBALS['TCA'][$table]['ctrl']['searchFields'] . ',cnum,comments');
     $searchFields = array_unique($searchFields);
     $GLOBALS['TCA'][$table]['ctrl']['searchFields'] = implode(',', $searchFields);
+
+
 }, Extension::KEY, basename(__FILE__, '.php'));

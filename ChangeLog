@@ -1,3 +1,18 @@
+2025-12-27 Franz Holzinger  <franz@ttproducts.de>
+    * fix email to send the differences of the changed user data
+
+2025-12-09 Franz Holzinger  <franz@ttproducts.de>
+    * fix dependencies. No typo3db_legacy is needed!
+
+2025-12-02 Franz Holzinger  <franz@ttproducts.de>
+    * breaking mm table: Change the fields of uid_local and uid_foreign. The table fe_users uid is the uid_foreign of the mm table. This is done because the sys_category table works like this.
+    * new feature: TCA category for sys_category tree.
+
+2025-11-26 Franz Holzinger  <franz@ttproducts.de>
+    * remove the enableMail feature. The Mail extension must be activated if Mail tables are used.
+    * Version number 1.0.0. It is stable enough for most use cases. Working under Doctrine.
+    * Replace Direct Mail extension by Mail
+
 2025-11-01 Franz Holzinger  <franz@ttproducts.de>
     * Rename folder and domain part Domain into Database for a difference to Extbase
     * fix namespace for PageRepository: TYPO3\CMS\Core\Domain\Repository\PageRepository .

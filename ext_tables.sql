@@ -24,7 +24,6 @@ CREATE TABLE fe_users (
 	date_of_birth int(11) DEFAULT '0' NOT NULL,
 	comments text,
 	by_invitation tinyint(4) unsigned DEFAULT '0' NOT NULL,
-	module_sys_dmail_html tinyint(3) unsigned DEFAULT '0' NOT NULL,
 	terms_acknowledged tinyint(4) unsigned DEFAULT '0' NOT NULL,
 	has_privileges tinyint(4) unsigned DEFAULT '0' NOT NULL,
 	token varchar(32) DEFAULT '' NOT NULL,
@@ -32,6 +31,7 @@ CREATE TABLE fe_users (
 	privacy_policy_date int(11) DEFAULT '0' NOT NULL,
 	tx_agency_password blob,
 	lost_password tinyint(4) unsigned DEFAULT '0' NOT NULL,
+    KEY mail (mail_active, email, mail_html)
 );
 
 

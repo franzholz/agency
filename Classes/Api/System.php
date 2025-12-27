@@ -53,8 +53,6 @@ use TYPO3\CMS\Core\Authentication\Event\LoginAttemptFailedEvent;
 
 use TYPO3\CMS\Core\Authentication\Mfa\MfaProviderRegistry;
 use TYPO3\CMS\Core\Authentication\Mfa\MfaRequiredException;
-use TYPO3\CMS\Core\Context\UserAspect;
-use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Session\UserSession;
 use TYPO3\CMS\Core\Session\UserSessionManager;
@@ -185,10 +183,10 @@ class System implements LoggerAwareInterface
                     ($ret = $authServiceObj->authUser($user)) > 0
                 ) {
                     // If the service returns >=200 then no more checking is needed - useful for IP checking without password
-                    if ((int)$ret >= 200) {
+                    if ((int) $ret >= 200) {
                         $ok = true;
                         $authenticated = true;
-                    } else if ((int)$ret >= 100) {
+                    } else if ((int) $ret >= 100) {
                         // nothing
                     } else {
                         $ok = true;
@@ -329,30 +327,6 @@ class System implements LoggerAwareInterface
         }
 
         return $result;
-    }
-
-    public function removePasswordAdditions(
-        Data $dataObj,
-        $theTable,
-        $uid,
-        $row
-    ): void {
-        $deleteFields = [
-            'lost_password',
-            'tx_agency_password'
-        ];
-        foreach ($deleteFields as $field) {
-            $row[$field] = '';
-        }
-        $newFieldList = implode(',', $deleteFields);
-
-        $res = $dataObj->getCoreQuery()->DBgetUpdate(
-            $theTable,
-            $uid,
-            $row,
-            $newFieldList,
-            true
-        );
     }
 
     /**

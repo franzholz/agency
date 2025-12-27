@@ -36,13 +36,10 @@ plugin.tx_agency {
   siteName = My TYPO3 Site
 
     # cat=plugin.tx_agency//; type=string; label= Registration form fields: List of fields to be included on the front end user registration form.
-  formFields = username, password, gender, first_name, last_name, status, date_of_birth, email, address, city, zone, static_info_country, zip, telephone, fax, language, title, company, www, module_sys_dmail_html, module_sys_dmail_newsletter, module_sys_dmail_category, image, comments, terms_acknowledged, privacy_policy_acknowledged, disable
+  formFields = username, password, gender, first_name, last_name, status, date_of_birth, email, address, city, zone, static_info_country, zip, telephone, fax, language, title, company, www, mail_html, categories, image, comments, terms_acknowledged, privacy_policy_acknowledged, disable
 
     # cat=plugin.tx_agency//; type=string; label= Required fields: List of fields that must be filled in on the front end user registration form.
   requiredFields = username, password, first_name, last_name,email
-
-    # cat=plugin.tx_agency//; type=string; label= Unsubscribe allowed fields: List of fields that are allowed to be updated by an UNSUBSCRIBE link without any login.
-  unsubscribeAllowedFields = module_sys_dmail_newsletter
 
     # cat=plugin.tx_agency/enable; type=boolean; label= Use email as username: If set, the user email will be used as the username.
   useEmailAsUsername = 0
@@ -200,8 +197,8 @@ plugin.tx_agency {
   # cat=plugin.tx_agency//; type=string; label= Redirect_url on login: Url to which the user may be redirected to upon login, when auto login is enabled.
   autoLoginRedirect_url =
 
-    # cat=plugin.tx_agency//; type=boolean; label= Direct Mail checked upon registration: The checkboxes for Direct Mail categories will be checked by default if you set this.
-   dmailCheckedUponRegistration = 0
+    # cat=plugin.tx_agency//; type=boolean; label= Mail checked upon registration: The checkboxes for Mail categories will be checked by default if you set this.
+   mailCheckedUponRegistration = 0
 
     # cat=plugin.tx_agency//; type=string; label= User group(s) upon registration: The value of the user group field. Must be a list of integers WITHOUT spaces between the comma separated values! Furthermore these integers MUST belong to actual fe_groups records!
   userGroupUponRegistration = 0
@@ -257,8 +254,8 @@ plugin.tx_agency {
     # cat=plugin.tx_agency//; type=options[,formal,informal]; label= Salutation mode to use: Possible values are '', 'formal' or 'informal'.
   salutation =
 
-    # cat=plugin.tx_agency//; type=string; label= PID list for Direct Mail categories: The Direct mail categories used by the plugin will be restricted to those found in these PID's.
-  module_sys_dmail_category_PIDLIST =
+    # cat=plugin.tx_agency//; type=string; label= PID list for Mail categories: The mail categories used by the plugin will be restricted to those found in these PID's.
+  categories_PIDLIST =
 
     # cat=plugin.tx_agency/enable; type=boolean; label=Use short URL's: If set, the use of short URL's in email messages sent to users is enabled.
   useShortUrls = 1
@@ -280,7 +277,7 @@ plugin.tx_agency {
 
     # cat=plugin.tx_agency//; type=boolean; label= Merge labels: If set then the labels for select boxes found in setup are merged to the labels already in the TCA, which might come from TCEFORM.fe_users altLabels or addItems. If 0, then only the labels from plugin.tx_agency._LOCAL_LANG.de.fe_users.x.I.x are taken.
   mergeLabels = 1
-  
+
     # cat=plugin.tx_agency//; type=string; label= Authorization Service classes: Comma separated list of authorization classes for front end user login.
   authServiceClass =
 }

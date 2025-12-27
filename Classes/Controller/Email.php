@@ -153,20 +153,11 @@ class Email implements SingletonInterface
                     $key = 'INFOMAIL';
 
                     if ($theTable == 'fe_users') {
-                        $key = 'SETFIXED_PASSWORD';
-                        $outGoingData = [];
-                        // add a r
-                        $outGoingData['lost_password'] = '1';
 
-                        $extraList = 'lost_password';
-                        $result =
-                            $dataObj->getCoreQuery()->DBgetUpdate(
-                                $theTable,
-                                $DBrows[0]['uid'],
-                                $outGoingData,
-                                $extraList,
-                                true
-                            );
+                        $key = 'SETFIXED_PASSWORD';
+                        $dataObj->activateLostPassword(
+                            $DBrows[0]['uid']
+                        );
                     }
 
                     $recipient = $DBrows[0][$conf['email.']['field']];
@@ -198,7 +189,7 @@ class Email implements SingletonInterface
                     );
                 } elseif (GeneralUtility::validEmail($fetch)) {
                     $key = 'INFOMAIL_NORECORD';
-                    $fetchArray = ['0' => ['email' => $fetch]];
+                    $fetchArray = [0 => ['email' => $fetch]];
                     $emailHasBeenSent = $this->compile(
                         $key,
                         $cObj,
@@ -365,12 +356,11 @@ class Email implements SingletonInterface
         ) {
             if (
                 (
-                    ExtensionManagementUtility::isLoaded('direct_mail') ||
-                    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['enableDirectMail']
+                    ExtensionManagementUtility::isLoaded('mail')
                 ) &&
-                isset($DBrows[0]['module_sys_dmail_html'])
+                isset($DBrows[0]['mail_html'])
             ) {
-                $useHtml = $DBrows[0]['module_sys_dmail_html'];
+                $useHtml = $DBrows[0]['mail_html'];
             } else {
                 $useHtml = true;
             }
@@ -413,7 +403,7 @@ class Email implements SingletonInterface
                 $conf['infomail'] &&
                 in_array($key, $infomailArray) &&
                     // Silently refuse to not send infomail to non-subscriber, if so requested
-                !($key == 'INFOMAIL_NORECORD' && intval($conf['email.'][$key]) == '0')
+                !($key == 'INFOMAIL_NORECORD' && intval($conf['email.'][$key]) == 0)
             )
         ) {
             $checkEmailSent = true;
@@ -539,15 +529,18 @@ class Email implements SingletonInterface
             $contentIndexArray['text'][] = 'user';
         }
         if ($content['userhtml']['all']) {
-            $content['userhtml']['rec'] = $templateService->getSubpart($content['userhtml']['all'], '###SUB_RECORD###');
+            $content['userhtml']['rec'] =
+                $templateService->getSubpart($content['userhtml']['all'], '###SUB_RECORD###');
             $contentIndexArray['html'][] = 'userhtml';
         }
         if ($content['admin']['all']) {
-            $content['admin']['rec'] = $templateService->getSubpart($content['admin']['all'], '###SUB_RECORD###');
+            $content['admin']['rec'] =
+                $templateService->getSubpart($content['admin']['all'], '###SUB_RECORD###');
             $contentIndexArray['text'][] = 'admin';
         }
         if ($content['adminhtml']['all']) {
-            $content['adminhtml']['rec'] = $templateService->getSubpart($content['adminhtml']['all'], '###SUB_RECORD###');
+            $content['adminhtml']['rec'] =
+                $templateService->getSubpart($content['adminhtml']['all'], '###SUB_RECORD###');
             $contentIndexArray['html'][] = 'adminhtml';
         }
         $bChangesOnly = ($conf['email.']['EDIT_SAVED'] == '2' && $cmd == 'edit');
@@ -568,7 +561,7 @@ class Email implements SingletonInterface
                 '',
                 false
             );
-        $markerObj->addLabelMarkers(
+       $markerObj->addLabelMarkers(
             $markerArray,
             $conf,
             $cObj,
@@ -640,7 +633,8 @@ class Email implements SingletonInterface
             }
 
             $markerArray['###SYS_AUTHCODE###'] = $authObj->generateAuthCode($row);
-            SetfixedUrls::compute(
+            $setfixedUrls = GeneralUtility::makeInstance(SetfixedUrls::class);
+            $setfixedUrls->compute(
                 $cmd,
                 $prefixId,
                 $cObj,
@@ -759,14 +753,15 @@ class Email implements SingletonInterface
                             $markerArray,
                             $viewOnly
                         );
-
                     $content[$index]['accum'] .=
                         $templateService->substituteMarkerArray(
                             $content[$index]['rec'],
                             $markerArray
                         );
+
                     if ($emailType == 'text') {
-                        $content[$index]['accum'] = htmlSpecialChars_decode($content[$index]['accum'], ENT_QUOTES);
+                        $content[$index]['accum'] =
+                            htmlSpecialChars_decode($content[$index]['accum'], ENT_QUOTES);
                     }
                 }
             }

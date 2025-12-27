@@ -47,6 +47,7 @@ use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
+use JambageCom\Div2007\Database\QueryBuilderApi;
 use JambageCom\Div2007\Utility\CompatibilityUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\HtmlUtility;
@@ -105,6 +106,7 @@ class EditView
         } else {
             $currentArray = $origArray;
         }
+
         if (!isset($markerArray['###HIDDENFIELDS###'])) {
             $markerArray['###HIDDENFIELDS###'] = '';
         }
@@ -129,7 +131,9 @@ class EditView
                     ''
                 );
         }
-        $failure = $parameterApi->getParameter('noWarnings') ? '' : $controlData->getFailure();
+        $failure = $parameterApi->getParameter('noWarnings') ?
+            '' :
+            $controlData->getFailure();
 
         if (!$failure) {
             $templateCode =
@@ -220,7 +224,6 @@ class EditView
         );
 
         foreach ($GLOBALS['TCA'][$theTable]['columns'] as $theField => $fieldConfig) {
-
             if (
                 isset($fieldConfig['config']['internal_type']) &&
                 $fieldConfig['config']['internal_type'] == 'file' &&
@@ -408,19 +411,19 @@ class EditView
                     is_string($authCode) &&
                         !strcmp($authCode, $theAuthCode) ||
                     $aCAuth ||
-                    $dataObj->getCoreQuery()->DBmayFEUserEdit(
+                    QueryBuilderApi::accessGranted(
+                        $controlData->getContext(),
                         $theTable,
                         $origArray,
                         $frontendUser->user,
-                        $conf['allowedGroups'] ?? '',
-                        $conf['fe_userEditSelf'] ?? false
+                        !empty($conf['fe_userEditSelf'])
                     )
                 ) {
                     // Display the form, if access granted.
                     $content = $this->renderForm(
                         $markerArray,
                         $conf,
-                        $prefixId,
+                        $prefixId,´
                         $cObj,
                         $languageObj,
                         $controlData,

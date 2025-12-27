@@ -41,6 +41,9 @@ namespace JambageCom\Agency\Database\Field;
  *
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
+
 
 class Base
 {
@@ -64,6 +67,25 @@ class Base
     {
         return $row[$fieldname];
     }
+
+    public function getConfigPidArray(int $pid, string $userGroupsPidList = ''): array
+    {
+        $pidArray = [];
+        $tmpArray = GeneralUtility::trimExplode(',', $userGroupsPidList, true);
+        if (count($tmpArray)) {
+            foreach($tmpArray as $value) {
+                $valueIsInt = MathUtility::canBeInterpretedAsInteger($value);
+                if ($valueIsInt) {
+                    $pidArray[] = intval($value);
+                }
+            }
+        }
+        if (empty($pidArray)) {
+            $pidArray[] = $pid;
+        }
+        return $pidArray;
+    }
+
 
     public function parseOutgoingData(
         $theTable,

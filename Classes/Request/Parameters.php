@@ -64,7 +64,7 @@ use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Security\Authentication;
 use JambageCom\Agency\Security\SecuredData;
 use JambageCom\Agency\Utility\SessionUtility;
-
+use JambageCom\Agency\Setfixed\SetfixedUrls;
 
 
 
@@ -113,11 +113,11 @@ class Parameters implements SingletonInterface
      * @var TypoScriptFrontendController|null
      */
     protected $typoScriptFrontendController;
-
     protected ?Context $context = null;
 
-    public function injectContext(Context $context)
-    {
+    public function __construct(
+        Context $context
+    ) {
         $this->context = $context;
     }
 
@@ -213,9 +213,11 @@ class Parameters implements SingletonInterface
 
         if ($shortUrls) {
             $regHash = false;
+            $setfixedUrls = GeneralUtility::makeInstance(SetfixedUrls::class);
+            $shortUrlLife = intval($conf['shortUrlLife']) ? strval(intval($conf['shortUrlLife'])) : '30';
 
             // delete outdated short urls
-            $this->cleanShortUrlCache();
+            $setfixedUrls->cleanShortUrlCache($shortUrlLife);
             if (
                 isset($feUserData) &&
                 is_array($feUserData) &&
@@ -238,7 +240,8 @@ class Parameters implements SingletonInterface
 
             // Check and process for short URL if the regHash GET parameter exists
             if ($regHash) {
-                $getVars = $this->getShortUrl($regHash);
+                $setfixedUrls = GeneralUtility::makeInstance(SetfixedUrls::class);
+                $getVars = $setfixedUrls->getShortUrl($regHash);
 
                 if (
                     isset($getVars) &&
@@ -541,7 +544,6 @@ class Parameters implements SingletonInterface
 
     public function setDefaultPid($pid): void
     {
-
         $bPidIsInt = MathUtility::canBeInterpretedAsInteger($pid);
         $this->defaultPid = ($bPidIsInt ? intval($pid) : $this->getTypoScriptFrontendController()->id);
     }
@@ -1053,80 +1055,6 @@ class Parameters implements SingletonInterface
         return $result;
     }   // isPreview
 
-    /*************************************
-    * SHORT URL HANDLING
-    *************************************/
-    /**
-    *  Get the stored variables using the hash value to access the database
-    */
-    public function getShortUrl($regHash)
-    {
-        // get the serialised array from the DB based on the passed hash value
-        $varArray = [];
-        $res =
-            $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-                'params',
-                'cache_md5params',
-                'md5hash=' . $GLOBALS['TYPO3_DB']->fullQuoteStr(
-                    $regHash,
-                    'cache_md5params'
-                )
-            );
-
-        while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-            $varArray = unserialize($row['params']);
-        }
-        $GLOBALS['TYPO3_DB']->sql_free_result($res);
-
-        // convert the array to one that will be properly incorporated into the GET global array.
-        $retArray = [];
-        foreach($varArray as $key => $val) {
-            if (is_string($val)) {
-                $val = str_replace('%2C', ',', $val);
-            }
-            $search = ['[%5D]', '[%5B]'];
-            $replace = ['\']', '\'][\''];
-            $newkey = "['" . preg_replace($search, $replace, $key);
-            if (!preg_match('/' . preg_quote(']') . '$/', $newkey)) {
-                $newkey .= "']";
-            }
-            eval("\$retArray" . $newkey . "='$val';");
-        }
-        return $retArray;
-    }   // getShortUrl
-
-    /**
-    *  Get the stored variables using the hash value to access the database
-    */
-    public function deleteShortUrl($regHash): void
-    {
-        if ($regHash != '') {
-            // get the serialised array from the DB based on the passed hash value
-            $GLOBALS['TYPO3_DB']->exec_DELETEquery(
-                'cache_md5params',
-                'md5hash=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($regHash, 'cache_md5params')
-            );
-        }
-    }
-
-    /**
-    *  Clears obsolete hashes used for short url's
-    */
-    public function cleanShortUrlCache(): void
-    {
-        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
-        $conf = $confObj->getConf();
-
-        $shortUrlLife = intval($conf['shortUrlLife']) ? strval(intval($conf['shortUrlLife'])) : '30';
-        $max_life = time() - (86400 * intval($shortUrlLife));
-        if (is_object($GLOBALS['TYPO3_DB'])) {
-            $res =
-                $GLOBALS['TYPO3_DB']->exec_DELETEquery(
-                    'cache_md5params',
-                    'tstamp<' . $max_life . ' AND type=99'
-                );
-        }
-    }   // cleanShortUrlCache
 
     /**
      * @return TypoScriptFrontendController|null

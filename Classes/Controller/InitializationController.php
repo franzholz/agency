@@ -51,9 +51,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use SJBR\StaticInfoTables\PiBaseApi;
 
 use JambageCom\Div2007\Compatibility\AbstractPlugin;
+use JambageCom\Div2007\Database\CoreQuery;
 use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
-use JambageCom\Div2007\Database\CoreQuery;
 
 use JambageCom\Agency\Configuration\ConfigurationStore;
 
@@ -64,6 +64,7 @@ use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Database\Tca;
 use JambageCom\Agency\Database\Tables;
 use JambageCom\Agency\Database\Data;
+use JambageCom\Agency\Domain\Model\FrontendUser;
 use JambageCom\Agency\Security\Authentication;
 use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Utility\LocalizationUtility;
@@ -130,7 +131,7 @@ class InitializationController implements SingletonInterface
 
         if (
             ExtensionManagementUtility::isLoaded(
-                STATIC_INFO_TABLES_EXT
+                'static_info_tables'
             )
         ) {
             // Initialise static info library
@@ -150,14 +151,9 @@ class InitializationController implements SingletonInterface
         }
 
         $urlObj = GeneralUtility::makeInstance(Url::class);
-        $coreQuery = GeneralUtility::makeInstance(
-            CoreQuery::class,
-            $request->getAttribute('frontend.controller')
-        );
         $dataObj =
             GeneralUtility::makeInstance(
-                Data::class,
-                $coreQuery
+                Data::class
             );
         $markerObj = GeneralUtility::makeInstance(Marker::class);
         $actionController = GeneralUtility::makeInstance(ActionController::class);
@@ -172,10 +168,6 @@ class InitializationController implements SingletonInterface
             'EXT:' . Extension::KEY . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf',
             false
         );
-        $tmpText = $languageObj->getLabel('unsupported');
-        if ($tmpText == '') {
-            $result = false;
-        }
 
         $languageObj->setSalutation($conf['salutation']);
         $urlObj->init(
@@ -215,8 +207,13 @@ class InitializationController implements SingletonInterface
                     $controlData,
                     $urlObj
                 );
+                $coreQuery = GeneralUtility::makeInstance(
+                    CoreQuery::class,
+                    $request->getAttribute('frontend.controller')
+                );
 
                 $dataObj->init(
+                    $coreQuery,
                     $languageObj,
                     $tcaObj,
                     $actionController,
@@ -227,15 +224,15 @@ class InitializationController implements SingletonInterface
                 );
 
                 $resultInit = $actionController->init2( // only here the $conf is changed
+                    $adminFieldList,
+                    $origArray,
+                    $errorMessage,
+                    $dataObj,
                     $confObj,
                     $staticInfoObj,
                     $theTable,
                     $controlData,
-                    $dataObj,
-                    $tcaObj,
-                    $adminFieldList,
-                    $origArray,
-                    $errorMessage
+                    $tcaObj
                 );
 
                 if ($resultInit === false) {

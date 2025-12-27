@@ -280,7 +280,7 @@ class Marker
                         true
                     );
                 }
-                $result = $this->tmpTcaMarkers['###TCA_INPUT_' . $matches[2] . '###'];
+                $result = $this->tmpTcaMarkers['###TCA_INPUT_' . $matches[2] . '###'] ?? '';
                 break;
             case 'meta':
                 if ($matches[2] == 'title') {
@@ -396,7 +396,7 @@ class Marker
         $infoFieldArray = GeneralUtility::trimExplode(',', $infoFields, true);
         $specialFieldArray = GeneralUtility::trimExplode(',', $this->data->getSpecialFieldList(), true);
 
-        if (!empty($specialFieldArray['0'])) {
+        if (!empty($specialFieldArray[0])) {
             $infoFieldArray = array_merge($infoFieldArray, $specialFieldArray);
             $requiredArray = array_merge($requiredArray, $specialFieldArray);
         }
@@ -439,13 +439,12 @@ class Marker
             $label = $languageObj->getLabel('tooltip_invitation_' . $theField);
             $label = htmlspecialchars($label);
             $markerArray['###TOOLTIP_INVITATION_' . $markerkey . '###'] = $label;
-
             $colConfig = $tcaColumns[$theField]['config'];
 
             if (
-                $colConfig['type'] == 'select' &&
-                isset($colConfig['items']) &&
-                is_array($colConfig['items'])
+                (
+                    $colConfig['type'] == 'select'
+                )
             ) {
                 $colContent = '';
                 $markerArray['###FIELD_' . $markerkey . '_CHECKED###'] = '';
@@ -461,17 +460,22 @@ class Marker
                     }
 
                     foreach ($fieldArray as $key => $value) {
-                        $label = $languageObj->getLabelFromString($colConfig['items'][$value]['label']);
+                        $label = $languageObj->getLabelFromString($colConfig['items'][$value]['label'] ?? '');
                         $markerArray['###FIELD_' . $markerkey . '_CHECKED###'] .= '- ' . $label . '<br' . HtmlUtility::getXhtmlFix() . '>';
-                        $label = $languageObj->getLabelFromString($colConfig['items'][$value]['label']);
+                        $label = $languageObj->getLabelFromString($colConfig['items'][$value]['label'] ?? '');
                         $markerArray['###LABEL_' . $markerkey . '_CHECKED###'] .= '- ' . $label . '<br' . HtmlUtility::getXhtmlFix() . '>';
-                        $markerArray['###POSTVARS_' . $markerkey.'###'] .= chr(10) . '	<input type="hidden" name="FE[fe_users][' . $theField . '][' . $key . ']" value ="' . $value . '"' . HtmlUtility::getXhtmlFix() . '>';
+                        $markerArray['###POSTVARS_' . $markerkey . '###'] .= chr(10) . '	<input type="hidden" name="FE[fe_users][' . $theField . '][' . $key . ']" value ="' . $value . '"' . HtmlUtility::getXhtmlFix() . '>';
                     }
                 }
             } elseif ($colConfig['type'] == 'check') {
-                $yes = (isset($row[$theField]) && $row[$theField] != '');
-                $markerArray['###FIELD_' . $markerkey . '_CHECKED###'] = ($yes ? 'checked' : '');
-                $markerArray['###LABEL_' . $markerkey . '_CHECKED###'] = ($yes ? $languageObj->getLabel('yes') : $languageObj->getLabel('no'));
+                if ($label != '') {
+                    $yes = (isset($row[$theField]) && $row[$theField] != '');
+                    $markerArray['###FIELD_' . $markerkey . '_CHECKED###'] = ($yes ? 'checked' : '');
+                    $markerArray['###LABEL_' . $markerkey . '_CHECKED###'] = ($yes ? $languageObj->getLabel('yes') : $languageObj->getLabel('no'));
+                } else {
+                    $markerArray['###FIELD_' . $markerkey . '_CHECKED###'] = '';
+                    $markerArray['###LABEL_' . $markerkey . '_CHECKED###'] = '';
+                }
             }
 
             if (in_array(trim($theField), $requiredArray)) {

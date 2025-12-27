@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace JambageCom\Agency\Api;
+namespace JambageCom\Agency\Database\Field;
 
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2008-2018 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
-*  This script is part of the Typo3 project. The Typo3 project is
+*  This script is part of the TYPO3 project. The TYPO3 project is
 *  free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
 *  the Free Software Foundation; either version 2 of the License or
@@ -32,55 +32,34 @@ namespace JambageCom\Agency\Api;
 /**
  * Part of the agency (Agency Registration) extension.
  *
- * customer number functions for the FE user field cnum
+ * class the usergroup field
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
- *
+ * @maintainer	Franz Holzinger <franz@ttproducts.de>
  * @package TYPO3
  * @subpackage agency
- *
  *
  */
 
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
-use JambageCom\Agency\Domain\Repository\FrontendUserRepository;
+use MEDIAESSENZ\Mail\Domain\Repository\CategoryRepository;
 
 
-class CustomerNumber implements SingletonInterface
+class Category extends Base implements SingletonInterface
 {
-    protected ?FrontendUserRepository $frontendUserRepository = null;
+    protected $savedReservedValues = [];
 
     public function __construct(
-        FrontendUserRepository $frontendUserRepository
+        protected readonly CategoryRepository $categoryRepository,
     ) {
-        $this->frontendUserRepository = $frontendUserRepository;
     }
 
-    public function generate(
-        $theTable,
-        $config
-    ) {
-        $prefix = $config['prefix'];
-        $result = $prefix . '1';
-
-        if ($prefix != '') {
-            $maxCustomerNumber =
-                $this->frontendUserRepository->maxCustomerNumber();
-
-            $found = preg_match_all('/([\d]+)/', $maxCustomerNumber, $match);
-            $index = $found - 1;
-            if (
-                $found &&
-                isset($match[$index]) &&
-                is_array($match[$index])
-            ) {
-                $index2 = count($match[$index]) - 1;
-                $result = $prefix . ($match[$index][$index2] + 1);
-            }
-        }
-
-        return $result;
+    public function findRecords(array $pidArray): QueryResultInterface|array
+    {
+        $records = $this->categoryRepository->findByPidList($pidArray, ['title' => 'ASC']);
+        return $records;
     }
 }
