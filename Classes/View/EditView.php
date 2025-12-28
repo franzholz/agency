@@ -423,7 +423,7 @@ class EditView
                     $content = $this->renderForm(
                         $markerArray,
                         $conf,
-                        $prefixId,´
+                        $prefixId,
                         $cObj,
                         $languageObj,
                         $controlData,
