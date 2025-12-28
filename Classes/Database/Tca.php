@@ -402,12 +402,6 @@ class Tca implements SingletonInterface
             unset($dataArray['privacy_policy_acknowledged']);
         }
 
-        if (
-            isset($dataArray[Field::CAPTCHA])
-        ) {
-            unset($dataArray[Field::CAPTCHA]);
-        }
-
         return true;
     } // modifyRow
 
@@ -743,7 +737,6 @@ class Tca implements SingletonInterface
                     break;
 
                 case 'select':
-
                     if (
                         isset($columnValue) &&
                         (
