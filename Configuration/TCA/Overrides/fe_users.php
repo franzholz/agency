@@ -114,7 +114,7 @@ call_user_func(function ($extensionKey, $table): void {
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.by_invitation',
             'config' => [
                 'type' => 'check',
-                'default' => '0'
+                'default' => 0
             ]
         ],
         'has_privileges' => [
@@ -122,7 +122,7 @@ call_user_func(function ($extensionKey, $table): void {
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.has_privileges',
             'config' => [
                 'type' => 'check',
-                'default' => '0'
+                'default' => 0
             ]
         ],
         'terms_acknowledged' => [
@@ -130,7 +130,7 @@ call_user_func(function ($extensionKey, $table): void {
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.terms_acknowledged',
             'config' => [
                 'type' => 'check',
-                'default' => '0',
+                'default' => 0,
                 'readOnly' => '1',
             ]
         ],
@@ -167,7 +167,7 @@ call_user_func(function ($extensionKey, $table): void {
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.lost_password',
             'config' => [
                 'type' => 'check',
-                'default' => '0'
+                'default' => 0
             ]
         ],
         'privacy_policy_acknowledged' => [
@@ -175,7 +175,7 @@ call_user_func(function ($extensionKey, $table): void {
             'label' => 'LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.privacy_policy_acknowledged',
             'config' => [
                 'type' => 'check',
-                'default' => '0',
+                'default' => 0,
                 'readOnly' => '1',
             ]
         ],
@@ -250,11 +250,11 @@ call_user_func(function ($extensionKey, $table): void {
             );
     }
 
-    $GLOBALS['TCA'][$table]['types']['0']['showitem'] =
+    $GLOBALS['TCA'][$table]['types'][0]['showitem'] =
         preg_replace(
             '/(^|,)\s*country\s*(,|$)/',
             '$1 ' .  implode(',', $validColumns) . '$2',
-            $GLOBALS['TCA'][$table]['types']['0']['showitem']
+            $GLOBALS['TCA'][$table]['types'][0]['showitem']
         );
 
     $temporaryColumns['title'] = '';
@@ -285,11 +285,11 @@ call_user_func(function ($extensionKey, $table): void {
         }
     }
 
-    $GLOBALS['TCA'][$table]['types']['0']['showitem'] =
+    $GLOBALS['TCA'][$table]['types'][0]['showitem'] =
         preg_replace(
             '/(^|,)\s*address\s*(,|$)/',
             '$1 ' .  implode(',', $validColumns) . '$2',
-            $GLOBALS['TCA'][$table]['types']['0']['showitem']
+            $GLOBALS['TCA'][$table]['types'][0]['showitem']
         );
 
     $GLOBALS['TCA'][$table]['palettes']['2']['showitem'] = 'gender,--linebreak--,' . $GLOBALS['TCA'][$table]['palettes']['2']['showitem'];

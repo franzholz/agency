@@ -262,6 +262,7 @@ class Tca implements SingletonInterface
                 case 'category':
                 case 'select':
                     $value = $dataArray[$columnName] ?? '';
+
                     if ($value == 'Array') {    // checkbox from which nothing has been selected
                         $dataArray[$columnName] = $value = '';
                     }
@@ -275,12 +276,14 @@ class Tca implements SingletonInterface
 
                     if (
                         in_array($columnName, $dataFieldList) &&
-                        !empty($columnConfig['MM']) &&
                         isset($value)
                     ) { // getAssignedToRecord($uid, $table)
                         if ($value == '' || is_array($value)) {
                             // the value contains the count of elements from a mm table
-                        } elseif ($bColumnIsCount) {
+                        } elseif (
+                            $bColumnIsCount &&
+                            !empty($columnConfig['MM'])
+                        ) {
                             $valuesArray =
                                 $this->getRelatedUids(
                                     $columnConfig['MM'],
@@ -290,9 +293,12 @@ class Tca implements SingletonInterface
                                     'sorting_foreign'
                                 );
                             $dataArray[$columnName] = $valuesArray;
-                        } else {
+                        } else if (
+                            is_string($value) ||
+                            is_int($value)
+                        ) {
                             // the values from the mm table are already available as an array
-                            $valuesArray = GeneralUtility::trimExplode(',', $value, true);
+                            $valuesArray = GeneralUtility::trimExplode(',', (string) $value, true);
                             $newValues = [];
                             foreach ($valuesArray as $theValue) {
                                 $newValues[] = (int) $theValue;
@@ -303,6 +309,7 @@ class Tca implements SingletonInterface
 
                     if (
                         isset($dataArray[$columnName]) &&
+                        !is_array($dataArray[$columnName]) &&
                         (
                             $dataArray[$columnName] == '' ||
                             MathUtility::canBeInterpretedAsInteger($dataArray[$columnName])
@@ -402,12 +409,6 @@ class Tca implements SingletonInterface
             unset($dataArray['privacy_policy_acknowledged']);
         }
 
-        if (
-            isset($dataArray[Field::CAPTCHA])
-        ) {
-            unset($dataArray[Field::CAPTCHA]);
-        }
-
         return true;
     } // modifyRow
 
@@ -436,7 +437,7 @@ class Tca implements SingletonInterface
         return $result;
     }
 
-    function generateSelectionPreviewContent(
+    public function generateSelectionPreviewContent(
         Localization $languageObj,
         string $theTable,
         string $columnName,
@@ -743,7 +744,6 @@ class Tca implements SingletonInterface
                     break;
 
                 case 'select':
-
                     if (
                         isset($columnValue) &&
                         (
@@ -839,7 +839,7 @@ class Tca implements SingletonInterface
         return $columnContent;
     }
 
-    public function getSelectCheckMainPart (
+    protected function getSelectCheckMainPart (
         &$previouslySelected,
         $columnName,
         $index,

@@ -313,7 +313,7 @@ class UserGroup extends Base implements SingletonInterface
                                             if ($row['email'] == $xmlRow['email']) {
                                                 $bRowFits = true;
                                             } elseif (
-                                                $nameArray['0'] == $nameArray['1'] &&
+                                                $nameArray[0] == $nameArray[1] &&
                                                 $row['zip'] == $xmlRow['zip']
                                             ) {
                                                 $bRowFits = true;

@@ -113,7 +113,7 @@ class Template
             'categories',
             'mail_html',
         ];
-        $infoFields = array_merge($infoFields, $mailFields); // add always the Direct Mail fields because its markers are present in the HTML template
+        $infoFields = array_merge($infoFields, $mailFields); // add always the Mail fields because its markers are present in the HTML template
 
         foreach ($mailFields as $theField) {
             if (

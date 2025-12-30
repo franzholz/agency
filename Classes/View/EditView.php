@@ -250,6 +250,7 @@ class EditView
                 $templateCode,
                 $markerArray
             );
+
         $markerArray['###HIDDENFIELDS###'] .=
             chr(10) . '<input type="hidden" name="FE[' . $theTable . '][uid]" value="' . $currentArray['uid'] . '"' . $xhtmlFix . '>';
 
@@ -301,8 +302,22 @@ class EditView
                     $currentArray,
                     $cmdKey
                 );
+
             $fields = $dataObj->getFieldList() . ',' . $dataObj->getAdditionalUpdateFields();
-            $fields = implode(',', array_intersect(explode(',', $fields), GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true)));
+            $fields =
+                implode(',',
+                    array_intersect(
+                        explode(
+                            ',',
+                            $fields
+                        ),
+                        GeneralUtility::trimExplode(
+                            ',',
+                            $conf[$cmdKey . '.']['fields'],
+                            true
+                        )
+                    )
+                );
             $fields = SecuredData::getOpenFields($fields);
             $form = $controlData->determineFormId();
             $updateJS =
@@ -404,6 +419,8 @@ class EditView
             ) {
                 $markerObj->setArray($markerArray);
                 $authCode = $authObj->getAuthCode();
+
+
 
                 // Must be logged in OR be authenticated by the aC code in order to edit
                 // If the recUid selects a record.... (no check here)
