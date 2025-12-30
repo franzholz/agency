@@ -153,39 +153,8 @@ class ActionController implements SingletonInterface
         $cmd = $controlData->getCmd();
         $dataArray = $dataObj->getDataArray();
         $fieldlist = '';
-        $modifyPassword = false;
         $request = $controlData->getRequest();
         $frontendUser = $request->getAttribute('frontend.user');
-        $bHtmlSpecialChars = false;
-        SecuredData::secureInput($dataArray, $bHtmlSpecialChars);
-        $dataObj->setDataArray($dataArray);
-
-        $fieldlist =
-            implode(',', TableUtility::getFields($theTable));
-
-        if ($cmd == 'password') {
-            $fieldlist = implode(',', array_keys($dataArray));
-            if ($modifyPassword) {
-                $fieldlist .= ',password';
-            }
-        }
-        $dataObj->setFieldList($fieldlist);
-
-        if (
-            isset($dataArray) &&
-            is_array($dataArray) &&
-            !empty($dataArray)
-        ) {
-            $tcaObj->modifyRow(
-                $dataArray,
-                $staticInfoObj,
-                $theTable,
-                $fieldlist,
-                true,
-                false
-            );
-        }
-
         $feUserdata = $controlData->getFeUserData();
         $theUid = 0;
         $setFixedUid = false;
@@ -210,7 +179,11 @@ class ActionController implements SingletonInterface
             $dataObj->setRecUid($theUid);
             $newOrigArray = $dataObj->fetchRow($theTable, $theUid);
 
-            if (isset($newOrigArray) && is_array($newOrigArray)) {
+            if (
+                isset($newOrigArray) &&
+                is_array($newOrigArray) &&
+                !empty($newOrigArray)
+            ) {
                 $tcaObj->modifyRow(
                     $newOrigArray,
                     $staticInfoObj,
@@ -573,7 +546,7 @@ class ActionController implements SingletonInterface
                 ) &&
                 !in_array($cmd, $this->noLoginCommands)
             )
-            ) {
+        ) {
             $controlData->setCmd($cmd);
             $origArray = [];
             $dataObj->setOrigArray($origArray);
@@ -587,6 +560,7 @@ class ActionController implements SingletonInterface
                         $frontendUser,
                         $extensionKey
                     );
+
                 if ($securedArrayRead && !empty($securedArray['password'])) {
                     $savePassword = $securedArray['password'];
                 }
@@ -659,13 +633,15 @@ class ActionController implements SingletonInterface
                     $theTable,
                     $finalDataArray,
                     $origArray,
-                    $cmdKey
+                    $cmdKey,
+                    false
                 );
             $dataObj->overrideValues(
                 $finalDataArray,
                 $cmdKey,
                 $conf[$cmdKey . '.']
             );
+
             if (
                 $parseResult &&
                 (

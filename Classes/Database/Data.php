@@ -118,7 +118,8 @@ class Data implements SingletonInterface
         $templateCode,
         Parameters $controlData,
         $staticInfoObj
-    ): void {
+    ): void
+    {
         $this->coreQuery = $coreQuery;
         $this->lang = $lang;
         $this->tca = $tca;
@@ -126,6 +127,7 @@ class Data implements SingletonInterface
         $this->controlData = $controlData;
         $this->fileFunc = GeneralUtility::makeInstance(BasicFileUtility::class);
         $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
+        $cmd = $controlData->getCmd();
 
         // Fetching the template file
         $this->setTemplateCode($templateCode);
@@ -140,15 +142,43 @@ class Data implements SingletonInterface
 
         // Get POST parameters
         $fe = $parameterApi->getParameter('FE');
+        $fieldlist =
+            implode(',', TableUtility::getFields($theTable));
 
         if (
-            isset($fe) &&
-            is_array($fe) &&
+            isset($fe[$theTable]) &&
+            is_array($fe[$theTable]) &&
             $controlData->isTokenValid()
         ) {
-            $feDataArray = $fe[$theTable];
-            $this->setDataArray($feDataArray);
+            $bHtmlSpecialChars = false;
+            $modifyPassword = false;
+            $dataArray = $fe[$theTable];
+            SecuredData::secureInput($dataArray, $bHtmlSpecialChars);
+
+            if ($cmd == 'password') {
+                $fieldlist = implode(',', array_keys($dataArray));
+                if ($modifyPassword) {
+                    $fieldlist .= ',password';
+                }
+            }
+
+            if (
+                isset($dataArray) &&
+                is_array($dataArray) &&
+                !empty($dataArray)
+            ) {
+                $tca->modifyRow(
+                    $dataArray,
+                    $staticInfoObj,
+                    $theTable,
+                    $fieldlist,
+                    true,
+                    false
+                );
+            }
+            $this->setDataArray($dataArray);
         }
+        $this->setFieldList($fieldlist);
     }
 
     public function getFrontendUserRepository(): ?FrontendUserRepository
@@ -410,6 +440,8 @@ class Data implements SingletonInterface
                     } else {
                         $dataValue = $theValue;
                     }
+
+                    $dataValue = is_int($dataArray[$theField]) ? (int) $dataValue : (is_string($dataArray) ? (string) $dataValue : $dataValue);
                 }
 
                 if (!$control) {
@@ -1004,8 +1036,11 @@ class Data implements SingletonInterface
                                     $countArray['hook'][$theCmd] = 1;
                                 }
                                 $extKey = $this->controlData->getExtensionKey();
-                                $hookClassArray = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['model'];
-                                if (is_array($hookClassArray)) {
+                                $hookClassArray = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['model'] ?? null;
+                                if (
+                                    isset($hookClassArray) &&
+                                    is_array($hookClassArray)
+                                ) {
                                     foreach ($hookClassArray as $classRef) {
                                         $hookObj = GeneralUtility::makeInstance($classRef);
 
@@ -1204,11 +1239,17 @@ class Data implements SingletonInterface
         $theTable,
         array &$dataArray,
         array $origArray,
-        $cmdKey
+        $cmdKey,
+        $forDatabase = false
     ) {
         $result = true;
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $conf = $confObj->getConf();
+        if ($forDatabase) {
+            if (isset($dataArray[Field::CAPTCHA])) {
+                unset($dataArray[Field::CAPTCHA]);
+            }
+        }
 
         if (is_array($conf['parseValues.'])) {
 
@@ -1286,6 +1327,10 @@ class Data implements SingletonInterface
                                         $fileDeleted
                                     );
 
+                                if ($forDatabase) {
+                                    $dataValue = count($dataValue);
+                                }
+
                                 if ($fileDeleted) {
                                     $result = false;
                                 }
@@ -1306,12 +1351,18 @@ class Data implements SingletonInterface
                                         is_string($dataArray[$theField]) ||
                                         is_int($dataArray[$theField])
                                     ) {
-                                        $fieldDataArray =
+                                        $localDataArray =
                                             GeneralUtility::trimExplode(
                                                 ',',
                                                 (string) $dataArray[$theField],
                                                 true
                                             );
+                                        foreach ($localDataArray as $value) {
+                                            $fieldDataArray[] =
+                                                MathUtility::canBeInterpretedAsInteger($value) ?
+                                                    (int) $value :
+                                                    $value;
+                                        }
                                     }
                                 }
                                 $dataValue = $fieldDataArray;
@@ -1387,7 +1438,11 @@ class Data implements SingletonInterface
                                 } elseif (!isset($dataArray[$theField])) {
                                     $bValueAssigned = false;
                                 } elseif (!$dataValue) {
-                                    $dataValue = '';
+                                    if ($forDatabase) {
+                                        $dataValue = 0;
+                                    } else {
+                                        $dataValue = '';
+                                    }
                                 }
                                 break;
                             default:
@@ -1609,32 +1664,19 @@ class Data implements SingletonInterface
                     ) {
                         $newFieldList = implode(',', $newFieldArray);
 
-                        $wouldBeDataArray = $this->parseOutgoingData(
+                        $this->parseValues( // convert into the wanted value types
                             $theTable,
-                            $cmdKey,
-                            $pid,
-                            $conf,
                             $dataArray,
-                            $origArray
-                        );
-
-                        $this->tca->modifyRow(
-                            $wouldBeDataArray,
-                            $staticInfoObj,
-                            $theTable,
-                            $newFieldList,
-                            $usePrivacyPolicy,
+                            $origArray,
+                            $cmdKey,
                             true
                         );
-
                         $differences =
                             ArrayUtility::arrayDifference(
                                 $origArray,
-                                $wouldBeDataArray,
-                                array_merge(explode(',', $this->getFieldList()), range(1, 100))
-                                // array_merge(array_keys($origArray), range(1, 100))
+                                $dataArray,
+                                array_merge(explode(',', $this->getFieldList()), range(0, 10))
                             );
-                        // $outGoingData = $differences['insertions'] ?? [];
                         $outGoingData =
                             $this->parseOutgoingData(
                                 $theTable,
@@ -1677,7 +1719,6 @@ class Data implements SingletonInterface
                                 isset($outGoingData[$checkField])
                             ) {
                                 $newRow[$checkField] = $outGoingData[$checkField];
-                                debug($checkField, '$checkField +++');
                             } else if (isset($dataArray[$checkField])) {
                                 $removeFields[] = $checkField;
                             }
@@ -2639,7 +2680,8 @@ class Data implements SingletonInterface
     ) {
         if (
             !isset($dataArray[$theField]) ||
-            $dataArray[$theField] == 0 ||
+            $dataArray[$theField] == ''   ||
+            $dataArray[$theField] == 0    ||
             $dataArray[$theField] == '01-01-1970'
         ) {
             $fieldConfig = $GLOBALS['TCA'][$theTable]['columns'][$theField]['config'];
@@ -2700,7 +2742,7 @@ class Data implements SingletonInterface
     )
     {
         $outGoingData = [];
-        $outGoingData['lost_password'] = '1';
+        $outGoingData['lost_password'] = 1;
 
         $extraList = 'lost_password';
         $result =
