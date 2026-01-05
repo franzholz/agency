@@ -21,6 +21,9 @@ An improved variant of Kasper Skårhøj’s Front End User Admin extension.
     Installation
     Configuration
     GetHelp
+    UserManual/Index
+    UserManual/AdministrativeReview
+    UserManual/RegistrationProcess
     *
 
 ..  card-grid::
@@ -39,7 +42,7 @@ An improved variant of Kasper Skårhøj’s Front End User Admin extension.
 
                 Learn how to include the site set `jambagecom/agency-default-plugin-set` and how to use settings
         to configure this extension.
-        
+
     ..  card:: :ref:`Frequently Asked Questions (FAQ) <faq>`
 
         These questions have been frequently asked.
