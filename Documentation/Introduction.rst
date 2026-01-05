@@ -26,11 +26,18 @@ The Agency Registration extension features include:
 •	Validation of the user's Internet site URL;
 •	Switching salutation mode;
 •	Sending an invitation to register;
-•	en_US localization;
 •	Compatibility with salted passwords (saltedpasswords) and RSA authentication (rsaauth);
 •	CSS-styled XHTML 1.0 Strict template;
 •	Seven optional hooks;
 •	Compatibility with Doctrine.
+* status report to check for possible problems with the installation of the extension (required extensions)
+
+..  _requirements:
+
+Requirements
+============
+
+Agency Registration (extension key: agency) requires TYPO3 13+ and PHP 8.2+.
 
 
 
