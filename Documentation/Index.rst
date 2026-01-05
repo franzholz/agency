@@ -4,7 +4,7 @@
 Agency Registration
 ===================
 
-An improved variant of Kasper Skårhøj&#039;s Front End User Admin extension
+An improved variant of Kasper Skårhøj’s Front End User Admin extension.
 
 ..  note::
     This documentation guide was automatically created by the init command of
