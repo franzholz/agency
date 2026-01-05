@@ -24,5 +24,5 @@ See also `Installing extensions, TYPO3 Getting started <https://docs.typo3.org/p
 Install Agency Registration in Classic Mode
 =========================================
 
-Or download the extension from `https://jambage.com <https://jambage.com>`_ and install it in
+Or download the extension from `Agency Registration Overview <https://extensions.typo3.org/extension/agency>`_ and install it in
 the Extension Manager.
