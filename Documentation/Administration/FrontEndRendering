@@ -12,4 +12,23 @@ HTML Template
 =============
 
 The default HTML template provided with the plugin is:
-EXT:agency/template/agency_css_tmpl.html
+:file:`EXT:agency/template/agency_css_tmpl.html`
+
+CSS Styles
+==========
+
+Default CSS styles are defined in TS template setup field of static template FE User Registration CSS-styled.
+As usual, the default CSS styles may be modified and moved to a .css file. In such a case , the location of the file should be specified by an import rule overriding the default TS template setup:
+:typoscript:`plugin.tx_agency._CSS_DEFAULT_STYLE = @import url("fileadmin/styles/some_style_sheet_file.css");` 
+
+Alternatively, the selectors may be moved to some site-wide style sheet file and the default styles may be nullified:
+:typoscript:`plugin.tx_agency._CSS_DEFAULT_STYLE >` 
+
+HTML Template Markers
+=====================
+The following is the list of global and main subparts markers used in the example HTML template.
+
+
+
+
+
