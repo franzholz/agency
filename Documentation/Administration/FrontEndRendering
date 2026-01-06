@@ -28,6 +28,25 @@ HTML Template Markers
 =====================
 The following is the list of global and main subparts markers used in the example HTML template.
 
+Global markers:
+---------------
+===================================== =================================
+Marker                                Description
+===================================== =================================
+###CHARSET###                         config.metaCharset or iso-8859-1 
+===================================== =================================
+
+Main subpart markers:
+---------------------
+===================================== ===================================================================
+Subpart Marker                        Description
+===================================== ===================================================================
+###TEMPLATE_CREATE###                 template used to display the initial registration form.
+###TEMPLATE_CREATE_PREVIEW###         template used to display the (optional) registration preview form
+===================================== ===================================================================
+
+
+
 
 
 
