@@ -1,1 +1,15 @@
-Chapter Front end rendering
+:navigation-title: Front End Rendering
+
+..  _front-end-rendering:
+
+===================
+Front End Rendering
+===================
+
+..  _htmö-template:
+
+HTML Template
+=============
+
+The default HTML template provided with the plugin is:
+EXT:agency/template/agency_css_tmpl.html
