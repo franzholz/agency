@@ -184,6 +184,44 @@ Main subpart markers:
    when administrative review is enabled, HTML message sent to the user when the registration was refused
 * EMAIL_TEMPLATE_SETFIXED_REFUSE          
    when administrative review is enabled, plain text message sent to the user when the registration was refused.
+* EMAIL_TEMPLATE_SETFIXED_REFUSE_ADMIN
+   when administrative review is enabled, plain text notification sent to the site administrator when a registration was refused
+* EMAIL_TEMPLATE_SETFIXED_DELETE_HTML
+   HTML message sent to the user when he has canceled his registration
+* EMAIL_TEMPLATE_SETFIXED_DELETE
+   plain text message sent to the user when he has canceled his registration
+* EMAIL_TEMPLATE_SETFIXED_DELETE_ADMIN
+   plain text notification sent to the site administrator when a user has canceled his registration.
+* EMAIL_TEMPLATE_INFOMAIL_HTML
+   HTML message sent to the subscriber when he wants to update or terminate his subscription (tt_address)
+* EMAIL_TEMPLATE_INFOMAIL
+   plain text message sent to the subscriber when he wants to update or terminate his subscription (tt_address).
+* EMAIL_TEMPLATE_INFOMAIL_NORECORD_HTML
+   HTML message sent to the subscriber when no record with his email was found
+* EMAIL_TEMPLATE_INFOMAIL_NORECORD
+   plain text message sent to the subscriber when no record with his email was found
+* EMAIL_TEMPLATE_DELETE_SAVED_HTML
+   the HTML message sent to the user when he has deleted his account
+* EMAIL_TEMPLATE_DELETE_SAVED
+   plain text message sent to the user when he has deleted his account
+* EMAIL_TEMPLATE_DELETE_SAVED_ADMIN
+   plain text notification sent to the site administrator when a user has deleted his account
+* EMAIL_TEMPLATE_SETFIXED_UNSUBSCRIBE_HTML
+   HTML message sent to the user to confirm that he/she was unsubscribed, but that his account is still active
+* EMAIL_TEMPLATE_SETFIXED_UNSUBSCRIBE
+   plain text message sent to the user to confirm that he/she was unsubscribed, but that his account is still active
+* EMAIL_TEMPLATE_SETFIXED_PASSWORD_HTML
+   HTML message sent to the user who has forgotten his password to create a new password for his account (fe_users)
+* EMAIL_TEMPLATE_SETFIXED_PASSWORD
+   tplain text message sent to the user who has forgotten his password to create a new password for his account (fe_users)
+
+
+
+
+
+
+
+
 
 
 
