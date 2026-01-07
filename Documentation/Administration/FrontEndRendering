@@ -38,9 +38,9 @@ CHARSET                               config.metaCharset or iso-8859-1
 
 Main subpart markers:
 ---------------------
-===================================== ==========================================================================================
+===================================== ============================================================================================
 Subpart Marker                        Description
-===================================== ==========================================================================================
+===================================== ============================================================================================
 TEMPLATE_CREATE                       initial registration form
 TEMPLATE_CREATE_PREVIEW               (optional) registration preview form
 TEMPLATE_CREATE_SAVED                 when email confirmation request is disabled, confirmation that the account was created
@@ -80,8 +80,23 @@ TEMPLATE_SETFIXED_FAILED              message when the registration or cancellat
 TEMPLATE_SETFIXED_LOGIN_FAILED        message when the autologin process ends up in an error
 TEMPLATE_AUTH                         link to the registration form
 TEMPLATE_NO_PERMISSIONS               message when some illegal access is attempted
-EMAIL_TEMPLATE_CREATE_SAVED_HTML      when email confirmation request is disabled, template for the HTML message sent to the user when he has created an account.
-===================================== ==========================================================================================
+EMAIL_TEMPLATE_CREATE_SAVED_HTML      when email confirmation request is disabled, HTML message sent to the user when he has 
+                                      created an account
+EMAIL_TEMPLATE_CREATE_SAVED           when email confirmation request is disabled, plain text message sent to the user when 
+                                      he has created an account
+EMAIL_TEMPLATE_CREATE_SAVED_ADMIN     when email confirmation request is disabled, 
+                                      plain text notification sent to the site administrator when a user has created an account
+EMAIL_TEMPLATE_EDIT_SAVED_HTML        the HTML message sent to the user when he has updated his account
+EMAIL_TEMPLATE_EDIT_SAVED             plain text message sent to the user when he has updated his account
+EMAIL_TEMPLATE_EDIT_SAVED_ADMIN       plain text notification sent to the site administrator when a user has updated his account
+EMAIL_TEMPLATE_SETFIXED_CREATE_HTML   when email confirmation request is enabled and administrative review is disabled, HTML 
+                                      message sent to the user when he has created an account and needs to confirm it
+EMAIL_TEMPLATE_SETFIXED_CREATE        when email confirmation request is enabled and administrative review is disabled, plain 
+                                      text message sent to the user when he has created an account and needs to confirm it
+EMAIL_TEMPLATE_SETFIXED_CREATE_ADMIN  when email confirmation request is enabled and administrative review is disabled, plain
+                                      text notification sent to the site administrator when a user has created an account and 
+                                      needs to confirm it
+===================================== ============================================================================================
 
 
 
