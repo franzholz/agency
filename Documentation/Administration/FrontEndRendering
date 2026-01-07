@@ -38,9 +38,9 @@ CHARSET                               config.metaCharset or iso-8859-1
 
 Main subpart markers:
 ---------------------
-===================================== ========================================================================================
+===================================== ==========================================================================================
 Subpart Marker                        Description
-===================================== ========================================================================================
+===================================== ==========================================================================================
 TEMPLATE_CREATE                       initial registration form
 TEMPLATE_CREATE_PREVIEW               (optional) registration preview form
 TEMPLATE_CREATE_SAVED                 when email confirmation request is disabled, confirmation that the account was created
@@ -51,8 +51,37 @@ TEMPLATE_SETFIXED_CREATE              when email confirmation request is enabled
                                       to complete the registration process
 TEMPLATE_SETFIXED_CREATE_REVIEW       when administrative review is enabled, confirmation that the account was created,
                                       but that an email is being sent to the user to complete the registration process
-TEMPLATE_INVITE                       initial account creation form in the case of an invitation.
-===================================== ========================================================================================
+TEMPLATE_INVITE                       initial account creation form in the case of an invitation
+TEMPLATE_INVITE_PREVIEW               (recommended) account creation preview form, in the case of an invitation
+TEMPLATE_SETFIXED_INVITE              confirmation that an account was created and that an invitation email has been sent
+                                      to the user to complete the registration process or decline the invitation
+TEMPLATE_INFOMAIL                     creen that allows the subscriber to request links to be sent to his email address so 
+                                      that he(she) may update or terminate his(her) subscription
+TEMPLATE_INFOMAIL_SENT                confirmation that the “infomail” message is being sent to the subscriber
+TEMPLATE_SETFIXED_OK_APPROVE_INVITE   password update form when the invited person accepts the invitation
+TEMPLATE_EDIT                         account or profile editing form
+TEMPLATE_EDIT_PREVIEW                 (optional) editing preview form
+TEMPLATE_EDIT_SAVED                   confirmation that the account was updated
+TEMPLATE_DELETE_PREVIEW               deletion confirmation form
+TEMPLATE_DELETE_SAVED                 confirmation that the account was deleted
+TEMPLATE_SETFIXED_OK                  when administrative review is disabled, 
+                                      confirmation that the registration process was completed
+TEMPLATE_SETFIXED_OK_APPROVE_REVIEW   when administrative review is enabled, confirmation that the registration was completed, 
+                                      but that the registration must be accepted by the site administrator
+TEMPLATE_SETFIXED_OK_ACCEPT           when administrative review is enabled, response page when the administrator accepts 
+                                      the account registration
+TEMPLATE_SETFIXED_OK_ENTER            when administrative review is enabled, response page when the user clicks on the link 
+                                      in the acceptation email (without auto-login)
+TEMPLATE_SETFIXED_OK_REFUSE           when administrative review is enabled, response page when the administrator refuse
+                                      the account registration
+TEMPLATE_SETFIXED_OK_DELETE           confirmation that the registration process was canceled
+TEMPLATE_SETFIXED_OK_UNSUBSCRIBE      response page when a user was unsubscribed by following a link of a mailing application
+TEMPLATE_SETFIXED_FAILED              message when the registration or cancellation process could not be completed
+TEMPLATE_SETFIXED_LOGIN_FAILED        message when the autologin process ends up in an error
+TEMPLATE_AUTH                         link to the registration form
+TEMPLATE_NO_PERMISSIONS               message when some illegal access is attempted
+EMAIL_TEMPLATE_CREATE_SAVED_HTML      when email confirmation request is disabled, template for the HTML message sent to the user when he has created an account.
+===================================== ==========================================================================================
 
 
 
