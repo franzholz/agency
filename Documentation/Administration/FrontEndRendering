@@ -121,7 +121,19 @@ EMAIL_TEMPLATE_SETFIXED_APPROVE_ADMIN   when email confirmation request is enabl
                                         text notification sent to the site administrator when a user has confirm it
 EMAIL_TEMPLATE_SETFIXED_APPROVE_...     when administrative review is enabled, template for the HTML message sent to the user 
 REVIEW_HTML                             when he has confirmed the registration
-MAIL_TEMPLATE_SETFIXED_APPROVE_REVIEW#
+EMAIL_TEMPLATE_SETFIXED_APPROVE_REVIEW  when administrative review is enabled, plain text message sent to the user when he has
+                                        confirmed the registration.
+EMAIL_TEMPLATE_SETFIXED_APPROVE_...     when administrative review is enabled, plain text notification sent to the site 
+REVIEW_ADMIN                            administrator when a user has confirmed his registration.
+EMAIL_TEMPLATE_SETFIXED_ACCEPT_HTML     when administrative review is enabled, HTML welcome message sent to the user when the 
+                                        registration was accepted
+EMAIL_TEMPLATE_SETFIXED_ACCEPT          when administrative review is enabled, plain text welcome message sent to the user 
+                                        when the registration was accepted
+EMAIL_TEMPLATE_SETFIXED_ACCEPT_ADMIN    when administrative review is enabled, plain text notification sent to the site 
+                                        administrator when a registration was accepted
+EMAIL_TEMPLATE_SETFIXED_REFUSE_HTML     when administrative review is enabled, HTML message sent to the user when the registration 
+                                        was refused
+EMAIL_TEMPLATE_SETFIXED_REFUSE          when administrative review is enabled, plain text message sent to the user when the registration was refused.
 ======================================= ============================================================================================
 
 
