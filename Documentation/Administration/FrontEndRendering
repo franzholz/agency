@@ -33,17 +33,26 @@ Global markers:
 ===================================== =================================
 Marker                                Description
 ===================================== =================================
-###CHARSET###                         config.metaCharset or iso-8859-1 
+CHARSET                               config.metaCharset or iso-8859-1 
 ===================================== =================================
 
 Main subpart markers:
 ---------------------
-===================================== ===================================================================
+===================================== ========================================================================================
 Subpart Marker                        Description
-===================================== ===================================================================
-###TEMPLATE_CREATE###                 template used to display the initial registration form.
-###TEMPLATE_CREATE_PREVIEW###         template used to display the (optional) registration preview form
-===================================== ===================================================================
+===================================== ========================================================================================
+TEMPLATE_CREATE                       initial registration form
+TEMPLATE_CREATE_PREVIEW               (optional) registration preview form
+TEMPLATE_CREATE_SAVED                 when email confirmation request is disabled, confirmation that the account was created
+TEMPLATE_CREATE_SAVED_REVIEW          when email confirmation request is disabled, but administrative review is enabled, 
+                                      confirmation that the account was created and an administrative review is required
+TEMPLATE_SETFIXED_CREATE              when email confirmation request is enabled and administrative review is disabled, 
+                                      confirmation that the account was created but that an email is being sent to the user 
+                                      to complete the registration process
+TEMPLATE_SETFIXED_CREATE_REVIEW       when administrative review is enabled, confirmation that the account was created,
+                                      but that an email is being sent to the user to complete the registration process
+TEMPLATE_INVITE                       initial account creation form in the case of an invitation.
+===================================== ========================================================================================
 
 
 
