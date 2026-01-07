@@ -96,6 +96,27 @@ EMAIL_TEMPLATE_SETFIXED_CREATE        when email confirmation request is enabled
 EMAIL_TEMPLATE_SETFIXED_CREATE_ADMIN  when email confirmation request is enabled and administrative review is disabled, plain
                                       text notification sent to the site administrator when a user has created an account and 
                                       needs to confirm it
+EMAIL_TEMPLATE_SETFIXED_CREATE_...    when administrative review is enabled, HTML message sent to the user when he has created 
+REVIEW_HTML                           and he needs to confirm his registration, and administrative review will be required
+EMAIL_TEMPLATE_SETFIXED_CREATE_REVIEW when administrative review is enabled, plain text message sent to the user when he has 
+                                      created and he needs to confirm it, and administrative review will be required
+EMAIL_TEMPLATE_SETFIXED_CREATE_...    when administrative review is enabled, plain text notification sent to the site 
+REVIEW_ADMIN                          administrator when a user has created an account and needs to confirm it
+EMAIL_TEMPLATE_SETFIXED_REVIEW_...    when administrative review is enabled, template for the HTML message sent to the site 
+ADMIN_HTML                            administrator when a user has approved it and a decision to accept or refuse the 
+                                      registration is required
+EMAIL_TEMPLATE_SETFIXED_REVIEW_ADMIN  when administrative review is enabled, plain text message sent to the site administrator 
+                                      when a user has approved it and a decision to accept or refuse the registration is required
+EMAIL_TEMPLATE_SETFIXED_INVITE_HTML   HTML invitation message sent to a person for whom an account has been created and requesting
+                                      the invitation be accepted to confirm registration, or to decline the invitation 
+EMAIL_TEMPLATE_SETFIXED_INVITE        plain text invitation message sent to a person for whom an account has been created and 
+                                      requesting the invitation be accepted to confirm it, or to decline the invitation
+EMAIL_TEMPLATE_SETFIXED_INVITE_ADMIN  plain text notification sent to the site administrator when an invitation to register has 
+                                      been sent and the invited person needs to confirm his/her registration
+EMAIL_TEMPLATE_SETFIXED_APPROVE_HTML  when email confirmation request is enabled and administrative review is disabled, HTML 
+                                      message sent to the user when he has confirmed the registration
+EMAIL_TEMPLATE_SETFIXED_APPROVE       when email confirmation request is enabled and administrative review is disabled, plain 
+                                      text message sent to the user when he has confirmed it
 ===================================== ============================================================================================
 
 
