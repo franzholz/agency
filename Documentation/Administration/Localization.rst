@@ -15,16 +15,17 @@ See `Translation files (XLIFF format) <https://docs.typo3.org/permalink/t3coreap
 Use the TYPO3 back end to install the available translations.
 
 
-Activate language
-You must activate the language in your TypoScript setup. Here comes an example how to activate German as the main language for TYPO3.
-Example:
-# language
-   config.htmlTag_langKey = de
-   config.language = de
-   config.locale_all = de_DE
-   config.sys_language_uid = 0
+Activate languages
+------------------
+
+You must activate your languages for TYPO3.
+
+See `languages <https://docs.typo3.org/permalink/t3coreapi:sitehandling-basics-languages>`_ .
+
+
 Adapting labels
-You may adapt the labels in pi/locallang.xlf to to your needs and languages.
+---------------
+You can adapt the labels in :file:`Resources/Private/Language/locallang.xlf to to your needs and languages.
 Any label may be overridden by inserting the appropriate assignment in your TS template setup:
 plugin.tx_agency._LOCAL_LANG.languageCode.labelName = overridingValue
 
