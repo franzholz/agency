@@ -25,11 +25,11 @@ See `languages <https://docs.typo3.org/permalink/t3coreapi:sitehandling-basics-l
 
 Adapting labels
 ---------------
-You can adapt the labels in :file:`Resources/Private/Language/locallang.xlf to to your needs and languages.
+You can adapt the labels in the extension file :file:`Resources/Private/Language/locallang.xlf` to to your needs and languages.
 Any label may be overridden by inserting the appropriate assignment in your TS template setup:
-plugin.tx_agency._LOCAL_LANG.languageCode.labelName = overridingValue
+:typoscript:`plugin.tx_agency._LOCAL_LANG.languageCode.labelName = overridingValue`
 
-You can find the name of the label (languageCode) you want to modify (or translate) by inspecting the extension file pi/locallang.xlf.
+You can find the name of the label (languageCode) you want to modify (or translate) by inspecting the file.
 Overriding labels specified in TCA
 You may also override by the same method labels from other files when they are referenced by the TCA definition of a field (see the tutorial section on Adding fields to the registration form). This is done as follows:
 plugin.tx_agency._LOCAL_LANG.languageCode.tableName.fieldName = overridingValue
