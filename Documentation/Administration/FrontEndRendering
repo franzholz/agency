@@ -213,7 +213,7 @@ Main subpart markers:
 * EMAIL_TEMPLATE_SETFIXED_PASSWORD_HTML
    HTML message sent to the user who has forgotten his password to create a new password for his account (fe_users)
 * EMAIL_TEMPLATE_SETFIXED_PASSWORD
-   tplain text message sent to the user who has forgotten his password to create a new password for his account (fe_users)
+   plain text message sent to the user who has forgotten his password to create a new password for his account (fe_users)
 
 
 
