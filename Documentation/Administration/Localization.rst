@@ -1,6 +1,18 @@
+..  _localization:
+
+============
 Localization
+============
+
+
 Language files
-The main language file is pi/locallang.xlf. You can translate it with the extension 'locallang-XML translation tool'.
+==============
+
+
+The main language file is :file:`Resources/Private/Language/locallang.xlf`. 
+See `Translation files (XLIFF format) <https://docs.typo3.org/permalink/t3coreapi:xliff>`_  .
+
+You can translate it with the extension 'locallang-XML translation tool'.
 See http://wiki.typo3.org/index.php/Translations and http://translation.typo3.org/ . For questions you can ask news://netfielders.de:119/typo3.translation.general (news reader).
 Send improvements to translations and text improvements to the translator of your language.
 Use the Extension Manager to install the available translations.
