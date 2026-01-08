@@ -29,16 +29,31 @@ You can adapt the labels in the extension file :file:`Resources/Private/Language
 Any label may be overridden by inserting the appropriate assignment in your TS template setup:
 :typoscript:`plugin.tx_agency._LOCAL_LANG.languageCode.labelName = overridingValue`
 
-You can find the name of the label (languageCode) you want to modify (or translate) by inspecting the file.
+You can find the name of the label (languageCode) you want to modify (or translate) by inspecting this file.
+
 Overriding labels specified in TCA
-You may also override by the same method labels from other files when they are referenced by the TCA definition of a field (see the tutorial section on Adding fields to the registration form). This is done as follows:
-plugin.tx_agency._LOCAL_LANG.languageCode.tableName.fieldName = overridingValue
+-----------------------------------
+
+You may also override by the same method labels from other files when they are referenced by the TCA definition of a field (see the tutorial section on adding fields to the registration form). This is done as follows:
+
+:typoscript:`plugin.tx_agency._LOCAL_LANG.languageCode.tableName.fieldName = overridingValue`
+
 Switching salutation mode
-You may also switch the salutation mode used in these labels when this is relevant for the language being used and when the labels are either available in the pi/locallang.xlf file or provided by TypoScript setup. See the TypoScript Reference section.
-v_dear_male or v_dear_female markers will be used instead of v_dear if a gender has been entered by the user.
+-------------------------
+
+You may also switch the salutation mode used in these labels when this is relevant for the language being used and when the labels are either available in the file  :file:`Resources/Private/Language/locallang.xlf` or provided by TypoScript setup. 
+See the TypoScript Reference section.
+
+:php:`v_dear_male` or :php:`v_dear_female` markers will be used instead of :php:`v_dear` if a gender has been entered by the user.
+
 Localization of user group title
-This extension adds table fe_groups_language_overlay in order to allow localization of the user group title.
+--------------------------------
+
+This extension adds the table :php:`fe_groups_language_overlay` in order to allow localization of the user group title.
+
 en_US localization
+------------------
+
 If config.language is set to en_US in TS template setup, labels localized to US English will be used in the front end. If not available, default (en_GB) labels will be used.
 Labels with variables
 Some labels in pi/locallang.xlf have names starting with 'v_'. In those labels, the following variables may be used:
