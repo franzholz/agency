@@ -23,16 +23,23 @@ If you want to use the fields of Mail, e.g. the checkbox to send HTML emails, th
 #.  Create a fourth page and click the checkbox “Hide in menu”. Insert the Agency Registration plugin, using the Default display mode and setting the Record Storage Page to the folder that will contain the front end user records.  Note that no access restriction should be set on this page, because otherwise unregistered users cannot see the confirmation page, and they cannot click on the confirmation link.  Set the TS template constant confirmPID to the page id of this page.
 #.  Decide which fields you want included on the registration form and, among those, which ones you want to be required in order to register. Set TS template constants formFields and requiredFields.
 #.  Review the extension constants described below. All these properties may be conveniently edited using the Constant Editor TS template tool.  If you do not use the Constant Editor to configure the extension, please note the form of the constants assignments in the constants section of your TS template:
-
-
-plugin.tx_agency.property = value
+typoscript:`plugin.tx_agency.property = value`
 or if you assign multiple values:
-plugin.tx_agency { 
- property = value
-... 
-}
-13.	TypoScript Setup:
-config.sys_language_uid = 0
-config.language = de
-config.locale_all = german
-config.typolinkLinkAccessRestrictedPages = NONE;
+..  code-block:: php
+    :caption: constants example
+
+    plugin.tx_agency { 
+       property = value
+       ... 
+    }
+#.  TypoScript Setup:
+..  code-block:: php
+    :caption: EXT:my_extension/ext_localconf.php
+
+    config { 
+       sys_language_uid = 0
+       language = de
+       locale_all = german
+       typolinkLinkAccessRestrictedPages = NONE
+    }
+
