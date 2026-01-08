@@ -70,9 +70,11 @@ Special functions can be inserted. They will be replaced by the result of the fu
 •	:php:`{data:<field>}`: value of this field of the FE user record
 •	:php:`{tca:<field>}`: value of the marker :php:`###TCA_INPUT_field'###`
 •	:php:`{meta:<stuff>}`: extra stuff functions:
-title: page title
+      :php:`title: page title`
 
 Adding extra labels
-Property extraLabels in TS setup may specify a list of extra labels that may be used in the HTML template.
+---------------------
+
+Property :typoscript:`extraLabels` in TS setup may specify a list of extra labels that may be used in the HTML template.
 The values of these labels are specified in TS setup with the same type of assignment as when overriding localized labels:
-plugin.tx_agency._LOCAL_LANG.languageCode.extraLabelName = extraLabelValue
+:typoscript:`plugin.tx_agency._LOCAL_LANG.languageCode.extraLabelName = extraLabelValue`
