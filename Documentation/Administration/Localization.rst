@@ -54,19 +54,22 @@ This extension adds the table :php:`fe_groups_language_overlay` in order to allo
 en_US localization
 ------------------
 
-If config.language is set to en_US in TS template setup, labels localized to US English will be used in the front end. If not available, default (en_GB) labels will be used.
+If the language is set to :php:`en_US` in the site configuration for languages, labels localized to US English will be used in the front end. If not available, default (en_GB) labels will be used.
+
 Labels with variables
-Some labels in pi/locallang.xlf have names starting with 'v_'. In those labels, the following variables may be used:
-•	%1$s : the title of the pid containing the front end user records created by the extension;
-•	%2$s : the user name of the front end user;
-•	%3$s : the name of the front end user;
-•	%4$s : the email address of the front end user.
-•	%5$s : the password of the front end user.
+---------------------
+
+Some labels in :file:`Resources/Private/Language/locallang.xlf` have names starting with :php:`v_`. In those labels, the following variables may be used:
+•	:php:`%1$s` : the title of the pid containing the front end user records created by the extension;
+•	:php:`%2$s` : the user name of the front end user;
+•	:php:`%3$s` : the name of the front end user;
+•	:php:`%4$s` : the email address of the front end user.
+•	:php:`%5$s` : the password of the front end user.
 
 Special functions can be inserted. They will be replaced by the result of the function.
-•	{data:<field>}: value of this field of the FE user record
-•	{tca:<field>}: value of the marker ###TCA_INPUT_field'###'
-•	{meta:<stuff>}: extra stuff functions:
+•	:php:`{data:<field>}`: value of this field of the FE user record
+•	:php:`{tca:<field>}`: value of the marker :php:`###TCA_INPUT_field'###`
+•	:php:`{meta:<stuff>}`: extra stuff functions:
 title: page title
 
 Adding extra labels
