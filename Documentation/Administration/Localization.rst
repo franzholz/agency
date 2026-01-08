@@ -60,17 +60,16 @@ Labels with variables
 ---------------------
 
 Some labels in :file:`Resources/Private/Language/locallang.xlf` have names starting with :php:`v_`. In those labels, the following variables may be used:
-•	:php:`%1$s` : the title of the pid containing the front end user records created by the extension;
-•	:php:`%2$s` : the user name of the front end user;
-•	:php:`%3$s` : the name of the front end user;
-•	:php:`%4$s` : the email address of the front end user.
-•	:php:`%5$s` : the password of the front end user.
+*   :php:`%1$s` : the title of the pid containing the front end user records created by the extension;
+*   :php:`%2$s` : the user name of the front end user;
+*   :php:`%3$s` : the name of the front end user;
+*   :php:`%4$s` : the email address of the front end user.
+*   :php:`%5$s` : the password of the front end user.
 
 Special functions can be inserted. They will be replaced by the result of the function.
-•	:php:`{data:<field>}`: value of this field of the FE user record
-•	:php:`{tca:<field>}`: value of the marker :php:`###TCA_INPUT_field'###`
-•	:php:`{meta:<stuff>}`: extra stuff functions:
-      :php:`title: page title`
+*   :php:`{data:<field>}`: value of this field of the FE user record
+*   :php:`{tca:<field>}`: value of the marker :php:`###TCA_INPUT_field'###`
+*   :php:`{meta:<stuff>}`: extra stuff functions: :php:`title: page title`
 
 Adding extra labels
 ---------------------
