@@ -20,7 +20,7 @@ file.templateFile
 -----------------
 
 ..  confval:: file.templateFile
-    :name: template-file
+    :name: file-templateFile
     :type: string 
     :Default: EXT:agency/template/agency_tmpl.tmpl
 
@@ -30,7 +30,7 @@ file.attachmentFile
 -------------------
 
 ..  confval:: file.attachmentFile
-    :name: attachment-file
+    :name: file-attachmentFile
     :type: string
     :Default: EXT:agency/template/agency_sample.txt
 
@@ -43,7 +43,7 @@ file.termsFile
 --------------
 
 ..  confval:: file.termsFile
-    :name: terms-file
+    :name: file-termsFile
     :type: string
     :Default: EXT:agency/template/agency_terms.txt
 
@@ -62,7 +62,6 @@ termsUrl
 ..  confval:: termsUrl
     :name: termsUrl
     :type: string
-    :Default: 
 
     Page (id or id,type) or url where the terms of usage are shown.
 
@@ -74,26 +73,26 @@ termsUrl
 
 
 
-..  _gifbuilder-text-breakWidth:
+..  _enable-html-mail:
 
-breakWidth
-----------
-
-..  confval:: breakWidth
-    :name: gifbuilder-text-breakWidth
-    :type: integer / :ref:`stdWrap <stdwrap>`
-
-    Defines the maximum width for an object, overlapping elements will
-    force an automatic line break.
-
-
-..  _gifbuilder-text-doNotStripHTML:
-
-doNotStripHTML
+enableHTMLMail
 --------------
 
-..  confval:: doNotStripHTML
-    :name: gifbuilder-text-doNotStripHTML
+..  confval:: enableHTMLMail
+    :name: enableHTMLMail
+    :type: boolean
+    :Default: 1
+
+    If set, emails sent to the front end user will be sent in HTML format. A plain text version will always be included in the emails.
+
+
+..  _enable-email-attachment:
+
+enableEmailAttachment
+---------------------
+
+..  confval:: enableEmailAttachment
+    :name: enableEmailAttachment
     :type: boolean
     :Default: 0 (false)
 
