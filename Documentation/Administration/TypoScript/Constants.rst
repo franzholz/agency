@@ -81,7 +81,7 @@ enableHTMLMail
 ..  confval:: enableHTMLMail
     :name: enableHTMLMail
     :type: boolean
-    :Default: 1
+    :Default: 1 (true)
 
     If set, emails sent to the front end user will be sent in HTML format. A plain text version will always be included in the emails.
 
@@ -96,31 +96,59 @@ enableEmailAttachment
     :type: boolean
     :Default: 0 (false)
 
-    If set, HTML tags inserted in the :ref:`gifbuilder-text-text` are
-    **not** removed. Any other HTML code will be removed by default!
+    If set, and if enableHTMLMail is also set, the attachment file - specified by file.attachmentFile - 
+    will be attached to the registration confirmation HTML email.
 
 
-..  _gifbuilder-text-emboss:
+..  _enable-auto-login-on-confirmation:
 
-emboss
-------
+enableAutoLoginOnConfirmation
+-----------------------------
 
-..  confval:: emboss
-    :name: gifbuilder-text-emboss
-    :type: GIFBUILDER object :ref:`->EMBOSS <gifbuilder-emboss>`
+..  confval:: enableAutoLoginOnConfirmation
+    :name: enableAutoLoginOnConfirmation
+    :type: boolean
+    :Default: 0 (false)
+
+    If set, the user will be automatically logged in upon confirmation of his registration.
+
+..  _enable-auto-login-on-create:
+
+enableAutoLoginOnCreate
+-----------------------
+
+..  confval:: enableAutoLoginOnCreate
+    :name: enableAutoLoginOnCreate
+    :type: boolean
+    :Default: 0 (false)
 
 
-..  _gifbuilder-text-fontColor:
+    Enable auto-login on account creation: if set and if email confirmation is not set, the user will be automatically logged in upon creation of his(her) account.
 
-fontColor
----------
 
-..  confval:: fontColor
-    :name: gifbuilder-text-fontColor
-    :type: :ref:`data-type-GraphicColor` / :ref:`stdWrap <stdwrap>`
-    :Default: black
+..  _enable-auto-login-on-confirmation:
 
-    The font color.
+enableAutoLoginOnInviteConfirmation
+-----------------------------------
+
+..  confval:: enableAutoLoginOnInviteConfirmation
+    :name: enableAutoLoginOnInviteConfirmation
+    :type: boolean
+    :Default: 1 (true)
+
+
+    If set, the user will be automatically logged in upon confirmation of his (her) invitation.
+
+..  _auto-login-redirect-url:
+
+autoLoginRedirect_url
+---------------------
+
+..  confval:: autoLoginRedirect_url
+    :name: autoLoginRedirect-url
+    :type: string
+
+    When auto login is enabled, URL to which the user may be redirected  upon login.
 
 
 ..  _gifbuilder-text-fontFile:
