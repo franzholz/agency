@@ -366,6 +366,9 @@ pidTitleOverride
 registerPID
 ~~~~~~~~~~~
 
+TODO ++++
+
+
 ..  confval:: splitRendering.[array]
     :name: gifbuilder-text-splitRendering-array
     :type: integer
