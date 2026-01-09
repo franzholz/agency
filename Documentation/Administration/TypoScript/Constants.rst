@@ -233,20 +233,24 @@ doNotEnforceUsername
 
 ..  confval:: doNotEnforceUsername
     :name: doNotEnforceUsername
-    :type: boolean
+    :type: string
     :Default: 0 (false)
 
-    If set, field username is not forced to be part of formFields and requiredFields.
+    If set, field username is not forced to be part of formFields and requiredFields.    
 
-..  _gifbuilder-text-niceText-after:
+..  _unsubscribe-allowed-fields:
 
-after
-~~~~~
+unsubscribeAllowedFields
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 ..  confval:: niceText.after
     :name: gifbuilder-text-niceText-after
 
     GraphicsMagick/ImageMagick parameters after scale.
+    Unsubscribe allowed fields: List of fields that are allowed to be updated by an UNSUBSCRIBE link without any login.
+
+    ..  note::
+        Applies to setfixed links from mailing applications with the following query string values: &agency[cmd]=setfixed&sFK=UNSUBSCRIBE. A value for a field listed may be specified with a string of the form: &fD[fieldName]=value. The value of the field of the will be updated when the link is processed.
 
 
 ..  _gifbuilder-text-niceText-before:
