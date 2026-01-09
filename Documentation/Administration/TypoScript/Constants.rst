@@ -19,7 +19,7 @@ Properties
 file.templateFile
 -----------------
 
-..  confval:: align
+..  confval:: file.templateFile
     :name: template-file
     :type: string 
     :Default: EXT:agency/template/agency_tmpl.tmpl
@@ -29,7 +29,7 @@ file.templateFile
 file.attachmentFile
 -------------------
 
-..  confval:: angle
+..  confval:: file.attachmentFile
     :name: attachment-file
     :type: string
     :Default: EXT:agency/template/agency_sample.txt
@@ -37,38 +37,41 @@ file.attachmentFile
     File name of a file to be attached to the registration confirmation email.
 
 
-..  _gifbuilder-text-antiAlias:
+..  _terms-file:
 
-antiAlias
----------
+file.termsFile
+--------------
 
-..  confval:: antiAlias
-    :name: gifbuilder-text-antiAlias
-    :type: boolean
-    :Default: 1 (true)
+..  confval:: file.termsFile
+    :name: terms-file
+    :type: string
+    :Default: EXT:agency/template/agency_terms.txt
 
-    The FreeType antialiasing.
+    File name of the terms of usage file.
+
 
     ..  note::
-        This option is not available, if
-        :ref:`gifbuilder-text-niceText` is enabled.
-
-        Setting this option to :typoscript:`0` will not work, if
-        :ref:`gifbuilder-text-fontColor` is set to black (or #000000).
+        This is used in conjunction with the field 'terms_acknowledged'.
 
 
-..  _gifbuilder-text-breakSpace:
+..  _terms-url:
 
-breakSpace
-----------
+termsUrl
+--------
 
-..  confval:: breakSpace
-    :name: gifbuilder-text-breakSpace
-    :type: float
-    :Default: 1.0
+..  confval:: termsUrl
+    :name: termsUrl
+    :type: string
+    :Default: 
 
-    Defines a value that is multiplied by the line height of the current
-    element.
+    Page (id or id,type) or url where the terms of usage are shown.
+
+    ..  note::
+        If set, overrides file.termsFile.
+
+    ..  note::
+        This is used in conjunction with the field 'terms_acknowledged'.
+
 
 
 ..  _gifbuilder-text-breakWidth:
