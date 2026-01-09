@@ -222,7 +222,7 @@ requiredFields
     List of fields that must be filled in on the Agency Registration form. Should be a subset of the list specified on the 'formFields' property.
 
     ..  note::
-        Note: captcha_response should not be set as a required field.
+        captcha_response should not be set as a required field.
 
 
 
@@ -233,7 +233,7 @@ doNotEnforceUsername
 
 ..  confval:: doNotEnforceUsername
     :name: doNotEnforceUsername
-    :type: string
+    :type: boolean
     :Default: 0 (false)
 
     If set, field username is not forced to be part of formFields and requiredFields.    
@@ -243,123 +243,128 @@ doNotEnforceUsername
 unsubscribeAllowedFields
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-..  confval:: niceText.after
-    :name: gifbuilder-text-niceText-after
+..  confval:: unsubscribeAllowedFields
+    :name: unsubscribeAllowedFields
+    :type: string
+    :Default: module_sys_dmail_newsletter
 
-    GraphicsMagick/ImageMagick parameters after scale.
     Unsubscribe allowed fields: List of fields that are allowed to be updated by an UNSUBSCRIBE link without any login.
 
     ..  note::
-        Applies to setfixed links from mailing applications with the following query string values: &agency[cmd]=setfixed&sFK=UNSUBSCRIBE. A value for a field listed may be specified with a string of the form: &fD[fieldName]=value. The value of the field of the will be updated when the link is processed.
+        Applies to setfixed links from mailing applications with the following query string values: &agency[cmd]=setfixed&sFK=UNSUBSCRIBE.
+        A value for a field listed may be specified with a string of the form: &fD[fieldName]=value. The value of the field of the will be updated when the link is processed.
 
 
-..  _gifbuilder-text-niceText-before:
+..  _code-length:
 
-before
-~~~~~~
+codeLength
+~~~~~~~~~~
 
-..  confval:: niceText.before
-    :name: gifbuilder-text-niceText-before
+..  confval:: codeLength
+    :name: codeLength
+    :type: int
+    :Default: 8
 
-    GraphicsMagick/ImageMagick parameters before scale.
+    Length of the authentication codes.
 
-
-..  _gifbuilder-text-niceText-scaleFactor:
-
-scaleFactor
-~~~~~~~~~~~
-
-..  confval:: niceText.scaleFactor
-    :name: gifbuilder-text-niceText-scaleFactor
-    :type: integer (2-5)
-
-    The scaling factor.
+    ..  note::
+        Direct Mail extension uses only 8 in its calculations.
 
 
-..  _gifbuilder-text-niceText-sharpen:
+..  _formName:
 
-sharpen
-~~~~~~~
+formName
+~~~~~~~~
 
-..  confval:: niceText.sharpen
-    :name: gifbuilder-text-niceText-sharpen
-    :type: integer (0-99)
+..  confval:: formName
+    :name: formName
+    :type: string
 
-    The sharpen value for the mask (after scaling). This enables you to make the
-    text crisper, if it is too blurred!
-
-
-..  _gifbuilder-text-offset:
-
-offset
-------
-
-..  confval:: offset
-    :name: gifbuilder-text-offset
-    :type: x,y :ref:`+calc <gifbuilder-calc>` / :ref:`stdWrap <stdwrap>`
-    :Default: 0,0
-
-    The offset of the :ref:`gifbuilder-text-text`.
+    Name of the HTML form. The name is also referenced on the  :typoscript:`onChangeCountryAttribute`. See below.
 
 
-..  _gifbuilder-text-outline:
+..  _on-change-country-attribute:
 
-outline
--------
+onChangeCountryAttribute
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-..  confval:: outline
-    :name: gifbuilder-text-outline
-    :type: GIFBUILDER object :ref:`->OUTLINE <gifbuilder-outline>`
+..  confval:: onChangeCountryAttribute
+    :name: on-change-country-attribute
+    :type: string
+    :Default: javascript:window.document.forms['fe_users_form'].submit();
 
-
-..  _gifbuilder-text-shadow:
-
-shadow
-------
-
-..  confval:: shadow
-    :name: gifbuilder-text-shadow
-    :type: GIFBUILDER object :ref:`->SHADOW <gifbuilder-shadow>`
+    Javascript to execute when the selected country is changed in the country selector box.
 
 
-..  _gifbuilder-text-spacing:
+..  _default-code:
 
-spacing
--------
+defaultCODE
+-----------
 
-..  confval:: spacing
-    :name: gifbuilder-text-spacing
+..  confval:: defaultCODE
+    :name: default-code
+    :type: string
+
+    Default CODE, when not specified on the inserted plugin record. May be CREATE or EDIT or empty.
+
+
+..  _pid:
+
+pid
+---
+
+..  confval:: pid
+    :name: pid
+    :type: page_id
+
+    Front end user records PID. If the records edited/created are located in another page than the 'current,' the PID of that page should be specified here.
+
+
+..  _user-groups-pid-iist:
+
+userGroupsPidList
+-----------------
+
+..  confval:: userGroupsPidList
+    :name: user-groups-pid-iist
+    :type: list of page_id's
+
+    User groups records PID list: List of page id's on which user groups records are located.
+
+    ..  note::
+        Note: If specified, user groups records will be assumed to be located on one of the specified pages, rather than on the page specified by 'pid'.
+
+
+..  _categories-pidlist:
+
+categories_PIDLIST
+------------------
+
+..  confval:: categories_PIDLIST
+    :name: categories-pidlist
     :type: positive integer / :ref:`stdWrap <stdwrap>`
     :Default: 0
 
-    The pixel distance between letters. This may render ugly!
+    PID list for Direct Mail categories. The Direct mail categories used by the plugin will be restricted to those found on the pages identified by the PID's in this list.
 
 
-..  _gifbuilder-text-splitRendering:
+..  _pid-title-override:
 
-splitRendering
---------------
+pidTitleOverride
+----------------
 
-..  confval:: splitRendering
-    :name: gifbuilder-text-splitRendering
-    :type: integer / *(array of keys)*
+..  confval:: pidTitleOverride
+    :name: pid-title-override
+    :type: string
 
-    Split the rendering of a string into separate processes with individual
-    configurations. By this method a certain range of characters can be rendered
-    with another font face or size. This is very useful if you want to use
-    separate fonts for strings where you have latin characters combined with,
-    for example, Japanese and there is a separate font file for each.
-
-    You can also render keywords in another
-    :ref:`font <gifbuilder-text-fontFile>` /
-    :ref:`size <gifbuilder-text-fontSize>` /
-    :ref:`color <gifbuilder-text-fontColor>`.
+    The specified string will override the title of the System Folder page specified by the pid property.
+    The title of the System Folder is used in some online and email messages in the default HTML template.
 
 
-..  _gifbuilder-text-splitRendering-array:
+..  _register-pid:
 
-[array]
-~~~~~~~
+registerPID
+~~~~~~~~~~~
 
 ..  confval:: splitRendering.[array]
     :name: gifbuilder-text-splitRendering-array
