@@ -148,112 +148,95 @@ autoLoginRedirect_url
     :name: autoLoginRedirect-url
     :type: string
 
-    When auto login is enabled, URL to which the user may be redirected  upon login.
+    When auto login is enabled, URL to which the user may be redirected upon login.
 
 
-..  _gifbuilder-text-fontFile:
+..  _html-mail-css:
 
-fontFile
+HTMLMailCSS
+-----------
+
+..  confval:: HTMLMailCSS
+    :name: HTMLMailCSS
+    :type: string
+    :Default: EXT:agency/template/tx_agency_htmlmail_xhtml.css
+
+    File name of  the HTML emails style sheet. If HTML emails are enabled, this file contains the CSS style sheet to be incorporated in these emails.
+
+
+..  _email:
+
+email
+-----
+
+..  confval:: email
+    :name: email
+    :type: string
+    :Default: MyTypo3Site@mydomain.org
+
+    Administration email address. This email address will be the sender email address and the recipient of administrator notifications.
+
+
+..  _site-name:
+
+siteName
 --------
 
-..  confval:: fontFile
-    :name: gifbuilder-text-fontFile
-    :type: resource / :ref:`stdWrap <stdwrap>`
-    :Default: Nimbus (Arial clone)
+..  confval:: siteName
+    :name: siteName
+    :type: string
+    :Default: My Typo3 Site
 
-    The font face (TrueType :file:`*.ttf` and OpenType :file:`*.otf` fonts can be
-    used).
-
-
-..  _gifbuilder-text-fontSize:
-
-fontSize
---------
-
-..  confval:: fontSize
-    :name: gifbuilder-text-fontSize
-    :type: positive integer / :ref:`stdWrap <stdwrap>`
-    :Default: 12
-
-    The font size.
+    Name of the registering site. If set, this will be used as the email address name in all sent emails and may be used as a signature on the mails.
 
 
-..  _gifbuilder-text-hide:
+..  _form-fields:
 
-hide
-----
-
-..  confval:: hide
-    :name: gifbuilder-text-hide
-    :type: boolean / :ref:`stdWrap <stdwrap>`
-    :Default: 0 (false)
-
-    If this is true, the text is **not** printed.
-
-    This feature may be used, if you need a :ref:`SHADOW <gifbuilder-shadow>`
-    object to base a shadow on the text, but do not want the text to be
-    displayed.
-
-
-..  _gifbuilder-text-iterations:
-
-iterations
+formFields
 ----------
 
-..  confval:: iterations
-    :name: gifbuilder-text-iterations
+..  confval:: formFields
+    :name: formFields
     :type: positive integer / :ref:`stdWrap <stdwrap>`
-    :Default: 1
+    :Default: username, password, gender, first_name, last_name, status, date_of_birth, email, address, city, zone, static_info_country, zip, telephone, fax, language, title, company, www, module_sys_dmail_html, module_sys_dmail_newsletter, categories, image, comments, terms_acknowledged, disable
 
-    How many times the :ref:`gifbuilder-text-text` should be "printed"
-    onto it self. This will add the effect of bold text.
+    List of fields to be included on the Agency Registration form. Should be a subset of the columns of the 'fe_users' table.
 
     ..  note::
-        This option is not available, if
-        :ref:`gifbuilder-text-niceText` is enabled.
+        If Direct Mail (direct_mail) extension is not installed, fields module_sys_dmail_newsletter, categories and module_sys_dmail_html are ignored (removed from the list).
+
+    ..  note::
+        Check your HTML template for the presence of the markers of the fields
 
 
-..  _gifbuilder-text-maxWidth:
 
-maxWidth
---------
+..  _required-fields:
 
-..  confval:: maxWidth
-    :name: gifbuilder-text-maxWidth
-    :type: positive integer / :ref:`stdWrap <stdwrap>`
+requiredFields
+--------------
 
-    Sets the maximum width in pixels, the :ref:`gifbuilder-text-text`
-    must be. Reduces the :ref:`gifbuilder-text-fontSize`, if the
-    text does not fit within this width.
+..  confval:: requiredFields
+    :name: requiredFields
+    :type: positive string
 
-    Does not support setting alternative font sizes in
-    :ref:`gifbuilder-text-splitRendering` options.
+    List of fields that must be filled in on the Agency Registration form. Should be a subset of the list specified on the 'formFields' property.
+
+    ..  note::
+        Note: captcha_response should not be set as a required field.
 
 
-..  _gifbuilder-text-niceText:
 
-niceText
---------
+..  _do-not-enforce-username:
 
-..  confval:: niceText
-    :name: gifbuilder-text-niceText
-    :type: boolean / :ref:`stdWrap <stdwrap>`
+doNotEnforceUsername
+--------------------
 
-    This is a very popular feature that helps to render small letters much nicer
-    than the FreeType library can normally do. But it also loads the system
-    very much!
+..  confval:: doNotEnforceUsername
+    :name: doNotEnforceUsername
+    :type: boolean
+    :Default: 0 (false)
 
-    The principle of this function is to create a black/white image file in
-    twice or more times the size of the actual image file and then print the
-    text onto this in a scaled dimension. Afterwards GraphicsMagick/ImageMagick
-    scales down the mask and masks the :ref:`gifbuilder-text-fontColor` down on
-    the original image file through the temporary mask.
-
-    The fact that the font is actually rendered in the double size and
-    scaled down adds a more homogeneous shape to the letters. Some fonts
-    are more critical than others though. If you do not need the quality,
-    then do not use the function.
-
+    If set, field username is not forced to be part of formFields and requiredFields.
 
 ..  _gifbuilder-text-niceText-after:
 
