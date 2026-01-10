@@ -14,46 +14,6 @@ Properties
     :local:
 
 
-..  _template-file:
-
-file.templateFile
------------------
-
-..  confval:: file.templateFile
-    :name: file-templateFile
-    :type: string 
-    :Default: EXT:agency/template/agency_tmpl.tmpl
-
-    File name of the HTML template
-
-file.attachmentFile
--------------------
-
-..  confval:: file.attachmentFile
-    :name: file-attachmentFile
-    :type: string
-    :Default: EXT:agency/template/agency_sample.txt
-
-    File name of a file to be attached to the registration confirmation email.
-
-
-..  _terms-file:
-
-file.termsFile
---------------
-
-..  confval:: file.termsFile
-    :name: file-termsFile
-    :type: string
-    :Default: EXT:agency/template/agency_terms.txt
-
-    File name of the terms of usage file.
-
-
-    ..  note::
-        This is used in conjunction with the field 'terms_acknowledged'.
-
-
 ..  _terms-url:
 
 termsUrl
@@ -71,6 +31,71 @@ termsUrl
     ..  note::
         This is used in conjunction with the field 'terms_acknowledged'.
 
+
+..  _template-file:
+
+file.templateFile
+-----------------
+
+..  confval:: file.templateFile
+    :name: file-templateFile
+    :type: file[html,htm,tmpl,txt]
+    :Default: EXT:agency/Resources/Private/Templates/AgencyRegistrationTemplate.html
+
+    File name of the HTML template
+
+file.attachmentFile
+-------------------
+
+..  confval:: file.attachmentFile
+    :name: file-attachmentFile
+    :type: file[pdf,doc,txt]
+    :Default: EXT:agency/Resources/Public/Examples/tx_agency_sample.txt
+
+    File name of a file to be attached to the registration confirmation email.
+
+
+..  _terms-file:
+
+file.termsFile
+--------------
+
+..  confval:: file.termsFile
+    :name: file-termsFile
+    :type: file[pdf,doc,sxw,txt]
+    :Default: EXT:agency/Resources/Public/Examples/tx_agency_terms.txt
+
+    File name of the terms of usage file.
+
+
+    ..  note::
+        This is used in conjunction with the field 'terms_acknowledged'.
+
+
+..  _privacy-policy-file:
+
+file.privacyPolicyFile
+----------------------
+
+..  confval:: file.privacyPolicyFile
+    :name: file-privacyPolicyFile
+    :type: file[pdf,doc,sxw,txt]
+    :Default: EXT:agency/Resources/Private/Templates/AgencyPrivacyPolicy.txt
+
+    File to be shown as the privacy policy.
+
+
+..  _privacy-policy-url:
+
+privacyPolicyUrl
+----------------
+
+..  confval:: privacyPolicyUrl
+    :name: privacyPolicyUrl
+    :type: string
+
+    Page (id or id,type) or url where the privacy policy is shown.
+    If set, it overrides the privacy policy file. This is needed for compliance with DSGVO / GDPR .
 
 
 ..  _enable-html-mail:
@@ -96,7 +121,7 @@ enableEmailAttachment
     :type: boolean
     :Default: 0 (false)
 
-    If set, and if enableHTMLMail is also set, the attachment file - specified by file.attachmentFile - 
+    If set, and if enableHTMLMail is also set, the attachment file - specified by file.attachmentFile -
     will be attached to the registration confirmation HTML email.
 
 
@@ -198,12 +223,12 @@ formFields
 ..  confval:: formFields
     :name: formFields
     :type: positive integer / :ref:`stdWrap <stdwrap>`
-    :Default: username, password, gender, first_name, last_name, status, date_of_birth, email, address, city, zone, static_info_country, zip, telephone, fax, language, title, company, www, module_sys_dmail_html, module_sys_dmail_newsletter, categories, image, comments, terms_acknowledged, disable
+    :Default: username, password, gender, first_name, last_name, status, date_of_birth, email, address, city, zone, static_info_country, zip, telephone, fax, language, title, company, www, mail_html, categories, image, comments, terms_acknowledged, privacy_policy_acknowledged, disable
 
     List of fields to be included on the Agency Registration form. Should be a subset of the columns of the 'fe_users' table.
 
     ..  note::
-        If Direct Mail (direct_mail) extension is not installed, fields module_sys_dmail_newsletter, categories and module_sys_dmail_html are ignored (removed from the list).
+        If the Mail (mail) extension is not installed, fields categories and mail_html are ignored (removed from the list).
 
     ..  note::
         Check your HTML template for the presence of the markers of the fields
@@ -218,6 +243,7 @@ requiredFields
 ..  confval:: requiredFields
     :name: requiredFields
     :type: positive string
+    :Default: username,password,first_name,last_name,email
 
     List of fields that must be filled in on the Agency Registration form. Should be a subset of the list specified on the 'formFields' property.
 
@@ -236,7 +262,7 @@ doNotEnforceUsername
     :type: boolean
     :Default: 0 (false)
 
-    If set, field username is not forced to be part of formFields and requiredFields.    
+    If set, field username is not forced to be part of formFields and requiredFields.
 
 ..  _unsubscribe-allowed-fields:
 
