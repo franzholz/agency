@@ -39,7 +39,7 @@ plugin.tx_agency {
   formFields = username, password, gender, first_name, last_name, status, date_of_birth, email, address, city, zone, static_info_country, zip, telephone, fax, language, title, company, www, mail_html, categories, image, comments, terms_acknowledged, privacy_policy_acknowledged, disable
 
     # cat=plugin.tx_agency//; type=string; label= Required fields: List of fields that must be filled in on the front end user registration form.
-  requiredFields = username, password, first_name, last_name,email
+  requiredFields = username,password,first_name,last_name,email
 
     # cat=plugin.tx_agency/enable; type=boolean; label= Use email as username: If set, the user email will be used as the username.
   useEmailAsUsername = 0
