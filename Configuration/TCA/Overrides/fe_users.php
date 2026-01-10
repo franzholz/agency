@@ -298,6 +298,4 @@ call_user_func(function ($extensionKey, $table): void {
     $searchFields = explode(',', $GLOBALS['TCA'][$table]['ctrl']['searchFields'] . ',cnum,comments');
     $searchFields = array_unique($searchFields);
     $GLOBALS['TCA'][$table]['ctrl']['searchFields'] = implode(',', $searchFields);
-
-
 }, Extension::KEY, basename(__FILE__, '.php'));
