@@ -29,7 +29,7 @@ call_user_func(function ($extensionKey, $table): void {
         'after:subheader',
     );
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
+    ExtensionManagementUtility::addPiFlexFormValue(
         '*',
         'FILE:EXT:' . $extensionKey  . '/Configuration/FlexForms/flexform_ds.xml',
         $pluginSignature,

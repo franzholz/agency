@@ -2,6 +2,8 @@
 
 defined('TYPO3') || die('Access denied.');
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
 use JambageCom\Agency\Constants\Extension;
 
 call_user_func(function ($extensionKey, $table): void {
@@ -209,8 +211,8 @@ call_user_func(function ($extensionKey, $table): void {
         }
     }
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns($table, $temporaryColumns);
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
+    ExtensionManagementUtility::addTCAcolumns($table, $temporaryColumns);
+    ExtensionManagementUtility::addToAllTCAtypes(
         $table,
         implode(',', $columns),
         '',
