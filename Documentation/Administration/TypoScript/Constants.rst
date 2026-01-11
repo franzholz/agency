@@ -426,6 +426,20 @@ linkToPID
     See also linkToPIDAddButton.
 
 
+..  _link-to-pid-add-button:
+
+linkToPIDAddButton
+------------------
+
+..  confval:: linkToPIDAddButton
+    :name: link-to-pid-add-button
+    :type: page_id
+
+    Link to after edit PID: PID of a page to be linked to after the user has completed the editing of his/her profile. 
+    See also linkToPIDAddButton.
+
+
+
 TODO ++++
 
 
