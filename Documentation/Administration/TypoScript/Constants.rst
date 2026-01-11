@@ -493,6 +493,75 @@ confirmType
     Confirmation page Type: Type (or pageNum) of the confirmation page. Meaningful only
     if email confirmation request is enabled.
 
+..  _login-pid:
+
+loginPID
+--------
+
+..  confval:: loginPID
+    :name: login-pid
+    :type: page_id
+
+    Login page PID: PID of the page on which the New login box extension is inserted with the intent of serving 
+    as the front end user login page. If not set, will default to 'current' page.
+
+
+..  _enable-preview-register:
+
+enablePreviewRegister
+---------------------
+
+..  confval:: enablePreviewRegister
+    :name: enable-preview-register
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable preview on registration. If set, the registration dialog will include a preview of the 
+    front end user data before it is saved.
+
+
+..  _enable-preview-edit:
+
+enablePreviewEdit
+-----------------
+
+..  confval:: enablePreviewEdit
+    :name: enable-preview-edit
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable preview on profile update. If set, the profile update dialog will include a preview of the 
+    front end user data before it is saved.
+
+
+..  _enable-admin-review:
+
+enableAdminReview
+-----------------
+
+..  confval:: enableAdminReview
+    :name: enable-admin-review
+    :type: boolean
+    :Default: 0 (false)
+
+    Enable administrative review. If set, the site administrator will be asked to accept the registration 
+    before it becomes enabled.
+
+
+..  _enable-email-confirmation:
+
+enableEmailConfirmation
+-----------------------
+
+..  confval:: enableEmailConfirmation
+    :name: enable-email-confirmation
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable email confirmation request: If set, an email will be sent to the prospective
+    front end user requesting a confirmation of registration.
+
+
 
 
 TODO ++++
