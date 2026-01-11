@@ -676,12 +676,11 @@ allowedUserGroups
 ..  confval:: allowedUserGroups
     :name: allowed-user-groups
     :type: string
-    :Default: 0 (false)
 
-    Allow selection of multiple usergroups. If set, the user may select to adhere to multiple user groups.
+    Comma separated list of user groups to be selectable. If 'ALL', then all groups are allowed.
 
     ..  note::
-        See also constants **allowUserGroupSelection** and **allowUserGroupUpdate**.
+        See also constant **allowUserGroupSelection**.
 
 
 
