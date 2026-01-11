@@ -651,6 +651,40 @@ allowUserGroupUpdate
 
 
 
+..  _allow-multiple-user-group-selection:
+
+allowMultipleUserGroupSelection
+-------------------------------
+
+..  confval:: allowMultipleUserGroupSelection
+    :name: allow-multiple-user-group-selection
+    :type: boolean
+    :Default: 0 (false)
+
+    Allow selection of multiple usergroups. If set, the user may select to adhere to multiple user groups.
+
+    ..  note::
+        See also constants **allowUserGroupSelection** and **allowUserGroupUpdate**.
+
+
+
+..  _allowed-user-groups:
+
+allowedUserGroups
+-----------------
+
+..  confval:: allowedUserGroups
+    :name: allowed-user-groups
+    :type: string
+    :Default: 0 (false)
+
+    Allow selection of multiple usergroups. If set, the user may select to adhere to multiple user groups.
+
+    ..  note::
+        See also constants **allowUserGroupSelection** and **allowUserGroupUpdate**.
+
+
+
 TODO ++++
 
 
