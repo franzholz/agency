@@ -435,8 +435,63 @@ linkToPIDAddButton
     :name: link-to-pid-add-button
     :type: page_id
 
-    Link to after edit PID: PID of a page to be linked to after the user has completed the editing of his/her profile. 
-    See also linkToPIDAddButton.
+    Add a button to link to after edit. If set, an additional button is displayed on the profile editing page,
+    or on the profile editing preview page, to save the changes and link to the page specified by linkToPID.
+
+
+..  _confirm-pid:
+
+confirmPID
+-----------
+
+..  confval:: confirmPID
+    :name: confirm-pid
+    :type: page_id
+
+    Confirmation page PID: PID of the page on which the extension is inserted with the intent of serving as the 
+    front end user confirmation page (or setfixed page!).
+
+
+..  _confirm-invitation-pid:
+
+confirmInvitationPID
+--------------------
+
+..  confval:: confirmInvitationPID
+    :name: confirm-invitation-pid
+    :type: page_id
+
+    Confirmation of invitation page PID: PID of the page on which the extension is inserted with the intent of serving as the
+    front end user confirmation page (or setfixed page!) when replying to an invitation. Meaningful only if email confirmation request is enabled.
+
+    ..  note::
+        If not set, will take the same value as confirmPID.
+
+
+..  _password-pid:
+
+passwordPID
+-----------
+
+..  confval:: passwordPID
+    :name: password-pid
+    :type: page_id
+
+    Password page PID: PID of the page on which the plugin is inserted with the intent of entering a new password.
+
+
+..  _confirm-type:
+
+confirmType
+-----------
+
+..  confval:: confirmType
+    :name: confirm-type
+    :type: int
+    :Default: 0
+
+    Confirmation page Type: Type (or pageNum) of the confirmation page. Meaningful only
+    if email confirmation request is enabled.
 
 
 
