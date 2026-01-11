@@ -390,7 +390,41 @@ pidTitleOverride
 ..  _register-pid:
 
 registerPID
-~~~~~~~~~~~
+-----------
+
+..  confval:: registerPID
+    :name: register-pid
+    :type: page_id
+
+    Registration page PID: PID of the page on which the extension is inserted with the intent of serving as the Agency Registration page.
+    If not set, will default to 'current' page.
+
+
+..  _edit-pid:
+
+editPID
+-------
+
+..  confval:: editPID
+    :name: edit-pid
+    :type: page_id
+
+    Profile editing page PID: PID of the page on which the extension is inserted with the intent of serving as the 
+    front end user profile editing page. If not set, will default to 'current' page.
+
+
+..  _link-to-pid:
+
+linkToPID
+---------
+
+..  confval:: editPID
+    :name: link-to-pid
+    :type: page_id
+
+    Link to after edit PID: PID of a page to be linked to after the user has completed the editing of his/her profile. 
+    See also linkToPIDAddButton.
+
 
 TODO ++++
 
