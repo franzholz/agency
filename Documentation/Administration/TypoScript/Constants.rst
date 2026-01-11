@@ -562,6 +562,37 @@ enableEmailConfirmation
     front end user requesting a confirmation of registration.
 
 
+..  _use-email-as-username:
+
+useEmailAsUsername
+------------------
+
+..  confval:: useEmailAsUsername
+    :name: use-email-as-username
+    :type: boolean
+    :Default: 0 (false)
+
+    Enable the use of the email address as username.
+
+    ..  note::
+        If enableEmailConfirmation is also set, the email field will NOT be included in the front end user profile editing form.
+
+
+
+..  _generate-username:
+
+generateUsername
+----------------
+
+..  confval:: generateUsername
+    :name: generate-username
+    :type: boolean
+    :Default: 0 (false)
+
+    Generate the username. If set, the username is assumed to be generated.
+
+    ..  note::
+        Hook registrationProcess_beforeConfirmCreate must be configured.
 
 
 TODO ++++
