@@ -578,7 +578,6 @@ useEmailAsUsername
         If enableEmailConfirmation is also set, the email field will NOT be included in the front end user profile editing form.
 
 
-
 ..  _generate-username:
 
 generateUsername
@@ -593,6 +592,63 @@ generateUsername
 
     ..  note::
         Hook registrationProcess_beforeConfirmCreate must be configured.
+
+
+..  _generate-password:
+
+generatePassword
+----------------
+
+..  confval:: generatePassword
+    :name: generate-password
+    :type: integer
+    :Default: 0
+
+    Generate the password: If non-zero, a random password is generated. The number of characters
+    in the password is given by this parameter.
+
+
+
+..  _allow-user-group-selection:
+
+allowUserGroupSelection
+-----------------------
+
+..  confval:: allowUserGroupSelection
+    :name: allow-user-group-selection
+    :type: boolean
+    :Default: 0 (false)
+
+    Allow selection of usergroup on registration. If set, the user may select to adhere to
+    user group(s) when registering.
+
+    ..  note::
+        The selectable usergroups must be located in the page identified by the **pid** constant.
+
+    ..  note::
+        If constants **userGroupUponRegistration** and **userGroupAfterConfirmation** are set, 
+        the usergroups they specify are not selectable.
+
+    ..  note::
+        Field **usergroup** must be included in the list specified by constant **formFields**.
+
+
+..  _allow-user-group-update:
+
+allowUserGroupUpdate
+---------------------
+
+..  confval:: allowUserGroupSelection
+    :name: allow-user-group-update
+    :type: boolean
+    :Default: 0 (false)
+
+    Allow selection of usergroup on editing. If set, the user may edit the list of user groups 
+    to which he(she) belongs.
+
+    ..  note::
+        See also constant **allowUserGroupSelection**.
+
 
 
 TODO ++++
