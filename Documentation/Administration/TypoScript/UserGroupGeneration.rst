@@ -53,7 +53,7 @@ file
     The xml file uses the table field names of fe_users as the leaf names.
     The fields :php:`cnum`, :php:`last_name`, :php:`email` and php:`zip` are required.
 
-When a user registers, then a different user group will be used if the user's customer number (cnum) is already present in a XML file and if the following conditions are matched :
+When a user registers himself, then a different user group will be used if the user's customer number (cnum) is already present in a XML file and if the following conditions are matched :
 The entered customer number must fit the cnum of the XML file and then it is checked if either the last names are equal or if otherwise both the zip codes and the emails are equal.
 The XML uses Row tags inside of the Members tag.
 XML format :
