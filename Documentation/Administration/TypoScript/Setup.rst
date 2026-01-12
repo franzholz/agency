@@ -8,6 +8,7 @@ TypoScript Setup
 Please note that the following properties refer to **TS template setup**, not to TS template constants!
 When installing this extension, you should **NOT** use the following setting:
 :typoscript:`config.disableAllHeaderCode = 1`
+
 This setting will prevent the inclusion of Javascript essential to the correct behavior of the profile editing features.
 
 
