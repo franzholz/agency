@@ -1043,7 +1043,6 @@ userGroupAfterConfirmation
     the front end user after receipt of his confirmation.
 
 
-
 ..  _user-group-after-acceptation:
 
 userGroupAfterAcceptation
@@ -1058,6 +1057,96 @@ userGroupAfterAcceptation
 
     ..  note::
         If administrative review is not enabled, this property is ignored.
+
+
+..  _password-at-least:
+
+passwordAtLeast
+---------------
+
+..  confval:: passwordAtLeast
+    :name: password-at-least
+    :type: string
+
+    Minimum password length: The minimum number of characters that the password must contain.
+
+
+..  _password-at-most:
+
+passwordAtMost
+---------------
+
+..  confval:: passwordAtMost
+    :name: password-at-most
+    :type: string
+
+    Maximum password length: The maximum number of characters that the password may contain.
+
+
+..  _username-at-least:
+
+usernameAtLeast
+---------------
+
+..  confval:: usernameAtLeast
+    :name: password-at-least
+    :type: string
+
+    Minimum username length: The minimum number of characters that the username must contain.
+
+..  _username-at-most:
+
+usernameAtMost
+---------------
+
+..  confval:: usernameAtMost
+    :name: username-at-most
+    :type: string
+
+    Maximum username length: The maximum number of characters that the username may contain.
+
+
+..  _name-at-most:
+
+nameAtMost
+----------
+
+..  confval:: nameAtMost
+    :name: name-at-most
+    :type: integer
+    :Default: 80
+
+    Maximum name length: The maximum number of characters that the name of the front end user may contain.
+
+
+..  _slpha-specials:
+
+alphaSpecials
+-------------
+
+..  confval:: alphaSpecials
+    :name: slpha-specials
+    :type: string
+
+    Allow special characters to alpha: The parse values for the alpha check normally contain alphabethical letters. Here you can add also special characters (e.g. German Umlauts) to the username.
+
+     :typoscript:`alphaSpecials = äöüß`
+
+..  _force-file-delete:
+
+forceFileDelete
+---------------
+
+..  confval:: forceFileDelete
+    :name: force-file-delete
+    :type: boolean
+    :Default: 1 (true)
+
+    If set, on record deletion, related images and files will be deleted even if the record in
+    the database is only marked :code:`deleted` .
+
+
+
 
 
 
