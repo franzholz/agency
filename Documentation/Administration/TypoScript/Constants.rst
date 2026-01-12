@@ -1128,7 +1128,8 @@ alphaSpecials
     :name: slpha-specials
     :type: string
 
-    Allow special characters to alpha: The parse values for the alpha check normally contain alphabethical letters. Here you can add also special characters (e.g. German Umlauts) to the username.
+    Allow special characters to alpha: The parse values for the alpha check normally contain alphabethical letters. 
+    Here you can add also special characters (e.g. German Umlauts) to the username.
 
      :typoscript:`alphaSpecials = äöüß`
 
@@ -1146,6 +1147,38 @@ forceFileDelete
     the database is only marked :code:`deleted` .
 
 
+..  _max-images:
+
+maxImages
+---------
+
+..  confval:: maxImages
+    :name: max-images
+    :type: integer
+    :Default: 6
+
+    Number of images that may be uploaded.
+    Value: An integer larger than 0 and smaller than 7.
+
+    ..  note::
+        Has no effect if the field 'image' is not in the list formFields.
+
+
+..  _salutation:
+
+salutation
+----------
+
+..  confval:: salutation
+    :name: salutation
+    :type: string
+
+    If set, should be either 'formal' or 'informal'.
+
+    ..  note::
+        This property will change the salutation mode used in the labels displayed in the front end, 
+        provided that this is meaningful in the language being displayed and that
+        translators have provided the informal version.
 
 
 
