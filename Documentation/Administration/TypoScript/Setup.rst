@@ -123,6 +123,36 @@ displayRequired
         }
 
 
+..  _captcha:
+
+captcha
+-------
+
+..  confval:: captcha
+    :name: captcha
+    :type: array of array
+
+    Set the used captcha extensions. If you want to support more captcha extensions then you must add them here.
+
+    extensionKey ... extension key
+    evalRule ... string to be used in evalValues.captcha_response
+
+    **Example:**
+    ..  code-block:: typoscript
+        :caption:  captcha
+
+    captcha {
+    	10 {
+    		extensionKey = sr_freecap
+    		evalRule = freecap
+    	}
+    	20 {
+    		extensionKey = captcha
+    		evalRule = captcha
+    	}
+    }
+
+
 
 
 
