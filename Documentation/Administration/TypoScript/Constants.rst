@@ -746,7 +746,7 @@ enableEmailOnApprove
 ..  confval:: enableEmailOnApprove
     :name: enable-email-on-approve
     :type: boolean
-    :Default: 0 (false)
+    :Default: 1 (true)
 
     Enable email on approval. If set, an email will be sent to the front end user when he confirms his registration.
     Effective only if email confirmation request is enabled.
@@ -760,11 +760,149 @@ enableEmailOnRefuse
 ..  confval:: enableEmailOnRefuse
     :name: enable-email-on-refuse
     :type: boolean
-    :Default: 0 (false)
+    :Default: 1 (true)
 
     Enable email on refusal: If set, an email will be sent to the prospective front end user 
     when he refuses to confirm his registration. Effective only if email confirmation request is enabled.
 
+
+..  _enable-email-on-admin-refuse:
+
+enableEmailOnAdminRefuse
+------------------------
+
+..  confval:: enableEmailOnAdminRefuse
+    :name: enable-email-on-admin-refuse
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable email on denial: If set, an email will be sent to the prospective front end user
+    when the site administrator refuses to confirm his registration.
+
+
+..  _enable-email-on-register:
+
+enableEmailOnRegister
+---------------------
+
+..  confval:: enableEmailOnRegister
+    :name: enable-email-on-register
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable email on registration: If set, an email will be sent to the front end user 
+    confirming his registration. Ignored if email confirmation request is enabled.
+
+
+..  _enable-email-on-update:
+
+enableEmailOnUpdate
+-------------------
+
+..  confval:: enableEmailOnUpdate
+    :name: enable-email-on-update
+    :type: integer
+    :Default: 1
+
+    Enable email on profile update. If set to 1, an email will be sent to the front end user to confirm 
+    the update of his profile. If set to 2, only the changed fields will be sent.
+
+
+..  _enable-email-on-delete:
+
+enableEmailOnDelete
+-------------------
+
+..  confval:: enableEmailOnDelete
+    :name: enable-email-on-delete
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable email on delete. If set, an email will be sent to the front end user to confirm the deletion of his account.
+
+
+..  _enable-email-on-unsubscribe:
+
+enableEmailOnUnsubscribe
+------------------------
+
+..  confval:: enableEmailOnUnsubscribe
+    :name: enable-email-on-unsubscribe
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable email on unsubscribe: If set, an email will be sent to the front end user end its subscription
+    to newsletters through a link from a mailing application.
+
+
+..  _enable-email-password:
+
+enableEmailPassword
+-------------------
+
+..  confval:: enableEmailPassword
+    :name: enable-email-password
+    :type: boolean
+    :Default: 0 (false)
+
+    Enable email for password creation: If set, an email can be sent to the front end user 
+    who has forgotten his password.
+
+
+..  _enable-admin-notify-confirmation:
+
+enableAdminNotifyConfirmation
+-----------------------------
+
+..  confval:: enableAdminNotifyConfirmation
+    :name: enable-admin-notify-confirmation
+    :type: boolean
+    :Default: 1 (true)
+
+    If set, an email will be sent to the site administrator when a request for confirmation of registration
+    is sent to a user.
+
+
+..  _enable-admin-notify-on-approve:
+
+enableAdminNotifyOnApprove
+--------------------------
+
+..  confval:: enableAdminNotifyOnApprove
+    :name: enable-admin-notify-on-approve
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable admin notification on approval: If set, an email will be sent to the site administrator 
+    when a user confirms his registration.
+
+
+..  _enable-admin-notify-on-refuse:
+
+enableAdminNotifyOnRefuse
+-------------------------
+
+..  confval:: enableAdminNotifyOnRefuse
+    :name: enable-admin-notify-on-refuse
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable admin notification on refusal. If set, an email will be sent to the site administrator 
+    when a user refuses to confirm his registration.
+
+
+..  _enable-admin-notify-on-register:
+
+enableAdminNotifyOnRegister
+---------------------------
+
+..  confval:: enableAdminNotifyOnRegister
+    :name: enable-admin-notify-on-register
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable admin notification on registration. If set, an email will be sent to the site administrator 
+    when a user registers. This is ignored if email confirmation request is enabled.
 
 
 
