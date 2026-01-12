@@ -683,6 +683,38 @@ allowedUserGroups
         See also constant **allowUserGroupSelection**.
 
 
+..  _allowed-sub-groups:
+
+allowedSubgroups
+----------------
+
+..  confval:: allowedSubgroups
+    :name: allowed-user-groups
+    :type: string
+
+    Comma separated list of subgroups from which all user groups shall be selectable. 
+    The user groups from allowedUserGroups shall be added also.
+
+    ..  note::
+        See also constant **allowedUserGroups**.
+
+
+..  _denied-user-groups:
+
+deniedUserGroups
+-----------------
+
+..  confval:: deniedUserGroups
+    :name: denied-user-groups
+    :type: string
+
+    Comma separated list of user groups to be never selectable.
+    These usegroups supersede the resulted user grous from allowedUserGroups and allowedSubgroups.
+
+    ..  note::
+        See also constants **allowedUserGroups** and **allowedSubgroups**.
+
+
 
 TODO ++++
 
