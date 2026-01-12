@@ -39,13 +39,13 @@ templateFile
     Same as :typoscript:`file.templateFile` from Constants. This is needed under Setup for language specific template files only.
 
 
-..  _extra-labels:
+..  _where-static-countries:
 
 where.static_countries
 -----------------------
 
 ..  confval:: extraLabels
-    :name: extra-labels
+    :name: where-static_countries
     :type: string
 
     Set a SQL WHERE condition to follow for the selected country in the :php:`static_countries` table of the :php:`static_info_tables` extension. 
@@ -74,5 +74,56 @@ where.static_countries
                 'SRB','SUR','SVK','SVN','SWE','SWZ','SYC','SYR','TCA','TCD','TGO','TJS','TKL','TKM','TLS','TON','TTO','TUN','TUR',
                 'TZA','UGA','UKR','UMI','URY','UZB','VAT','VCT','VGB','VIR','VNM','VUT','WLF','WSM','XAF','YEM','ZAF','ZAR','ZMB','ZWE')
         }
+
+
+..  _eval-func:
+
+evalFunc
+--------
+
+..  confval:: evalFunc
+    :name: eval-func
+    :type: function-name
+
+    additional evaluation function for the records, e.g. :php:`user_myfunction`or :php:`user_myclass->main`
+
+
+..  _user-func-update-array:
+
+userFunc_updateArray
+--------------------
+
+..  confval:: evalFunc
+    :name: eval-func
+    :type: function-name
+
+    User function to update the records	
+
+
+..  _display-required:
+
+displayRequired
+---------------
+
+..  confval:: displayRequired
+    :name: display-required
+    :type: cObject
+
+    Use this cOject for the display of required fields. By default the required fields are printed with an asterisk (*).
+
+    **Example:**
+    ..  code-block:: typoscript
+        :caption:  displayRequired = COA
+
+        displayRequired = COA
+        displayRequired {
+           10 = TEXT
+           10.value = You must fill this in!
+           10.wrap = <b>Attention:</b> | *
+        }
+
+
+
+
 
 
