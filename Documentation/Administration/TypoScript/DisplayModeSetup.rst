@@ -56,7 +56,7 @@ defaultValues
 -------------
 
 ..  confval:: defaultValues
-    :name: defaultValues
+    :name: default-values
     :type: array of strings
     :Default: See TS constant formFields
 
@@ -90,6 +90,18 @@ overrrideValues
         }
 
 
+..  _eval-values:
+
+evalValues
+-------------
+
+..  confval:: evalValues
+    :name: eval-values
+    :type: array of strings
+    :Default: See TS constant formFields
+
+    Check functions to be applied on the fields.
+    
 
     
     
