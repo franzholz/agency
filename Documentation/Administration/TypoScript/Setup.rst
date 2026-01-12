@@ -59,17 +59,20 @@ where.static_countries
     }
     
     Example 2:
-    plugin.tx_agency { 
-      where.static_countries = static_countries.cn_iso_3 IN ('AFN','AGO','AIA','ALL','ANT','ARE','ARM','ASM','ATA','ATF','ATG','ASM','AUT','AZE','BDI','BEN','BFA','BGR','BHR','BIH',
-'BLR','BMU','BRB','BRN','BTN','BVT','BWA','CAF','CCK','CIV','CMR','COK','COL','COM','CPV','CRI','CSG','CUB','CXR',
-'CYM','CYP','CZE','DEU','DJI','DNK','DZA','ECU','EGY','ERI','ESH','ESP','EST','ETH','FIN','FJI','FLK','FRO','FSM',
-'GAB','GEO','GHA','GIB','GIN','GLP','GMB','GNB','GNQ','GRD','GRL','GUF','GUY','HMD','HRV','HUN','IRN','IRQ','ISL',
-'ISR','ITA','JAM','JOR','KAZ','KEN','KGZ','KIR','KNA','KWT','LBR','LBN','LBY','LCA','LIE','LSO','LTU','LUX','LVA',
-'MAR','MCO','MDA','MDG','MHL','MKD','MLI','MLT','MNP','MOZ','MRT','MSR','MTQ','MUS','MWI','MYT','NAM','NCL','NER',
-'NFK','NGA','NIC','NLD','NOR','NPL','NRU','OMN','PAK','PCN','PLW','PNG','POL','PYF','QAT','REU','ROU','RUS','RWA',
-'SAU','SDN','SEN','SGS','SHN','SJM','SLE','SLB','SLV','SMR','SOM','SPM','STP','SRB','SUR','SVK','SVN','SWE','SWZ',
-'SYC','SYR','TCA','TCD','TGO','TJS','TKL','TKM','TLS','TON','TTO','TUN','TUR','TZA','UGA','UKR','UMI','URY','UZB',
-'VAT','VCT','VGB','VIR','VNM','VUT','WLF','WSM','XAF','YEM','ZAF','ZAR','ZMB','ZWE')
-    }
+    ..  code-block:: php
+        :caption:  plugin.tx_agency.where.static_countries
+    
+        plugin.tx_agency { 
+           where.static_countries = static_countries.cn_iso_3 IN ('AFN','AGO','AIA','ALL','ANT','ARE','ARM','ASM','ATA','ATF','ATG','ASM','AUT','AZE',
+               'BDI','BEN','BFA','BGR','BHR','BIH','BLR','BMU','BRB','BRN','BTN','BVT','BWA','CAF','CCK','CIV','CMR','COK','COL',
+               'COM','CPV','CRI','CSG','CUB','CXR','CYM','CYP','CZE','DEU','DJI','DNK','DZA','ECU','EGY','ERI','ESH','ESP','EST',
+               'ETH','FIN','FJI','FLK','FRO','FSM','GAB','GEO','GHA','GIB','GIN','GLP','GMB','GNB','GNQ','GRD','GRL','GUF','GUY',
+               'HMD','HRV','HUN','IRN','IRQ','ISL','ISR','ITA','JAM','JOR','KAZ','KEN','KGZ','KIR','KNA','KWT','LBR','LBN','LBY',
+                'LCA','LIE','LSO','LTU','LUX','LVA','MAR','MCO','MDA','MDG','MHL','MKD','MLI','MLT','MNP','MOZ','MRT','MSR','MTQ',
+                'MUS','MWI','MYT','NAM','NCL','NER','NFK','NGA','NIC','NLD','NOR','NPL','NRU','OMN','PAK','PCN','PLW','PNG','POL',
+                'PYF','QAT','REU','ROU','RUS','RWA','SAU','SDN','SEN','SGS','SHN','SJM','SLE','SLB','SLV','SMR','SOM','SPM','STP',
+                'SRB','SUR','SVK','SVN','SWE','SWZ','SYC','SYR','TCA','TCD','TGO','TJS','TKL','TKM','TLS','TON','TTO','TUN','TUR',
+                'TZA','UGA','UKR','UMI','URY','UZB','VAT','VCT','VGB','VIR','VNM','VUT','WLF','WSM','XAF','YEM','ZAF','ZAR','ZMB','ZWE')
+        }
 
 
