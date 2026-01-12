@@ -905,6 +905,161 @@ enableAdminNotifyOnRegister
     when a user registers. This is ignored if email confirmation request is enabled.
 
 
+..  _enable-admin-notify-on-update:
+
+enableAdminNotifyOnUpdate
+-------------------------
+
+..  confval:: enableAdminNotifyOnUpdate
+    :name: enable-admin-notify-on-update
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable admin notification on update: If set, an email will be sent to the site administrator 
+    when a user updates his profile.
+
+
+..  _enable-admin-notify-on-delete:
+
+enableAdminNotifyOnDelete
+-------------------------
+
+..  confval:: enableAdminNotifyOnDelete
+    :name: enable-admin-notify-on-delete
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable admin notification on deletion: If set, an email will be sent to the site administrator 
+    when a user deletes his account.
+
+
+..  _enable-admin-notify-on-enter:
+
+enableAdminNotifyOnEnter
+------------------------
+
+..  confval:: enableAdminNotifyOnEnter
+    :name: enable-admin-notify-on-enter
+    :type: boolean
+    :Default: 0 (false)
+
+    Enable admin notification on entering: If set, an email will be sent to the site administration
+    when a user clicks on the link to log in.
+
+
+..  _enable-admin-notify-on-admin-accept:
+
+enableAdminNotifyOnAdminAccept
+------------------------------
+
+..  confval:: enableAdminNotifyOnAdminAccept
+    :name: enable-admin-notify-on-admin-accept
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable admin notification on approval by admin: If set, an email will be sent to 
+    the site administration when a registration is accepted by the administration.
+
+
+..  _enable-admin-notify-on-admin-refuse:
+
+enableAdminNotifyOnAdminRefuse
+------------------------------
+
+..  confval:: enableAdminNotifyOnAdminRefuse
+    :name: enable-admin-notify-on-admin-refuse
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable admin notification on refusal by admin: If set, an email will be sent to 
+    the site administration when a registration is refused by the administration.
+
+
+..  _enable-admin-notify-on-unsubscribe:
+
+enableAdminNotifyOnUnsubscribe
+------------------------------
+
+..  confval:: enableAdminNotifyOnUnsubscribe
+    :name: enable-admin-notify-on-unsubscribe
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable admin notification on unsubscribe: If set, an email will be sent to 
+    the site administration when the user ends his membership through a link from a mailing application.
+
+
+..  _enable-admin-notify-on-password:
+
+enableAdminNotifyOnPassword
+---------------------------
+
+..  confval:: enableAdminNotifyOnPassword
+    :name: enable-admin-notify-on-password
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable admin notification on lost password: If set, an email will be sent to 
+    the site administration when the user requests to recreate his lost password..
+
+
+..  _mail-checked-upon-registration:
+
+mailCheckedUponRegistration
+---------------------------
+
+..  confval:: mailCheckedUponRegistration
+    :name: mail-checked-upon-registration
+    :type: boolean
+    :Default: 0 (false)
+
+    Check all the checkboxes for Mail categories in creation dialogues.
+
+
+..  _user-group-upon-registration:
+
+userGroupUponRegistration
+-------------------------
+
+..  confval:: userGroupUponRegistration
+    :name: user-group-upon-registration
+    :type: string
+
+    User group(s) upon registration: The value of the user group field. Must be a list of integers 
+    WITHOUT spaces between the comma separated values! Furthermore, these integers MUST point
+    to actual fe_groups records!
+
+
+..  _user-group-after-confirmation:
+
+userGroupAfterConfirmation
+--------------------------
+
+..  confval:: userGroupAfterConfirmation
+    :name: user-group-after-confirmation
+    :type: string
+
+    User group(s) after confirmation: The value of the user group(s) assigned to
+    the front end user after receipt of his confirmation.
+
+
+
+..  _user-group-after-acceptation:
+
+userGroupAfterAcceptation
+--------------------------
+
+..  confval:: userGroupAfterAcceptation
+    :name: user-group-after-acceptation
+    :type: string
+
+    User group(s) after acceptation: The value of the user group(s) assigned to 
+    the front end user after acceptation of his(her) registration, when the administrative review is enabled.
+
+    ..  note::
+        If administrative review is not enabled, this property is ignored.
+
+
 
 
 TODO ++++
