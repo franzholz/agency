@@ -1,4 +1,4 @@
-:navigation-title: Configuration
+:navigation-title: Typoscript Constants
 ..  _typoscript-constants:
 
 ====================
