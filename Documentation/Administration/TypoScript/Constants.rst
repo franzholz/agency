@@ -1206,7 +1206,6 @@ useLocalization
 
     Enable the localization for selectable items.
 
-
 ..  _use-local-country:
 
 useLocalCountry
@@ -1218,6 +1217,74 @@ useLocalCountry
     :Default: 0 (false)
 
     Show the country names in their local languages.
+
+
+..  _short-url-life:
+
+shortUrlLife
+------------
+
+..  confval:: shortUrlLife
+    :name: short-url-life
+    :type: int+
+    :Default: 30
+
+    Short URL cache lifespan. This is the number of days that short URL's will be kept in the DB. 
+    After this delay, the short URL's will be removed. Confirmation URL's included in email messages 
+    older than this number of days will not work.
+
+..  _date-format:
+
+dateFormat
+----------
+
+..  confval:: dateFormat
+    :name: date-format
+    :type: string
+    :Default: d-m-Y
+
+    date format
+    You should also change the error message output if you change this.
+
+    day:
+    *   d - day of the month, 2 digits with leading zeros; i.e. "01" to "31"
+    *   j - day of the month without leading zeros; i.e. "1" to "31"
+    month:
+    *   m - month; i.e. "01" to "12"
+    *   n - month without leading zeros; i.e. "1" to "12"
+    year:
+    *   Y - year, 4 digits; e.g. "1999"
+    *   y - year, 2 digits; e.g. "99"
+
+
+..  _date-split:
+
+dateSplit
+---------
+
+..  confval:: dateSplit
+    :name: date-split
+    :type: string
+    :Default: -
+
+    split characters for the dateFormat.  This is a regular expression and might need the escape character '\'!
+    Use :typoscript:`dateSplit = \.` to separate the date with a dot :php:`.` .
+
+
+..  _merge-labels:
+
+mergeLabels
+-----------
+
+..  confval:: mergeLabels
+    :name: merge-labels
+    :type: boolean
+    :Default: 1 (true)
+
+    If set then the labels for select boxes found in setup are merged to the labels already in the TCA, 
+    which might come from TCEFORM.fe_users altLabels or :php:`addItems`. If :typoscript:`0`, then only the labels from 
+    :php:`plugin.tx_agency._LOCAL_LANG.de.fe_users.x.I.x`  are taken.
+
 
 
 
