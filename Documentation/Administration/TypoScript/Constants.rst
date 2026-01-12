@@ -715,6 +715,59 @@ deniedUserGroups
         See also constants **allowedUserGroups** and **allowedSubgroups**.
 
 
+..  _keep-unselectable-user-groups:
+
+keepUnselectableUserGroups
+--------------------------
+
+..  confval:: keepUnselectableUserGroups
+    :name: keep-unselectable-user-groups
+    :type: boolean
+    :Default: 0 (false)
+
+    If set und if a FE user is changing his FE user group then all the other FE user groups which 
+    are not shown in the select box will remain. If unset then the user will only keep the 
+    user group selected by himself and the reserved user groups which consist of the temporal
+    user groups from the registration process: userGroupUponRegistration, userGroupAfterConfirmation, 
+    userGroupAfterAcceptation .
+    This is only useful if allowUserGroupUpdate has been set, too.
+
+Note: See also the constants allowedUserGroups., allowedSubgroups and deniedUserGroups
+
+    ..  note::
+        See also constants **allowedUserGroups**, **allowedSubgroups** and **deniedUserGroups**..
+
+
+..  _enable-email-on-approve:
+
+enableEmailOnApprove
+--------------------
+
+..  confval:: enableEmailOnApprove
+    :name: enable-email-on-approve
+    :type: boolean
+    :Default: 0 (false)
+
+    Enable email on approval. If set, an email will be sent to the front end user when he confirms his registration.
+    Effective only if email confirmation request is enabled.
+
+
+..  _enable-email-on-refuse:
+
+enableEmailOnRefuse
+-------------------
+
+..  confval:: enableEmailOnRefuse
+    :name: enable-email-on-refuse
+    :type: boolean
+    :Default: 0 (false)
+
+    Enable email on refusal: If set, an email will be sent to the prospective front end user 
+    when he refuses to confirm his registration. Effective only if email confirmation request is enabled.
+
+
+
+
 
 TODO ++++
 
