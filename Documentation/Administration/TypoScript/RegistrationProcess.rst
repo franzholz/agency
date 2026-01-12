@@ -65,13 +65,24 @@ _FIELDLIST
 ..  _fieldname-dot-placeholder:
 
 *placeholder fieldname.*
------------------------
+------------------------
 
 ..  confval:: *placeholder fieldname+
     :name: _FIELDLIST
     :type: array
 
-    Replace *placeholder fieldname* with the database's field name of the table fe_users or tt_address resp. .
-    The listed table field names will get a new value after the registration process.
+    See fieldname above (only supported for usergroup)
+    Enhanced replacements for the values of table fields at the end of the given registration process.
+
+    See chapter 'usergroup generation'
+
+  ..  code-block:: php
+      :caption: EXT:my_extension/ext_localconf.php
+  
+       usergroup {
+          10.uid = 3
+          10.file = fileadmin/Mitglieder.xml
+        }
+
 
 
