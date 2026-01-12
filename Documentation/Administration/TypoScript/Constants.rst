@@ -1180,6 +1180,44 @@ salutation
         provided that this is meaningful in the language being displayed and that
         translators have provided the informal version.
 
+..  _use-short-urls:
+
+useShortUrls
+------------
+
+..  confval:: useShortUrls
+    :name: use-short-urls
+    :type: boolean
+    :Default: 1 (true)
+
+    Enable the use of short URLs in email messages sent to users is enabled. Do not disable this
+    if possible, because a short URL provides the highest security level.
+
+
+..  _use-localization:
+
+useLocalization
+---------------
+
+..  confval:: useLocalization
+    :name: use-localization
+    :type: boolean
+    :Default: 0 (false)
+
+    Enable the localization for selectable items.
+
+
+..  _use-local-country:
+
+useLocalCountry
+---------------
+
+..  confval:: useLocalCountry
+    :name: use-local-country
+    :type: boolean
+    :Default: 0 (false)
+
+    Show the country names in their local languages.
 
 
 
