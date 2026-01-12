@@ -34,20 +34,44 @@ Properties
     :local:
 
 
-..  _terms-url:
+..  _field-list:
 
-termsUrl
---------
+_FIELDLIST
+----------
 
-..  confval:: termsUrl
-    :name: termsUrl
+..  confval:: _FIELDLIST
+    :name: _FIELDLIST
+    :type: string
+    :Default: uid,pid,usergroup
+
+    List of fields to be used by the generated links. The encoding and decoding process wil consider these fields.
+
+    Allows to specify a different list of fields for each PROCESS.
+
+
+..  _fieldname-placeholder:
+
+*placeholder fieldname*
+-----------------------
+
+..  confval:: *placeholder fieldname+
+    :name: _FIELDLIST
     :type: string
 
-    Page (id or id,type) or url where the terms of usage are shown.
+    Replace *placeholder fieldname* with the database's field name of the table fe_users or tt_address resp. .
+    The listed table field names will get a new value after the registration process.
 
-    ..  note::
-        If set, overrides file.termsFile.
 
-    ..  note::
-        This is used in conjunction with the field 'terms_acknowledged'.
+..  _fieldname-dot-placeholder:
+
+*placeholder fieldname.*
+-----------------------
+
+..  confval:: *placeholder fieldname+
+    :name: _FIELDLIST
+    :type: array
+
+    Replace *placeholder fieldname* with the database's field name of the table fe_users or tt_address resp. .
+    The listed table field names will get a new value after the registration process.
+
 
