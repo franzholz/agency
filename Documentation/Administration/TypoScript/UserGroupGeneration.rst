@@ -38,3 +38,19 @@ uid
 
     The database table field uid of fe_groups. This is the uid of the FE user group.
 
+
+..  _usergroup-file
+
+file
+----
+
+..  confval:: file
+    :name: usergroup-file
+    :type: string
+
+    File name of the XML file for member comparison. See example file 
+    :file:`Resources/Public/Examples/tx_agency_members.xml`.
+    The xml file uses the table field names of fe_users as the leaf names.
+    The fields :php:`cnum`, :php:`last_name`, :php:`email` and php:`zip` are required.
+
+
