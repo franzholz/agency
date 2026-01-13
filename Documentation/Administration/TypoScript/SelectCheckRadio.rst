@@ -25,3 +25,30 @@ activities: EMAIL
     	}
     }
     
+
+Properties
+==========
+
+..  contents::
+    :local:
+
+
+..  _item:
+
+item
+-----
+
+..  confval:: item
+    :name: item
+    :type: stdWrap
+
+    Wrap around each single item.
+    additional property:
+    notLast:  if set the last item will not be wrapped
+
+..  confval:: list
+    :name: list
+    :type: stdWrap
+
+        list	stdWrap	Wrap around the list of items.	
+
