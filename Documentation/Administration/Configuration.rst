@@ -25,21 +25,29 @@ If you want to use the fields of Mail, e.g. the checkbox to send HTML emails, th
 #.  Review the extension constants described below. All these properties may be conveniently edited using the Constant Editor TS template tool.  If you do not use the Constant Editor to configure the extension, please note the form of the constants assignments in the constants section of your TS template:
 typoscript:`plugin.tx_agency.property = value`
 or if you assign multiple values:
-..  code-block:: php
-    :caption: constants example
 
-    plugin.tx_agency { 
-       property = value
-       ... 
-    }
+  ..  code-block:: php
+      :caption: constants example
+  
+      plugin.tx_agency { 
+         property = value
+         ... 
+      }
 #.  TypoScript Setup:
-..  code-block:: php
-    :caption: EXT:my_extension/ext_localconf.php
 
-    config { 
-       sys_language_uid = 0
-       language = de
-       locale_all = german
-       typolinkLinkAccessRestrictedPages = NONE
-    }
+  ..  code-block:: php
+      :caption: EXT:my_extension/ext_localconf.php
+  
+      config { 
+         sys_language_uid = 0
+         language = de
+         locale_all = german
+         typolinkLinkAccessRestrictedPages = NONE
+      }
+  
+Setting an image upload folder compatible with front end login for website users
+---------------------------------------------------------------------------------
+
+The path of the image upload folder used by the Agency Registration extension may be set in the installation dialog. The default value is :file:`uploads/tx_agency`. A popular alternative in many configurations is :file:`uploads/pics`. The Agency Registration extension will update the TCA of the fe_users table. Therefore, the back end forms will use the specified path.
+It is also possible to show the user image in the user listing produced by the front end login for website users.
 
