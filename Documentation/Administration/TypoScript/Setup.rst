@@ -59,13 +59,16 @@ where.static_countries
     See section Labels and localisation about adding extra  labels.
 
     Example 1:
+    ..  code-block::typoscript
+        :caption:  plugin.tx_agency.where.static_countries by cn_eu_member
+
     plugin.tx_agency { 
-     where.static_countries = cn_eu_member = 1
+       where.static_countries = cn_eu_member = 1
     }
     
     Example 2:
-    ..  code-block:: php
-        :caption:  plugin.tx_agency.where.static_countries
+    ..  code-block::typoscript
+        :caption:  plugin.tx_agency.where.static_countries by static_countries.cn_iso_3 IN
     
         plugin.tx_agency { 
            where.static_countries = static_countries.cn_iso_3 IN ('AFN','AGO','AIA','ALL','ANT','ARE','ARM','ASM','ATA','ATF','ATG','ASM','AUT','AZE',
