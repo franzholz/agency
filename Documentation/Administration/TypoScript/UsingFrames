@@ -20,3 +20,5 @@ If the registration confirmation page (confirmPID) is designed to be displayed w
 
 after setting :typoscript:`plugin.tx_agency.confirmPID` in your TS template constants.
 
+..  note::
+    cmd, rU and aC are in the list for compatibility with the Mail extension. Still valid?
