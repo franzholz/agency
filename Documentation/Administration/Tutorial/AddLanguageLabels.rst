@@ -41,4 +41,14 @@ The following message displayed when a validation rule evalRuleName applicable t
     plugin.tx_agency._LOCAL_LANG.languageCode.evalErrors_evalRuleName_myNewFieldName = errorMessageForEvalRule
 
 
+================
+Add fe_users.php
+================
+
+TYPO3 reads in the :php:`$GLOBALS['TCA']` modified in your extension. Just add the new columns
+for your fields into the php:`$GLOBALS['TCA']` of your file :file:`fe_users.php`. This must be placed 
+into the folder :php:`Configuration/TCA/Overrides` of your extension.
+
+
+
 
