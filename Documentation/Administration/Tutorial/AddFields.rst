@@ -82,6 +82,15 @@ In the case of a field of type textarea, check, radio and select, the HTML for t
     <dd>###FIELD_MYNEWFIELDNAME###</dd>
     <!-- ###SUB_INCLUDED_FIELD_myNewFieldName### -->
 
-+++
+or
+
+..  code-block:: html
+    :caption: Enhancement of the HTML template by self defined field in preview
+
+    <!-- ###SUB_INCLUDED_FIELD_myNewFieldName### -->
+    <dt>###LABEL_MYNEWFIELDNAME###</dt>
+    <dd>###TCA_INPUT_myNewFieldName###</dd>
+    <!-- ###SUB_INCLUDED_FIELD_myNewFieldName### -->
+
 
 
