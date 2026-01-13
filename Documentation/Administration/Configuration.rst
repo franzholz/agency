@@ -51,3 +51,11 @@ Setting an image upload folder compatible with front end login for website users
 The path of the image upload folder used by the Agency Registration extension may be set in the installation dialog. The default value is :file:`uploads/tx_agency`. A popular alternative in many configurations is :file:`uploads/pics`. The Agency Registration extension will update the TCA of the fe_users table. Therefore, the back end forms will use the specified path.
 It is also possible to show the user image in the user listing produced by the front end login for website users.
 
+Configure the extension to use the email address as user name
+-------------------------------------------------------------
+
+#.  Use the Constant editor to set the constant :php:`useEmailAsUsername` to 1;
+#.  You may want to change the relative position of the email field in the following subparts of the HTML template: :php:`###TEMPLATE_CREATE###`, :php:`###TEMPLATE_INVITE###`  and :php:`###TEMPLATE_EDIT###`.
+Note that if you have set constant :php:`enableEmailConfirmation`, the email field will not appear on the editing form because no confirmation request is sent when the email address is modified.
+Also in tt_products the email addresses are used as user names.
+
