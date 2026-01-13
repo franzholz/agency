@@ -59,3 +59,22 @@ Configure the extension to use the email address as user name
 Note that if you have set constant :php:`enableEmailConfirmation`, the email field will not appear on the editing form because no confirmation request is sent when the email address is modified.
 Also in tt_products the email addresses are used as user names.
 
+
+Make the user name changeable
+-----------------------------
+
+Use the following setup.
+**Example:**
+
+..  code-block:: php
+    :caption: Enable username modifications
+
+    plugin.tx_agency {
+    	edit {
+    		overrideValues {
+    			username >
+    		}
+    	}
+    }
+    
+
