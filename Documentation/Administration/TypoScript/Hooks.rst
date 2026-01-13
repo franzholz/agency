@@ -6,12 +6,13 @@ Available Hooks
 ===============
 
 Thee sets of hooks may be used by the extension.
-The first set of hooks is named confirmRegistrationClass and offers the possibility of the following two hooks:
-•	confirmRegistrationClass_preProcess: this hook is invoked just BEFORE the registration confirmation (or so-called setfixed) is processed;
-•	confirmRegistrationClass_postProcess: this hook is invoked just AFTER the registration confirmation (or so-called setfixed) is processed.
-The second set of hooks is named registrationProcess and offers the possibility of the following four hooks:
-•	registrationProcess_beforeConfirmCreate: this hook is invoked just BEFORE the user record is filled for preview by the user;
-•	registrationProcess_afterSaveCreate: this hook is invoked just AFTER the user record has been created and saved;
+The first set of hooks is named :php:`confirmRegistrationClass` and offers the possibility to follow two hooks:
+
+*   :php:`confirmRegistrationClass_preProcess`: This hook is invoked just BEFORE the registration confirmation (or so-called :php:`setfixed`) is processed;
+*	  :php:`confirmRegistrationClass_postProcess`: This hook is invoked just AFTER the registration confirmation (or so-called :php:`setfixed`) is processed.
+The second set of hooks is named :php:`registrationProcess` and offers the possibility of the following four hooks:
+*	  :php:`registrationProcess_beforeConfirmCreate`: This hook is invoked just BEFORE the user record is filled for preview by the user;
+*	  :php:`registrationProcess_afterSaveCreate`: This hook is invoked just AFTER the user record has been created and saved;
 •	registrationProcess_afterSaveEdit: this hook is invoked just AFTER the user record has been edited and saved;
 •	registrationProcess_beforeSaveDelete: this hook is invoked just BEFORE the user record is deleted.
 The third set of hooks is for global markers and processing.
