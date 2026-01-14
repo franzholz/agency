@@ -21,6 +21,26 @@ An improved variant of Kasper Skårhøj’s Front End User Admin extension.
     Installation
     Configuration
     GetHelp
+    Administration/Configuration
+    Administration/ExtensionConfiguration
+    Administration/FrontEndRendering
+    Administration/Localization
+    Administration/ShortUrl
+    Administration/Tutorial/AddFields
+    Administration/Tutorial/AddLanguageLabels
+    Administration/TypoScript/Captcha
+    Administration/TypoScript/Constants
+    Administration/TypoScript/DisplayFrontEndUser
+    Administration/TypoScript/DisplayModeSetup
+    Administration/TypoScript/FormFields
+    Administration/TypoScript/Hooks
+    Administration/TypoScript/RegistrationProcess
+    Administration/TypoScript/SelectCheckRadio
+    Administration/TypoScript/SendingInvitation
+    Administration/TypoScript/Setup
+    Administration/TypoScript/TableConfiguration
+    Administration/TypoScript/UserGroupGeneration
+    Administration/TypoScript/UsingFrames
     UserManual/Index
     UserManual/AdministrativeReview
     UserManual/RegistrationProcess
