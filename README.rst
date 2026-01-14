@@ -40,8 +40,5 @@ look to chapter ‘Get Help’ ot the documentation.
 Possible feature enhancements:
 ..............................
 
-•   If email address is used as username
-and email confirmation request is enabled, send confirmation request
-when the email address is edited;
-•   offer a registration process by
-regular mail.
+•   If email address is used as username and email confirmation request is enabled, send confirmation request when the email address is edited;
+•   offer a registration process by regular mail.
