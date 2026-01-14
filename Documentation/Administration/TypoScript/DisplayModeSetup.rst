@@ -8,6 +8,7 @@ Display Mode Specific Setup
 Use the display mode (lower case) as the first parameter.
 
 **Example:**
+
 ..  code-block:: typoscript
     :caption: configure edit.overrideValues.usergroup
 
@@ -34,7 +35,7 @@ fields
     List of fields to be included on the Agency Registration form. Should be a subset of the columns of the :php:`fe_users` table.
 
     Allows to specify a different list of fields for each CODE.
-    
+
 ..  _required:
 
 required
@@ -61,7 +62,7 @@ defaultValues
     :Default: See TS constant formFields
 
     Default values for the fields.
-    
+
 
 ..  _override-values:
 
@@ -73,13 +74,13 @@ overrrideValues
     :type: array of strings/stdWrap
 
     Array of field names for which a fixed value or stdWrap function shall be applied.
-    The stdWrap e.g. can be used when FE Users should not be able to change a field, 
+    The stdWrap e.g. can be used when FE Users should not be able to change a field,
     which they must fill out only at registration.
 
     **Example:**
     ..  code-block:: typoscript
         :caption: Example overrideValues
-    
+
         overrideValues {
             username =
             usergroup >
@@ -101,7 +102,7 @@ evalValues
     :Default: See TS constant formFields
 
     Check functions to be applied on the fields.
-    
 
-    
-    
+
+
+

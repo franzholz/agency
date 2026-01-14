@@ -6,12 +6,12 @@ Wrap for Select, Check Boxes and Radio Buttons
 ==============================================
 
 You can have different select boxes defined in TCA, which can also be shown as checkboxes in FE.
-You will need this for Mail or overwritten topics. The configuration needs the activity 
+You will need this for Mail or overwritten topics. The configuration needs the activity
   (:php:`create`, :php:`edit`, :php:`email` for email, :php:`preview` for preview,
    :php:`input` for the page with input fields) and the field name of fe_users.
-  
+
 activities: EMAIL
-  
+
 **Example Setup:**
 
 ..  code-block:: php
@@ -24,7 +24,7 @@ activities: EMAIL
     		}
     	}
     }
-    
+
 
 Properties
 ==========
@@ -36,7 +36,7 @@ Properties
 ..  _item:
 
 item
------
+----
 
 ..  confval:: item
     :name: item
@@ -46,9 +46,15 @@ item
     additional property:
     notLast:  if set the last item will not be wrapped
 
+
+..  _list:
+
+list
+----
+
 ..  confval:: list
     :name: list
     :type: stdWrap
 
-        list	stdWrap	Wrap around the list of items.	
+    list	stdWrap	Wrap around the list of items.
 

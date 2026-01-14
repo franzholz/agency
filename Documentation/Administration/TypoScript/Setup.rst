@@ -53,24 +53,26 @@ where.static_countries
     :name: where-static_countries
     :type: string
 
-    Set a SQL WHERE condition to follow for the selected country in the :php:`static_countries` table of the :php:`static_info_tables` extension. 
+    Set a SQL WHERE condition to follow for the selected country in the :php:`static_countries` table of the :php:`static_info_tables` extension.
     Maybe you want to see only users from EU countries on your site.
 
     See section Labels and localisation about adding extra  labels.
 
     Example 1:
+
     ..  code-block::typoscript
         :caption:  plugin.tx_agency.where.static_countries by cn_eu_member
 
-    plugin.tx_agency { 
+    plugin.tx_agency {
        where.static_countries = cn_eu_member = 1
     }
-    
+
     Example 2:
+
     ..  code-block::typoscript
         :caption:  plugin.tx_agency.where.static_countries by static_countries.cn_iso_3 IN
-    
-        plugin.tx_agency { 
+
+        plugin.tx_agency {
            where.static_countries = static_countries.cn_iso_3 IN ('AFN','AGO','AIA','ALL','ANT','ARE','ARM','ASM','ATA','ATF','ATG','ASM','AUT','AZE',
                'BDI','BEN','BFA','BGR','BHR','BIH','BLR','BMU','BRB','BRN','BTN','BVT','BWA','CAF','CCK','CIV','CMR','COK','COL',
                'COM','CPV','CRI','CSG','CUB','CXR','CYM','CYP','CZE','DEU','DJI','DNK','DZA','ECU','EGY','ERI','ESH','ESP','EST',
@@ -105,7 +107,7 @@ userFunc_updateArray
     :name: eval-func
     :type: function-name
 
-    User function to update the records	
+    User function to update the records
 
 
 ..  _display-required:
@@ -120,6 +122,7 @@ displayRequired
     Use this cOject for the display of required fields. By default the required fields are printed with an asterisk (*).
 
     **Example:**
+
     ..  code-block:: typoscript
         :caption:  displayRequired = COA
 
@@ -142,26 +145,24 @@ captcha
 
     Set the used captcha extensions. If you want to support more captcha extensions then you must add them here.
 
-    extensionKey ... extension key
-    evalRule ... string to be used in evalValues.captcha_response
+    *extensionKey* ... extension key
+    *evalRule*     ... string to be used in evalValues.captcha_response
 
     **Example:**
+
     ..  code-block:: typoscript
         :caption:  captcha
 
-    captcha {
-    	10 {
-    		extensionKey = sr_freecap
-    		evalRule = freecap
-    	}
-    	20 {
-    		extensionKey = captcha
-    		evalRule = captcha
-    	}
-    }
-
-
-
+        captcha {
+            10 {
+                extensionKey = sr_freecap
+                evalRule = freecap
+            }
+            20 {
+                extensionKey = captcha
+                evalRule = captcha
+            }
+        }
 
 
 

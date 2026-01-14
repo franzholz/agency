@@ -6,9 +6,10 @@ Registration Process
 ====================
 
 Use 'setfixed' as the first and the registration process name (upper case) as the second parameter.
+
 **Example:**
 
-  ..  code-block:: php
+..  code-block:: php
     :caption: Example setfixed
 
     setfixed.ACCEPT {
@@ -78,7 +79,7 @@ _FIELDLIST
 
   ..  code-block:: php
       :caption: EXT:my_extension/ext_localconf.php
-  
+
        usergroup {
           10.uid = 3
           10.file = fileadmin/Mitglieder.xml

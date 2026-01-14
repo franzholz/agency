@@ -64,9 +64,9 @@ Frequently Asked Questions (FAQ)
 
 
     ..  accordion-item:: The Mail markers are not substituted:
-        ###LABEL_CATEGORIES### ###TCA_INPUT_categories###
-        ###LABEL_MAIL_HTML### ###TCA_INPUT_mail_html###
-        ###LABEL_MAIL_HTML_CHECKED###
+        :php:`###LABEL_CATEGORIES###` :php:`###TCA_INPUT_categories###`
+        :php:`###LABEL_MAIL_HTML###` :php:`###TCA_INPUT_mail_html###`
+        :php:`###LABEL_MAIL_HTML_CHECKED###`
         :name: empty form token
         :header-level: 2
 
@@ -75,7 +75,8 @@ Frequently Asked Questions (FAQ)
         enableMail to 1 if no Mail is installed or 0 if Mail is installed.
 
         Other Solution:
-        Do not use these markers : Remove all subparts and markers for Mail from the HTML template file.
+        Do not use these markers : Remove all subparts and
+        markers for Mail from the HTML template file.
 
 
 

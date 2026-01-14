@@ -18,6 +18,7 @@ An improved variant of Kasper Skårhøj’s Front End User Admin extension.
     :hidden:
 
     */Index
+    Introduction
     Installation
     Configuration
     GetHelp
