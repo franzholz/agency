@@ -1,0 +1,233 @@
+:navigation-title: Front End Rendering
+
+..  _front-end-rendering:
+
+===================
+Front End Rendering
+===================
+
+..  _htmö-template:
+
+HTML Template
+=============
+
+The default HTML template provided with the plugin is:
+:file:`EXT:agency/template/agency_css_tmpl.html`
+
+CSS Styles
+==========
+
+Default CSS styles are defined in TS template setup field of static template FE User Registration CSS-styled.
+As usual, the default CSS styles may be modified and moved to a .css file. In such a case , the location of the file should be specified by an import rule overriding the default TS template setup:
+:typoscript:`plugin.tx_agency._CSS_DEFAULT_STYLE = @import url("fileadmin/styles/some_style_sheet_file.css");` 
+
+Alternatively, the selectors may be moved to some site-wide style sheet file and the default styles may be nullified:
+:typoscript:`plugin.tx_agency._CSS_DEFAULT_STYLE >` 
+
+HTML Template Markers
+=====================
+The following is the list of global and main subparts markers used in the example HTML template.
+
+Global markers:
+---------------
+===================================== =================================
+Marker                                Description
+===================================== =================================
+CHARSET                               config.metaCharset or iso-8859-1 
+===================================== =================================
+
+Main subpart markers:
+---------------------
+
+* TEMPLATE_CREATE
+   initial registration form
+* TEMPLATE_CREATE_PREVIEW 
+   (optional) registration preview form 
+* TEMPLATE_CREATE_SAVED                
+   when email confirmation request is disabled, confirmation that the account was created
+* TEMPLATE_CREATE_SAVED_REVIEW 
+   when email confirmation request is disabled, but administrative review is enabled, 
+   confirmation that the account was created and an administrative review is required
+* TEMPLATE_SETFIXED_CREATE    
+   when email confirmation request is enabled and administrative review is disabled, 
+   confirmation that the account was created but that an email is being sent to the user to complete the registration process
+* TEMPLATE_SETFIXED_CREATE_REVIEW    
+   when administrative review is enabled, confirmation that the account was created,
+   but that an email is being sent to the user to complete the registration process
+* TEMPLATE_INVITE   
+   initial account creation form in the case of an invitation
+* TEMPLATE_INVITE_PREVIEW
+   (recommended) account creation preview form, in the case of an invitation
+* TEMPLATE_SETFIXED_INVITE
+   confirmation that an account was created and that an invitation email has been sent
+   to the user to complete the registration process or decline the invitation
+* TEMPLATE_INFOMAIL   
+   screen that allows the subscriber to request links to be sent to his email address so 
+   that he(she) may update or terminate his(her) subscription
+* TEMPLATE_INFOMAIL_SENT 
+   confirmation that the “infomail” message is being sent to the subscriber
+* TEMPLATE_SETFIXED_OK_APPROVE_INVITE
+   password update form when the invited person accepts the invitation
+* TEMPLATE_EDIT 
+   account or profile editing form
+* TEMPLATE_EDIT_PREVIEW
+   (optional) editing preview form
+* TEMPLATE_EDIT_SAVED      
+   confirmation that the account was updated
+* TEMPLATE_DELETE_PREVIEW 
+   deletion confirmation form
+* TEMPLATE_DELETE_SAVED
+    confirmation that the account was deleted
+* TEMPLATE_SETFIXED_OK 
+   when administrative review is disabled,
+   confirmation that the registration process was completed
+* TEMPLATE_SETFIXED_OK_APPROVE_REVIEW 
+   when administrative review is enabled, confirmation that the registration was completed, 
+   but that the registration must be accepted by the site administrator
+* TEMPLATE_SETFIXED_OK_ACCEPT  
+   when administrative review is enabled, response page when the administrator accepts 
+   the account registration
+* TEMPLATE_SETFIXED_OK_ENTER
+   when administrative review is enabled, response page when the user clicks on the link 
+   in the acceptation email (without auto-login)
+* TEMPLATE_SETFIXED_OK_REFUSE
+   when administrative review is enabled, response page when the administrator refuse
+   the account registration
+* TEMPLATE_SETFIXED_OK_DELETE
+   confirmation that the registration process was canceled
+* TEMPLATE_SETFIXED_OK_UNSUBSCRIBE 
+   response page when a user was unsubscribed by following a link of a mailing application
+* TEMPLATE_SETFIXED_FAILED  
+   message when the registration or cancellation process could not be completed
+* TEMPLATE_SETFIXED_LOGIN_FAILED 
+   message when the autologin process ends up in an error
+* TEMPLATE_AUTH  
+   link to the registration form
+* TEMPLATE_NO_PERMISSIONS   
+   message when some illegal access is attempted
+* EMAIL_TEMPLATE_CREATE_SAVED_HTML 
+   when email confirmation request is disabled, HTML message sent to the user when he has 
+   created an account
+* EMAIL_TEMPLATE_CREATE_SAVED
+   when email confirmation request is disabled, plain text message sent to the user when 
+   he has created an account
+* EMAIL_TEMPLATE_CREATE_SAVED_ADMIN    
+   when email confirmation request is disabled, 
+   plain text notification sent to the site administrator when a user has created an account0
+* EMAIL_TEMPLATE_EDIT_SAVED_HTML  
+   the HTML message sent to the user when he has updated his account
+* EMAIL_TEMPLATE_EDIT_SAVED   
+   plain text message sent to the user when he has updated his account
+* EMAIL_TEMPLATE_EDIT_SAVED_ADMIN  
+   plain text notification sent to the site administrator when a user has updated his account
+* EMAIL_TEMPLATE_SETFIXED_CREATE_HTML
+   when email confirmation request is enabled and administrative review is disabled, HTML 
+   message sent to the user when he has created an account and needs to confirm it
+* EMAIL_TEMPLATE_SETFIXED_CREATE 
+   when email confirmation request is enabled and administrative review is disabled, plain 
+   text message sent to the user when he has created an account and needs to confirm it
+* EMAIL_TEMPLATE_SETFIXED_CREATE_ADMIN
+   when email confirmation request is enabled and administrative review is disabled, plain
+   text notification sent to the site administrator when a user has created an account and 
+   needs to confirm it
+* EMAIL_TEMPLATE_SETFIXED_CREATE_REVIEW_HTML
+   when administrative review is enabled, HTML message sent to the user when he has created 
+   and he needs to confirm his registration, and administrative review will be required
+* EMAIL_TEMPLATE_SETFIXED_CREATE_REVIEW 
+   when administrative review is enabled, plain text message sent to the user when he has 
+   created and he needs to confirm it, and administrative review will be required
+* EMAIL_TEMPLATE_SETFIXED_CREATE_REVIEW_ADMIN    
+   when administrative review is enabled, plain text notification sent to the site 
+   administrator when a user has created an account and needs to confirm it
+* EMAIL_TEMPLATE_SETFIXED_REVIEW_ADMIN_HTML  
+   when administrative review is enabled, template for the HTML message sent to the site 
+   administrator when a user has approved it and a decision to accept or refuse the registration is required
+* EMAIL_TEMPLATE_SETFIXED_REVIEW_ADMIN 
+   when administrative review is enabled, plain text message sent to the site administrator 
+   when a user has approved it and a decision to accept or refuse the registration is required
+* EMAIL_TEMPLATE_SETFIXED_INVITE_HTML
+   HTML invitation message sent to a person for whom an account has been created and requesting
+   the invitation be accepted to confirm registration, or to decline the invitation 
+* EMAIL_TEMPLATE_SETFIXED_INVITE
+   plain text invitation message sent to a person for whom an account has been created and 
+   requesting the invitation be accepted to confirm it, or to decline the invitation
+* EMAIL_TEMPLATE_SETFIXED_INVITE_ADMIN
+   plain text notification sent to the site administrator when an invitation to register has 
+   been sent and the invited person needs to confirm his/her registration
+* EMAIL_TEMPLATE_SETFIXED_APPROVE_HTML 
+   when email confirmation request is enabled and administrative review is disabled, HTML 
+   message sent to the user when he has confirmed the registration
+* EMAIL_TEMPLATE_SETFIXED_APPROVE     
+   when email confirmation request is enabled and administrative review is disabled, plain 
+   text message sent to the user when he has confirmed it
+* EMAIL_TEMPLATE_SETFIXED_APPROVE_ADMIN 
+   when email confirmation request is enabled and administrative review is disabled, plain
+   text notification sent to the site administrator when a user has confirm it
+* EMAIL_TEMPLATE_SETFIXED_APPROVE_REVIEW_HTML     
+   when administrative review is enabled, template for the HTML message sent to the user 
+   when he has confirmed the registration
+* EMAIL_TEMPLATE_SETFIXED_APPROVE_REVIEW 
+   when administrative review is enabled, plain text message sent to the user when he has
+   confirmed the registration.
+* EMAIL_TEMPLATE_SETFIXED_APPROVE_REVIEW_ADMIN    
+   when administrative review is enabled, plain text notification sent to the site 
+   administrator when a user has confirmed his registration.
+* EMAIL_TEMPLATE_SETFIXED_ACCEPT_HTML  
+   when administrative review is enabled, HTML welcome message sent to the user when the registration was accepted
+* EMAIL_TEMPLATE_SETFIXED_ACCEPT 
+   when administrative review is enabled, plain text welcome message sent to the user 
+   when the registration was accepted
+* EMAIL_TEMPLATE_SETFIXED_ACCEPT_ADMIN   
+   when administrative review is enabled, plain text notification sent to the site 
+   administrator when a registration was accepted
+* EMAIL_TEMPLATE_SETFIXED_REFUSE_HTML
+   when administrative review is enabled, HTML message sent to the user when the registration was refused
+* EMAIL_TEMPLATE_SETFIXED_REFUSE          
+   when administrative review is enabled, plain text message sent to the user when the registration was refused.
+* EMAIL_TEMPLATE_SETFIXED_REFUSE_ADMIN
+   when administrative review is enabled, plain text notification sent to the site administrator when a registration was refused
+* EMAIL_TEMPLATE_SETFIXED_DELETE_HTML
+   HTML message sent to the user when he has canceled his registration
+* EMAIL_TEMPLATE_SETFIXED_DELETE
+   plain text message sent to the user when he has canceled his registration
+* EMAIL_TEMPLATE_SETFIXED_DELETE_ADMIN
+   plain text notification sent to the site administrator when a user has canceled his registration.
+* EMAIL_TEMPLATE_INFOMAIL_HTML
+   HTML message sent to the subscriber when he wants to update or terminate his subscription (tt_address)
+* EMAIL_TEMPLATE_INFOMAIL
+   plain text message sent to the subscriber when he wants to update or terminate his subscription (tt_address).
+* EMAIL_TEMPLATE_INFOMAIL_NORECORD_HTML
+   HTML message sent to the subscriber when no record with his email was found
+* EMAIL_TEMPLATE_INFOMAIL_NORECORD
+   plain text message sent to the subscriber when no record with his email was found
+* EMAIL_TEMPLATE_DELETE_SAVED_HTML
+   the HTML message sent to the user when he has deleted his account
+* EMAIL_TEMPLATE_DELETE_SAVED
+   plain text message sent to the user when he has deleted his account
+* EMAIL_TEMPLATE_DELETE_SAVED_ADMIN
+   plain text notification sent to the site administrator when a user has deleted his account
+* EMAIL_TEMPLATE_SETFIXED_UNSUBSCRIBE_HTML
+   HTML message sent to the user to confirm that he/she was unsubscribed, but that his account is still active
+* EMAIL_TEMPLATE_SETFIXED_UNSUBSCRIBE
+   plain text message sent to the user to confirm that he/she was unsubscribed, but that his account is still active
+* EMAIL_TEMPLATE_SETFIXED_PASSWORD_HTML
+   HTML message sent to the user who has forgotten his password to create a new password for his account (fe_users)
+* EMAIL_TEMPLATE_SETFIXED_PASSWORD
+   plain text message sent to the user who has forgotten his password to create a new password for his account (fe_users)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

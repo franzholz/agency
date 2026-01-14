@@ -1,0 +1,14 @@
+:navigation-title: Sending Invitation
+..  _sending-invitation:
+
+===================
+Sending Invitation
+===================
+
+
+
+Create a page, limiting access to this page to front end user groups who will be authorized to send invitations to register.
+Insert the Agency Registration plugin, setting the display mode to 'Invite' and the Starting Point to the System Folder 
+that will contain the front end user records created.
+When an account is created through this page, an invitation message will be sent to the email address specified on the account. 
+The invited person may accept or decline the invitation
