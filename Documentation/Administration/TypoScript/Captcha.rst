@@ -35,3 +35,13 @@ or set in TS Setup:
     }
 
 
+
+Captcha markers
+---------------
+
+*  :php:`###NAME_CAPTCHA_RESPONSE###`
+*  :php:`###CAPTCHA_NOTICE###`
+*  :php:`###CAPTCHA_CANT_READ#`##
+*  :php:`###CAPTCHA_IMAGE###`
+*  :php:`###CAPTCHA_ACCESSIBLE###`
+

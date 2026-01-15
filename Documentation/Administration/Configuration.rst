@@ -4,7 +4,7 @@
 =============
 Configuration
 =============
-  
+
 Configuration steps
 ====================
 
@@ -28,23 +28,23 @@ or if you assign multiple values:
 
   ..  code-block:: php
       :caption: constants example
-  
-      plugin.tx_agency { 
+
+      plugin.tx_agency {
          property = value
-         ... 
+         ...
       }
 #.  TypoScript Setup:
 
   ..  code-block:: php
       :caption: EXT:my_extension/ext_localconf.php
-  
-      config { 
+
+      config {
          sys_language_uid = 0
          language = de
          locale_all = german
          typolinkLinkAccessRestrictedPages = NONE
       }
-  
+
 Setting an image upload folder compatible with front end login for website users
 ---------------------------------------------------------------------------------
 
@@ -76,5 +76,71 @@ Use the following setup.
     		}
     	}
     }
-    
+
+
+
+automatic generation of the customer number
+-------------------------------------------
+
+..  code-block:: php
+    :caption: Generation of the customer number
+
+    plugin.tx_agency {
+      create {
+         generateCustomerNumber = 1
+         generateCustomerNumber {
+            prefix = No-
+         }
+      }
+    }
+
+
+
+Activate the privacy policy check
+---------------------------------
+
+Setup:
+~~~~~~
+
+
+..  code-block:: php
+    :caption: Activation of privacy policy check
+
+    plugin.tx_agency {
+      privacyPolicyUrl = 28
+
+      create {
+         fields =  first_name, last_name, password, hidden, email, mail_html, privacy_policy_acknowledged
+      }
+    }
+
+Alternative in Constants:
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+..  code-block:: php
+    :caption: Activation of privacy policy check in Constants
+
+    plugin.tx_agency {
+
+        formFields := addToList(privacy_policy_acknowledged)
+    }
+
+
+Language Labels:
+~~~~~~~~~~~~~~~~
+
+..  code-block:: php
+    :caption: Language Labels for Privacy Policy
+
+    plugin.tx_agency._LOCAL_LANG {
+      de {
+         click_here_to_edit = Benutzerdaten bearbeiten
+         privacy_policy_acknowledged = Ich bestätige, dass ich die Datenschutzbestimmung gelesen habe und dieser zustimme.
+         privacy_policy_acknowledged_2 = Ich bestätige für alle Daten, die ich auf dieser Webseite eingebe, dass Sie diese gemäß den Datenschutzbestimmungen verwenden dürfen.
+         privacy_policy_hint = Hinweis
+         privacy_policy_hint_1 = Sie haben das Recht diese Zustimmung zu einem späteren Zeitpunkt per E-Mail zu widerrufen.
+         click_here_to_see_privacy_policy = Hier klicken um die Datenschutzbestimmung zu lesen.
+      }
+    }
 
