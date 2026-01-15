@@ -31,27 +31,17 @@ or set in TS Setup:
     :caption: activate captcha in evalValues
 
     plugin.tx_agency {
-      create.evalValues.captcha_response = captcha
+        create.evalValues.captcha_response = captcha
     }
 
-The captcha default setup which defines the captcha_response from above is:
 
-..  code-block:: php
-    :caption: activate captcha extensions
 
-    plugin.tx_agency {
-      captcha {
-        10 {
-           extensionKey = sr_freecap
-           evalRule = freecap
-        }
-        20 {
-           extensionKey = foo_captcha
-           evalRule = bar_captcha
-        }
-      }
-    }
+Captcha markers
+---------------
 
-Notice that the :php:`evalRule` must be identical to the captcha_response.
-
+*  :php:`###NAME_CAPTCHA_RESPONSE###`
+*  :php:`###CAPTCHA_NOTICE###`
+*  :php:`###CAPTCHA_CANT_READ#`##
+*  :php:`###CAPTCHA_IMAGE###`
+*  :php:`###CAPTCHA_ACCESSIBLE###`
 
