@@ -47,18 +47,15 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Agency\Domain\Repository\FrontendUserRepository;
 
-
-class CustomerNumber implements SingletonInterface
+#[Autoconfigure(public: true)]
+class CustomerNumber
 {
-    protected ?FrontendUserRepository $frontendUserRepository = null;
-
-    public function __construct(
-        FrontendUserRepository $frontendUserRepository
-    ) {
-        $this->frontendUserRepository = $frontendUserRepository;
-    }
+    // public function __construct(
+    //     private readonly FrontendUserRepository $frontendUserRepository
+    // ) {}
 
     public function generate(
+        FrontendUserRepository $frontendUserRepository,
         $theTable,
         $config
     ) {
@@ -67,7 +64,7 @@ class CustomerNumber implements SingletonInterface
 
         if ($prefix != '') {
             $maxCustomerNumber =
-                $this->frontendUserRepository->maxCustomerNumber();
+                $frontendUserRepository->maxCustomerNumber();
 
             $found = preg_match_all('/([\d]+)/', $maxCustomerNumber, $match);
             $index = $found - 1;

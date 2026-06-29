@@ -23,7 +23,7 @@ use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * FrontendUser repository with all the callable functionality
+ * FrontendGroup repository with all the callable functionality
  */
 class FrontendGroupRepository
 {

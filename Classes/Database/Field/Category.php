@@ -45,8 +45,7 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
-use MEDIAESSENZ\Mail\Domain\Repository\CategoryRepository;
-
+use JambageCom\Agency\Domain\Repository;
 
 class Category extends Base implements SingletonInterface
 {

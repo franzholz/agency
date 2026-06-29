@@ -93,13 +93,10 @@ class ActionController implements SingletonInterface
     public $controlData;
     // Commands that may be processed when no user is logged in
     public $noLoginCommands = ['create', 'invite', 'setfixed', 'infomail', 'login'];
-    protected ?FrontendUserRepository $frontendUserRepository = null;
 
     public function __construct(
-        FrontendUserRepository $frontendUserRepository
-    ) {
-        $this->frontendUserRepository = $frontendUserRepository;
-    }
+        private readonly FrontendUserRepository $frontendUserRepository
+    ) {}
 
     public function init(
         ConfigurationStore $confObj,
@@ -610,9 +607,13 @@ class ActionController implements SingletonInterface
                 !isset($origArray['cnum']) &&
                 $conf[$cmdKey . '.']['generateCustomerNumber']
             ) {
-                $customerNumberApi = GeneralUtility::makeInstance(CustomerNumber::class);
+                $customerNumberApi =
+                    GeneralUtility::makeInstance(
+                        CustomerNumber::class
+                    );
                 $customerNumber =
                     $customerNumberApi->generate(
+                        $this->frontendUserRepository,
                         $theTable,
                         $conf[$cmdKey . '.']['generateCustomerNumber.']
                     );
