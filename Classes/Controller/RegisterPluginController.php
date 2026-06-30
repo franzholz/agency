@@ -68,19 +68,6 @@ class RegisterPluginController extends AbstractPlugin
         LocalizationUtility::init();
         $configurationCheck = GeneralUtility::makeInstance(ConfigurationCheck::class);
 
-        // Check installation requirements
-        $content =
-            $configurationCheck->checkRequirements(
-                $conf,
-                $this->extKey
-            );
-
-        // Check installation security settings
-        $content .=
-            $configurationCheck->checkSecuritySettings(
-                $this->extKey
-            );
-
         // Check presence of deprecated markers
         $content .=
             $configurationCheck->checkDeprecatedMarkers(
