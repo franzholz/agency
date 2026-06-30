@@ -21,7 +21,7 @@ call_user_func(function ($extensionKey, $table): void {
         $extensionKey
     );
 
-    +// Activate the display of the FlexForm field
+    // Activate the display of the FlexForm field
     ExtensionManagementUtility::addToAllTCAtypes(
         'tt_content',
         '--div--;Configuration,pi_flexform,',
