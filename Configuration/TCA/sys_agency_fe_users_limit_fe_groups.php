@@ -3,6 +3,8 @@
 defined('TYPO3') || die('Access denied.');
 
 use JambageCom\Agency\Constants\Extension;
+use JambageCom\Agency\Utility\ConfigurationUtility;
+
 
 $extensionKey = Extension::KEY;
 $languageSubpath = '/Resources/Private/Language/';
@@ -82,8 +84,7 @@ $result = [
                 'renderType' => 'inputDateTime',
                 'default' => 0,
                 'range' => [
-                    'upper' => mktime(0, 0, 0, 12, 31, $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['endtimeYear']),
-                    'lower' => mktime(0, 0, 0, date('n') - 1, date('d'), date('Y'))
+                    'upper' => mktime(0, 0, 0, 1, 1, 2106),
                 ]
             ]
         ],

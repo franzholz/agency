@@ -2007,7 +2007,10 @@ class Data implements SingletonInterface
 
                         // <Ries van Twisk added registrationProcess hooks>
                         // Call all beforeSaveDelete hooks BEFORE the record is deleted
-                        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'])) {
+                        if (
+                            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess']) &&
+                            is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'])
+                        ) {
                             foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['registrationProcess'] as $classRef) {
                                 $hookObj = GeneralUtility::makeInstance($classRef);
                                 if (method_exists($hookObj, 'registrationProcess_beforeSaveDelete')) {

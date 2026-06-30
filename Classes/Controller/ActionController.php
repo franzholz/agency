@@ -804,7 +804,7 @@ class ActionController implements SingletonInterface
                     $controlData->getPid(),
                     $savePassword,
                     $extraFields,
-                    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['registrationProcess']
+                    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['registrationProcess'] ?? ''
                 );
 
                 if ($newDataArray) {

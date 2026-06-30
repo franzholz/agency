@@ -5,6 +5,9 @@ defined('TYPO3') || die('Access denied.');
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 use JambageCom\Agency\Constants\Extension;
+use JambageCom\Agency\Utility\ConfigurationUtility;
+
+
 
 call_user_func(function ($extensionKey, $table): void {
     $table = 'fe_users';
@@ -196,7 +199,7 @@ call_user_func(function ($extensionKey, $table): void {
         ],
     ];
 
-    if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['forceGender']) {
+    if (ConfigurationUtility::getExtensionConfiguration('forceGender') ?? false) {
         $temporaryColumns['gender']['config']['items'] = [
             ['LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.gender.I.0', '0'],
             ['LLL:EXT:' . $extensionKey . $languageSubpath . 'locallang_db.xlf:fe_users.gender.I.1', '1']
@@ -229,10 +232,12 @@ call_user_func(function ($extensionKey, $table): void {
     $GLOBALS['TCA'][$table]['columns']['email']['config']['max'] = '255';
     $GLOBALS['TCA'][$table]['columns']['telephone']['config']['max'] = '25';
     $GLOBALS['TCA'][$table]['columns']['fax']['config']['max'] = '25';
-    $GLOBALS['TCA'][$table]['columns']['image']['config']['uploadfolder'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['uploadfolder'];
-    $GLOBALS['TCA'][$table]['columns']['image']['config']['max_size'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['imageMaxSize'];
-    $GLOBALS['TCA'][$table]['columns']['image']['config']['allowed'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['imageTypes'];
-
+    $GLOBALS['TCA'][$table]['columns']['image']['config']['uploadfolder'] =
+        ConfigurationUtility::getExtensionConfiguration('uploadfolder');
+    $GLOBALS['TCA'][$table]['columns']['image']['config']['max_size'] =
+        ConfigurationUtility::getExtensionConfiguration('imageMaxSize');
+    $GLOBALS['TCA'][$table]['columns']['image']['config']['allowed'] =
+        ConfigurationUtility::getExtensionConfiguration('imageTypes');
 
     $temporaryColumns['country'] = '';
     $columns = ['zone', 'static_info_country', 'country', 'language'];
