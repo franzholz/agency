@@ -1,3 +1,6 @@
+2026-06-30 Franz Holzinger  <franz@ttproducts.de>
+    * use ConfigurationUtility copied from mail extension
+
 2025-12-27 Franz Holzinger  <franz@ttproducts.de>
     * fix email to send the differences of the changed user data
 
