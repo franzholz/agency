@@ -8,7 +8,6 @@ use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Utility\ConfigurationUtility;
 
 
-
 call_user_func(function ($extensionKey, $table): void {
     $table = 'fe_users';
     $languageSubpath = '/Resources/Private/Language/';
@@ -306,3 +305,4 @@ call_user_func(function ($extensionKey, $table): void {
     $searchFields = array_unique($searchFields);
     $GLOBALS['TCA'][$table]['ctrl']['searchFields'] = implode(',', $searchFields);
 }, Extension::KEY, basename(__FILE__, '.php'));
+
