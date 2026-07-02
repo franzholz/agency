@@ -2,7 +2,9 @@
 
 defined('TYPO3') || die('Access denied.');
 
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Utility\ConfigurationUtility;
@@ -11,6 +13,8 @@ use JambageCom\Agency\Utility\ConfigurationUtility;
 call_user_func(function ($extensionKey, $table): void {
     $table = 'fe_users';
     $languageSubpath = '/Resources/Private/Language/';
+    $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+    $majorVersion = $typo3Version->getMajorVersion();
 
     $temporaryColumns = [
         'cnum' => [
@@ -232,11 +236,10 @@ call_user_func(function ($extensionKey, $table): void {
     $GLOBALS['TCA'][$table]['columns']['telephone']['config']['max'] = '25';
     $GLOBALS['TCA'][$table]['columns']['fax']['config']['max'] = '25';
     $GLOBALS['TCA'][$table]['columns']['image']['config']['uploadfolder'] =
-        ConfigurationUtility::getExtensionConfiguration('uploadfolder');
+        ConfigurationUtility::getExtensionConfiguration('uploadfolder') ?? 'uploads/tx_agency';
     $GLOBALS['TCA'][$table]['columns']['image']['config']['max_size'] =
-        ConfigurationUtility::getExtensionConfiguration('imageMaxSize');
-    $GLOBALS['TCA'][$table]['columns']['image']['config']['allowed'] =
-        ConfigurationUtility::getExtensionConfiguration('imageTypes');
+        ConfigurationUtility::getExtensionConfiguration('imageMaxSize') ?? 250;    $GLOBALS['TCA'][$table]['columns']['image']['config']['allowed'] =
+        ConfigurationUtility::getExtensionConfiguration('imageTypes') ?? 'png,jpeg,jpg,gif,tif,tiff';
 
     $temporaryColumns['country'] = '';
     $columns = ['zone', 'static_info_country', 'country', 'language'];
@@ -301,8 +304,10 @@ call_user_func(function ($extensionKey, $table): void {
     $GLOBALS['TCA'][$table]['palettes']['2']['showitem'] = 'gender,--linebreak--,' . $GLOBALS['TCA'][$table]['palettes']['2']['showitem'];
     $GLOBALS['TCA'][$table]['ctrl']['thumbnail'] = 'image';
 
-    $searchFields = explode(',', $GLOBALS['TCA'][$table]['ctrl']['searchFields'] . ',cnum,comments');
-    $searchFields = array_unique($searchFields);
-    $GLOBALS['TCA'][$table]['ctrl']['searchFields'] = implode(',', $searchFields);
+    if ($majorVersion < 14) {
+        $searchFields = explode(',', $GLOBALS['TCA'][$table]['ctrl']['searchFields'] . ',cnum,comments');
+        $searchFields = array_unique($searchFields);
+        $GLOBALS['TCA'][$table]['ctrl']['searchFields'] = implode(',', $searchFields);
+    }
 }, Extension::KEY, basename(__FILE__, '.php'));
 
