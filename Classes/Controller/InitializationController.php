@@ -50,7 +50,6 @@ use Psr\Http\Message\ServerRequestInterface;
 
 use SJBR\StaticInfoTables\PiBaseApi;
 
-use JambageCom\Div2007\Compatibility\AbstractPlugin;
 use JambageCom\Div2007\Database\CoreQuery;
 use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
@@ -100,7 +99,7 @@ class InitializationController implements SingletonInterface
         &$markerObj,
         &$errorMessage,
         ServerRequestInterface $request,
-        AbstractPlugin $pibaseObj,
+        RegisterPluginController $pibaseObj,
         ContentObjectRenderer $cObj,
         ConfigurationStore $confObj,
         $conf,
@@ -276,7 +275,7 @@ class InitializationController implements SingletonInterface
 
 
     public function main(
-        AbstractPlugin $pibaseObj,
+        RegisterPluginController $pibaseObj,
         ServerRequestInterface $request,
         ContentObjectRenderer $cObj,
         $content,

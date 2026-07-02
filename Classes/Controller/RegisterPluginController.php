@@ -43,7 +43,10 @@ namespace JambageCom\Agency\Controller;
 
 use Psr\Http\Message\ServerRequestInterface;
 
+use TYPO3\CMS\Core\Attribute\AsAllowedCallable;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Configuration\ConfigurationCheck;
@@ -66,13 +69,17 @@ class RegisterPluginController
     */
     public $piVars = [];
 
+    public function setContentObjectRenderer(ContentObjectRenderer $cObj): void
+    {
+        $this->cObj = $cObj;
+    }
+
     #[AsAllowedCallable]
     public function main(
         $content,
         $conf,
         ServerRequestInterface $request
     ) {
-        $this->conf = $conf;
         $this->piVars =
             self::getRequestPostOverGetParameterWithPrefix(
                 $request,
