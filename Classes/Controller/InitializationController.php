@@ -48,8 +48,6 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 use Psr\Http\Message\ServerRequestInterface;
 
-use SJBR\StaticInfoTables\PiBaseApi;
-
 use JambageCom\Div2007\Database\CoreQuery;
 use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
@@ -91,7 +89,6 @@ class InitializationController implements SingletonInterface
     public function init(
         &$controlData,
         array &$origArray,
-        &$staticInfoObj,
         &$dataObj,
         &$actionController,
         &$tcaObj,
@@ -111,9 +108,11 @@ class InitializationController implements SingletonInterface
         $result = true;
         HtmlUtility::generateXhtmlFix();
 
+        $useStaticInfo =
+            ExtensionManagementUtility::isLoaded('static_info_tables');
         $tcaObj = GeneralUtility::makeInstance(Tca::class);
+        $tcaObj->init($useStaticInfo);
         $confObj->init($conf);
-        $tcaObj->init($pibaseObj->extKey, $theTable);
         $tablesObj = GeneralUtility::makeInstance(Tables::class);
         $tablesObj->init($theTable);
         $authObj = GeneralUtility::makeInstance(Authentication::class);
@@ -127,27 +126,6 @@ class InitializationController implements SingletonInterface
             $pibaseObj->piVars,
             $theTable
         );
-
-        if (
-            ExtensionManagementUtility::isLoaded(
-                'static_info_tables'
-            )
-        ) {
-            // Initialise static info library
-            if (class_exists('SJBR\\StaticInfoTables\\PiBaseApi')) {
-                $staticInfoObj = GeneralUtility::makeInstance(PiBaseApi::class);
-            }
-
-            if (
-                is_object($staticInfoObj) &&
-                (
-                    !method_exists($staticInfoObj, 'needsInit') ||
-                    $staticInfoObj->needsInit()
-                )
-            ) {
-                $staticInfoObj->init();
-            }
-        }
 
         $urlObj = GeneralUtility::makeInstance(Url::class);
         $dataObj =
@@ -218,8 +196,7 @@ class InitializationController implements SingletonInterface
                     $actionController,
                     $theTable,
                     $templateCode,
-                    $controlData,
-                    $staticInfoObj
+                    $controlData
                 );
 
                 $resultInit = $actionController->init2( // only here the $conf is changed
@@ -228,7 +205,7 @@ class InitializationController implements SingletonInterface
                     $errorMessage,
                     $dataObj,
                     $confObj,
-                    $staticInfoObj,
+                    $useStaticInfo,
                     $theTable,
                     $controlData,
                     $tcaObj
@@ -250,7 +227,7 @@ class InitializationController implements SingletonInterface
                     $controlData->getPrefixId(),
                     $controlData->getTable(),
                     $urlObj,
-                    $staticInfoObj,
+                    $useStaticInfo,
                     $uid,
                     $controlData->readToken()
                 );
@@ -285,7 +262,6 @@ class InitializationController implements SingletonInterface
         $buttonLabelsList = '',
         $otherLabelsList = ''
     ) {
-        $staticInfoObj = null;
         $dataObj = null; // object of type tx_agency_data
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $errorMessage = '';
@@ -295,7 +271,6 @@ class InitializationController implements SingletonInterface
         $success = $this->init(
             $controlData,
             $origArray,
-            $staticInfoObj,
             $dataObj,
             $actionController,
             $tcaObj,
@@ -335,7 +310,7 @@ class InitializationController implements SingletonInterface
                 $dataObj,
                 $tcaObj,
                 $markerObj,
-                $staticInfoObj,
+                ExtensionManagementUtility::isLoaded('static_info_tables'),
                 $theTable,
                 $cmd,
                 $cmdKey,

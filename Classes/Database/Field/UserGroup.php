@@ -350,7 +350,7 @@ class UserGroup extends Base implements SingletonInterface
      *
      * @param array $controlData: the object of the control data
      * @param    mixed       If $usergroup is an integer, it's the uid of the usergroup overlay record and thus the usergroup overlay record is returned. If $usergroup is an array, it's a usergroup record and based on this usergroup record the language overlay record is found and gespeichert.OVERLAYED before the usergroup record is returned.
-     * @param    integer     Language UID if you want to set an alternative value to $this->controlData->sys_language_content which is default. Should be >=0
+     * @param    integer     Language UID if you want to set an alternative value to $this->controlData-> which is default. Should be >=0
      * @return   array       usergroup row which is overlayed with language_overlay record (or the overlay record alone)
      */
     public function getUsergroupOverlay(

@@ -47,14 +47,17 @@ use Doctrine\DBAL\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
+
 use SJBR\StaticInfoTables\PiBaseApi;
 
 use JambageCom\Div2007\Api\Css;
+use JambageCom\Div2007\Api\StaticInfoTablesApi;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\TableUtility;
@@ -70,15 +73,19 @@ use JambageCom\Agency\Request\Parameters;
 
 class Tca implements SingletonInterface
 {
+    private $useStaticInfo;
+
+
     public function __construct(
         protected readonly ConnectionPool $connectionPool,
         protected readonly FrontendGroupRepository $frontendGroupRepository,
+        protected readonly PageRepository $pageRepository,
     ) {
     }
 
-    public function init($extKey, $theTable): void
+    public function init($useStaticInfo): void
     {
-        // nothing
+        $this->useStaticInfo = $useStaticInfo;
     }
 
     public function getForeignTable($theTable, $columnName)
@@ -222,7 +229,7 @@ class Tca implements SingletonInterface
     */
     public function modifyRow(
         array &$dataArray,
-        ?PiBaseApi $staticInfoObj,
+        $useStaticInfo,
         string $theTable,
         string $fieldList,
         bool $usePrivacyPolicy = false,
@@ -389,14 +396,16 @@ class Tca implements SingletonInterface
         }
 
         if (
-            is_object($staticInfoObj) &&
+            $this->useStaticInfo &&
             !empty($dataArray['static_info_country'])
         ) {
+            $staticInfoApi = GeneralUtility::makeInstance(StaticInfoTablesApi::class);
             // empty zone if it does not fit to the provided country
             $zoneArray =
-                $staticInfoObj->initCountrySubdivisions(
+                $staticInfoApi->initCountrySubdivisions(
                     $dataArray['static_info_country']
                 );
+
             if (!isset($zoneArray[$dataArray['zone']])) {
                 $dataArray['zone'] = '';
             }
@@ -554,11 +563,14 @@ class Tca implements SingletonInterface
                                 $foreignRows[$i]
                             );
                     } elseif (
-                        $localizedRow =
-                            $GLOBALS['TSFE']->sys_page->getLanguageOverlay(
-                                $columnConfig['foreign_table'],
-                                $foreignRows[$i],
-                                $languageAspect)
+                        !empty(
+                            $localizedRow =
+                                $this->pageRepository->getLanguageOverlay(
+                                    $columnConfig['foreign_table'],
+                                    $foreignRows[$i],
+                                    $languageAspect
+                                )
+                         )
                     ) {
                         $foreignRows[$i] = $localizedRow;
                     }
@@ -1445,11 +1457,14 @@ class Tca implements SingletonInterface
                     $outputArray = [];
 
                     while ($row2 = $result->fetchAssociative()) {
-                        if ($localizedRow =
-                            $GLOBALS['TSFE']->sys_page->getLanguageOverlay(
-                                $columnConfig['foreign_table'],
-                                $row2,
-                                $languageAspect
+                        if (
+                            !empty(
+                                $localizedRow =
+                                    $this->pageRepository->getLanguageOverlay(
+                                        $columnConfig['foreign_table'],
+                                        $row2,
+                                        $languageAspect
+                                    )
                             )
                         ) {
                             $row2 = $localizedRow;

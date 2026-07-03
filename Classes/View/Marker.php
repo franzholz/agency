@@ -58,6 +58,7 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
 
 use JambageCom\Div2007\Api\Css;
+use JambageCom\Div2007\Api\StaticInfoTablesApi;
 use JambageCom\Div2007\Captcha\CaptchaInterface;
 use JambageCom\Div2007\Utility\FrontendUtility;
 use JambageCom\Div2007\Utility\HtmlUtility;
@@ -87,7 +88,6 @@ class Marker
     public $controlData;
     public $tca;
     public $previewLabel;
-    public $staticInfoObj;
     public $markerArray = [];
     public $buttonLabelsList;
     public $otherLabelsList;
@@ -95,6 +95,8 @@ class Marker
     private $urlMarkerArray;
     private $thePidTitle;
     private $tmpTcaMarkers;
+    private bool $useStaticInfo;
+
 
     public function init(
         ConfigurationStore $confObj,
@@ -106,7 +108,7 @@ class Marker
         $prefixId,
         $theTable,
         Url $urlObj,
-        $staticInfoObj,
+        bool $useStaticInfo,
         $uid,
         $token
     ): void {
@@ -114,11 +116,10 @@ class Marker
         $this->data = $data;
         $this->tca = $tcaObj;
         $this->controlData = $controlData;
-        $this->staticInfoObj = $staticInfoObj;
         $this->thePidTitle = $controlData->getPidTitle();
+        $this->useStaticInfo = $useStaticInfo;
 
         $markerArray = [];
-
         $charset = 'utf-8';
         $markerArray['###CHARSET###'] = $charset;
         $markerArray['###PREFIXID###'] = $prefixId;
@@ -135,14 +136,12 @@ class Marker
                 $extKey,
                 $prefixId
             );
-
         $this->setUrlMarkerArray($urlMarkerArray);
         $markerArray = array_merge($markerArray, $urlMarkerArray);
         $this->setArray($markerArray);
 
         // Button labels
         $buttonLabelsList = 'register,confirm_register,back_to_form,update,confirm_update,enter,confirm_delete,cancel_delete,confirm_refuse,cancel_refuse,confirm_approve,cancel_approve,update_and_more,password_enter_new';
-
         $this->setButtonLabelsList($buttonLabelsList);
 
         $otherLabelsList = 'yes,no,new_password,password_again,tooltip_password_again,tooltip_invitation_password_again,click_here_to_register,tooltip_click_here_to_register,click_here_to_edit,tooltip_click_here_to_edit,click_here_to_delete,tooltip_click_here_to_delete,click_here_to_refuse,tooltip_click_here_to_refuse,click_here_to_see_terms,tooltip_click_here_to_see_terms,click_here_to_see_privacy_policy,tooltip_click_here_to_see_privacy_policy,privacy_policy_acknowledged_2,privacy_policy_hint,privacy_policy_hint_1,privacy_policy_hint_2,' .
@@ -867,19 +866,22 @@ class Marker
         $row = '',
         $viewOnly = false
     ): void {
-        if (is_object($this->staticInfoObj)) {
+        if ($this->useStaticInfo) {
+            $staticInfoApi = GeneralUtility::makeInstance(StaticInfoTablesApi::class);
             $css = GeneralUtility::makeInstance(Css::class);
             $cmd = $this->controlData->getCmd();
             $theTable = $this->controlData->getTable();
 
             if ($this->controlData->getMode() == Mode::PREVIEW || $viewOnly) {
                 $markerArray['###FIELD_static_info_country###'] =
-                    $this->staticInfoObj->getStaticInfoName('COUNTRIES', is_array($row) ? $row['static_info_country'] : '');
-                $markerArray['###FIELD_zone###'] = $this->staticInfoObj->getStaticInfoName('SUBDIVISIONS', is_array($row) ? $row['zone'] : '', is_array($row) ? $row['static_info_country'] : '');
+                    $staticInfoApi->getStaticInfoName('COUNTRIES', is_array($row) ? $row['static_info_country'] : '');
+                $markerArray['###FIELD_zone###'] =
+                    $staticInfoApi->getStaticInfoName('SUBDIVISIONS', is_array($row) ? $row['zone'] : '', is_array($row) ? $row['static_info_country'] : '');
                 if (!$markerArray['###FIELD_zone###']) {
                     $markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="FE['.$theTable.'][zone]" value=""' . HtmlUtility::getXhtmlFix() . '>';
                 }
-                $markerArray['###FIELD_language###'] = $this->staticInfoObj->getStaticInfoName('LANGUAGES', is_array($row) ? $row['language'] : '');
+                $markerArray['###FIELD_language###'] =
+                    $staticInfoApi->getStaticInfoName('LANGUAGES', is_array($row) ? $row['language'] : '');
             } else {
                 $idCountry =
                     FrontendUtility::getClassName(
@@ -905,19 +907,20 @@ class Marker
                 if (isset($this->conf['where.']) && is_array($this->conf['where.'])) {
                     $where = $this->conf['where.']['static_countries'];
                 }
-                $markerArray['###SELECTOR_STATIC_INFO_COUNTRY###'] = $this->staticInfoObj->buildStaticInfoSelector(
-                    'COUNTRIES',
-                    'FE[' . $theTable . ']' . '[' . $fieldNameCountry . ']',
-                    $css->getClassName($fieldNameCountry, 'select'),
-                    $selected,
-                    '',
-                    $this->conf['onChangeCountryAttribute'],
-                    $idCountry,
-                    $titleCountry,
-                    $where,
-                    '',
-                    $this->conf['useLocalCountry']
-                );
+                $markerArray['###SELECTOR_STATIC_INFO_COUNTRY###'] =
+                    $staticInfoApi->buildStaticInfoSelector(
+                        'COUNTRIES',
+                        'FE[' . $theTable . ']' . '[' . $fieldNameCountry . ']',
+                        $css->getClassName($fieldNameCountry, 'select'),
+                        $selected,
+                        '',
+                        $this->conf['onChangeCountryAttribute'],
+                        $idCountry,
+                        $titleCountry,
+                        $where,
+                        '',
+                        $this->conf['useLocalCountry']
+                    );
 
                 $fieldNameZone = 'zone';
                 $where = '';
@@ -925,7 +928,7 @@ class Marker
                     $where = $this->conf['where.']['static_country_zones'];
                 }
                 $markerArray['###SELECTOR_ZONE###'] =
-                    $this->staticInfoObj->buildStaticInfoSelector(
+                    $staticInfoApi->buildStaticInfoSelector(
                         'SUBDIVISIONS',
                         'FE[' . $theTable . ']' . '[' . $fieldNameZone . ']',
                         $css->getClassName($fieldNameZone, 'select'),
@@ -947,7 +950,7 @@ class Marker
                 }
 
                 $markerArray['###SELECTOR_LANGUAGE###'] =
-                    $this->staticInfoObj->buildStaticInfoSelector(
+                    $staticInfoApi->buildStaticInfoSelector(
                         'LANGUAGES',
                         'FE[' . $theTable . ']' . '[' . $fieldNameLanguage . ']',
                         $css->getClassName($fieldNameLanguage, 'select'),

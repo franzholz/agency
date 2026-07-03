@@ -51,6 +51,7 @@ use TYPO3\CMS\Core\Utility\File\BasicFileUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
+use JambageCom\Div2007\Api\StaticInfoTablesApi;
 use JambageCom\Div2007\Captcha\CaptchaInterface;
 use JambageCom\Div2007\Captcha\CaptchaManager;
 use JambageCom\Div2007\Database\CoreQuery;
@@ -116,8 +117,7 @@ class Data implements SingletonInterface
         $control,
         $theTable,
         $templateCode,
-        Parameters $controlData,
-        $staticInfoObj
+        Parameters $controlData
     ): void
     {
         $this->coreQuery = $coreQuery;
@@ -169,7 +169,6 @@ class Data implements SingletonInterface
             ) {
                 $tca->modifyRow(
                     $dataArray,
-                    $staticInfoObj,
                     $theTable,
                     $fieldlist,
                     true,
@@ -562,7 +561,6 @@ class Data implements SingletonInterface
     */
     public function evalValues(
         ConfigurationStore $confObj,
-        $staticInfoObj,
         $theTable,
         array &$dataArray,
         array &$origArray,
@@ -570,7 +568,8 @@ class Data implements SingletonInterface
         $cmdKey,
         array $requiredArray,
         array $checkFieldArray,
-        $captcha
+        $captcha,
+        $useStaticInfo
     ) {
         $conf = $confObj->getConf();
         $failureMsg = [];
@@ -1060,7 +1059,6 @@ class Data implements SingletonInterface
                                             $bInternal = false;
                                             $errorField = $hookObj->evalValues(
                                                 $confObj,
-                                                $staticInfoObj,
                                                 $theTable,
                                                 $dataArray,
                                                 $origArray,
@@ -1068,6 +1066,7 @@ class Data implements SingletonInterface
                                                 $cmdKey,
                                                 $requiredArray,
                                                 $checkFieldArray,
+                                                $useStaticInfo,
                                                 $theField,
                                                 $cmdParts,
                                                 $bInternal,
@@ -1197,9 +1196,11 @@ class Data implements SingletonInterface
             $markContentArray['###EVAL_ERROR_saved###'] = '';
         }
 
-        if (!empty($this->missing['zone']) && is_object($staticInfoObj)) {
+        if ($useStaticInfo && !empty($this->missing['zone'])) {
+            $staticInfoApi = GeneralUtility::makeInstance(StaticInfoTablesApi::class);
             // empty zone if there is not zone for the provided country
-            $zoneArray = $staticInfoObj->initCountrySubdivisions($dataArray['static_info_country']);
+            $zoneArray =
+                $staticInfoApi->initCountrySubdivisions($dataArray['static_info_country']);
 
             if (
                 !isset($zoneArray) ||
@@ -1210,6 +1211,7 @@ class Data implements SingletonInterface
                 unset($failureArray[$k]);
             }
         }
+
         if (!empty($this->missing)) {
             foreach ($this->missing as $theField => $value) {
                 $errorMsg = $this->getFailureText(
@@ -1585,7 +1587,6 @@ class Data implements SingletonInterface
     */
     public function save(
         array &$newRow,
-        $staticInfoObj,
         Parameters $controlData,
         $theTable,
         array $dataArray,
@@ -1735,7 +1736,6 @@ class Data implements SingletonInterface
 
                         $this->tca->modifyRow(
                             $newRow,
-                            $staticInfoObj,
                             $theTable,
                             $modifyFieldList,
                             $usePrivacyPolicy,
@@ -1904,7 +1904,6 @@ class Data implements SingletonInterface
                         $newRow = $this->parseIncomingData($newRow);
                         $this->tca->modifyRow(
                             $newRow,
-                            $staticInfoObj,
                             $theTable,
                             $this->getFieldList(),
                             $usePrivacyPolicy,

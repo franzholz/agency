@@ -138,7 +138,7 @@ class ActionController implements SingletonInterface
         &$errorMessage,
         Data &$dataObj,
         ConfigurationStore $confObj,
-        $staticInfoObj,
+        $useStaticInfo,
         $theTable,
         Parameters $controlData,
         Tca $tcaObj
@@ -183,7 +183,6 @@ class ActionController implements SingletonInterface
             ) {
                 $tcaObj->modifyRow(
                     $newOrigArray,
-                    $staticInfoObj,
                     $theTable,
                     $dataObj->getFieldList()
                 );
@@ -498,7 +497,7 @@ class ActionController implements SingletonInterface
         Data $dataObj,
         Tca $tcaObj,
         Marker $markerObj,
-        $staticInfoObj,
+        $useStaticInfo,
         $theTable,
         $cmd,
         $cmdKey,
@@ -664,7 +663,6 @@ class ActionController implements SingletonInterface
                 // A button was clicked on
                 $evalErrors = $dataObj->evalValues(
                     $confObj,
-                    $staticInfoObj,
                     $theTable,
                     $finalDataArray,
                     $origArray,
@@ -672,7 +670,8 @@ class ActionController implements SingletonInterface
                     $cmdKey,
                     $controlData->getRequiredArray(),
                     $checkFieldArray,
-                    $controlData->getCaptcha()
+                    $controlData->getCaptcha(),
+                    $useStaticInfo
                 );
                 // If the two password fields are not equal, clear session data
                 if (
@@ -715,7 +714,6 @@ class ActionController implements SingletonInterface
                 // We are going to redisplay
                 $evalErrors = $dataObj->evalValues(
                     $confObj,
-                    $staticInfoObj,
                     $theTable,
                     $finalDataArray,
                     $origArray,
@@ -723,7 +721,8 @@ class ActionController implements SingletonInterface
                     $cmdKey,
                     $controlData->getRequiredArray(),
                     $checkFieldArray,
-                    $controlData->getCaptcha()
+                    $controlData->getCaptcha(),
+                    $useStaticInfo
                 );
 
                 // If the two password fields are not equal, clear session data
@@ -792,7 +791,6 @@ class ActionController implements SingletonInterface
                 $newDataArray = [];
                 $theUid = $dataObj->save(
                     $newDataArray,
-                    $staticInfoObj,
                     $controlData,
                     $theTable,
                     $finalDataArray,
@@ -839,7 +837,6 @@ class ActionController implements SingletonInterface
                 $finalDataArray['email'] = $fetch;
                 $evalErrors = $dataObj->evalValues(
                     $confObj,
-                    $staticInfoObj,
                     $theTable,
                     $finalDataArray,
                     $origArray,
@@ -847,7 +844,8 @@ class ActionController implements SingletonInterface
                     $cmdKey,
                     [],
                     [],
-                    $controlData->getCaptcha()
+                    $controlData->getCaptcha(),
+                    $useStaticInfo
                 );
             }
             $controlData->setRequiredArray([]);
