@@ -497,11 +497,11 @@ class Parameters implements SingletonInterface
      */
     protected function setPidTitle($conf, $sys_language_uid)
     {
-        $context = GeneralUtility::makeInstance(Context::class);
+        $context = $this->getContext();
         $context->setAspect('language', new LanguageAspect($sys_language_uid));
-        $pidRecord = GeneralUtility::makeInstance(PageRepository::class, $context);
-        $row = $pidRecord->getPage((int) $this->getPid());
-        $this->thePidTitle = trim($conf['pidTitleOverride']) ?: $row['title'];
+        $pageRepository = GeneralUtility::makeInstance(PageRepository::class, $context);
+        $row = $pageRepository->getPage((int) $this->getDefaultPid());
+        $this->thePidTitle = trim($conf['pidTitleOverride'] ?: $row['title'] ?? '');
     }
 
     public function getConf()
