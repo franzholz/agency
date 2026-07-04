@@ -541,9 +541,14 @@ class Parameters implements SingletonInterface
 
     public function setDefaultPid($pid): void
     {
-
         $bPidIsInt = MathUtility::canBeInterpretedAsInteger($pid);
-        $this->defaultPid = ($bPidIsInt ? intval($pid) : $this->getTypoScriptFrontendController()->id);
+        $this->defaultPid =
+            ($bPidIsInt && $pid > 0 ?
+                intval($pid) :
+                $this->getRequest()
+                    ->getAttribute('routing')
+                    ->getPageId() ?? 0
+            );
     }
 
     public function getDefaultPid()
