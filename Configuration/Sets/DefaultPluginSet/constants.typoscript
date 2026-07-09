@@ -27,7 +27,7 @@ plugin.tx_agency {
   file.icon_delete = EXT:agency/Resources/Public/Icons/icon_delete.gif
 
     # cat=plugin.tx_agency/file; type=file[css]; label= HTML emails stylesheet: If HTML emails are enabled, this file contains the CSS stylesheet to be incorporated in these mails.
-  HTMLMailCSS = EXT:agency/template/tx_agency_htmlmail_xhtml.css
+  HTMLMailCSS = EXT:agency/Resources/Public/Css/tx_agency_htmlmail_xhtml.css
 
     # cat=plugin.tx_agency//; type=string; label= Administration email: Enter the administration email address here. This email address will be the sender email and also receive administration notifications.
   email = MyTYPO3Site@mydomain.org

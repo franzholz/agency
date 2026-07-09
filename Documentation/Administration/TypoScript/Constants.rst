@@ -184,7 +184,7 @@ HTMLMailCSS
 ..  confval:: HTMLMailCSS
     :name: HTMLMailCSS
     :type: string
-    :Default: EXT:agency/template/tx_agency_htmlmail_xhtml.css
+    :Default: EXT:agency/Resources/Public/Css/tx_agency_htmlmail_xhtml.csss
 
     File name of  the HTML emails style sheet. If HTML emails are enabled, this file contains the CSS style sheet to be incorporated in these emails.
 
