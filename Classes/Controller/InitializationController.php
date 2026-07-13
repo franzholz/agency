@@ -48,9 +48,6 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 use Psr\Http\Message\ServerRequestInterface;
 
-use SJBR\StaticInfoTables\PiBaseApi;
-
-use JambageCom\Div2007\Compatibility\AbstractPlugin;
 use JambageCom\Div2007\Database\CoreQuery;
 use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
@@ -92,7 +89,6 @@ class InitializationController implements SingletonInterface
     public function init(
         &$controlData,
         array &$origArray,
-        &$staticInfoObj,
         &$dataObj,
         &$actionController,
         &$tcaObj,
@@ -100,7 +96,7 @@ class InitializationController implements SingletonInterface
         &$markerObj,
         &$errorMessage,
         ServerRequestInterface $request,
-        AbstractPlugin $pibaseObj,
+        RegisterPluginController $pluginController,
         ContentObjectRenderer $cObj,
         ConfigurationStore $confObj,
         $conf,
@@ -111,44 +107,25 @@ class InitializationController implements SingletonInterface
     ) {
         $result = true;
         HtmlUtility::generateXhtmlFix();
-
+        $useStaticInfo =
+            ExtensionManagementUtility::isLoaded('static_info_tables');
         $tcaObj = GeneralUtility::makeInstance(Tca::class);
+        $tcaObj->init($useStaticInfo, $conf);
         $confObj->init($conf);
-        $tcaObj->init($pibaseObj->extKey, $theTable);
         $tablesObj = GeneralUtility::makeInstance(Tables::class);
         $tablesObj->init($theTable);
         $authObj = GeneralUtility::makeInstance(Authentication::class);
         $authObj->init($confObj); // config is changed
         $controlData = GeneralUtility::makeInstance(Parameters::class);
         $controlData->init(
+            $origArray,
             $confObj,
             $request,
-            $pibaseObj->prefixId,
-            $pibaseObj->extKey,
-            $pibaseObj->piVars,
+            $pluginController->prefixId,
+            $pluginController->extKey,
+            $pluginController->piVars,
             $theTable
         );
-
-        if (
-            ExtensionManagementUtility::isLoaded(
-                'static_info_tables'
-            )
-        ) {
-            // Initialise static info library
-            if (class_exists('SJBR\\StaticInfoTables\\PiBaseApi')) {
-                $staticInfoObj = GeneralUtility::makeInstance(PiBaseApi::class);
-            }
-
-            if (
-                is_object($staticInfoObj) &&
-                (
-                    !method_exists($staticInfoObj, 'needsInit') ||
-                    $staticInfoObj->needsInit()
-                )
-            ) {
-                $staticInfoObj->init();
-            }
-        }
 
         $urlObj = GeneralUtility::makeInstance(Url::class);
         $dataObj =
@@ -168,7 +145,6 @@ class InitializationController implements SingletonInterface
             'EXT:' . Extension::KEY . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf',
             false
         );
-
         $languageObj->setSalutation($conf['salutation']);
         $urlObj->init(
             $cObj,
@@ -177,9 +153,9 @@ class InitializationController implements SingletonInterface
         );
 
         if ($result !== false) {
-            if ($pibaseObj->extKey != Extension::KEY) {
+            if ($pluginController->extKey != Extension::KEY) {
                 $filename = LocalizationUtility::getFilename();
-                $filename = 'EXT:' . $pibaseObj->extKey . $filename;
+                $filename = 'EXT:' . $pluginController->extKey . $filename;
 
                 // Static Methods for Extensions for fetching the texts of agency
                 $languageObj->loadLocalLang(
@@ -196,7 +172,7 @@ class InitializationController implements SingletonInterface
                 $errorText = $languageObj->getLabel(
                     'internal_no_template'
                 );
-                $errorMessage = sprintf($errorText, $templateFile, 'plugin.tx_' . $pibaseObj->extKey . '.templateFile');
+                $errorMessage = sprintf($errorText, $templateFile, 'plugin.tx_' . $pluginController->extKey . '.templateFile');
             }
 
             if ($controlData->isTokenValid()) {
@@ -214,13 +190,11 @@ class InitializationController implements SingletonInterface
 
                 $dataObj->init(
                     $coreQuery,
-                    $languageObj,
                     $tcaObj,
                     $actionController,
                     $theTable,
                     $templateCode,
-                    $controlData,
-                    $staticInfoObj
+                    $controlData
                 );
 
                 $resultInit = $actionController->init2( // only here the $conf is changed
@@ -229,7 +203,7 @@ class InitializationController implements SingletonInterface
                     $errorMessage,
                     $dataObj,
                     $confObj,
-                    $staticInfoObj,
+                    $useStaticInfo,
                     $theTable,
                     $controlData,
                     $tcaObj
@@ -251,7 +225,7 @@ class InitializationController implements SingletonInterface
                     $controlData->getPrefixId(),
                     $controlData->getTable(),
                     $urlObj,
-                    $staticInfoObj,
+                    $useStaticInfo,
                     $uid,
                     $controlData->readToken()
                 );
@@ -276,17 +250,16 @@ class InitializationController implements SingletonInterface
 
 
     public function main(
-        AbstractPlugin $pibaseObj,
+        RegisterPluginController $pluginController,
         ServerRequestInterface $request,
         ContentObjectRenderer $cObj,
         $content,
         $conf,
         $theTable,
-        $adminFieldList = 'username,password,name,disable,usergroup,by_invitation,tx_agency_password,lost_password',
-        $buttonLabelsList = '',
-        $otherLabelsList = ''
     ) {
-        $staticInfoObj = null;
+        $adminFieldList = 'username,password,name,disable,usergroup,by_invitation,tx_agency_password,lost_password';
+        $buttonLabelsList = '';
+        $otherLabelsList = '';
         $dataObj = null; // object of type tx_agency_data
         $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
         $errorMessage = '';
@@ -296,7 +269,6 @@ class InitializationController implements SingletonInterface
         $success = $this->init(
             $controlData,
             $origArray,
-            $staticInfoObj,
             $dataObj,
             $actionController,
             $tcaObj,
@@ -304,7 +276,7 @@ class InitializationController implements SingletonInterface
             $markerObj,
             $errorMessage,
             $request,
-            $pibaseObj,
+            $pluginController,
             $cObj,
             $confObj,
             $conf,
@@ -336,7 +308,7 @@ class InitializationController implements SingletonInterface
                 $dataObj,
                 $tcaObj,
                 $markerObj,
-                $staticInfoObj,
+                ExtensionManagementUtility::isLoaded('static_info_tables'),
                 $theTable,
                 $cmd,
                 $cmdKey,
@@ -350,14 +322,14 @@ class InitializationController implements SingletonInterface
             $content = $errorMessage;
         } elseif ($success === false) {
             $xhtmlFix = HtmlUtility::determineXhtmlFix();
-            $content = '<em>Internal error in ' . $pibaseObj->extKey . '!</em><br ' . $xhtmlFix . '> Maybe you forgot to include the basic template file under "include statics from extensions".';
+            $content = '<em>Internal error in ' . $pluginController->extKey . '!</em><br ' . $xhtmlFix . '> Maybe you forgot to include the basic template file under "include statics from extensions".';
         }
 
         $content =
             FrontendUtility::wrapInBaseClass(
                 $content,
-                $pibaseObj->prefixId,
-                $pibaseObj->extKey
+                $pluginController->prefixId,
+                $pluginController->extKey
             );
 
         return $content;

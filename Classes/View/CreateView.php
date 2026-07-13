@@ -120,7 +120,10 @@ class CreateView
         if ($conf['create']) {
 
             // Call all beforeConfirmCreate hooks before the record has been shown and confirmed
-            if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['registrationProcess'])) {
+            if (
+                isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['registrationProcess']) &&
+                is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['registrationProcess'])
+            ) {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['registrationProcess'] as $classRef) {
                     $hookObj = GeneralUtility::makeInstance($classRef);
 
@@ -181,7 +184,6 @@ class CreateView
                     $errorFieldArray,
                     $failure
                 );
-
             $markerArray =
                 $markerObj->fillInMarkerArray(
                     $markerArray,
@@ -261,6 +263,7 @@ class CreateView
                     $templateCode,
                     $markerArray
                 );
+
             $markerObj->addHiddenFieldsMarkers(
                 $markerArray,
                 $theTable,
@@ -332,7 +335,7 @@ class CreateView
                         'FE[' . $theTable . ']',
                         $fields
                     );
-                    $content .= $updateJS;
+                $content .= $updateJS;
             }
         }
 

@@ -74,8 +74,7 @@ class FrontendUserRepository extends Repository
 
         $rows = $query->execute(true);
 
-        $result = $rows[0];
-        // ->execute(true);
+        $result = $rows[0] ?? [];
 
         return $result;
     }
@@ -86,12 +85,11 @@ class FrontendUserRepository extends Repository
      * @param int $pid pid of record
      * @param bool $respectEnableFields if set to false, hidden records are shown
      */
-    public function save(int $pid, array $row/*, string $fields*/): int
+    public function save(int $pid, array $row /*, string $fields*/): int
     {
         $insertId = 0;
         $row['pid'] = $pid;
         $queryBuilder = $this->connection->createQueryBuilder();
-
         $queryBuilder
             ->insert(self::TABLE)
             ->values(

@@ -43,6 +43,7 @@ namespace JambageCom\Agency\Controller;
  *
  *
  */
+
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
@@ -73,6 +74,11 @@ class Email implements SingletonInterface
     public $emailMarkAdminSuffix = '_ADMIN';
     public $emailMarkHTMLSuffix = '_HTML';
     protected $extensionKey = '';
+
+    public function __construct(
+        protected readonly PageRepository $pageRepository
+    ) {
+    }
 
     public function getExtensionKey()
     {
@@ -134,7 +140,7 @@ class Email implements SingletonInterface
                 $enable = TableUtility::enableFields($theTable);
                 // Getting records
                 // $conf['email.']['field'] must be a valid field in the table!
-                $DBrows = PageRepository::getRecordsByField(
+                $DBrows = $this->pageRepository->getRecordsByField(
                     $theTable,
                     $conf['email.']['field'],
                     $fetch,
@@ -852,7 +858,7 @@ class Email implements SingletonInterface
         if (
             MathUtility::canBeInterpretedAsInteger($recipient)
         ) {
-            $fe_userRec = $GLOBALS['TSFE']->sys_page->getRawRecord('fe_users', $recipient);
+            $fe_userRec = $this->pageRepository->getRawRecord('fe_users', $recipient);
             $recipient = $fe_userRec['email'];
         }
         $file = '';
@@ -933,10 +939,10 @@ class Email implements SingletonInterface
         // Send mail to admin
         if (
             $admin &&
-                (
-                    $adminContent != '' ||
-                    $adminContentHTML != ''
-                )
+            (
+                $adminContent != '' ||
+                $adminContentHTML != ''
+            )
         ) {
             if (isset($conf['email.']['replyTo'])) {
                 if ($conf['email.']['replyTo'] == 'user') {

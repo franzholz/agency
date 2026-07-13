@@ -1,7 +1,7 @@
 {
   "name": "jambagecom/agency",
   "type": "typo3-cms-extension",
-  "description": "An improved variant of Kasper Skårhøj's Front End User Admin extension",
+  "description": "Agency Registration. - An improved variant of Kasper Skårhøj's Front End User Admin extension",
   "keywords": [
     "TYPO3",
     "extension",
@@ -23,15 +23,13 @@
     "GPL-2.0-or-later"
   ],
   "require": {
-    "typo3/cms-core": "^13.4",
-    "jambagecom/div2007": "^2.3.11",
-    "friendsoftypo3/rdct": "^3.2",
-    "friendsoftypo3/typo3db-legacy": "^1.3",
-    "mediaessenz/mail": "^3.9"
+    "typo3/cms-core": "^13.4 || ^14.3",
+    "jambagecom/div2007": "^2.4.4",
+    "friendsoftypo3/rdct": "^3.2"
   },
   "suggest": {
-    "typo3/cms-felogin": "^13.4",
-    "sjbr/static-info-tables": "^13.4"
+    "typo3/cms-felogin": "^13.4 || ^14.3",
+    "sjbr/static-info-tables": "^13.4 || ^14.3"
   },
   "autoload": {
     "psr-4": {
@@ -43,7 +41,18 @@
   },
   "extra": {
     "typo3/cms": {
-      "extension-key": "agency"
+      "extension-key": "agency",
+      "version": "1.1.0",
+      "Package": {
+          "providesPackages": {}
+      }
     }
+  },
+  "config": {
+      "allow-plugins": {
+          "typo3/class-alias-loader": true,
+          "typo3/cms-composer-installers": true
+      }
   }
 }
+

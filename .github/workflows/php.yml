@@ -19,7 +19,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
+    - run: echo "Checkout finished"
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
@@ -35,6 +36,13 @@ jobs:
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
+
+    - name: Validate PHP syntax
+      run: find . -name "*.php" -not -path "./vendor/*" | xargs -I{} php -l -d display_errors=1 -d log_errors=1 {}
+
+    - name: Run PHPStan
+      run: vendor/bin/phpstan analyse
+
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md

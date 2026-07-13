@@ -101,13 +101,6 @@ class DeleteView
             $templateCode = $dataObj->getTemplateCode();
             $authObj = GeneralUtility::makeInstance(Authentication::class);
 
-            // If deleting is enabled
-            $origArray =
-                $GLOBALS['TSFE']->sys_page->getRawRecord(
-                    $theTable,
-                    $dataObj->getRecUid()
-                );
-
             if (is_array($origArray)) {
                 $aCAuth =
                     $authObj->aCAuth(

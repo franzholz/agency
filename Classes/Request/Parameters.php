@@ -7,7 +7,7 @@ namespace JambageCom\Agency\Request;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2026 Franz Holzinger (franz@ttproducts.de)
 *  (c) 2012 Stanislas Rolland (typo3(arobas)sjbr.ca)
 *  All rights reserved
 *
@@ -45,13 +45,14 @@ namespace JambageCom\Agency\Request;
 
 use Psr\Http\Message\ServerRequestInterface;
 
-use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Routing\SiteMatcher;
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 use JambageCom\Div2007\Captcha\CaptchaInterface;
 use JambageCom\Div2007\Captcha\CaptchaManager;
@@ -95,7 +96,7 @@ class Parameters implements SingletonInterface
     protected $bDoNotSave = false;
     protected $failure = false; // is set if data did not have the required fields set.
 
-    protected $sys_language_content;
+    protected $sys_language_uid;
     protected $feUserData = [];
     protected $bValidRegHash;
     protected $regHash;
@@ -109,16 +110,10 @@ class Parameters implements SingletonInterface
     protected $setFixedParameters = ['rU', 'aC', 'cmd', 'sFK'];
     protected $fD = [];
 
-    /**
-     * @var TypoScriptFrontendController|null
-     */
-    protected $typoScriptFrontendController;
-    protected ?Context $context = null;
-
     public function __construct(
-        Context $context
+        protected readonly Context $context,
+        protected readonly PageRepository $pageRepository
     ) {
-        $this->context = $context;
     }
 
     public function getContext()
@@ -135,6 +130,7 @@ class Parameters implements SingletonInterface
     }
 
     public function init(
+        array &$origArray,
         ConfigurationStore $confObj,
         ServerRequestInterface $request,
         $prefixId,
@@ -143,10 +139,10 @@ class Parameters implements SingletonInterface
         $theTable
     ): void {
         $this->setRequest($request);
-
         $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
         $parameterApi->setControlData($this);
 
+        $basePath = '';
         $fdArray = [];
         $conf = $confObj->getConf();
         $shortUrls = $conf['useShortUrls'] ?? false;
@@ -160,18 +156,23 @@ class Parameters implements SingletonInterface
         }
         $this->confObj = $confObj;
         $this->setDefaultPid($conf['pid']);
-
         $this->site_url = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
-        $tsfe = $this->getTypoScriptFrontendController();
 
-        if ($tsfe->absRefPrefix) {
+        // Beispiel für den Zugriff im Request
+        $site = $request->getAttribute('frontend.site');
+        if ($site instanceof Site) {
+            // Gibt den Basis-Pfad der Site zurück (z.B. / oder /de/)
+            $basePath = $site->getBase()->getPath();
+        }
+
+        if ($basePath != '') {
             if(
-                strpos($tsfe->absRefPrefix, 'http://') === 0 ||
-                strpos($tsfe->absRefPrefix, 'https://') === 0
+                strpos($basePath, 'http://') === 0 ||
+                strpos($basePath, 'https://') === 0
             ) {
-                $this->site_url = $tsfe->absRefPrefix;
+                $this->site_url = $basePath;
             } else {
-                $this->site_url = $this->site_url . ltrim($tsfe->absRefPrefix, '/');
+                $this->site_url = $this->site_url . ltrim($basePath, '/');
             }
         }
         $this->setPrefixId($prefixId);
@@ -179,11 +180,13 @@ class Parameters implements SingletonInterface
         $this->piVars = $piVars;
         $this->setTable($theTable);
         $authObj = GeneralUtility::makeInstance(Authentication::class);
+        $languageAspect = $this->getContext()->getAspect('language');
 
-        $this->sys_language_content = intval($tsfe->config['config']['sys_language_uid'] ?? 0);
+        // Entspricht der gesuchten ID
+        $this->sys_language_uid = $languageAspect->getId();
 
         // set the title language overlay
-        $this->setPidTitle($conf, $this->sys_language_content);
+        $this->setPidTitle($conf, $this->sys_language_uid);
 
         $pidTypeArray = ['login', 'register', 'edit', 'infomail', 'confirm', 'confirmInvitation', 'password'];
         // set the pid's
@@ -259,10 +262,10 @@ class Parameters implements SingletonInterface
                     }
                     $restoredFeUserData = $getVars[$prefixId];
 
-                    foreach ($getVars as $k => $v) {
-                        // restore former GET values for the url
-                        ControlUtility::_GETset($v, $k);
-                    }
+                    // foreach ($getVars as $k => $v) {
+                    //     // restore former GET values for the url
+                    //     ControlUtility::_GETset($v, $k);
+                    // }
 
                     if (
                         isset($feUserData['rU']) &&
@@ -345,9 +348,10 @@ class Parameters implements SingletonInterface
 
         // Get the data for the uid provided in query parameters
         $bRuIsInt = MathUtility::canBeInterpretedAsInteger($feUserData['rU'] ?? '');
+
         if ($bRuIsInt) {
             $theUid = intval($feUserData['rU']);
-            $origArray = $tsfe->sys_page->getRawRecord($theTable, $theUid);
+            $origArray = $this->pageRepository->getRawRecord($theTable, $theUid);
         }
 
         if (
@@ -494,17 +498,17 @@ class Parameters implements SingletonInterface
     }
 
     /**
-     * Set the title of the page o  f the records
+     * Set the title of the page of the records
      *
      * @return void
      */
     protected function setPidTitle($conf, $sys_language_uid)
     {
-        $context = GeneralUtility::makeInstance(Context::class);
+        $context = $this->getContext();
         $context->setAspect('language', new LanguageAspect($sys_language_uid));
-        $pidRecord = GeneralUtility::makeInstance(PageRepository::class, $context);
-        $row = $pidRecord->getPage((int) $this->getPid());
-        $this->thePidTitle = trim($conf['pidTitleOverride']) ?: $row['title'];
+        $pageRepository = GeneralUtility::makeInstance(PageRepository::class, $context);
+        $row = $pageRepository->getPage((int) $this->getDefaultPid());
+        $this->thePidTitle = trim($conf['pidTitleOverride'] ?: $row['title'] ?? '');
     }
 
     public function getConf()
@@ -545,7 +549,13 @@ class Parameters implements SingletonInterface
     public function setDefaultPid($pid): void
     {
         $bPidIsInt = MathUtility::canBeInterpretedAsInteger($pid);
-        $this->defaultPid = ($bPidIsInt ? intval($pid) : $this->getTypoScriptFrontendController()->id);
+        $this->defaultPid =
+            ($bPidIsInt && $pid > 0 ?
+                intval($pid) :
+                $this->getRequest()
+                    ->getAttribute('routing')
+                    ->getPageId() ?? 0
+            );
     }
 
     public function getDefaultPid()
@@ -728,7 +738,7 @@ class Parameters implements SingletonInterface
         ) {
             $result = $conf['conf.'][$theTable . '.'][$theCode . '.']['sys_language_uid'];
         } else {
-            $result = $this->sys_language_content;
+            $result = $this->sys_language_uid;
         }
         return $result;
     }
@@ -1054,13 +1064,4 @@ class Parameters implements SingletonInterface
         $result = (!empty($cmdKey) && !empty($conf[$cmdKey . '.']['preview']) && $this->getFeUserData('preview'));
         return $result;
     }   // isPreview
-
-
-    /**
-     * @return TypoScriptFrontendController|null
-     */
-    public function getTypoScriptFrontendController()
-    {
-        return $this->typoScriptFrontendController ?: $this->getRequest()->getAttribute('frontend.controller') ?? null;
-    }
 }

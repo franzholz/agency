@@ -43,43 +43,50 @@ namespace JambageCom\Agency\Controller;
 
 use Psr\Http\Message\ServerRequestInterface;
 
+use TYPO3\CMS\Core\Attribute\AsAllowedCallable;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-
-use JambageCom\Div2007\Compatibility\AbstractPlugin;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 use JambageCom\Agency\Constants\Extension;
 use JambageCom\Agency\Configuration\ConfigurationCheck;
 use JambageCom\Agency\Utility\LocalizationUtility;
 
 
-class RegisterPluginController extends AbstractPlugin
+class RegisterPluginController
 {
-    // Plugin initialization variables
-    public $prefixId = Extension::KEY;
-    public $scriptRelPath = 'Classes/Controller/RegisterPluginController.php'; // Path to this script relative to the extension dir.
-    public $extKey = Extension::KEY;		// Extension key.
+    protected ?ContentObjectRenderer $cObj = null;
 
+    /**
+     *
+     * @var string
+     */
+    public $prefixId = Extension::KEY;
+    public $extKey = Extension::KEY;		// Extension key.
+    /*
+    *
+    * @var array
+    */
+    public $piVars = [];
+
+    public function setContentObjectRenderer(ContentObjectRenderer $cObj): void
+    {
+        $this->cObj = $cObj;
+    }
+
+    #[AsAllowedCallable]
     public function main(
         $content,
         $conf,
         ServerRequestInterface $request
     ) {
-        $this->conf = $conf;
+        $this->piVars =
+            self::getRequestPostOverGetParameterWithPrefix(
+                $request,
+                $this->prefixId
+            );
         LocalizationUtility::init();
         $configurationCheck = GeneralUtility::makeInstance(ConfigurationCheck::class);
-
-        // Check installation requirements
-        $content =
-            $configurationCheck->checkRequirements(
-                $conf,
-                $this->extKey
-            );
-
-        // Check installation security settings
-        $content .=
-            $configurationCheck->checkSecuritySettings(
-                $this->extKey
-            );
 
         // Check presence of deprecated markers
         $content .=
@@ -125,4 +132,25 @@ class RegisterPluginController extends AbstractPlugin
 
         return $content;
     }
+
+    /**
+     * Returns the global arrays $_GET and $_POST merged with $_POST taking precedence.
+     *
+     * @param string $parameter Key (variable name) from GET or POST vars
+     * @return array Returns the GET vars merged recursively onto the POST vars.
+     */
+    private static function getRequestPostOverGetParameterWithPrefix(
+        ServerRequestInterface $request,
+        $parameter
+    )
+    {
+        $postParameter = $request->getParsedBody()[$parameter] ?? [];
+        $postParameter = is_array($postParameter) ? $postParameter : [];
+        $getParameter = $request->getQueryParams()[$parameter] ?? [];
+        $getParameter = is_array($getParameter) ? $getParameter : [];
+        $mergedParameters = $getParameter;
+        ArrayUtility::mergeRecursiveWithOverrule($mergedParameters, $postParameter);
+        return $mergedParameters;
+    }
 }
+

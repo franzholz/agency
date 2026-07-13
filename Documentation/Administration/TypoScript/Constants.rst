@@ -80,7 +80,7 @@ file.privacyPolicyFile
 ..  confval:: file.privacyPolicyFile
     :name: file-privacyPolicyFile
     :type: file[pdf,doc,sxw,txt]
-    :Default: EXT:agency/Resources/Private/Templates/AgencyPrivacyPolicy.txt
+    :Default: EXT:agency/Resources/Public/Examples/AgencyPrivacyPolicy.txt
 
     File to be shown as the privacy policy.
 
@@ -184,7 +184,7 @@ HTMLMailCSS
 ..  confval:: HTMLMailCSS
     :name: HTMLMailCSS
     :type: string
-    :Default: EXT:agency/template/tx_agency_htmlmail_xhtml.css
+    :Default: EXT:agency/Resources/Public/Css/tx_agency_htmlmail_xhtml.csss
 
     File name of  the HTML emails style sheet. If HTML emails are enabled, this file contains the CSS style sheet to be incorporated in these emails.
 
@@ -409,7 +409,7 @@ editPID
     :name: edit-pid
     :type: page_id
 
-    Profile editing page PID: PID of the page on which the extension is inserted with the intent of serving as the 
+    Profile editing page PID: PID of the page on which the extension is inserted with the intent of serving as the
     front end user profile editing page. If not set, will default to 'current' page.
 
 
@@ -422,7 +422,7 @@ linkToPID
     :name: link-to-pid
     :type: page_id
 
-    Link to after edit PID: PID of a page to be linked to after the user has completed the editing of his/her profile. 
+    Link to after edit PID: PID of a page to be linked to after the user has completed the editing of his/her profile.
     See also linkToPIDAddButton.
 
 
@@ -448,7 +448,7 @@ confirmPID
     :name: confirm-pid
     :type: page_id
 
-    Confirmation page PID: PID of the page on which the extension is inserted with the intent of serving as the 
+    Confirmation page PID: PID of the page on which the extension is inserted with the intent of serving as the
     front end user confirmation page (or setfixed page!).
 
 
@@ -502,7 +502,7 @@ loginPID
     :name: login-pid
     :type: page_id
 
-    Login page PID: PID of the page on which the New login box extension is inserted with the intent of serving 
+    Login page PID: PID of the page on which the New login box extension is inserted with the intent of serving
     as the front end user login page. If not set, will default to 'current' page.
 
 
@@ -516,7 +516,7 @@ enablePreviewRegister
     :type: boolean
     :Default: 1 (true)
 
-    Enable preview on registration. If set, the registration dialog will include a preview of the 
+    Enable preview on registration. If set, the registration dialog will include a preview of the
     front end user data before it is saved.
 
 
@@ -530,7 +530,7 @@ enablePreviewEdit
     :type: boolean
     :Default: 1 (true)
 
-    Enable preview on profile update. If set, the profile update dialog will include a preview of the 
+    Enable preview on profile update. If set, the profile update dialog will include a preview of the
     front end user data before it is saved.
 
 
@@ -544,7 +544,7 @@ enableAdminReview
     :type: boolean
     :Default: 0 (false)
 
-    Enable administrative review. If set, the site administrator will be asked to accept the registration 
+    Enable administrative review. If set, the site administrator will be asked to accept the registration
     before it becomes enabled.
 
 
@@ -626,7 +626,7 @@ allowUserGroupSelection
         The selectable usergroups must be located in the page identified by the **pid** constant.
 
     ..  note::
-        If constants **userGroupUponRegistration** and **userGroupAfterConfirmation** are set, 
+        If constants **userGroupUponRegistration** and **userGroupAfterConfirmation** are set,
         the usergroups they specify are not selectable.
 
     ..  note::
@@ -643,7 +643,7 @@ allowUserGroupUpdate
     :type: boolean
     :Default: 0 (false)
 
-    Allow selection of usergroup on editing. If set, the user may edit the list of user groups 
+    Allow selection of usergroup on editing. If set, the user may edit the list of user groups
     to which he(she) belongs.
 
     ..  note::
@@ -692,7 +692,7 @@ allowedSubgroups
     :name: allowed-user-groups
     :type: string
 
-    Comma separated list of subgroups from which all user groups shall be selectable. 
+    Comma separated list of subgroups from which all user groups shall be selectable.
     The user groups from allowedUserGroups shall be added also.
 
     ..  note::
@@ -725,10 +725,10 @@ keepUnselectableUserGroups
     :type: boolean
     :Default: 0 (false)
 
-    If set und if a FE user is changing his FE user group then all the other FE user groups which 
-    are not shown in the select box will remain. If unset then the user will only keep the 
+    If set und if a FE user is changing his FE user group then all the other FE user groups which
+    are not shown in the select box will remain. If unset then the user will only keep the
     user group selected by himself and the reserved user groups which consist of the temporal
-    user groups from the registration process: userGroupUponRegistration, userGroupAfterConfirmation, 
+    user groups from the registration process: userGroupUponRegistration, userGroupAfterConfirmation,
     userGroupAfterAcceptation .
     This is only useful if allowUserGroupUpdate has been set, too.
 
@@ -762,7 +762,7 @@ enableEmailOnRefuse
     :type: boolean
     :Default: 1 (true)
 
-    Enable email on refusal: If set, an email will be sent to the prospective front end user 
+    Enable email on refusal: If set, an email will be sent to the prospective front end user
     when he refuses to confirm his registration. Effective only if email confirmation request is enabled.
 
 
@@ -790,7 +790,7 @@ enableEmailOnRegister
     :type: boolean
     :Default: 1 (true)
 
-    Enable email on registration: If set, an email will be sent to the front end user 
+    Enable email on registration: If set, an email will be sent to the front end user
     confirming his registration. Ignored if email confirmation request is enabled.
 
 
@@ -804,7 +804,7 @@ enableEmailOnUpdate
     :type: integer
     :Default: 1
 
-    Enable email on profile update. If set to 1, an email will be sent to the front end user to confirm 
+    Enable email on profile update. If set to 1, an email will be sent to the front end user to confirm
     the update of his profile. If set to 2, only the changed fields will be sent.
 
 
@@ -845,7 +845,7 @@ enableEmailPassword
     :type: boolean
     :Default: 0 (false)
 
-    Enable email for password creation: If set, an email can be sent to the front end user 
+    Enable email for password creation: If set, an email can be sent to the front end user
     who has forgotten his password.
 
 
@@ -873,7 +873,7 @@ enableAdminNotifyOnApprove
     :type: boolean
     :Default: 1 (true)
 
-    Enable admin notification on approval: If set, an email will be sent to the site administrator 
+    Enable admin notification on approval: If set, an email will be sent to the site administrator
     when a user confirms his registration.
 
 
@@ -887,7 +887,7 @@ enableAdminNotifyOnRefuse
     :type: boolean
     :Default: 1 (true)
 
-    Enable admin notification on refusal. If set, an email will be sent to the site administrator 
+    Enable admin notification on refusal. If set, an email will be sent to the site administrator
     when a user refuses to confirm his registration.
 
 
@@ -901,7 +901,7 @@ enableAdminNotifyOnRegister
     :type: boolean
     :Default: 1 (true)
 
-    Enable admin notification on registration. If set, an email will be sent to the site administrator 
+    Enable admin notification on registration. If set, an email will be sent to the site administrator
     when a user registers. This is ignored if email confirmation request is enabled.
 
 
@@ -915,7 +915,7 @@ enableAdminNotifyOnUpdate
     :type: boolean
     :Default: 1 (true)
 
-    Enable admin notification on update: If set, an email will be sent to the site administrator 
+    Enable admin notification on update: If set, an email will be sent to the site administrator
     when a user updates his profile.
 
 
@@ -929,7 +929,7 @@ enableAdminNotifyOnDelete
     :type: boolean
     :Default: 1 (true)
 
-    Enable admin notification on deletion: If set, an email will be sent to the site administrator 
+    Enable admin notification on deletion: If set, an email will be sent to the site administrator
     when a user deletes his account.
 
 
@@ -957,7 +957,7 @@ enableAdminNotifyOnAdminAccept
     :type: boolean
     :Default: 1 (true)
 
-    Enable admin notification on approval by admin: If set, an email will be sent to 
+    Enable admin notification on approval by admin: If set, an email will be sent to
     the site administration when a registration is accepted by the administration.
 
 
@@ -971,7 +971,7 @@ enableAdminNotifyOnAdminRefuse
     :type: boolean
     :Default: 1 (true)
 
-    Enable admin notification on refusal by admin: If set, an email will be sent to 
+    Enable admin notification on refusal by admin: If set, an email will be sent to
     the site administration when a registration is refused by the administration.
 
 
@@ -985,7 +985,7 @@ enableAdminNotifyOnUnsubscribe
     :type: boolean
     :Default: 1 (true)
 
-    Enable admin notification on unsubscribe: If set, an email will be sent to 
+    Enable admin notification on unsubscribe: If set, an email will be sent to
     the site administration when the user ends his membership through a link from a mailing application.
 
 
@@ -999,7 +999,7 @@ enableAdminNotifyOnPassword
     :type: boolean
     :Default: 1 (true)
 
-    Enable admin notification on lost password: If set, an email will be sent to 
+    Enable admin notification on lost password: If set, an email will be sent to
     the site administration when the user requests to recreate his lost password..
 
 
@@ -1025,7 +1025,7 @@ userGroupUponRegistration
     :name: user-group-upon-registration
     :type: string
 
-    User group(s) upon registration: The value of the user group field. Must be a list of integers 
+    User group(s) upon registration: The value of the user group field. Must be a list of integers
     WITHOUT spaces between the comma separated values! Furthermore, these integers MUST point
     to actual fe_groups records!
 
@@ -1052,7 +1052,7 @@ userGroupAfterAcceptation
     :name: user-group-after-acceptation
     :type: string
 
-    User group(s) after acceptation: The value of the user group(s) assigned to 
+    User group(s) after acceptation: The value of the user group(s) assigned to
     the front end user after acceptation of his(her) registration, when the administrative review is enabled.
 
     ..  note::
@@ -1128,7 +1128,7 @@ alphaSpecials
     :name: slpha-specials
     :type: string
 
-    Allow special characters to alpha: The parse values for the alpha check normally contain alphabethical letters. 
+    Allow special characters to alpha: The parse values for the alpha check normally contain alphabethical letters.
     Here you can add also special characters (e.g. German Umlauts) to the username.
 
      :typoscript:`alphaSpecials = äöüß`
@@ -1176,7 +1176,7 @@ salutation
     If set, should be either 'formal' or 'informal'.
 
     ..  note::
-        This property will change the salutation mode used in the labels displayed in the front end, 
+        This property will change the salutation mode used in the labels displayed in the front end,
         provided that this is meaningful in the language being displayed and that
         translators have provided the informal version.
 
@@ -1229,8 +1229,8 @@ shortUrlLife
     :type: int+
     :Default: 30
 
-    Short URL cache lifespan. This is the number of days that short URL's will be kept in the DB. 
-    After this delay, the short URL's will be removed. Confirmation URL's included in email messages 
+    Short URL cache lifespan. This is the number of days that short URL's will be kept in the DB.
+    After this delay, the short URL's will be removed. Confirmation URL's included in email messages
     older than this number of days will not work.
 
 ..  _date-format:
@@ -1281,8 +1281,8 @@ mergeLabels
     :type: boolean
     :Default: 1 (true)
 
-    If set then the labels for select boxes found in setup are merged to the labels already in the TCA, 
-    which might come from TCEFORM.fe_users altLabels or :php:`addItems`. If :typoscript:`0`, then only the labels from 
+    If set then the labels for select boxes found in setup are merged to the labels already in the TCA,
+    which might come from TCEFORM.fe_users altLabels or :php:`addItems`. If :typoscript:`0`, then only the labels from
     :php:`plugin.tx_agency._LOCAL_LANG.de.fe_users.x.I.x`  are taken.
 
 
