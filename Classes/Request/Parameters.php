@@ -45,11 +45,11 @@ namespace JambageCom\Agency\Request;
 
 use Psr\Http\Message\ServerRequestInterface;
 
-use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Routing\SiteMatcher;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -109,12 +109,11 @@ class Parameters implements SingletonInterface
     protected $setFixedOptions = ['DELETE', 'EDIT', 'UNSUBSCRIBE'];
     protected $setFixedParameters = ['rU', 'aC', 'cmd', 'sFK'];
     protected $fD = [];
-    protected ?Context $context = null;
 
     public function __construct(
-        Context $context
+        protected readonly Context $context,
+        protected readonly PageRepository $pageRepository
     ) {
-        $this->context = $context;
     }
 
     public function getContext()
@@ -131,6 +130,7 @@ class Parameters implements SingletonInterface
     }
 
     public function init(
+        array &$origArray,
         ConfigurationStore $confObj,
         ServerRequestInterface $request,
         $prefixId,
@@ -262,10 +262,10 @@ class Parameters implements SingletonInterface
                     }
                     $restoredFeUserData = $getVars[$prefixId];
 
-                    foreach ($getVars as $k => $v) {
-                        // restore former GET values for the url
-                        ControlUtility::_GETset($v, $k);
-                    }
+                    // foreach ($getVars as $k => $v) {
+                    //     // restore former GET values for the url
+                    //     ControlUtility::_GETset($v, $k);
+                    // }
 
                     if (
                         isset($feUserData['rU']) &&
@@ -348,9 +348,10 @@ class Parameters implements SingletonInterface
 
         // Get the data for the uid provided in query parameters
         $bRuIsInt = MathUtility::canBeInterpretedAsInteger($feUserData['rU'] ?? '');
+
         if ($bRuIsInt) {
             $theUid = intval($feUserData['rU']);
-            $origArray = $tsfe->sys_page->getRawRecord($theTable, $theUid);
+            $origArray = $this->pageRepository->getRawRecord($theTable, $theUid);
         }
 
         if (
@@ -497,7 +498,7 @@ class Parameters implements SingletonInterface
     }
 
     /**
-     * Set the title of the page o  f the records
+     * Set the title of the page of the records
      *
      * @return void
      */
@@ -505,9 +506,9 @@ class Parameters implements SingletonInterface
     {
         $context = $this->getContext();
         $context->setAspect('language', new LanguageAspect($sys_language_uid));
-        $pidRecord = GeneralUtility::makeInstance(PageRepository::class, $context);
-        $row = $pidRecord->getPage((int) $this->getPid());
-        $this->thePidTitle = trim($conf['pidTitleOverride']) ?: $row['title'];
+        $pageRepository = GeneralUtility::makeInstance(PageRepository::class, $context);
+        $row = $pageRepository->getPage((int) $this->getDefaultPid());
+        $this->thePidTitle = trim($conf['pidTitleOverride'] ?: $row['title'] ?? '');
     }
 
     public function getConf()
@@ -548,7 +549,13 @@ class Parameters implements SingletonInterface
     public function setDefaultPid($pid): void
     {
         $bPidIsInt = MathUtility::canBeInterpretedAsInteger($pid);
-        $this->defaultPid = ($bPidIsInt ? intval($pid) : $this->getTypoScriptFrontendController()->id);
+        $this->defaultPid =
+            ($bPidIsInt && $pid > 0 ?
+                intval($pid) :
+                $this->getRequest()
+                    ->getAttribute('routing')
+                    ->getPageId() ?? 0
+            );
     }
 
     public function getDefaultPid()

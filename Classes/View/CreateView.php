@@ -184,7 +184,6 @@ class CreateView
                     $errorFieldArray,
                     $failure
                 );
-
             $markerArray =
                 $markerObj->fillInMarkerArray(
                     $markerArray,
@@ -264,6 +263,7 @@ class CreateView
                     $templateCode,
                     $markerArray
                 );
+
             $markerObj->addHiddenFieldsMarkers(
                 $markerArray,
                 $theTable,
@@ -335,7 +335,7 @@ class CreateView
                         'FE[' . $theTable . ']',
                         $fields
                     );
-                    $content .= $updateJS;
+                $content .= $updateJS;
             }
         }
 

@@ -406,6 +406,7 @@ class Marker
         }
 
         $infoFieldArray = array_unique($infoFieldArray);
+
         foreach($infoFieldArray as $theField) {
             $markerkey = $cObj->caseshift($theField, 'upper');
             $bValueChanged = false;
@@ -878,7 +879,7 @@ class Marker
                 $markerArray['###FIELD_zone###'] =
                     $staticInfoApi->getStaticInfoName('SUBDIVISIONS', is_array($row) ? $row['zone'] : '', is_array($row) ? $row['static_info_country'] : '');
                 if (!$markerArray['###FIELD_zone###']) {
-                    $markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="FE['.$theTable.'][zone]" value=""' . HtmlUtility::getXhtmlFix() . '>';
+                    $markerArray['###HIDDENFIELDS###'] = ($markerArray['###HIDDENFIELDS###'] ?? '') . '<input type="hidden" name="FE['.$theTable.'][zone]" value=""' . HtmlUtility::getXhtmlFix() . '>';
                 }
                 $markerArray['###FIELD_language###'] =
                     $staticInfoApi->getStaticInfoName('LANGUAGES', is_array($row) ? $row['language'] : '');
@@ -907,6 +908,7 @@ class Marker
                 if (isset($this->conf['where.']) && is_array($this->conf['where.'])) {
                     $where = $this->conf['where.']['static_countries'];
                 }
+                debug ($where, '$where static_info_country');
                 $markerArray['###SELECTOR_STATIC_INFO_COUNTRY###'] =
                     $staticInfoApi->buildStaticInfoSelector(
                         'COUNTRIES',
@@ -939,6 +941,7 @@ class Marker
                         $titleZone,
                         $where
                     );
+
                 if (!$markerArray['###SELECTOR_ZONE###']) {
                     $markerArray['###HIDDENFIELDS###'] .= '<input type="hidden" name="FE[' . $theTable . '][' . $fieldNameZone . ']" value=""' . HtmlUtility::getXhtmlFix() . '>';
                 }
@@ -1339,7 +1342,7 @@ var submitFile = function(id){
                             $value = htmlspecialchars($value);
                         }
                         $markerArray['###' . $prefix . $field . '###'] =
-                            $nl2br && !empty($value) && is_string($value) ? nl2br($value) : $value;
+                            ($nl2br && !empty($value) && is_string($value)) ? nl2br($value) : $value;
                     }
                 }
             }

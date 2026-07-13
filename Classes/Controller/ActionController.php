@@ -149,7 +149,7 @@ class ActionController implements SingletonInterface
         $extensionKey = $controlData->getExtensionKey();
         $cmd = $controlData->getCmd();
         $dataArray = $dataObj->getDataArray();
-        $fieldlist = '';
+        $fieldList = $dataObj->getFieldList();
         $request = $controlData->getRequest();
         $frontendUser = $request->getAttribute('frontend.user');
         $feUserdata = $controlData->getFeUserData();
@@ -184,7 +184,7 @@ class ActionController implements SingletonInterface
                 $tcaObj->modifyRow(
                     $newOrigArray,
                     $theTable,
-                    $dataObj->getFieldList()
+                    $fieldList
                 );
                 $origArray = $newOrigArray;
             }
@@ -238,19 +238,6 @@ class ActionController implements SingletonInterface
                 $dataArray = $dataObj->readDefaultValues($cmdKey);
             }
         }
-
-        if (!empty($conf['addAdminFieldList'])) {
-            $adminFieldList .= ',' . trim($conf['addAdminFieldList']);
-        }
-        $adminFieldList =
-            implode(
-                ',',
-                array_intersect(
-                    explode(',', $fieldlist),
-                    GeneralUtility::trimExplode(',', $adminFieldList, true)
-                )
-            );
-        $dataObj->setAdminFieldList($adminFieldList);
 
         if (!empty($cmdKey)) {
             if (
@@ -379,7 +366,8 @@ class ActionController implements SingletonInterface
             $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('tt_address');
             if (is_array($extConf) && $extConf['disableCombinedNameField'] == '1') {
                 $element = 'name';
-                $conf[$cmdKey . '.']['fields'] = implode(',', array_filter(explode(',', $conf[$cmdKey . '.']['fields']), function ($item) use ($element) {
+                $conf[$cmdKey . '.']['fields'] =
+                    implode(',', array_filter(explode(',', $conf[$cmdKey . '.']['fields']), function ($item) use ($element) {
                     return $element == $item;
                 }));
             }
@@ -436,8 +424,6 @@ class ActionController implements SingletonInterface
         }
         $dataObj->setDataArray($dataArray);
         $controlData->setRequiredArray($requiredArray);
-
-        $fieldList = $dataObj->getFieldList();
         $fieldArray = GeneralUtility::trimExplode(',', $fieldList, true);
         $additionalFields = $dataObj->getAdditionalIncludedFields();
 
@@ -471,10 +457,22 @@ class ActionController implements SingletonInterface
 
         $additionalFields = array_unique($additionalFields);
         $dataObj->setAdditionalIncludedFields($additionalFields);
-        $fieldArray = array_merge($fieldArray, $additionalFields);
-        $fieldArray = array_unique($fieldArray);
-        $fieldList = implode(',', $fieldArray);
-        $dataObj->setFieldList($fieldList);
+        $additionalFields = array_merge($fieldArray, $additionalFields);
+        $additionalFields = array_unique($additionalFields);
+        $dataObj->setFieldList(implode(',', $additionalFields));
+
+        if (!empty($conf['addAdminFieldList'])) {
+            $adminFieldList .= ',' . trim($conf['addAdminFieldList']);
+        }
+        $adminFieldList =
+            implode(
+                ',',
+                array_intersect(
+                    explode(',', $fieldList),
+                                GeneralUtility::trimExplode(',', $adminFieldList, true)
+                )
+            );
+        $dataObj->setAdminFieldList($adminFieldList);
     } // init2
 
     /**
@@ -663,6 +661,7 @@ class ActionController implements SingletonInterface
                 // A button was clicked on
                 $evalErrors = $dataObj->evalValues(
                     $confObj,
+                    $languageObj,
                     $theTable,
                     $finalDataArray,
                     $origArray,
@@ -714,6 +713,7 @@ class ActionController implements SingletonInterface
                 // We are going to redisplay
                 $evalErrors = $dataObj->evalValues(
                     $confObj,
+                    $languageObj,
                     $theTable,
                     $finalDataArray,
                     $origArray,
@@ -837,6 +837,7 @@ class ActionController implements SingletonInterface
                 $finalDataArray['email'] = $fetch;
                 $evalErrors = $dataObj->evalValues(
                     $confObj,
+                    $languageObj,
                     $theTable,
                     $finalDataArray,
                     $origArray,
@@ -945,7 +946,6 @@ class ActionController implements SingletonInterface
                     $bSetfixed,
                     $bCreateReview
                 );
-
             $afterSave = GeneralUtility::makeInstance(AfterSaveView::class);
             $errorContent =
                 $afterSave->render(

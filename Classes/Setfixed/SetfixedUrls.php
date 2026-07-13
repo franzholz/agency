@@ -42,6 +42,9 @@ namespace JambageCom\Agency\Setfixed;
 *
 *
 */
+
+use FoT3\Rdct\Repository\CacheMd5paramsRepository;
+
 use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -49,12 +52,11 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 
 use JambageCom\Div2007\Utility\FrontendUtility;
 
-use FoT3\Rdct\Repository\CacheMd5paramsRepository;
-
 use JambageCom\Agency\Api\ParameterApi;
 use JambageCom\Agency\Request\Parameters;
 use JambageCom\Agency\Security\Authentication;
 use JambageCom\Agency\Database\Tables;
+
 
 class SetFixedUrls implements SingletonInterface
 {
@@ -94,6 +96,7 @@ class SetFixedUrls implements SingletonInterface
         if ($controlData->getSetfixedEnabled() && is_array($setfixed)) {
             $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
             $authObj = GeneralUtility::makeInstance(Authentication::class);
+            $request = $controlData->getRequest();
 
             foreach($setfixed as $theKey => $data) {
                 if (strstr($theKey, '.')) {
@@ -187,10 +190,12 @@ class SetFixedUrls implements SingletonInterface
                 }
 
                 $linkPID = $controlData->getPid($pidCmd);
+                $typoScriptConfig = $request->getAttribute('frontend.typoscript')?->getConfigArray() ?? [];
+                $linkVarsSetting = (string)($typoScriptConfig['linkVars'] ?? '');
 
                 if (
                     $parameterApi->getParameter('L') &&
-                    !GeneralUtility::inList($GLOBALS['TSFE']->config['config']['linkVars'], 'L')
+                    !GeneralUtility::inList($linkVarsSetting, 'L')
                 ) {
                     $setfixedpiVars['L'] = $parameterApi->getParameter('L');
                 }
@@ -202,6 +207,7 @@ class SetFixedUrls implements SingletonInterface
                 $urlConf = [];
                 $urlConf['disableGroupAccessCheck'] = true;
                 $confirmType = (MathUtility::canBeInterpretedAsInteger($confirmType) ? intval($confirmType) : $controlData->getType());
+
                 $url =
                     FrontendUtility::getTypoLink_URL(
                         $cObj,
@@ -228,18 +234,6 @@ class SetFixedUrls implements SingletonInterface
         $calc = $hashCalculator->calculateCacheHash($params);
         $regHash_calc = substr($calc, 0, 20);
 
-        // and store it with a serialized version of the array in the DB
-        // $res =
-        //     $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-        //         'md5hash',
-        //         'cache_md5params',
-        //         'md5hash=' .
-        //             $GLOBALS['TYPO3_DB']->fullQuoteStr(
-        //                 $regHash_calc,
-        //                 'cache_md5params'
-        //             )
-        //     );
-
         $count =
             $this->cacheMd5ParamsRepository
                 ->countByMd5hash(
@@ -247,13 +241,6 @@ class SetFixedUrls implements SingletonInterface
                 );
 
         if (!$count) {
-            // $insertFields = ['md5hash' => $regHash_calc, 'tstamp' => time(), 'type' => 99, 'params' => serialize($params)];
-            //
-            // $GLOBALS['TYPO3_DB']->exec_INSERTquery(
-            //     'cache_md5params',
-            //     $insertFields
-            // );
-
             $this->cacheMd5ParamsRepository
                 ->insert(
                     $regHash_calc,
@@ -262,7 +249,6 @@ class SetFixedUrls implements SingletonInterface
                     99
                   );
         }
-        // $GLOBALS['TYPO3_DB']->sql_free_result($res);
 
         return $regHash_calc;
     }
@@ -276,27 +262,16 @@ class SetFixedUrls implements SingletonInterface
     public function getShortUrl($regHash)
     {
         // get the serialised array from the DB based on the passed hash value
-        // $varArray = [];
-        // $res =
-        // $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-        //     'params',
-        //     'cache_md5params',
-        //     'md5hash=' . $GLOBALS['TYPO3_DB']->fullQuoteStr(
-        //         $regHash,
-        //         'cache_md5params'
-        //     )
-        // );
         $row =
             $this->cacheMd5ParamsRepository
                 ->fetchRedirectRecord(
                     $regHash
                 );
-        $varArray = unserialize($row['params']);
 
-        // while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-        //     $varArray = unserialize($row['params']);
-        // }
-        // $GLOBALS['TYPO3_DB']->sql_free_result($res);
+        if (!$row) {
+            return false;
+        }
+        $varArray = unserialize($row['params']);
 
         // convert the array to one that will be properly incorporated into the GET global array.
         $retArray = [];
@@ -324,14 +299,6 @@ class SetFixedUrls implements SingletonInterface
             ->delete(
                 $regHash
             );
-
-        // if ($regHash != '') {
-        //     // get the serialised array from the DB based on the passed hash value
-        //     $GLOBALS['TYPO3_DB']->exec_DELETEquery(
-        //         'cache_md5params',
-        //         'md5hash=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($regHash, 'cache_md5params')
-        //     );
-        // }
     }
 
     /**
@@ -344,14 +311,5 @@ class SetFixedUrls implements SingletonInterface
                 $shortUrlLife * 24,
                 99
             );
-
-        // $max_life = time() - (86400 * intval($shortUrlLife));
-        // if (is_object($GLOBALS['TYPO3_DB'])) {
-        //     $res =
-        //     $GLOBALS['TYPO3_DB']->exec_DELETEquery(
-        //         'cache_md5params',
-        //         'tstamp<' . $max_life . ' AND type=99'
-        //     );
-        // }
     }   // cleanShortUrlCache
 }

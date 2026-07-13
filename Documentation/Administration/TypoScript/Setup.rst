@@ -86,6 +86,31 @@ where.static_countries
         }
 
 
+..  _where-static-country-zones:
+
+where.static_country_zones
+--------------------------
+
+..  confval:: extraLabels
+    :name: where-static_country_zones
+    :type: string
+
+    Set a SQL WHERE condition to follow for the selected country zones in the :php:`static_country_zones` table of the :php:`static_info_tables` extension.
+
+
+..  _where-static-languages:
+
+where.static_languages
+----------------------
+
+..  confval:: extraLabels
+    :name: where-static_languages
+    :type: string
+
+    Set a SQL WHERE condition to follow for the selected language in the :php:`static_languages` table of the :php:`static_info_tables` extension.
+
+
+
 ..  _eval-func:
 
 evalFunc

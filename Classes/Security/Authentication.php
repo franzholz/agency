@@ -62,8 +62,10 @@ class Authentication implements SingletonInterface
 
         // Setting the authCode length
         $this->config['codeLength'] = 8;
-        if (isset($this->conf['authcodeFields.']) && is_array($this->conf['authcodeFields.'])) {
-
+        if (
+            isset($this->conf['authcodeFields.']) &&
+            is_array($this->conf['authcodeFields.'])
+        ) {
             if (intval($this->conf['authcodeFields.']['codeLength'])) {
                 $this->config['codeLength'] = intval($this->conf['authcodeFields.']['codeLength']);
             }
@@ -113,24 +115,24 @@ class Authentication implements SingletonInterface
 
         if ($fields) {
             $fieldArray = GeneralUtility::trimExplode(',', $fields, true);
-            foreach ($fieldArray as $key => $value) {
-                if (isset($record[$value])) {
-                    if (is_array($record[$value])) {
-                        $recordCopy[$key] = implode(',', $record[$value]);
+            foreach ($fieldArray as $field) {
+                if (isset($record[$field])) {
+                    if (is_array($record[$field])) {
+                        $recordCopy[$field] = implode(',', $record[$field]);
                     } else {
-                        $recordCopy[$key] = $record[$value];
+                        $recordCopy[$field] = $record[$field];
                     }
-                    if ($rawUrlDecode && is_string($recordCopy[$key])) {
-                        $recordCopy[$key] = rawurldecode($recordCopy[$key]);
+                    if ($rawUrlDecode && is_string($recordCopy[$field])) {
+                        $recordCopy[$field] = rawurldecode($recordCopy[$field]);
                     }
                 }
             }
         } else {
-            foreach ($record as $key => $value) {
+            foreach ($record as $field => $value) {
                 if (is_array($value)) {
                     $value = implode(',', $value);
                 }
-                $recordCopy[$key] = $value;
+                $recordCopy[$field] = $value;
             }
         }
         $preKey = implode('|', $recordCopy);
@@ -191,8 +193,8 @@ class Authentication implements SingletonInterface
     */
     public function setfixedHash(
         array $record,
-        $fields = '',
-        $codeLength = 0
+        string $fields = '',
+        int $codeLength = 0
     ) {
         $rawUrlDecode = true;
         $result = $this->generateAuthCode(

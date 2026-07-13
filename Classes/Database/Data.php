@@ -44,12 +44,14 @@ namespace JambageCom\Agency\Database;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Resource\Security\FileNameValidator;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\File\BasicFileUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+
 
 use JambageCom\Div2007\Api\StaticInfoTablesApi;
 use JambageCom\Div2007\Captcha\CaptchaInterface;
@@ -63,6 +65,7 @@ use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\SystemUtility;
 use JambageCom\Div2007\Utility\TableUtility;
 
+use JambageCom\Agency\Api\Localization;
 use JambageCom\Agency\Api\ParameterApi;
 use JambageCom\Agency\Configuration\ConfigurationStore;
 use JambageCom\Agency\Constants\Field;
@@ -74,7 +77,6 @@ use JambageCom\Agency\Security\SecuredData;
 
 class Data implements SingletonInterface
 {
-    public $lang;
     public $tca;
     public $freeCap; // object of type tx_srfreecap_pi2
     public $control;
@@ -106,13 +108,13 @@ class Data implements SingletonInterface
 
     public function __construct(
         protected readonly ConnectionPool $connectionPool,
-        protected readonly FrontendUserRepository $frontendUserRepository
+        protected readonly FrontendUserRepository $frontendUserRepository,
+        protected readonly PageRepository $pageRepository
     ) {
     }
 
     public function init(
         $coreQuery,
-        $lang,
         $tca,
         $control,
         $theTable,
@@ -121,7 +123,6 @@ class Data implements SingletonInterface
     ): void
     {
         $this->coreQuery = $coreQuery;
-        $this->lang = $lang;
         $this->tca = $tca;
         $this->control = $control;
         $this->controlData = $controlData;
@@ -440,7 +441,7 @@ class Data implements SingletonInterface
                         $dataValue = $theValue;
                     }
 
-                    $dataValue = is_int($dataArray[$theField]) ? (int) $dataValue : (is_string($dataArray) ? (string) $dataValue : $dataValue);
+                    $dataValue = is_int($dataValue) ? (int) $dataValue : (is_string($dataArray) ? (string) $dataValue : $dataValue);
                 }
 
                 if (!$control) {
@@ -475,83 +476,6 @@ class Data implements SingletonInterface
         return $dataArray;
     }
 
-    /**
-    * Gets the error message to be displayed
-    *
-    * @param string  $theField: the name of the field being validated
-    * @param string  $theRule: the name of the validation rule being evaluated
-    * @param string  $label: a default error message provided by the invoking function
-    * @param integer $orderNo: ordered number of the rule for the field (>0 if used)
-    * @param string  $param: parameter for the error message
-    * @param boolean $bInternal: if the bug is caused by an internal problem
-    * @return string  the error message to be displayed
-    */
-    public function getFailureText(
-        $dataArray,
-        $theField,
-        $theRule,
-        $label,
-        $orderNo = '',
-        $param = '',
-        $bInternal = false
-    ) {
-        $confObj = GeneralUtility::makeInstance(ConfigurationStore::class);
-        $conf = $confObj->getConf();
-
-        if (
-            (string) $orderNo != '' &&
-            $theRule &&
-            isset($conf['evalErrors.'][$theField . '.'][$theRule . '.'])
-        ) {
-            $count = 0;
-
-            foreach ($conf['evalErrors.'][$theField . '.'][$theRule . '.'] as $k => $v) {
-                $bKIsInt = MathUtility::canBeInterpretedAsInteger($k);
-
-                if ($bInternal) {
-                    if ($k == 'internal') {
-                        $failureLabel = $v;
-                        break;
-                    }
-                } elseif ($bKIsInt) {
-                    $count++;
-
-                    if ($count == $orderNo) {
-                        $failureLabel = $v;
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (!isset($failureLabel)) {
-            if (
-                $theRule &&
-                isset($conf['evalErrors.'][$theField . '.'][$theRule])
-            ) {
-                $failureLabel = $conf['evalErrors.'][$theField . '.'][$theRule];
-            } else {
-                $failureLabel = '';
-                $internalPostfix = ($bInternal ? '_internal' : '');
-                if ($theRule) {
-                    $labelname = 'evalErrors_' . $theRule . '_' . $theField . $internalPostfix;
-                    $failureLabel = $this->lang->getLabel($labelname);
-                    $failureLabel = $failureLabel ?: $this->lang->getLabel('evalErrors_' . $theRule . $internalPostfix);
-                }
-
-                if (!$failureLabel) { // this remains only for compatibility reasons
-                    $labelname = $label;
-                    $failureLabel = $this->lang->getLabel($labelname);
-                }
-            }
-        }
-
-        if ($param != '' && $failureLabel != '') {
-            $failureLabel = sprintf($failureLabel, $param);
-        }
-
-        return $failureLabel;
-    }   // getFailureText
 
     /**
     * Applies validation rules specified in TS setup
@@ -561,6 +485,7 @@ class Data implements SingletonInterface
     */
     public function evalValues(
         ConfigurationStore $confObj,
+        Localization $languageObj,
         $theTable,
         array &$dataArray,
         array &$origArray,
@@ -572,8 +497,10 @@ class Data implements SingletonInterface
         $useStaticInfo
     ) {
         $conf = $confObj->getConf();
+        $evalConf = $conf['evalErrors.'] ?? [];
         $failureMsg = [];
         $displayFieldArray = GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], true);
+
         if (
             $captcha instanceof CaptchaInterface
         ) {
@@ -615,8 +542,12 @@ class Data implements SingletonInterface
                     // This may be tricked if the input has the pid-field set but the edit-field list does NOT allow the pid to be edited. Then the pid may be false.
                     $recordTestPid = $pid;
                 } elseif (!empty($dataArray['uid'])) {
-                    $tempRecArr = $GLOBALS['TSFE']->sys_page->getRawRecord($this->controlData->getTable(), $dataArray['uid']);
-                    $recordTestPid = intval($tempRecArr['pid']);
+                    $record =
+                        $this->pageRepository->getRawRecord(
+                            $this->controlData->getTable(),
+                            $dataArray['uid']
+                        );
+                    $recordTestPid = intval($record['pid']);
                 }
                 $bRecordExists = ($recordTestPid != 0);
             } else {
@@ -703,8 +634,8 @@ class Data implements SingletonInterface
                                         $this->inError[$theField] = true;
                                         $this->evalErrors[$theField][] = $theCmd;
                                         $failureMsg[$theField][] =
-                                            $this->getFailureText(
-                                                $dataArray,
+                                            $languageObj->getFailureText(
+                                                $evalConf,
                                                 $theField,
                                                 'uniqueLocal',
                                                 'evalErrors_existed_already'
@@ -720,8 +651,8 @@ class Data implements SingletonInterface
                                     $this->inError[$theField] = true;
                                     $this->evalErrors[$theField][] = $theCmd;
                                     $failureMsg[$theField][] =
-                                        $this->getFailureText(
-                                            $dataArray,
+                                        $languageObj->getFailureText(
+                                            $evalConf,
                                             $theField,
                                             $theCmd,
                                             'evalErrors_same_twice'
@@ -738,8 +669,8 @@ class Data implements SingletonInterface
                                     $this->inError[$theField] = true;
                                     $this->evalErrors[$theField][] = $theCmd;
                                     $failureMsg[$theField][] =
-                                        $this->getFailureText(
-                                            $dataArray,
+                                        $languageObj->getFailureText(
+                                            $evalConf,
                                             $theField,
                                             $theCmd,
                                             'evalErrors_valid_email'
@@ -755,8 +686,8 @@ class Data implements SingletonInterface
                                     $this->inError[$theField] = true;
                                     $this->evalErrors[$theField][] = $theCmd;
                                     $failureMsg[$theField][] =
-                                        $this->getFailureText(
-                                            $dataArray,
+                                        $languageObj->getFailureText(
+                                            $evalConf,
                                             $theField,
                                             $theCmd,
                                             'evalErrors_required'
@@ -776,8 +707,8 @@ class Data implements SingletonInterface
                                     $this->evalErrors[$theField][] = $theCmd;
                                     $failureMsg[$theField][] =
                                         sprintf(
-                                            $this->getFailureText(
-                                                $dataArray,
+                                            $languageObj->getFailureText(
+                                                $evalConf,
                                                 $theField,
                                                 $theCmd,
                                                 'evalErrors_atleast_characters'
@@ -797,8 +728,8 @@ class Data implements SingletonInterface
                                     $this->evalErrors[$theField][] = $theCmd;
                                     $failureMsg[$theField][] =
                                         sprintf(
-                                            $this->getFailureText(
-                                                $dataArray,
+                                            $languageObj->getFailureText(
+                                                $evalConf,
                                                 $theField,
                                                 $theCmd,
                                                 'evalErrors_atmost_characters'
@@ -826,8 +757,8 @@ class Data implements SingletonInterface
                                         $this->evalErrors[$theField][] = $theCmd;
                                         $failureMsg[$theField][] =
                                             sprintf(
-                                                $this->getFailureText(
-                                                    $dataArray,
+                                                $languageObj->getFailureText(
+                                                    $evalConf,
                                                     $theField,
                                                     $theCmd,
                                                     'evalErrors_unvalid_list'
@@ -850,7 +781,8 @@ class Data implements SingletonInterface
                                         $colConfig['internal_type'] == 'file'
                                     ) {
                                         $uploadPath = $colConfig['uploadfolder'];
-                                        $allowedExtArray = GeneralUtility::trimExplode(',', $colConfig['allowed'], true);
+                                        $allowedExtArray =
+                                            GeneralUtility::trimExplode(',', $colConfig['allowed'], true);
                                         $maxSize = $colConfig['max_size'];
                                         $fileNameArray = $dataArray[$theField];
                                         $newFileNameArray = [];
@@ -878,8 +810,8 @@ class Data implements SingletonInterface
                                                             $this->evalErrors[$theField][] = $theCmd;
                                                             $failureMsg[$theField][] =
                                                                 sprintf(
-                                                                    $this->getFailureText(
-                                                                        $dataArray,
+                                                                    $languageObj->getFailureText(
+                                                                        $evalConf,
                                                                         $theField,
                                                                         'max_size',
                                                                         'evalErrors_size_too_large'
@@ -913,8 +845,8 @@ class Data implements SingletonInterface
                                                         $this->evalErrors[$theField][] = $theCmd;
                                                         $failureMsg[$theField][] =
                                                             sprintf(
-                                                                $this->getFailureText(
-                                                                    $dataArray,
+                                                                $languageObj->getFailureText(
+                                                                    $evalConf,
                                                                     $theField,
                                                                     'isfile',
                                                                     ($bWritePermissionError ? 'evalErrors_write_permission' : 'evalErrors_file_upload')
@@ -927,8 +859,8 @@ class Data implements SingletonInterface
                                                     $this->evalErrors[$theField][] = $theCmd;
                                                     $failureMsg[$theField][] =
                                                         sprintf(
-                                                            $this->getFailureText(
-                                                                $dataArray,
+                                                            $languageObj->getFailureText(
+                                                                $evalConf,
                                                                 $theField,
                                                                 'allowed',
                                                                 'evalErrors_file_extension'
@@ -962,8 +894,8 @@ class Data implements SingletonInterface
                                         $this->inError[$theField] = true;
                                         $this->evalErrors[$theField][] = $theCmd;
                                         $failureMsg[$theField][] =
-                                            $this->getFailureText(
-                                                $dataArray,
+                                            $languageObj->getFailureText(
+                                                $evalConf,
                                                 $theField,
                                                 $theCmd,
                                                 'evalErrors_unvalid_url'
@@ -984,8 +916,8 @@ class Data implements SingletonInterface
                                     $this->inError[$theField] = true;
                                     $this->evalErrors[$theField][] = $theCmd;
                                     $failureMsg[$theField][] =
-                                        $this->getFailureText(
-                                            $dataArray,
+                                        $languageObj->getFailureText(
+                                            $evalConf,
                                             $theField,
                                             $theCmd,
                                             'evalErrors_unvalid_date'
@@ -1015,8 +947,8 @@ class Data implements SingletonInterface
                                         $this->inError[$theField] = true;
                                         $this->evalErrors[$theField][] = $theCmd;
                                         $failureMsg[$theField][] =
-                                            $this->getFailureText(
-                                                $dataArray,
+                                            $languageObj->getFailureText(
+                                                $evalConf,
                                                 $theField,
                                                 $theCmd,
                                                 'evalErrors_' . $theCmd,
@@ -1059,6 +991,7 @@ class Data implements SingletonInterface
                                             $bInternal = false;
                                             $errorField = $hookObj->evalValues(
                                                 $confObj,
+                                                $languageObj,
                                                 $theTable,
                                                 $dataArray,
                                                 $origArray,
@@ -1081,8 +1014,8 @@ class Data implements SingletonInterface
                                                 if (!$test) {
                                                     $this->inError[$theField] = true;
                                                     $failureText =
-                                                        $this->getFailureText(
-                                                            $dataArray,
+                                                        $languageObj->getFailureText(
+                                                            $evalConf,
                                                             $theField,
                                                             $theCmd,
                                                             'evalErrors_' . $theCmd,
@@ -1095,6 +1028,7 @@ class Data implements SingletonInterface
                                                         $hookFailureText =
                                                             $hookObj->getFailureText(
                                                                 $failureText,
+                                                                $evalConf,
                                                                 $dataArray,
                                                                 $theField,
                                                                 $theCmd,
@@ -1140,8 +1074,8 @@ class Data implements SingletonInterface
                                         if (!$test) {
                                             $this->inError[$theField] = true;
                                             $failureText =
-                                                $this->getFailureText(
-                                                    $dataArray,
+                                                $languageObj->getFailureText(
+                                                    $evalConf,
                                                     $theField,
                                                     $theCmd,
                                                     'evalErrors_' . $theCmd,
@@ -1214,8 +1148,8 @@ class Data implements SingletonInterface
 
         if (!empty($this->missing)) {
             foreach ($this->missing as $theField => $value) {
-                $errorMsg = $this->getFailureText(
-                    $dataArray,
+                $errorMsg = $languageObj->getFailureText(
+                    $evalConf,
                     $theField,
                     'required',
                     'evalErrors_required'
@@ -1571,7 +1505,7 @@ class Data implements SingletonInterface
             $result = $this->frontendUserRepository->findRowByUid($theUid);
         } else {
             $result =
-                $GLOBALS['TSFE']->sys_page->getRawRecord(
+                $this->pageRepository->getRawRecord(
                     $theTable,
                     $theUid
                 );
@@ -1786,7 +1720,6 @@ class Data implements SingletonInterface
                 break;
             default:
                 if (is_array($conf[$cmdKey . '.'])) {
-
                     $newFieldList =
                         implode(
                             ',',
@@ -1825,7 +1758,6 @@ class Data implements SingletonInterface
                                 )
                             )
                         );
-
                     $parsedArray =
                         $this->parseOutgoingData(
                             $theTable,
@@ -1854,7 +1786,7 @@ class Data implements SingletonInterface
                     }
                     $newId = $this->frontendUserRepository->save(
                         $this->controlData->getPid(),
-                        $insertFields,
+                        $insertFields
                         // $newFieldList,
                     );
                     $result = $newId;
@@ -1896,7 +1828,11 @@ class Data implements SingletonInterface
                     $dataArray['uid'] = $newId;
                     $this->frontendUserRepository->updateMMRelations($dataArray);
                     $this->setSaved(true);
-                    $newRow = $GLOBALS['TSFE']->sys_page->getRawRecord($theTable, $newId);
+                    $newRow =
+                        $this->pageRepository->getRawRecord(
+                            $theTable,
+                            $newId
+                        );
 
                     if (is_array($newRow)) {
                         // Post-create processing: call user functions and hooks
@@ -2586,6 +2522,7 @@ class Data implements SingletonInterface
                             $theTable,
                             $colName
                         );
+
                     $fieldObj->parseOutgoingData(
                         $theTable,
                         $colName,

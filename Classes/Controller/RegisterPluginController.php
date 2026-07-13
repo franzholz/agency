@@ -85,7 +85,6 @@ class RegisterPluginController
                 $request,
                 $this->prefixId
             );
-
         LocalizationUtility::init();
         $configurationCheck = GeneralUtility::makeInstance(ConfigurationCheck::class);
 

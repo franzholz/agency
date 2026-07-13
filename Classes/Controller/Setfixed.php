@@ -324,7 +324,6 @@ class Setfixed implements SingletonInterface
                                 $conf['create.']['overrideValues.']['usergroup'],
                                 true
                             );
-
                             $remainingGroups = array_diff($originalGroups, $overwriteGroups);
                             $groupsToAdd = GeneralUtility::trimExplode(',', $setfixedUsergroup, true);
                             $finalGroups = array_merge(
@@ -396,6 +395,9 @@ class Setfixed implements SingletonInterface
                     }
 
                     if ($autoLoginIsRequested) {
+                        if (empty($currentArray['tx_agency_password'])) {
+                            throw new \RuntimeException('Error in agency: The internal password must not be empty! ', 1783868892);
+                        }
                         // $cryptedPassword = '';
                         $encoded = $currentArray['tx_agency_password'];
                         $cryptedPassword = base64_decode($encoded);
@@ -454,9 +456,7 @@ class Setfixed implements SingletonInterface
             ) {
                 $markerObj->addGeneralHiddenFieldsMarkers(
                     $markerArray,
-                    $usesPassword ?
-                        'login' :
-                        'password',
+                    $usesPassword ? 'login' : 'password',
                     $token,
                     $setFixedKey,
                     $fD
@@ -682,7 +682,6 @@ class Setfixed implements SingletonInterface
                     $theTable == 'fe_users'
                 ) {
                     // If applicable, send admin a request to review the registration request
-
                     if (
                         $conf['enableAdminReview'] &&
                         $setFixedKey == 'APPROVE' &&
@@ -821,6 +820,7 @@ class Setfixed implements SingletonInterface
                 [],
                 ''
             );
+
             // TODO: Your registration has been confirmed .
         }
         return $content;

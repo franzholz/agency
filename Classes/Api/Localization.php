@@ -24,6 +24,9 @@ use JambageCom\Div2007\Base\TranslationBase;
 
 use Psr\Http\Message\ServerRequestInterface;
 
+// use JambageCom\Agency\Configuration\ConfigurationStore;
+
+
 class Localization extends TranslationBase implements SingletonInterface
 {
     public $allowedSuffixes = ['', 'formal', 'informal']; // list of allowed suffixes
@@ -176,4 +179,80 @@ class Localization extends TranslationBase implements SingletonInterface
         }
         return $localizedLabel;
     }
+
+    /**
+     * Gets the error message to be displayed
+     *
+     * @param string  $theField: the name of the field being validated
+     * @param string  $theRule: the name of the validation rule being evaluated
+     * @param string  $label: a default error message provided by the invoking function
+     * @param integer $orderNo: ordered number of the rule for the field (>0 if used)
+     * @param string  $param: parameter for the error message
+     * @param boolean $bInternal: if the bug is caused by an internal problem
+     * @return string  the error message to be displayed
+     */
+    public function getFailureText(
+        $evalErrorsConf,
+        $theField,
+        $theRule,
+        $label,
+        $orderNo = '',
+        $param = '',
+        $bInternal = false
+    ) {
+        if (
+            (string) $orderNo != '' &&
+            $theRule &&
+            isset($evalErrorsConf[$theField . '.'][$theRule . '.'])
+        ) {
+            $count = 0;
+
+            foreach ($evalErrorsConf[$theField . '.'][$theRule . '.'] as $k => $v) {
+                $bKIsInt = MathUtility::canBeInterpretedAsInteger($k);
+
+                if ($bInternal) {
+                    if ($k == 'internal') {
+                        $failureLabel = $v;
+                        break;
+                    }
+                } elseif ($bKIsInt) {
+                    $count++;
+
+                    if ($count == $orderNo) {
+                        $failureLabel = $v;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!isset($failureLabel)) {
+            if (
+                $theRule &&
+                isset($evalErrorsConf[$theField . '.'][$theRule])
+            ) {
+                $failureLabel = $evalErrorsConf[$theField . '.'][$theRule];
+            } else {
+                $failureLabel = '';
+                $internalPostfix = ($bInternal ? '_internal' : '');
+
+                if ($theRule) {
+                    $labelname = 'evalErrors_' . $theRule . '_' . $theField . $internalPostfix;
+                    $failureLabel = $this->getLabel($labelname);
+                    $failureLabel = $failureLabel ?? $this->getLabel('evalErrors_' . $theRule . $internalPostfix);
+                }
+
+                if (!$failureLabel) { // this remains if no evalErrors_required for a specific field is set
+                    $labelname = 'evalErrors_' . $theRule;  //
+                    $failureLabel = $this->getLabel($labelname) . ' ' . $theField;
+                }
+            }
+        }
+
+        if ($param != '' && $failureLabel != '') {
+            $failureLabel = sprintf($failureLabel, $param);
+        }
+
+        return $failureLabel;
+    }   // getFailureText
 }

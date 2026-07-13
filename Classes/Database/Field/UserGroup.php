@@ -77,13 +77,34 @@ class UserGroup extends Base implements SingletonInterface
             $cmdKey != 'password' &&
             $cmdKey != 'delete'
         ) {
-            if (isset($conf[$cmdKey . '.']['allowUserGroupSelection'])) {
+            if (!empty($conf[$cmdKey . '.']['allowUserGroupSelection'])) {
                 $conf[$cmdKey . '.']['fields'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'] . ',usergroup', true)));
                 $conf[$cmdKey . '.']['required'] = implode(',', array_unique(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'] . ',usergroup', true)));
             } else {
                 // Remove usergroup from the list of fields and required fields if the user is not allowed to select user groups
-                $conf[$cmdKey . '.']['fields'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['fields'], 1), ['usergroup']));
-                $conf[$cmdKey . '.']['required'] = implode(',', array_diff(GeneralUtility::trimExplode(',', $conf[$cmdKey . '.']['required'], 1), ['usergroup']));
+                $conf[$cmdKey . '.']['fields'] =
+                    implode(',',
+                        array_diff(
+                            GeneralUtility::trimExplode(
+                                ',',
+                                $conf[$cmdKey . '.']['fields'],
+                                true
+                            ),
+                            ['usergroup']
+                        )
+                    );
+                $conf[$cmdKey . '.']['required'] =
+                    implode(
+                        ',',
+                        array_diff(
+                            GeneralUtility::trimExplode(
+                                ',',
+                                $conf[$cmdKey . '.']['required'],
+                                true
+                            ),
+                            ['usergroup']
+                        )
+                    );
             }
         }
         // If inviting and administrative review is enabled, save original reserved user groups
@@ -364,11 +385,11 @@ class UserGroup extends Base implements SingletonInterface
         // Initialize:
         if ($language == '') {
             $language =
-            $controlData->getSysLanguageUid(
-                $conf,
-                'ALL',
-                'fe_groups_language_overlay'
-            );
+                $controlData->getSysLanguageUid(
+                    $conf,
+                    'ALL',
+                    'fe_groups_language_overlay'
+                );
         }
 
         // If language UID is different from zero, do overlay:
