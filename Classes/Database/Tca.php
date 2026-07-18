@@ -439,7 +439,11 @@ class Tca implements SingletonInterface
                 $keyArray[$valuesArray['value']] = $valuesArray['label'];
             }
             foreach ($labelItemArray as $labelValuesArray) {
-                $keyArray[$labelValuesArray['value']] = $labelValuesArray['label'];
+                if (isset($labelValuesArray['value'])) {
+                    $keyArray[$labelValuesArray['value']] = $labelValuesArray['label'] ?? 'unknown';
+                } else if (isset($labelValuesArray[1])) {
+                    $keyArray[$labelValuesArray[1]] = $labelValuesArray[0] ?? 'unknown';
+                }
             }
             foreach ($keyArray as $key => $value) {
                 $result[] = ['label' => $value, 'value' => $key];
@@ -489,8 +493,13 @@ class Tca implements SingletonInterface
 
         if (is_array($itemArray)) {
             $itemKeyArray = $this->getItemKeyArray($itemArray);
+
             for ($i = 0; $i < count($valuesArray); $i++) {
+                if (!isset($valuesArray[$i])) {
+                    continue;
+                }
                 $label = '';
+
                 if (empty($itemKeyArray)) {
                     $label = $valuesArray[$i];
                 } else {

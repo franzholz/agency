@@ -80,7 +80,6 @@ class CreateView
         $prefixId,
         $extensionKey,
         ContentObjectRenderer $cObj,
-        Localization $languageObj,
         Parameters $controlData,
         ConfigurationStore $confObj,
         Tca $tcaObj,
@@ -105,6 +104,7 @@ class CreateView
             return false;
         }
 
+        $languageObj = GeneralUtility::makeInstance(Localization::class);
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         $templateCode = $dataObj->getTemplateCode();
         $currentArray = array_merge($origArray, $dataArray);

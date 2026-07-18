@@ -887,8 +887,8 @@ class Data implements SingletonInterface
                                         $urlParts === false ||
                                         !GeneralUtility::isValidUrl($dataArray[$theField]) ||
                                         ($urlParts['scheme'] != 'http' && $urlParts['scheme'] != 'https') ||
-                                        $urlParts['user'] ||
-                                        $urlParts['pass']
+                                        !empty($urlParts['user']) ||
+                                        !empty($urlParts['pass'])
                                     ) {
                                         $failureArray[] = $theField;
                                         $this->inError[$theField] = true;
@@ -1336,16 +1336,16 @@ class Data implements SingletonInterface
                                 if ($dataValue) {
                                     $urlParts = parse_url($dataValue);
                                     if ($urlParts !== false) {
-                                        if (!$urlParts['scheme']) {
-                                            $urlParts['scheme'] = 'http';
+                                        if (empty($urlParts['scheme'])) {
+                                            $urlParts['scheme'] = 'https';
                                             $dataValue = $urlParts['scheme'] . '://' . $dataValue;
                                         }
                                         if (GeneralUtility::isValidUrl($dataValue)) {
                                             $dataValue = $urlParts['scheme'] . '://' .
                                                 $urlParts['host'] .
-                                                $urlParts['path'] .
-                                                ($urlParts['query'] ? '?' . $urlParts['query'] : '') .
-                                                ($urlParts['fragment'] ? '#' . $urlParts['fragment'] : '');
+                                                ($urlParts['path'] ?? '').
+                                                ($urlParts['query'] ?? '') .
+                                                (!empty($urlParts['fragment']) ? '#' . $urlParts['fragment'] : '');
                                         }
                                     }
                                 }

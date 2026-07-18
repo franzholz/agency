@@ -626,6 +626,7 @@ class ActionController implements SingletonInterface
                 $cmdKey,
                 $theTable
             );
+
             $parseResult =
                 $dataObj->parseValues(
                     $theTable,
@@ -1209,7 +1210,6 @@ class ActionController implements SingletonInterface
                         $cmdKey,
                         $markerArray,
                         $template,
-                        $displayObj,
                         $editView,
                         $deleteView,
                         $templateCode,
@@ -1321,7 +1321,6 @@ class ActionController implements SingletonInterface
                         $markerArray,
                         $conf,
                         $cObj,
-                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -1356,7 +1355,6 @@ class ActionController implements SingletonInterface
                         $prefixId,
                         $extensionKey,
                         $cObj,
-                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
@@ -1389,7 +1387,6 @@ class ActionController implements SingletonInterface
                         $prefixId,
                         $extensionKey,
                         $cObj,
-                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,

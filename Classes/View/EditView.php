@@ -81,7 +81,6 @@ class EditView
         array $conf,
         $prefixId,
         ContentObjectRenderer $cObj,
-        Localization $languageObj,
         Parameters $controlData,
         ConfigurationStore $confObj,
         Tca $tcaObj,
@@ -98,6 +97,7 @@ class EditView
         $errorFieldArray,
         $token
     ) {
+        $languageObj = GeneralUtility::makeInstance(Localization::class);
         $parameterApi = GeneralUtility::makeInstance(ParameterApi::class);
         $xhtmlFix = HtmlUtility::determineXhtmlFix();
         $templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
@@ -337,7 +337,6 @@ class EditView
     * Checks if the edit form may be displayed; if not, a link to login
     *
     * @param array $cObj: the cObject
-    * @param array $languageObj: the language object
     * @param array $controlData: the object of the control data
     * @param array  $errorFieldArray: array of field with errors (former $this->data->inError[$theField])
     * @return string  the template with substituted markers
@@ -347,7 +346,6 @@ class EditView
         array &$markerArray,
         $conf,
         ContentObjectRenderer $cObj,
-        Localization $languageObj,
         Parameters $controlData,
         ConfigurationStore $confObj,
         $tcaObj,
@@ -442,7 +440,6 @@ class EditView
                         $conf,
                         $prefixId,
                         $cObj,
-                        $languageObj,
                         $controlData,
                         $confObj,
                         $tcaObj,
