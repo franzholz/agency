@@ -601,7 +601,6 @@ class Marker
         }
         $genderLabelArray['v_dear'] = $vDear;
 
-
         $this->addOtherLabelMarkers(
             $markerArray,
             $cObj,
@@ -908,7 +907,6 @@ class Marker
                 if (isset($this->conf['where.']) && is_array($this->conf['where.'])) {
                     $where = $this->conf['where.']['static_countries'];
                 }
-                debug ($where, '$where static_info_country');
                 $markerArray['###SELECTOR_STATIC_INFO_COUNTRY###'] =
                     $staticInfoApi->buildStaticInfoSelector(
                         'COUNTRIES',

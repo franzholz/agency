@@ -205,6 +205,7 @@ class Template
                             '###SUB_INCLUDED_FIELD_' . $theField . '###',
                             ''
                         );
+
                 } else {
                     $templateCode =
                         $templateService->substituteSubpart(
@@ -551,6 +552,7 @@ class Template
                 }
                 break;
         }
+
         return $result;
     }
 }

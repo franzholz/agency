@@ -112,7 +112,6 @@ class Setfixed implements SingletonInterface
         $cmdKey,
         array $markerArray,
         Template $template,
-        CreateView $displayObj,
         EditView $editView,
         DeleteView $deleteView,
         $templateCode,
