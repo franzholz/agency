@@ -9,6 +9,7 @@ use TYPO3\CMS\Core\Attribute\UpgradeWizard;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Upgrades\AbstractListTypeToCTypeUpdate;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 
