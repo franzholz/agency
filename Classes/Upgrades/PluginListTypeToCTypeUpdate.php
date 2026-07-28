@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Upgrades\AbstractListTypeToCTypeUpdate;
 
 
 
-#[UpgradeWizard('agencyPluginListTypeToCTypeUpdate')]
+#[UpgradeWizard('agency_pluginListTypeToCTypeUpdate')]
 final class PluginListTypeToCTypeUpdate extends AbstractListTypeToCTypeUpdate
 {
     public function __construct(private readonly ConnectionPool $connectionPool)
