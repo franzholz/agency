@@ -24,7 +24,7 @@
   ],
   "require": {
     "typo3/cms-core": "^13.4 || ^14.3",
-    "jambagecom/div2007": "^2.4.4",
+    "jambagecom/div2007": "^2.4.7",
     "friendsoftypo3/rdct": "^3.2"
   },
   "suggest": {
