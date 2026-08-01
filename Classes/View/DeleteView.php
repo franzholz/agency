@@ -126,14 +126,6 @@ class DeleteView
                             !empty($conf['fe_userEditSelf'])
                         );
 
-                        // $dataObj->getCoreQuery()->DBmayFEUserEdit(
-                        //     $theTable,
-                        //     $origArray,
-                        //     $feUser,
-                            // $conf['allowedGroups'] ?? '',
-                            // $conf['fe_userEditSelf'] ?? ''
-                        // );
-
                     if ($aCAuth || $bMayEdit) {
                         //                         $markerArray = $markerObj->getArray();
                         // Display the form, if access granted.

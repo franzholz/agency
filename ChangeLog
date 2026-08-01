@@ -1,4 +1,6 @@
 
+2026-08-01 Franz Holzinger  <franz@ttproducts.de>
+    * remove not used class JambageCom\Div2007\Database\CoreQuery
 
 2026-07-01 Franz Holzinger  <franz@ttproducts.de>
     * compatibility TYPO3 14

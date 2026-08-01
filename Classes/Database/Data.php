@@ -56,7 +56,6 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 use JambageCom\Div2007\Api\StaticInfoTablesApi;
 use JambageCom\Div2007\Captcha\CaptchaInterface;
 use JambageCom\Div2007\Captcha\CaptchaManager;
-use JambageCom\Div2007\Database\CoreQuery;
 use JambageCom\Div2007\Database\QueryBuilderApi;
 use JambageCom\Div2007\Utility\ArrayUtility;
 use JambageCom\Div2007\Utility\CompatibilityUtility;
@@ -100,11 +99,6 @@ class Data implements SingletonInterface
     public $missing = []; // array of required missing fields
     public $inError = []; // array of fields with eval errors other than absence
     public $templateCode = '';
-    /**
-     * @var CoreQuery
-     */
-    protected $coreQuery;
-    // protected ?FrontendUserRepository $frontendUserRepository = null;
 
     public function __construct(
         protected readonly ConnectionPool $connectionPool,
@@ -114,7 +108,6 @@ class Data implements SingletonInterface
     }
 
     public function init(
-        $coreQuery,
         $tca,
         $control,
         $theTable,
@@ -122,7 +115,6 @@ class Data implements SingletonInterface
         Parameters $controlData
     ): void
     {
-        $this->coreQuery = $coreQuery;
         $this->tca = $tca;
         $this->control = $control;
         $this->controlData = $controlData;
@@ -184,11 +176,6 @@ class Data implements SingletonInterface
     public function getFrontendUserRepository(): ?FrontendUserRepository
     {
         return $this->frontendUserRepository;
-    }
-
-    public function getCoreQuery()
-    {
-        return $this->coreQuery;
     }
 
     public function setError($error): void
@@ -1929,13 +1916,6 @@ class Data implements SingletonInterface
                             $feUser,
                             !empty($conf['fe_userEditSelf'])
                         )
-                        // $this->coreQuery->DBmayFEUserEdit(
-                        //     $theTable,
-                        //     $origArray,
-                        //     $feUser,
-                        //     $conf['allowedGroups'] ?? '',
-                        //     $conf['fe_userEditSelf'] ?? ''
-                        // )
                     ) {
                         // Delete the record and display form, if access granted.
                         $extKey = $controlData->getExtensionKey();

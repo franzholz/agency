@@ -48,7 +48,6 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 use Psr\Http\Message\ServerRequestInterface;
 
-use JambageCom\Div2007\Database\CoreQuery;
 use JambageCom\Div2007\Utility\HtmlUtility;
 use JambageCom\Div2007\Utility\FrontendUtility;
 
@@ -110,7 +109,7 @@ class InitializationController implements SingletonInterface
         $useStaticInfo =
             ExtensionManagementUtility::isLoaded('static_info_tables');
         $tcaObj = GeneralUtility::makeInstance(Tca::class);
-        $tcaObj->init($useStaticInfo, $conf);
+        $tcaObj->init($request, $useStaticInfo, $conf);
         $confObj->init($conf);
         $tablesObj = GeneralUtility::makeInstance(Tables::class);
         $tablesObj->init($theTable);
@@ -183,13 +182,7 @@ class InitializationController implements SingletonInterface
                     $controlData,
                     $urlObj
                 );
-                $coreQuery = GeneralUtility::makeInstance(
-                    CoreQuery::class,
-                    $request->getAttribute('frontend.controller')
-                );
-
                 $dataObj->init(
-                    $coreQuery,
                     $tcaObj,
                     $actionController,
                     $theTable,

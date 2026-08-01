@@ -80,6 +80,7 @@ class Tca implements SingletonInterface
     }
 
     public function init(
+        ServerRequestInterface $request,
         $useStaticInfo,
         array $conf
     ): void
@@ -87,7 +88,7 @@ class Tca implements SingletonInterface
         $this->useStaticInfo = $useStaticInfo;
         if ($useStaticInfo) {
             $staticInfoApi = GeneralUtility::makeInstance(StaticInfoTablesApi::class);
-            $staticInfoApi->init($conf);
+            $staticInfoApi->init($request, $conf);
         }
     }
 
