@@ -5,15 +5,15 @@
     <body>
       <trans-unit id="agency" resname="agency">
         <source>Agency Registration</source>
-        <target state="needs-translation">Agency Registration</target>
+        <target state="translated">Agency Registration</target>
       </trans-unit>
       <trans-unit id="feUserGroupScheduler.name" resname="feUserGroupScheduler.name">
         <source>FE User Group Check for Timeouts</source>
-        <target state="needs-translation">FE User Group Check for Timeouts</target>
+        <target state="translated">FE felhasználói csoportok ellenőrzése időtúllépésre</target>
       </trans-unit>
       <trans-unit id="feUserGroupScheduler.description" resname="feUserGroupScheduler.description">
         <source>This task checks all FE User Groups of all FE Users for a timeout. The FE User might lose a FE User Group membership if its endtime has been reached.</source>
-        <target state="needs-translation">This task checks all FE User Groups of all FE Users for a timeout. The FE User might lose a FE User Group membership if its endtime has been reached.</target>
+        <target state="translated">Ez a feladat minden FE felhasználó összes FE felhasználói csoportját ellenőrzi időtúllépésre. A FE felhasználó elveszítheti a FE felhasználói csoporttagságát, ha elérte a végidejét.</target>
       </trans-unit>
     </body>
   </file>
