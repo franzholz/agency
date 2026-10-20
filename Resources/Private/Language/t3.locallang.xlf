@@ -1,0 +1,2264 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="EXT:agency/Resources/Private/Language/locallang.xlf" date="2018-03-07T09:00:37Z" product-name="agency" target-language="t3">
+    <header/>
+    <body>
+      <trans-unit id="unsupported" resname="unsupported">
+        <source>unsupported</source>
+        <target>crwdns333490:0crwdne333490:0</target>
+      </trans-unit>
+      <trans-unit id="username" resname="username">
+        <source>Preferred username</source>
+        <target>crwdns333492:0crwdne333492:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_username" resname="tooltip_username">
+        <source>Enter the username you want to use to login.</source>
+        <target>crwdns333494:0crwdne333494:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_username_informal" resname="tooltip_username_informal">
+        <source>Enter the username you want to use to login.</source>
+        <target>crwdns333496:0crwdne333496:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_username" resname="tooltip_invitation_username">
+        <source>Enter a username for the invited person.</source>
+        <target>crwdns333498:0crwdne333498:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_username_informal" resname="tooltip_invitation_username_informal">
+        <source>Enter a username for the invited person.</source>
+        <target>crwdns333500:0crwdne333500:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_login_username" resname="tooltip_login_username">
+        <source>Enter your username.</source>
+        <target>crwdns333502:0crwdne333502:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_login_username_informal" resname="tooltip_login_username_informal">
+        <source>Enter your username.</source>
+        <target>crwdns333504:0crwdne333504:0</target>
+      </trans-unit>
+      <trans-unit id="missing_username" resname="missing_username">
+        <source>Enter a username!</source>
+        <target>crwdns333506:0crwdne333506:0</target>
+      </trans-unit>
+      <trans-unit id="missing_username_informal" resname="missing_username_informal">
+        <source>Enter a username!</source>
+        <target>crwdns333508:0crwdne333508:0</target>
+      </trans-unit>
+      <trans-unit id="password" resname="password">
+        <source>Password</source>
+        <target>crwdns333510:0crwdne333510:0</target>
+      </trans-unit>
+      <trans-unit id="new_password" resname="new_password">
+        <source>New password, if desired</source>
+        <target>crwdns333512:0crwdne333512:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_password" resname="tooltip_password">
+        <source>Enter the password you want to use to login.</source>
+        <target>crwdns333514:0crwdne333514:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_password_informal" resname="tooltip_password_informal">
+        <source>Enter the password you want to use to login.</source>
+        <target>crwdns333516:0crwdne333516:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_password" resname="tooltip_invitation_password">
+        <source>Enter a password for the invited person.</source>
+        <target>crwdns333518:0crwdne333518:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_password_informal" resname="tooltip_invitation_password_informal">
+        <source>Enter a password for the invited person.</source>
+        <target>crwdns333520:0crwdne333520:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_login_password" resname="tooltip_login_password">
+        <source>Enter your password.</source>
+        <target>crwdns333522:0crwdne333522:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_login_password_informal" resname="tooltip_login_password_informal">
+        <source>Enter your password.</source>
+        <target>crwdns333524:0crwdne333524:0</target>
+      </trans-unit>
+      <trans-unit id="password_again" resname="password_again">
+        <source>Repeat Password</source>
+        <target>crwdns333526:0crwdne333526:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_password_again" resname="tooltip_password_again">
+        <source>Enter the same password a second time.</source>
+        <target>crwdns333528:0crwdne333528:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_password_again_informal" resname="tooltip_password_again_informal">
+        <source>Enter the same password a second time.</source>
+        <target>crwdns333530:0crwdne333530:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_password_again" resname="tooltip_invitation_password_again">
+        <source>Enter the same password a second time.</source>
+        <target>crwdns333532:0crwdne333532:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_password_again_informal" resname="tooltip_invitation_password_again_informal">
+        <source>Enter the same password a second time.</source>
+        <target>crwdns333534:0crwdne333534:0</target>
+      </trans-unit>
+      <trans-unit id="missing_password" resname="missing_password">
+        <source>Please enter a password!</source>
+        <target>crwdns333536:0crwdne333536:0</target>
+      </trans-unit>
+      <trans-unit id="missing_password_informal" resname="missing_password_informal">
+        <source>Please enter a password!</source>
+        <target>crwdns333538:0crwdne333538:0</target>
+      </trans-unit>
+      <trans-unit id="usergroup" resname="usergroup">
+        <source>User group</source>
+        <target>crwdns333540:0crwdne333540:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_usergroup" resname="tooltip_usergroup">
+        <source>Select the group(s) to which you wish to belong.</source>
+        <target>crwdns333542:0crwdne333542:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_usergroup_informal" resname="tooltip_usergroup_informal">
+        <source>Select the group(s) to which you wish to belong.</source>
+        <target>crwdns333544:0crwdne333544:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_usergroup" resname="tooltip_invitation_usergroup">
+        <source>Select the group(s) to which the invited person will initially belong.</source>
+        <target>crwdns333546:0crwdne333546:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_usergroup_informal" resname="tooltip_invitation_usergroup_informal">
+        <source>Select the group(s) to which the invited person will initially belong.</source>
+        <target>crwdns333548:0crwdne333548:0</target>
+      </trans-unit>
+      <trans-unit id="missing_usergroup" resname="missing_usergroup">
+        <source>Please select a user group!</source>
+        <target>crwdns333550:0crwdne333550:0</target>
+      </trans-unit>
+      <trans-unit id="missing_usergroup_informal" resname="missing_usergroup_informal">
+        <source>Please select a user group!</source>
+        <target>crwdns333552:0crwdne333552:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_usergroup" resname="missing_invitation_usergroup">
+        <source>Please select a user group!</source>
+        <target>crwdns333554:0crwdne333554:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_usergroup_informal" resname="missing_invitation_usergroup_informal">
+        <source>Please select a user group!</source>
+        <target>crwdns333556:0crwdne333556:0</target>
+      </trans-unit>
+      <trans-unit id="name" resname="name">
+        <source>Name</source>
+        <target>crwdns333558:0crwdne333558:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_name" resname="tooltip_name">
+        <source>Enter your full name.</source>
+        <target>crwdns333560:0crwdne333560:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_name_informal" resname="tooltip_name_informal">
+        <source>Enter your full name.</source>
+        <target>crwdns333562:0crwdne333562:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_name" resname="tooltip_invitation_name">
+        <source>Enter the full name of the invited person.</source>
+        <target>crwdns333564:0crwdne333564:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_name_informal" resname="tooltip_invitation_name_informal">
+        <source>Enter the full name of the invited person.</source>
+        <target>crwdns333566:0crwdne333566:0</target>
+      </trans-unit>
+      <trans-unit id="missing_name" resname="missing_name">
+        <source>Please enter your name!</source>
+        <target>crwdns333568:0crwdne333568:0</target>
+      </trans-unit>
+      <trans-unit id="missing_name_informal" resname="missing_name_informal">
+        <source>Please enter your name!</source>
+        <target>crwdns333570:0crwdne333570:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_name" resname="missing_invitation_name">
+        <source>Please enter a name!</source>
+        <target>crwdns333572:0crwdne333572:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_name_informal" resname="missing_invitation_name_informal">
+        <source>Please enter a name!</source>
+        <target>crwdns333574:0crwdne333574:0</target>
+      </trans-unit>
+      <trans-unit id="first_name" resname="first_name">
+        <source>First name</source>
+        <target>crwdns333576:0crwdne333576:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_first_name" resname="tooltip_first_name">
+        <source>Enter your first name.</source>
+        <target>crwdns333578:0crwdne333578:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_first_name_informal" resname="tooltip_first_name_informal">
+        <source>Enter your first name.</source>
+        <target>crwdns333580:0crwdne333580:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_first_name" resname="tooltip_invitation_first_name">
+        <source>Enter the first name of the invited person.</source>
+        <target>crwdns333582:0crwdne333582:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_first_name_informal" resname="tooltip_invitation_first_name_informal">
+        <source>Enter the first name of the invited person.</source>
+        <target>crwdns333584:0crwdne333584:0</target>
+      </trans-unit>
+      <trans-unit id="missing_first_name" resname="missing_first_name">
+        <source>Please enter your first name!</source>
+        <target>crwdns333586:0crwdne333586:0</target>
+      </trans-unit>
+      <trans-unit id="missing_first_name_informal" resname="missing_first_name_informal">
+        <source>Please enter your first name!</source>
+        <target>crwdns333588:0crwdne333588:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_first_name" resname="missing_invitation_first_name">
+        <source>Please enter a first name!</source>
+        <target>crwdns333590:0crwdne333590:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_first_name_informal" resname="missing_invitation_first_name_informal">
+        <source>Please enter a first name!</source>
+        <target>crwdns333592:0crwdne333592:0</target>
+      </trans-unit>
+      <trans-unit id="middle_name" resname="middle_name">
+        <source>Middle name</source>
+        <target>crwdns333594:0crwdne333594:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_middle_name" resname="tooltip_middle_name">
+        <source>Enter your middle name.</source>
+        <target>crwdns333596:0crwdne333596:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_middle_name_informal" resname="tooltip_middle_name_informal">
+        <source>Enter your middle name.</source>
+        <target>crwdns333598:0crwdne333598:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_middle_name" resname="tooltip_invitation_middle_name">
+        <source>Enter the middle name of the invited person.</source>
+        <target>crwdns333600:0crwdne333600:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_middle_name_informal" resname="tooltip_invitation_middle_name_informal">
+        <source>Enter the middle name of the invited person.</source>
+        <target>crwdns333602:0crwdne333602:0</target>
+      </trans-unit>
+      <trans-unit id="missing_middle_name" resname="missing_middle_name">
+        <source>Please enter your middle name!</source>
+        <target>crwdns333604:0crwdne333604:0</target>
+      </trans-unit>
+      <trans-unit id="missing_middle_name_informal" resname="missing_middle_name_informal">
+        <source>Please enter your middle name!</source>
+        <target>crwdns333606:0crwdne333606:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_middle_name" resname="missing_invitation_middle_name">
+        <source>Please enter a middle name!</source>
+        <target>crwdns333608:0crwdne333608:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_middle_name_informal" resname="missing_invitation_middle_name_informal">
+        <source>Please enter a middle name!</source>
+        <target>crwdns333610:0crwdne333610:0</target>
+      </trans-unit>
+      <trans-unit id="last_name" resname="last_name">
+        <source>Last name</source>
+        <target>crwdns333612:0crwdne333612:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_last_name" resname="tooltip_last_name">
+        <source>Enter your surname.</source>
+        <target>crwdns333614:0crwdne333614:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_last_name_informal" resname="tooltip_last_name_informal">
+        <source>Enter your surname.</source>
+        <target>crwdns333616:0crwdne333616:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_last_name" resname="tooltip_invitation_last_name">
+        <source>Enter the surname of the invited person.</source>
+        <target>crwdns333618:0crwdne333618:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_last_name_informal" resname="tooltip_invitation_last_name_informal">
+        <source>Enter the surname of the invited person.</source>
+        <target>crwdns333620:0crwdne333620:0</target>
+      </trans-unit>
+      <trans-unit id="missing_last_name" resname="missing_last_name">
+        <source>Please enter your surname!</source>
+        <target>crwdns333622:0crwdne333622:0</target>
+      </trans-unit>
+      <trans-unit id="missing_last_name_informal" resname="missing_last_name_informal">
+        <source>Please enter your surname!</source>
+        <target>crwdns333624:0crwdne333624:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_last_name" resname="missing_invitation_last_name">
+        <source>Please enter a surname!</source>
+        <target>crwdns333626:0crwdne333626:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_last_name_informal" resname="missing_invitation_last_name_informal">
+        <source>Please enter a surname!</source>
+        <target>crwdns333628:0crwdne333628:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_status" resname="tooltip_status">
+        <source>Select in the list the status that corresponds to yours.</source>
+        <target>crwdns333630:0crwdne333630:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_status_informal" resname="tooltip_status_informal">
+        <source>Select in the list the status that corresponds to yours.</source>
+        <target>crwdns333632:0crwdne333632:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_status" resname="tooltip_invitation_status">
+        <source>Select in the list the status that corresponds to the status of the invited person.</source>
+        <target>crwdns333634:0crwdne333634:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_status_informal" resname="tooltip_invitation_status_informal">
+        <source>Select in the list the status that corresponds to the status of the invited person.</source>
+        <target>crwdns333636:0crwdne333636:0</target>
+      </trans-unit>
+      <trans-unit id="date_of_birth" resname="date_of_birth">
+        <source>Date of birth (dd-mm-yyyy)</source>
+        <target>crwdns333638:0crwdne333638:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_date_of_birth" resname="tooltip_date_of_birth">
+        <source>Enter your date of birth in the format day-month-year.</source>
+        <target>crwdns333640:0crwdne333640:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_date_of_birth_informal" resname="tooltip_date_of_birth_informal">
+        <source>Enter your date of birth in the format day-month-year.</source>
+        <target>crwdns333642:0crwdne333642:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_date_of_birth" resname="tooltip_invitation_date_of_birth">
+        <source>Enter the date of birth of the invited person.</source>
+        <target>crwdns333644:0crwdne333644:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_date_of_birth_informal" resname="tooltip_invitation_date_of_birth_informal">
+        <source>Enter the date of birth of the invited person.</source>
+        <target>crwdns333646:0crwdne333646:0</target>
+      </trans-unit>
+      <trans-unit id="missing_date_of_birth" resname="missing_date_of_birth">
+        <source>Please enter your date of birth!</source>
+        <target>crwdns333648:0crwdne333648:0</target>
+      </trans-unit>
+      <trans-unit id="missing_date_of_birth_informal" resname="missing_date_of_birth_informal">
+        <source>Please enter your date of birth!</source>
+        <target>crwdns333650:0crwdne333650:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_date_of_birth" resname="missing_invitation_date_of_birth">
+        <source>Please enter a date of birth!</source>
+        <target>crwdns333652:0crwdne333652:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_date_of_birth_informal" resname="missing_invitation_date_of_birth_informal">
+        <source>Please enter a date of birth!</source>
+        <target>crwdns333654:0crwdne333654:0</target>
+      </trans-unit>
+      <trans-unit id="address" resname="address">
+        <source>Address</source>
+        <target>crwdns333656:0crwdne333656:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_address" resname="tooltip_address">
+        <source>Enter your address (number, street, apt.).</source>
+        <target>crwdns333658:0crwdne333658:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_address_informal" resname="tooltip_address_informal">
+        <source>Enter your address (number, street, apt.).</source>
+        <target>crwdns333660:0crwdne333660:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_address" resname="tooltip_invitation_address">
+        <source>Enter the address (number, street, apt.).</source>
+        <target>crwdns333662:0crwdne333662:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_address_informal" resname="tooltip_invitation_address_informal">
+        <source>Enter the address (number, street, apt.).</source>
+        <target>crwdns333664:0crwdne333664:0</target>
+      </trans-unit>
+      <trans-unit id="missing_address" resname="missing_address">
+        <source>Please enter your address!</source>
+        <target>crwdns333666:0crwdne333666:0</target>
+      </trans-unit>
+      <trans-unit id="missing_address_informal" resname="missing_address_informal">
+        <source>Please enter your address!</source>
+        <target>crwdns333668:0crwdne333668:0</target>
+      </trans-unit>
+      <trans-unit id="missing_captcha_response" resname="missing_captcha_response">
+        <source>Please enter the captcha phrase!</source>
+        <target>crwdns333670:0crwdne333670:0</target>
+      </trans-unit>
+      <trans-unit id="missing_captcha_response_informal" resname="missing_captcha_response_informal">
+        <source>Please enter the captcha phrase!</source>
+        <target>crwdns333672:0crwdne333672:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_address" resname="missing_invitation_address">
+        <source>Please enter an address!</source>
+        <target>crwdns333674:0crwdne333674:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_address_informal" resname="missing_invitation_address_informal">
+        <source>Please enter an address!</source>
+        <target>crwdns333676:0crwdne333676:0</target>
+      </trans-unit>
+      <trans-unit id="house_no" resname="house_no">
+        <source>House number</source>
+        <target>crwdns333678:0crwdne333678:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_house_no" resname="tooltip_house_no">
+        <source>Enter your house number.</source>
+        <target>crwdns333680:0crwdne333680:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_house_no_informal" resname="tooltip_house_no_informal">
+        <source>Enter your house number.</source>
+        <target>crwdns333682:0crwdne333682:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_house_no" resname="tooltip_invitation_house_no">
+        <source>Enter your house number.</source>
+        <target>crwdns333684:0crwdne333684:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_house_no_informal" resname="tooltip_invitation_house_no_informal">
+        <source>Enter your house number.</source>
+        <target>crwdns333686:0crwdne333686:0</target>
+      </trans-unit>
+      <trans-unit id="missing_house_no" resname="missing_house_no">
+        <source>Please enter your house number!</source>
+        <target>crwdns333688:0crwdne333688:0</target>
+      </trans-unit>
+      <trans-unit id="missing_house_no_informal" resname="missing_house_no_informal">
+        <source>Please enter your house number!</source>
+        <target>crwdns333690:0crwdne333690:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_house_no" resname="missing_invitation_house_no">
+        <source>Please enter a house number!</source>
+        <target>crwdns333692:0crwdne333692:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_house_no_informal" resname="missing_invitation_house_no_informal">
+        <source>Please enter a house number!</source>
+        <target>crwdns333694:0crwdne333694:0</target>
+      </trans-unit>
+      <trans-unit id="city" resname="city">
+        <source>City</source>
+        <target>crwdns333696:0crwdne333696:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_city" resname="tooltip_city">
+        <source>Enter the name of the city or village.</source>
+        <target>crwdns333698:0crwdne333698:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_city_informal" resname="tooltip_city_informal">
+        <source>Enter the name of your city or village.</source>
+        <target>crwdns333700:0crwdne333700:0</target>
+      </trans-unit>
+      <trans-unit id="missing_city" resname="missing_city">
+        <source>Please enter the name of your city!</source>
+        <target>crwdns333702:0crwdne333702:0</target>
+      </trans-unit>
+      <trans-unit id="missing_city_informal" resname="missing_city_informal">
+        <source>Please enter the name of your city!</source>
+        <target>crwdns333704:0crwdne333704:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_city" resname="missing_invitation_city">
+        <source>Please enter the name of a city!</source>
+        <target>crwdns333706:0crwdne333706:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_city_informal" resname="missing_invitation_city_informal">
+        <source>Please enter the name of a city!</source>
+        <target>crwdns333708:0crwdne333708:0</target>
+      </trans-unit>
+      <trans-unit id="zone" resname="zone">
+        <source>County/province</source>
+        <target>crwdns333710:0crwdne333710:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_zone" resname="tooltip_zone">
+        <source>Select your County or Province in this list.</source>
+        <target>crwdns333712:0crwdne333712:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_zone_informal" resname="tooltip_zone_informal">
+        <source>Select your County or Province in this list.</source>
+        <target>crwdns333714:0crwdne333714:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_zone" resname="tooltip_invitation_zone">
+        <source>Select the County or Province in this list.</source>
+        <target>crwdns333716:0crwdne333716:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_zone_informal" resname="tooltip_invitation_zone_informal">
+        <source>Select the County or Province in this list.</source>
+        <target>crwdns333718:0crwdne333718:0</target>
+      </trans-unit>
+      <trans-unit id="missing_zone" resname="missing_zone">
+        <source>Please select your County or Province!</source>
+        <target>crwdns333720:0crwdne333720:0</target>
+      </trans-unit>
+      <trans-unit id="missing_zone_informal" resname="missing_zone_informal">
+        <source>Please select your County or Province!</source>
+        <target>crwdns333722:0crwdne333722:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_zone" resname="missing_invitation_zone">
+        <source>Please select a County or Province!</source>
+        <target>crwdns333724:0crwdne333724:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_zone_informal" resname="missing_invitation_zone_informal">
+        <source>Please select a County or Province!</source>
+        <target>crwdns333726:0crwdne333726:0</target>
+      </trans-unit>
+      <trans-unit id="country" resname="country">
+        <source>Country</source>
+        <target>crwdns333728:0crwdne333728:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_country" resname="tooltip_country">
+        <source>Enter the name of your country.</source>
+        <target>crwdns333730:0crwdne333730:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_country_informal" resname="tooltip_country_informal">
+        <source>Enter the name of your country.</source>
+        <target>crwdns333732:0crwdne333732:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_country" resname="tooltip_invitation_country">
+        <source>Enter the name of the country.</source>
+        <target>crwdns333734:0crwdne333734:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_country_informal" resname="tooltip_invitation_country_informal">
+        <source>Enter the name of the country.</source>
+        <target>crwdns333736:0crwdne333736:0</target>
+      </trans-unit>
+      <trans-unit id="missing_country" resname="missing_country">
+        <source>Please enter the name of your country!</source>
+        <target>crwdns333738:0crwdne333738:0</target>
+      </trans-unit>
+      <trans-unit id="missing_country_informal" resname="missing_country_informal">
+        <source>Please enter the name of your country!</source>
+        <target>crwdns333740:0crwdne333740:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_country" resname="missing_invitation_country">
+        <source>Please enter the name of the country!</source>
+        <target>crwdns333742:0crwdne333742:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_country_informal" resname="missing_invitation_country_informal">
+        <source>Please enter the name of the country!</source>
+        <target>crwdns333744:0crwdne333744:0</target>
+      </trans-unit>
+      <trans-unit id="zip" resname="zip">
+        <source>Postal code</source>
+        <target>crwdns333746:0crwdne333746:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_zip" resname="tooltip_zip">
+        <source>Enter your Postcode.</source>
+        <target>crwdns333748:0crwdne333748:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_zip_informal" resname="tooltip_zip_informal">
+        <source>Enter your Postcode.</source>
+        <target>crwdns333750:0crwdne333750:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_zip" resname="tooltip_invitation_zip">
+        <source>Enter the Postcode.</source>
+        <target>crwdns333752:0crwdne333752:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_zip_informal" resname="tooltip_invitation_zip_informal">
+        <source>Enter the Postcode.</source>
+        <target>crwdns333754:0crwdne333754:0</target>
+      </trans-unit>
+      <trans-unit id="missing_zip" resname="missing_zip">
+        <source>Please enter your Postcode!</source>
+        <target>crwdns333756:0crwdne333756:0</target>
+      </trans-unit>
+      <trans-unit id="missing_zip_informal" resname="missing_zip_informal">
+        <source>Please enter your Postcode!</source>
+        <target>crwdns333758:0crwdne333758:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_zip" resname="missing_invitation_zip">
+        <source>Please enter a Postcode!</source>
+        <target>crwdns333760:0crwdne333760:0</target>
+      </trans-unit>
+      <trans-unit id="static_info_country" resname="static_info_country">
+        <source>Country</source>
+        <target>crwdns333762:0crwdne333762:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_static_info_country" resname="tooltip_static_info_country">
+        <source>Select your country in the list.</source>
+        <target>crwdns333764:0crwdne333764:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_static_info_country_informal" resname="tooltip_static_info_country_informal">
+        <source>Select your country in the list.</source>
+        <target>crwdns333766:0crwdne333766:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_static_info_country" resname="tooltip_invitation_static_info_country">
+        <source>Select the country in the list.</source>
+        <target>crwdns333768:0crwdne333768:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_static_info_country_informal" resname="tooltip_invitation_static_info_country_informal">
+        <source>Select the country in the list.</source>
+        <target>crwdns333770:0crwdne333770:0</target>
+      </trans-unit>
+      <trans-unit id="missing_static_info_country" resname="missing_static_info_country">
+        <source>Please select your country!</source>
+        <target>crwdns333772:0crwdne333772:0</target>
+      </trans-unit>
+      <trans-unit id="missing_static_info_country_informal" resname="missing_static_info_country_informal">
+        <source>Please select your country!</source>
+        <target>crwdns333774:0crwdne333774:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_static_info_country" resname="missing_invitation_static_info_country">
+        <source>Please select a country!</source>
+        <target>crwdns333776:0crwdne333776:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_static_info_country_informal" resname="missing_invitation_static_info_country_informal">
+        <source>Please select a country!</source>
+        <target>crwdns333778:0crwdne333778:0</target>
+      </trans-unit>
+      <trans-unit id="telephone" resname="telephone">
+        <source>Telephone</source>
+        <target>crwdns333780:0crwdne333780:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_telephone" resname="tooltip_telephone">
+        <source>Enter your phone number.</source>
+        <target>crwdns333782:0crwdne333782:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_telephone_informal" resname="tooltip_telephone_informal">
+        <source>Enter your phone number.</source>
+        <target>crwdns333784:0crwdne333784:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_telephone" resname="tooltip_invitation_telephone">
+        <source>Enter the phone number of the invited person.</source>
+        <target>crwdns333786:0crwdne333786:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_telephone_informal" resname="tooltip_invitation_telephone_informal">
+        <source>Enter the phone number of the invited person.</source>
+        <target>crwdns333788:0crwdne333788:0</target>
+      </trans-unit>
+      <trans-unit id="missing_telephone" resname="missing_telephone">
+        <source>Please enter your phone number!</source>
+        <target>crwdns333790:0crwdne333790:0</target>
+      </trans-unit>
+      <trans-unit id="missing_telephone_informal" resname="missing_telephone_informal">
+        <source>Please enter your phone number!</source>
+        <target>crwdns333792:0crwdne333792:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_telephone" resname="missing_invitation_telephone">
+        <source>Please enter a phone number!</source>
+        <target>crwdns333794:0crwdne333794:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_telephone_informal" resname="missing_invitation_telephone_informal">
+        <source>Please enter a phone number!</source>
+        <target>crwdns333796:0crwdne333796:0</target>
+      </trans-unit>
+      <trans-unit id="fax" resname="fax">
+        <source>Fax</source>
+        <target>crwdns333798:0crwdne333798:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_fax" resname="tooltip_fax">
+        <source>Enter your fax number.</source>
+        <target>crwdns333800:0crwdne333800:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_fax_informal" resname="tooltip_fax_informal">
+        <source>Enter your fax number.</source>
+        <target>crwdns333802:0crwdne333802:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_fax" resname="tooltip_invitation_fax">
+        <source>Enter the fax number of the invited person.</source>
+        <target>crwdns333804:0crwdne333804:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_fax_informal" resname="tooltip_invitation_fax_informal">
+        <source>Enter the fax number of the invited person.</source>
+        <target>crwdns333806:0crwdne333806:0</target>
+      </trans-unit>
+      <trans-unit id="missing_fax" resname="missing_fax">
+        <source>Please enter your fax number!</source>
+        <target>crwdns333808:0crwdne333808:0</target>
+      </trans-unit>
+      <trans-unit id="missing_fax_informal" resname="missing_fax_informal">
+        <source>Please enter your fax number!</source>
+        <target>crwdns333810:0crwdne333810:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_fax" resname="missing_invitation_fax">
+        <source>Please enter a fax number!</source>
+        <target>crwdns333812:0crwdne333812:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_fax_informal" resname="missing_invitation_fax_informal">
+        <source>Please enter a fax number!</source>
+        <target>crwdns333814:0crwdne333814:0</target>
+      </trans-unit>
+      <trans-unit id="email" resname="email">
+        <source>E-mail</source>
+        <target>crwdns333816:0crwdne333816:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_email" resname="tooltip_email">
+        <source>Enter your email address.</source>
+        <target>crwdns333818:0crwdne333818:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_email_informal" resname="tooltip_email_informal">
+        <source>Enter your email address.</source>
+        <target>crwdns333820:0crwdne333820:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_email" resname="tooltip_invitation_email">
+        <source>Enter the email address of the invited person.</source>
+        <target>crwdns333822:0crwdne333822:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_email_informal" resname="tooltip_invitation_email_informal">
+        <source>Enter the email address of the invited person.</source>
+        <target>crwdns333824:0crwdne333824:0</target>
+      </trans-unit>
+      <trans-unit id="missing_email" resname="missing_email">
+        <source>A valid e-mail is required.</source>
+        <target>crwdns333826:0crwdne333826:0</target>
+      </trans-unit>
+      <trans-unit id="missing_email_informal" resname="missing_email_informal">
+        <source>A valid e-mail is required.</source>
+        <target>crwdns333828:0crwdne333828:0</target>
+      </trans-unit>
+      <trans-unit id="mail_html" resname="mail_html">
+        <source>Receive HTML e-mails?</source>
+        <target>crwdns388444:0crwdne388444:0</target>
+      </trans-unit>
+      <trans-unit id="mail_html_informal" resname="mail_html_informal">
+        <source>Receive HTML e-mails?</source>
+        <target>crwdns388446:0crwdne388446:0</target>
+      </trans-unit>
+      <trans-unit id="module_sys_dmail_html" resname="module_sys_dmail_html">
+        <source>Receive HTML e-mails?</source>
+        <target>crwdns333830:0crwdne333830:0</target>
+      </trans-unit>
+      <trans-unit id="module_sys_dmail_html_informal" resname="module_sys_dmail_html_informal">
+        <source>Receive HTML e-mails?</source>
+        <target>crwdns333832:0crwdne333832:0</target>
+      </trans-unit>
+      <trans-unit id="yes" resname="yes">
+        <source>Yes</source>
+        <target>crwdns333834:0crwdne333834:0</target>
+      </trans-unit>
+      <trans-unit id="no" resname="no">
+        <source>No</source>
+        <target>crwdns333836:0crwdne333836:0</target>
+      </trans-unit>
+      <trans-unit id="module_sys_dmail_newsletter" resname="module_sys_dmail_newsletter">
+        <source>Receive newsletter?</source>
+        <target>crwdns333838:0crwdne333838:0</target>
+      </trans-unit>
+      <trans-unit id="module_sys_dmail_newletter_informal" resname="module_sys_dmail_newletter_informal">
+        <source>Receive newsletter?</source>
+        <target>crwdns333840:0crwdne333840:0</target>
+      </trans-unit>
+      <trans-unit id="module_sys_dmail_category" resname="module_sys_dmail_category">
+        <source>Receive news on any of these subjects?</source>
+        <target>crwdns333842:0crwdne333842:0</target>
+      </trans-unit>
+      <trans-unit id="module_sys_dmail_category_informal" resname="module_sys_dmail_category_informal">
+        <source>Receive news on any of these subjects?</source>
+        <target>crwdns333844:0crwdne333844:0</target>
+      </trans-unit>
+      <trans-unit id="missing_module_sys_dmail_category" resname="missing_module_sys_dmail_category">
+        <source>Please select at least one subject!</source>
+        <target>crwdns333846:0crwdne333846:0</target>
+      </trans-unit>
+      <trans-unit id="missing_module_sys_dmail_category_informal" resname="missing_module_sys_dmail_category_informal">
+        <source>Please select at least one subject!</source>
+        <target>crwdns333848:0crwdne333848:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_module_sys_dmail_category" resname="missing_invitation_module_sys_dmail_category">
+        <source>Please select at least one subject!</source>
+        <target>crwdns333850:0crwdne333850:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_module_sys_dmail_category_informal" resname="missing_invitation_module_sys_dmail_category_informal">
+        <source>Please select at least one subject!</source>
+        <target>crwdns333852:0crwdne333852:0</target>
+      </trans-unit>
+      <trans-unit id="language" resname="language">
+        <source>Language</source>
+        <target>crwdns333854:0crwdne333854:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_language" resname="tooltip_language">
+        <source>Select your preferred language in this list.</source>
+        <target>crwdns333856:0crwdne333856:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_language_informal" resname="tooltip_language_informal">
+        <source>Select your preferred language in this list.</source>
+        <target>crwdns333858:0crwdne333858:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_language" resname="tooltip_invitation_language">
+        <source>Select the language of the invited person in this list.</source>
+        <target>crwdns333860:0crwdne333860:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_language_informal" resname="tooltip_invitation_language_informal">
+        <source>Select the language of the invited person in this list.</source>
+        <target>crwdns333862:0crwdne333862:0</target>
+      </trans-unit>
+      <trans-unit id="missing_language" resname="missing_language">
+        <source>Please select your preferred language!</source>
+        <target>crwdns333864:0crwdne333864:0</target>
+      </trans-unit>
+      <trans-unit id="missing_language_informal" resname="missing_language_informal">
+        <source>Please select your preferred language!</source>
+        <target>crwdns333866:0crwdne333866:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_language" resname="missing_invitation_language">
+        <source>Please select a preferred language!</source>
+        <target>crwdns333868:0crwdne333868:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_language_informal" resname="missing_invitation_language_informal">
+        <source>Please select a preferred language!</source>
+        <target>crwdns333870:0crwdne333870:0</target>
+      </trans-unit>
+      <trans-unit id="title" resname="title">
+        <source>Title</source>
+        <target>crwdns333872:0crwdne333872:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_title" resname="tooltip_title">
+        <source>Enter the title of your position or profession.</source>
+        <target>crwdns333874:0crwdne333874:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_title_informal" resname="tooltip_title_informal">
+        <source>Enter the title of your position or profession.</source>
+        <target>crwdns333876:0crwdne333876:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_title" resname="tooltip_invitation_title">
+        <source>Enter the title of the invited person.</source>
+        <target>crwdns333878:0crwdne333878:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_title_informal" resname="tooltip_invitation_title_informal">
+        <source>Enter the title of the invited person.</source>
+        <target>crwdns333880:0crwdne333880:0</target>
+      </trans-unit>
+      <trans-unit id="missing_title" resname="missing_title">
+        <source>Please enter your title!</source>
+        <target>crwdns333882:0crwdne333882:0</target>
+      </trans-unit>
+      <trans-unit id="missing_title_informal" resname="missing_title_informal">
+        <source>Please enter your title!</source>
+        <target>crwdns333884:0crwdne333884:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_title" resname="missing_invitation_title">
+        <source>Please enter a title!</source>
+        <target>crwdns333886:0crwdne333886:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_title_informal" resname="missing_invitation_title_informal">
+        <source>Please enter a title!</source>
+        <target>crwdns333888:0crwdne333888:0</target>
+      </trans-unit>
+      <trans-unit id="terms_acknowledged" resname="terms_acknowledged">
+        <source>I acknowledge and agree to the terms.</source>
+        <target>crwdns333890:0crwdne333890:0</target>
+      </trans-unit>
+      <trans-unit id="terms_acknowledged_informal" resname="terms_acknowledged_informal">
+        <source>I acknowledge and agree to the terms.</source>
+        <target>crwdns333892:0crwdne333892:0</target>
+      </trans-unit>
+      <trans-unit id="privacy_policy_acknowledged" resname="privacy_policy_acknowledged">
+        <source>I acknowledge and agree to the privacy policy.</source>
+        <target>crwdns333894:0crwdne333894:0</target>
+      </trans-unit>
+      <trans-unit id="privacy_policy_acknowledged_informal" resname="privacy_policy_acknowledged_informal">
+        <source>I acknowledge and agree to the privacy policy.</source>
+        <target>crwdns333896:0crwdne333896:0</target>
+      </trans-unit>
+      <trans-unit id="privacy_policy_acknowledged_2" resname="privacy_policy_acknowledged_2">
+        <source>I agree for any data I transmit through this site, that you can use them in accordance with the Privacy Policy.</source>
+        <target>crwdns333898:0crwdne333898:0</target>
+      </trans-unit>
+      <trans-unit id="privacy_policy_acknowledged_2_informal" resname="privacy_policy_acknowledged_2_informal">
+        <source>I agree for any data I transmit through this site, that you can use them in accordance with the Privacy Policy.</source>
+        <target>crwdns333900:0crwdne333900:0</target>
+      </trans-unit>
+      <trans-unit id="privacy_policy_hint" resname="privacy_policy_hint">
+        <source>Hint</source>
+        <target>crwdns333902:0crwdne333902:0</target>
+      </trans-unit>
+      <trans-unit id="privacy_policy_hint_1" resname="privacy_policy_hint_1">
+        <source>You have the right to renounce the agreement to the usage of your personal data at any time via email.</source>
+        <target>crwdns333904:0crwdne333904:0</target>
+      </trans-unit>
+      <trans-unit id="privacy_policy_hint_2_informal" resname="privacy_policy_hint_2_informal">
+        <source>You have the right to renounce the agreement to the usage of your personal data at any time via email.</source>
+        <target>crwdns333906:0crwdne333906:0</target>
+      </trans-unit>
+      <trans-unit id="company" resname="company">
+        <source>Company</source>
+        <target>crwdns333908:0crwdne333908:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_company" resname="tooltip_company">
+        <source>Enter the name of your company or organization.</source>
+        <target>crwdns333910:0crwdne333910:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_company_informal" resname="tooltip_company_informal">
+        <source>Enter the name of your company or organization.</source>
+        <target>crwdns333912:0crwdne333912:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_company" resname="tooltip_invitation_company">
+        <source>Enter the name of the company or organization of the invited person.</source>
+        <target>crwdns333914:0crwdne333914:0</target>
+      </trans-unit>
+      <trans-unit id="missing_company" resname="missing_company">
+        <source>Please enter the name of your company!</source>
+        <target>crwdns333916:0crwdne333916:0</target>
+      </trans-unit>
+      <trans-unit id="missing_company_informal" resname="missing_company_informal">
+        <source>Please enter the name of your company!</source>
+        <target>crwdns333918:0crwdne333918:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_company" resname="missing_invitation_company">
+        <source>Please enter the name of a company!</source>
+        <target>crwdns333920:0crwdne333920:0</target>
+      </trans-unit>
+      <trans-unit id="www" resname="www">
+        <source>Web site</source>
+        <target>crwdns333922:0crwdne333922:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_www" resname="tooltip_www">
+        <source>Enter the address of your website.</source>
+        <target>crwdns333924:0crwdne333924:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_www_informal" resname="tooltip_www_informal">
+        <source>Enter the address of your website.</source>
+        <target>crwdns333926:0crwdne333926:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_www" resname="tooltip_invitation_www">
+        <source>Enter the address of the website of the invited person.</source>
+        <target>crwdns333928:0crwdne333928:0</target>
+      </trans-unit>
+      <trans-unit id="missing_www" resname="missing_www">
+        <source>Please enter the address of your website!</source>
+        <target>crwdns333930:0crwdne333930:0</target>
+      </trans-unit>
+      <trans-unit id="missing_www_informal" resname="missing_www_informal">
+        <source>Please enter the address of your website!</source>
+        <target>crwdns333932:0crwdne333932:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_www" resname="missing_invitation_www">
+        <source>Please enter a website address!</source>
+        <target>crwdns333934:0crwdne333934:0</target>
+      </trans-unit>
+      <trans-unit id="image" resname="image">
+        <source>Photographs</source>
+        <target>crwdns333936:0crwdne333936:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_image" resname="tooltip_image">
+        <source>Enter the path and name of a file or click on the button to browse the files on your computer.</source>
+        <target>crwdns333938:0crwdne333938:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_image_informal" resname="tooltip_image_informal">
+        <source>Enter the path and name of a file or click on the button to browse the files on your computer.</source>
+        <target>crwdns333940:0crwdne333940:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_invitation_image" resname="tooltip_invitation_image">
+        <source>Enter the path and name of a file or click on the button to browse the files on your computer.</source>
+        <target>crwdns333942:0crwdne333942:0</target>
+      </trans-unit>
+      <trans-unit id="missing_image" resname="missing_image">
+        <source>Please enter your photograph!</source>
+        <target>crwdns333944:0crwdne333944:0</target>
+      </trans-unit>
+      <trans-unit id="missing_image_informal" resname="missing_image_informal">
+        <source>Please enter your photograph!</source>
+        <target>crwdns333946:0crwdne333946:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_image" resname="missing_invitation_image">
+        <source>Please enter a photograph!</source>
+        <target>crwdns333948:0crwdne333948:0</target>
+      </trans-unit>
+      <trans-unit id="missing_invitation_image_informal" resname="missing_invitation_image_informal">
+        <source>Please enter a photograph!</source>
+        <target>crwdns333950:0crwdne333950:0</target>
+      </trans-unit>
+      <trans-unit id="icon_delete" resname="icon_delete">
+        <source>Delete!</source>
+        <target>crwdns333952:0crwdne333952:0</target>
+      </trans-unit>
+      <trans-unit id="file_view" resname="file_view">
+        <source>View</source>
+        <target>crwdns333954:0crwdne333954:0</target>
+      </trans-unit>
+      <trans-unit id="confirm_file_delete" resname="confirm_file_delete">
+        <source>Are sure that you want to delete this file?</source>
+        <target>crwdns333956:0crwdne333956:0</target>
+      </trans-unit>
+      <trans-unit id="confirm_file_delete_informal" resname="confirm_file_delete_informal">
+        <source>Are sure that you want to delete this file?</source>
+        <target>crwdns333958:0crwdne333958:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_comments" resname="tooltip_comments">
+        <source>Enter your comments.</source>
+        <target>crwdns333960:0crwdne333960:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_comments_informal" resname="tooltip_comments_informal">
+        <source>Enter your comments.</source>
+        <target>crwdns333962:0crwdne333962:0</target>
+      </trans-unit>
+      <trans-unit id="missing_terms_acknowledged" resname="missing_terms_acknowledged">
+        <source>Please acknowledge the terms!</source>
+        <target>crwdns333964:0crwdne333964:0</target>
+      </trans-unit>
+      <trans-unit id="missing_terms_acknowledged_informal" resname="missing_terms_acknowledged_informal">
+        <source>Please acknowledge the terms!</source>
+        <target>crwdns333966:0crwdne333966:0</target>
+      </trans-unit>
+      <trans-unit id="button_register" resname="button_register">
+        <source>Create account</source>
+        <target>crwdns333968:0crwdne333968:0</target>
+      </trans-unit>
+      <trans-unit id="button_confirm_register" resname="button_confirm_register">
+        <source>Create account now!</source>
+        <target>crwdns333970:0crwdne333970:0</target>
+      </trans-unit>
+      <trans-unit id="button_back_to_form" resname="button_back_to_form">
+        <source>Back to form</source>
+        <target>crwdns333972:0crwdne333972:0</target>
+      </trans-unit>
+      <trans-unit id="button_update" resname="button_update">
+        <source>Update profile</source>
+        <target>crwdns333974:0crwdne333974:0</target>
+      </trans-unit>
+      <trans-unit id="button_confirm_update" resname="button_confirm_update">
+        <source>Update profile now!</source>
+        <target>crwdns333976:0crwdne333976:0</target>
+      </trans-unit>
+      <trans-unit id="button_update_and_more" resname="button_update_and_more">
+        <source>Update and continue...</source>
+        <target>crwdns333978:0crwdne333978:0</target>
+      </trans-unit>
+      <trans-unit id="button_enter" resname="button_enter">
+        <source>Enter</source>
+        <target>crwdns333980:0crwdne333980:0</target>
+      </trans-unit>
+      <trans-unit id="button_confirm_delete" resname="button_confirm_delete">
+        <source>Yes, delete account</source>
+        <target>crwdns333982:0crwdne333982:0</target>
+      </trans-unit>
+      <trans-unit id="button_cancel_delete" resname="button_cancel_delete">
+        <source>No, cancel</source>
+        <target>crwdns333984:0crwdne333984:0</target>
+      </trans-unit>
+      <trans-unit id="button_confirm_refuse" resname="button_confirm_refuse">
+        <source>Yes, refuse account</source>
+        <target>crwdns373702:0crwdne373702:0</target>
+      </trans-unit>
+      <trans-unit id="button_cancel_refuse" resname="button_cancel_refuse">
+        <source>No, cancel</source>
+        <target>crwdns373704:0crwdne373704:0</target>
+      </trans-unit>
+      <trans-unit id="button_confirm_approve" resname="button_confirm_approve">
+        <source>Yes, approve account</source>
+        <target>crwdns333986:0crwdne333986:0</target>
+      </trans-unit>
+      <trans-unit id="button_cancel_approve" resname="button_cancel_approve">
+        <source>No, cancel</source>
+        <target>crwdns333988:0crwdne333988:0</target>
+      </trans-unit>
+      <trans-unit id="button_password_enter_new" resname="button_password_enter_new">
+        <source>Send me the email to enter a new password.</source>
+        <target>crwdns333990:0crwdne333990:0</target>
+      </trans-unit>
+      <trans-unit id="button_password_enter_new_informal" resname="button_password_enter_new_informal">
+        <source>Send me the email to enter a new password.</source>
+        <target>crwdns333992:0crwdne333992:0</target>
+      </trans-unit>
+      <trans-unit id="click_here_to_register" resname="click_here_to_register">
+        <source>Not a member yet? click here to register.</source>
+        <target>crwdns333994:0crwdne333994:0</target>
+      </trans-unit>
+      <trans-unit id="click_here_to_register_informal" resname="click_here_to_register_informal">
+        <source>Not a member yet? click here to register.</source>
+        <target>crwdns333996:0crwdne333996:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_click_here_to_register" resname="tooltip_click_here_to_register">
+        <source>Presents a registration form.</source>
+        <target>crwdns333998:0crwdne333998:0</target>
+      </trans-unit>
+      <trans-unit id="click_here_to_edit" resname="click_here_to_edit">
+        <source>Click here to edit your profile or delete your account.</source>
+        <target>crwdns334000:0crwdne334000:0</target>
+      </trans-unit>
+      <trans-unit id="click_here_to_edit_informal" resname="click_here_to_edit_informal">
+        <source>Click here to edit your profile or delete your account.</source>
+        <target>crwdns334002:0crwdne334002:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_click_here_to_edit" resname="tooltip_click_here_to_edit">
+        <source>Presents an account editing form.</source>
+        <target>crwdns334004:0crwdne334004:0</target>
+      </trans-unit>
+      <trans-unit id="click_here_to_delete" resname="click_here_to_delete">
+        <source>Click here to delete your membership.</source>
+        <target>crwdns334006:0crwdne334006:0</target>
+      </trans-unit>
+      <trans-unit id="click_here_to_delete_informal" resname="click_here_to_delete_informal">
+        <source>Click here to delete your membership.</source>
+        <target>crwdns334008:0crwdne334008:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_click_here_to_delete" resname="tooltip_click_here_to_delete">
+        <source>Opens a dialog to delete your membership.</source>
+        <target>crwdns334010:0crwdne334010:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_click_here_to_delete_informal" resname="tooltip_click_here_to_delete_informal">
+        <source>Opens a dialog to delete your membership.</source>
+        <target>crwdns334012:0crwdne334012:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_click_here_to_refuse" resname="tooltip_click_here_to_refuse">
+        <source>Opens a dialog to refuse this membership.</source>
+        <target>crwdns373706:0crwdne373706:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_click_here_to_refuse_informal" resname="tooltip_click_here_to_refuse_informal">
+        <source>Opens a dialog to refuse this membership.</source>
+        <target>crwdns373708:0crwdne373708:0</target>
+      </trans-unit>
+      <trans-unit id="click_here_to_see_terms" resname="click_here_to_see_terms">
+        <source>Click here to see the terms.</source>
+        <target>crwdns334014:0crwdne334014:0</target>
+      </trans-unit>
+      <trans-unit id="click_here_to_see_terms_informal" resname="click_here_to_see_terms_informal">
+        <source>Click here to see the terms.</source>
+        <target>crwdns334016:0crwdne334016:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_click_here_to_see_terms" resname="tooltip_click_here_to_see_terms">
+        <source>Opens a page or file which shows the terms.</source>
+        <target>crwdns334018:0crwdne334018:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_click_here_to_see_terms_informal" resname="tooltip_click_here_to_see_terms_informal">
+        <source>Opens a page or file which shows the terms.</source>
+        <target>crwdns334020:0crwdne334020:0</target>
+      </trans-unit>
+      <trans-unit id="click_here_to_see_privacy_policy" resname="click_here_to_see_privacy_policy">
+        <source>Click here to see the privacy policy.</source>
+        <target>crwdns334022:0crwdne334022:0</target>
+      </trans-unit>
+      <trans-unit id="click_here_to_see_privacy_policy_informal" resname="click_here_to_see_privacy_policy_informal">
+        <source>Click here to see the privacy policy.</source>
+        <target>crwdns334024:0crwdne334024:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_click_here_to_see_privacy_policy" resname="tooltip_click_here_to_see_privacy_policy">
+        <source>Opens a page or file which shows the privacy policy.</source>
+        <target>crwdns334026:0crwdne334026:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_click_here_to_see_privacy_policy_informal" resname="tooltip_click_here_to_see_privacy_policy_informal">
+        <source>Opens a page or file which shows the privacy policy.</source>
+        <target>crwdns334028:0crwdne334028:0</target>
+      </trans-unit>
+      <trans-unit id="click_here_to_see_information" resname="click_here_to_see_information">
+        <source>If you require additional information, please click on the link</source>
+        <target>crwdns334030:0crwdne334030:0</target>
+      </trans-unit>
+      <trans-unit id="tooltip_click_here_to_see_information" resname="tooltip_click_here_to_see_information">
+        <source>Opens a page or file which shows additional information</source>
+        <target>crwdns334032:0crwdne334032:0</target>
+      </trans-unit>
+      <trans-unit id="disclaimer" resname="disclaimer">
+        <source>Disclaimer</source>
+        <target>crwdns334034:0crwdne334034:0</target>
+      </trans-unit>
+      <trans-unit id="consider_terms_usage" resname="consider_terms_usage">
+        <source>Please take into consideration the general terms of usage</source>
+        <target>crwdns334036:0crwdne334036:0</target>
+      </trans-unit>
+      <trans-unit id="signature" resname="signature">
+        <source>Name&lt;br&gt;Address&lt;br&gt;Telefon&lt;br&gt;</source>
+        <target>crwdns334038:0crwdne334038:0</target>
+      </trans-unit>
+      <trans-unit id="enter_account_info" resname="enter_account_info">
+        <source>Please complete the information for your membership.</source>
+        <target>crwdns334040:0crwdne334040:0</target>
+      </trans-unit>
+      <trans-unit id="enter_account_info_informal" resname="enter_account_info_informal">
+        <source>Please complete the information for your membership.</source>
+        <target>crwdns334042:0crwdne334042:0</target>
+      </trans-unit>
+      <trans-unit id="enter_invitation_account_info" resname="enter_invitation_account_info">
+        <source>Please complete the information of the account for the invited person.</source>
+        <target>crwdns334044:0crwdne334044:0</target>
+      </trans-unit>
+      <trans-unit id="enter_invitation_account_info_informal" resname="enter_invitation_account_info_informal">
+        <source>Please complete the information of the account for the invited person.</source>
+        <target>crwdns334046:0crwdne334046:0</target>
+      </trans-unit>
+      <trans-unit id="required_info_notice" resname="required_info_notice">
+        <source>Please complete all required fields *</source>
+        <target>crwdns334048:0crwdne334048:0</target>
+      </trans-unit>
+      <trans-unit id="copy_paste_link" resname="copy_paste_link">
+        <source>Or copy and paste it into your browser.&lt;br&gt;</source>
+        <target>crwdns334050:0crwdne334050:0</target>
+      </trans-unit>
+      <trans-unit id="copy_paste_link_informal" resname="copy_paste_link_informal">
+        <source>Or copy and paste it into your browser.&lt;br&gt;</source>
+        <target>crwdns334052:0crwdne334052:0</target>
+      </trans-unit>
+      <trans-unit id="excuse_us" resname="excuse_us">
+        <source>Please forgive us for any inconvenience we may have caused you.&lt;br&gt;&lt;br&gt;</source>
+        <target>crwdns334054:0crwdne334054:0</target>
+      </trans-unit>
+      <trans-unit id="excuse_us_informal" resname="excuse_us_informal">
+        <source>Please forgive us for any inconvenience we may have caused you.&lt;br&gt;&lt;br&gt;</source>
+        <target>crwdns334056:0crwdne334056:0</target>
+      </trans-unit>
+      <trans-unit id="registration_problem" resname="registration_problem">
+        <source>There seems to be a problem.</source>
+        <target>crwdns334058:0crwdne334058:0</target>
+      </trans-unit>
+      <trans-unit id="registration_login" resname="registration_login">
+        <source>Your login data seem to be invalid.</source>
+        <target>crwdns334060:0crwdne334060:0</target>
+      </trans-unit>
+      <trans-unit id="registration_sorry" resname="registration_sorry">
+        <source>We are sorry that it was not possible to complete this process.</source>
+        <target>crwdns334062:0crwdne334062:0</target>
+      </trans-unit>
+      <trans-unit id="registration_sorry_informal" resname="registration_sorry_informal">
+        <source>We are sorry that it was not possible to complete this process.</source>
+        <target>crwdns334064:0crwdne334064:0</target>
+      </trans-unit>
+      <trans-unit id="registration_internal error" resname="registration_internal error">
+        <source>An internal error has occurred.</source>
+        <target>crwdns334066:0crwdne334066:0</target>
+      </trans-unit>
+      <trans-unit id="registration_clicked_twice" resname="registration_clicked_twice">
+        <source>Perhaps you clicked twice on the link?</source>
+        <target>crwdns334068:0crwdne334068:0</target>
+      </trans-unit>
+      <trans-unit id="registration_clicked_twice_informal" resname="registration_clicked_twice_informal">
+        <source>Perhaps you clicked twice on the link?</source>
+        <target>crwdns334070:0crwdne334070:0</target>
+      </trans-unit>
+      <trans-unit id="registration_help" resname="registration_help">
+        <source>If the problem persists, please contact us at the following e-mail address and we will be pleased to help you.</source>
+        <target>crwdns334072:0crwdne334072:0</target>
+      </trans-unit>
+      <trans-unit id="registration_help_informal" resname="registration_help_informal">
+        <source>If the problem persists, please contact us at the following e-mail address and we will be pleased to help you.</source>
+        <target>crwdns334074:0crwdne334074:0</target>
+      </trans-unit>
+      <trans-unit id="kind_regards" resname="kind_regards">
+        <source>Kind regards,</source>
+        <target>crwdns334076:0crwdne334076:0</target>
+      </trans-unit>
+      <trans-unit id="kind_regards_informal" resname="kind_regards_informal">
+        <source>Kind regards,</source>
+        <target>crwdns334078:0crwdne334078:0</target>
+      </trans-unit>
+      <trans-unit id="kind_regards_cre" resname="kind_regards_cre">
+        <source>Welcome from us all at</source>
+        <target>crwdns334080:0crwdne334080:0</target>
+      </trans-unit>
+      <trans-unit id="kind_regards_cre_informal" resname="kind_regards_cre_informal">
+        <source>Welcome from us all at</source>
+        <target>crwdns334082:0crwdne334082:0</target>
+      </trans-unit>
+      <trans-unit id="kind_regards_del" resname="kind_regards_del">
+        <source>Wishing you well</source>
+        <target>crwdns334084:0crwdne334084:0</target>
+      </trans-unit>
+      <trans-unit id="kind_regards_del_informal" resname="kind_regards_del_informal">
+        <source>Wishing you well</source>
+        <target>crwdns334086:0crwdne334086:0</target>
+      </trans-unit>
+      <trans-unit id="kind_regards_ini" resname="kind_regards_ini">
+        <source>We would like to welcome you at</source>
+        <target>crwdns334088:0crwdne334088:0</target>
+      </trans-unit>
+      <trans-unit id="kind_regards_ini_informal" resname="kind_regards_ini_informal">
+        <source>We would like to welcome you at</source>
+        <target>crwdns334090:0crwdne334090:0</target>
+      </trans-unit>
+      <trans-unit id="kind_regards_inv" resname="kind_regards_inv">
+        <source>We would like to welcome you at</source>
+        <target>crwdns334092:0crwdne334092:0</target>
+      </trans-unit>
+      <trans-unit id="kind_regards_inv_informal" resname="kind_regards_inv_informal">
+        <source>We would like to welcome you at</source>
+        <target>crwdns334094:0crwdne334094:0</target>
+      </trans-unit>
+      <trans-unit id="kind_regards_upd" resname="kind_regards_upd">
+        <source>Warmest wishes</source>
+        <target>crwdns334096:0crwdne334096:0</target>
+      </trans-unit>
+      <trans-unit id="kind_regards_upd_informal" resname="kind_regards_upd_informal">
+        <source>Warmest wishes</source>
+        <target>crwdns334098:0crwdne334098:0</target>
+      </trans-unit>
+      <trans-unit id="v_really_wish_to_delete" resname="v_really_wish_to_delete">
+        <source>Do you really wish to delete your membership &lt;b&gt;%2$s&lt;/b&gt;?</source>
+        <target>crwdns334100:0%2$scrwdne334100:0</target>
+      </trans-unit>
+      <trans-unit id="v_really_wish_to_delete_informal" resname="v_really_wish_to_delete_informal">
+        <source>Do you really wish to delete your membership &lt;b&gt;%2$s&lt;/b&gt;?</source>
+        <target>crwdns334102:0%2$scrwdne334102:0</target>
+      </trans-unit>
+      <trans-unit id="v_really_wish_to_refuse" resname="v_really_wish_to_refuse">
+        <source>Do you really wish to refuse the membership of &lt;b&gt;%2$s&lt;/b&gt;?</source>
+        <target>crwdns373710:0%2$scrwdne373710:0</target>
+      </trans-unit>
+      <trans-unit id="v_really_wish_to_refuse_informal" resname="v_really_wish_to_refuse_informal">
+        <source>Do you really wish to refuse the membership of &lt;b&gt;%2$s&lt;/b&gt;?</source>
+        <target>crwdns373712:0%2$scrwdne373712:0</target>
+      </trans-unit>
+      <trans-unit id="v_really_wish_to_approve" resname="v_really_wish_to_approve">
+        <source>Do you really wish to approve your membership &lt;b&gt;%2$s&lt;/b&gt;?</source>
+        <target>crwdns334104:0%2$scrwdne334104:0</target>
+      </trans-unit>
+      <trans-unit id="v_really_wish_to_approve_informal" resname="v_really_wish_to_approve_informal">
+        <source>Do you really wish to approve your membership &lt;b&gt;%2$s&lt;/b&gt;?</source>
+        <target>crwdns334106:0%2$scrwdne334106:0</target>
+      </trans-unit>
+      <trans-unit id="v_verify_before_create" resname="v_verify_before_create">
+        <source>Please verify that all the information is correct before your membership with the name &lt;b&gt;%2$s&lt;/b&gt; will be created&lt;br&gt;</source>
+        <target>crwdns334108:0%2$scrwdne334108:0</target>
+      </trans-unit>
+      <trans-unit id="v_verify_before_create_informal" resname="v_verify_before_create_informal">
+        <source>Please verify that all the information is correct before your membership with the name &lt;b&gt;%2$s&lt;/b&gt; will be created&lt;br&gt;</source>
+        <target>crwdns334110:0%2$scrwdne334110:0</target>
+      </trans-unit>
+      <trans-unit id="v_verify_invitation_before_create" resname="v_verify_invitation_before_create">
+        <source>Please verify that all the data of &lt;b&gt;%3$s&lt;/b&gt; is correct before the membership with the name &lt;b&gt;%2$s&lt;/b&gt; will be created</source>
+        <target>crwdns334112:0%3$scrwdnd334112:0%2$scrwdne334112:0</target>
+      </trans-unit>
+      <trans-unit id="v_verify_invitation_before_create_informal" resname="v_verify_invitation_before_create_informal">
+        <source>Please verify that all the data of &lt;b&gt;%3$s&lt;/b&gt; is correct before the membership with the name &lt;b&gt;%2$s&lt;/b&gt; will be created</source>
+        <target>crwdns334114:0%3$scrwdnd334114:0%2$scrwdne334114:0</target>
+      </trans-unit>
+      <trans-unit id="v_edit_your_account" resname="v_edit_your_account">
+        <source>Edit the information of your membership &lt;b&gt;%2$s&lt;/b&gt;</source>
+        <target>crwdns334116:0%2$scrwdne334116:0</target>
+      </trans-unit>
+      <trans-unit id="v_edit_your_account_informal" resname="v_edit_your_account_informal">
+        <source>Edit the information of your membership &lt;b&gt;%2$s&lt;/b&gt;</source>
+        <target>crwdns334118:0%2$scrwdne334118:0</target>
+      </trans-unit>
+      <trans-unit id="v_verify_before_update" resname="v_verify_before_update">
+        <source>Please verify that all the information is correct before your membership &lt;b&gt;%2$s&lt;/b&gt; will be updated</source>
+        <target>crwdns334120:0%2$scrwdne334120:0</target>
+      </trans-unit>
+      <trans-unit id="v_verify_before_update_informal" resname="v_verify_before_update_informal">
+        <source>Please verify that all the information is correct before your membership &lt;b&gt;%2$s&lt;/b&gt; will be updated</source>
+        <target>crwdns334122:0%2$scrwdne334122:0</target>
+      </trans-unit>
+      <trans-unit id="v_dear" resname="v_dear">
+        <source>Dear %3$s,</source>
+        <target>crwdns334124:0%3$scrwdne334124:0</target>
+      </trans-unit>
+      <trans-unit id="v_dear_informal" resname="v_dear_informal">
+        <source>Hi %3$s,</source>
+        <target>crwdns334126:0%3$scrwdne334126:0</target>
+      </trans-unit>
+      <trans-unit id="v_dear_male" resname="v_dear_male">
+        <source>Dear Mr. %3$s,</source>
+        <target>crwdns334128:0%3$scrwdne334128:0</target>
+      </trans-unit>
+      <trans-unit id="v_dear_female" resname="v_dear_female">
+        <source>Dear Mrs. %3$s,</source>
+        <target>crwdns334130:0%3$scrwdne334130:0</target>
+      </trans-unit>
+      <trans-unit id="v_infomail_dear" resname="v_infomail_dear">
+        <source>Dear Mrs./Sir,</source>
+        <target>crwdns334132:0crwdne334132:0</target>
+      </trans-unit>
+      <trans-unit id="v_infomail_dear_informal" resname="v_infomail_dear_informal">
+        <source>Dear Mrs./Sir,</source>
+        <target>crwdns334134:0crwdne334134:0</target>
+      </trans-unit>
+      <trans-unit id="v_infomail_lost_password" resname="v_infomail_lost_password">
+        <source>Enter the email address under which you are registered.</source>
+        <target>crwdns334136:0crwdne334136:0</target>
+      </trans-unit>
+      <trans-unit id="v_infomail_lost_password_confirm" resname="v_infomail_lost_password_confirm">
+        <source>The email with the lost password has been sent to &lt;b&gt;%4$s&lt;/b&gt;.</source>
+        <target>crwdns334138:0%4$scrwdne334138:0</target>
+      </trans-unit>
+      <trans-unit id="v_infomail_lost_password_enter_new" resname="v_infomail_lost_password_enter_new">
+        <source>The email to enter a new password has been sent to &lt;b&gt;%4$s&lt;/b&gt;.</source>
+        <target>crwdns334140:0%4$scrwdne334140:0</target>
+      </trans-unit>
+      <trans-unit id="v_infomail_lost_password_subject" resname="v_infomail_lost_password_subject">
+        <source>Information about your registration with &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334142:0%1$scrwdne334142:0</target>
+      </trans-unit>
+      <trans-unit id="v_infomail_lost_password_subject_informal" resname="v_infomail_lost_password_subject_informal">
+        <source>Information about your registration with &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334144:0%1$scrwdne334144:0</target>
+      </trans-unit>
+      <trans-unit id="v_infomail_lost_password_message1" resname="v_infomail_lost_password_message1">
+        <source>The email message will contain a link that will allow you to enter your new password for &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334146:0%1$scrwdne334146:0</target>
+      </trans-unit>
+      <trans-unit id="v_infomail_lost_password_message1_informal" resname="v_infomail_lost_password_message1_informal">
+        <source>The email message will contain a link that will allow you to enter your new password for &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334148:0%1$scrwdne334148:0</target>
+      </trans-unit>
+      <trans-unit id="v_infomail_lost_password_message2" resname="v_infomail_lost_password_message2">
+        <source>Please follow the instructions given in this email message to recreate your membership password.</source>
+        <target>crwdns334150:0crwdne334150:0</target>
+      </trans-unit>
+      <trans-unit id="v_infomail_lost_password_message2_informal" resname="v_infomail_lost_password_message2_informal">
+        <source>Please follow the instructions given in this email message to recreate your membership password.</source>
+        <target>crwdns334152:0crwdne334152:0</target>
+      </trans-unit>
+      <trans-unit id="v_to_the_administrator" resname="v_to_the_administrator">
+        <source>To the administrator of memberships with %1$s</source>
+        <target>crwdns334154:0%1$scrwdne334154:0</target>
+      </trans-unit>
+      <trans-unit id="v_now_enter_your_username" resname="v_now_enter_your_username">
+        <source>You may now enter with your username &lt;b&gt;%2$s&lt;/b&gt; and your password</source>
+        <target>crwdns334156:0%2$scrwdne334156:0</target>
+      </trans-unit>
+      <trans-unit id="v_now_enter_your_username_informal" resname="v_now_enter_your_username_informal">
+        <source>You may now enter with your username &lt;b&gt;%2$s&lt;/b&gt; and your password</source>
+        <target>crwdns334158:0%2$scrwdne334158:0</target>
+      </trans-unit>
+      <trans-unit id="v_notification" resname="v_notification">
+        <source>Notification</source>
+        <target>crwdns334160:0crwdne334160:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_created_subject" resname="v_registration_created_subject">
+        <source>Thank you for joining us at &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334162:0%1$scrwdne334162:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_created_subject_informal" resname="v_registration_created_subject_informal">
+        <source>Thank you for joining us at &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334164:0%1$scrwdne334164:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_created_message1" resname="v_registration_created_message1">
+        <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</source>
+        <target>crwdns334166:0%2$scrwdne334166:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_created_message1_informal" resname="v_registration_created_message1_informal">
+        <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</source>
+        <target>crwdns334168:0%2$scrwdne334168:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_created_message2" resname="v_registration_created_message2">
+        <source>Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list of members.</source>
+        <target>crwdns334170:0%4$scrwdne334170:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_created_message2_informal" resname="v_registration_created_message2_informal">
+        <source>Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list of members.</source>
+        <target>crwdns334172:0%4$scrwdne334172:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_created_message3" resname="v_registration_created_message3">
+        <source>Welcome as our new member.</source>
+        <target>crwdns334174:0crwdne334174:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_created_message3_informal" resname="v_registration_created_message3_informal">
+        <source>Welcome as our new member.</source>
+        <target>crwdns334176:0crwdne334176:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_created" resname="v_registration_created">
+        <source>%3$s created a new membership with %1$s.</source>
+        <target>crwdns334178:0%3$scrwdnd334178:0%1$scrwdne334178:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_updated_subject" resname="v_registration_updated_subject">
+        <source>Your membership details with &lt;b&gt;%1$s&lt;/b&gt; have been updated.</source>
+        <target>crwdns334180:0%1$scrwdne334180:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_updated_subject_informal" resname="v_registration_updated_subject_informal">
+        <source>Your membership details with &lt;b&gt;%1$s&lt;/b&gt; have been updated.</source>
+        <target>crwdns334182:0%1$scrwdne334182:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_updated_message1" resname="v_registration_updated_message1">
+        <source>Thank you for keeping your profile up-to-date.</source>
+        <target>crwdns334184:0crwdne334184:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_updated_message1_informal" resname="v_registration_updated_message1_informal">
+        <source>Thanks for keeping your profile up-to-date.</source>
+        <target>crwdns334186:0crwdne334186:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_updated" resname="v_registration_updated">
+        <source>%3$s updated his(her) profile with %1$s.</source>
+        <target>crwdns334188:0%3$scrwdnd334188:0%1$scrwdne334188:0</target>
+      </trans-unit>
+      <trans-unit id="v_invitation_confirm" resname="v_invitation_confirm">
+        <source>The invitation has been sent.</source>
+        <target>crwdns334190:0crwdne334190:0</target>
+      </trans-unit>
+      <trans-unit id="v_invitation_account_was_created" resname="v_invitation_account_was_created">
+        <source>The membership &lt;b&gt;%2$s&lt;/b&gt; has been created. An invitation to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt; was sent to &lt;b&gt;%3$s&lt;/b&gt; at the e-mail address &lt;b&gt;%4$s&lt;/b&gt;.</source>
+        <target>crwdns334192:0%2$scrwdnd334192:0%1$scrwdnd334192:0%3$scrwdnd334192:0%4$scrwdne334192:0</target>
+      </trans-unit>
+      <trans-unit id="v_invitation_account_was_created_informal" resname="v_invitation_account_was_created_informal">
+        <source>The membership &lt;b&gt;%2$s&lt;/b&gt; has been created. An invitation to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt; was sent to &lt;b&gt;%3$s&lt;/b&gt; at the e-mail address &lt;b&gt;%4$s&lt;/b&gt;.</source>
+        <target>crwdns334194:0%2$scrwdnd334194:0%1$scrwdnd334194:0%3$scrwdnd334194:0%4$scrwdne334194:0</target>
+      </trans-unit>
+      <trans-unit id="v_invitation_instructions1" resname="v_invitation_instructions1">
+        <source>You will have access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website only after you will have confirmed your registration.&lt;br&gt;Please follow the instructions given in the confirmation message in order to complete the registration procedure.</source>
+        <target>crwdns334196:0%1$scrwdne334196:0</target>
+      </trans-unit>
+      <trans-unit id="v_please_confirm" resname="v_please_confirm">
+        <source>Please confirm your registration.</source>
+        <target>crwdns334198:0crwdne334198:0</target>
+      </trans-unit>
+      <trans-unit id="v_please_confirm_informal" resname="v_please_confirm_informal">
+        <source>Please confirm your registration.</source>
+        <target>crwdns334200:0crwdne334200:0</target>
+      </trans-unit>
+      <trans-unit id="v_your_account_was_created" resname="v_your_account_was_created">
+        <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been created. We are sending a message to your e-mail address &lt;b&gt;%4$s&lt;/b&gt; so that you can confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334202:0%2$scrwdnd334202:0%4$scrwdnd334202:0%1$scrwdne334202:0</target>
+      </trans-unit>
+      <trans-unit id="v_your_account_was_created_informal" resname="v_your_account_was_created_informal">
+        <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been created. We are sending a message to your e-mail address &lt;b&gt;%4$s&lt;/b&gt; so that you can confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334204:0%2$scrwdnd334204:0%4$scrwdnd334204:0%1$scrwdne334204:0</target>
+      </trans-unit>
+      <trans-unit id="v_your_account_was_created_nomail" resname="v_your_account_was_created_nomail">
+        <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been created. Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; is being used. Now you are registered at &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334206:0%2$scrwdnd334206:0%4$scrwdnd334206:0%1$scrwdne334206:0</target>
+      </trans-unit>
+      <trans-unit id="v_your_account_was_created_nomail_informal" resname="v_your_account_was_created_nomail_informal">
+        <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been created. Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; is being used. Now you are registered at &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334208:0%2$scrwdnd334208:0%4$scrwdnd334208:0%1$scrwdne334208:0</target>
+      </trans-unit>
+      <trans-unit id="v_follow_instructions1" resname="v_follow_instructions1">
+        <source>In order to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;, you will have to follow the instructions given in the invitation message.</source>
+        <target>crwdns334210:0%1$scrwdne334210:0</target>
+      </trans-unit>
+      <trans-unit id="v_follow_instructions1_informal" resname="v_follow_instructions1_informal">
+        <source>In order to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;, you will have to follow the instructions given in the invitation message.</source>
+        <target>crwdns334212:0%1$scrwdne334212:0</target>
+      </trans-unit>
+      <trans-unit id="v_follow_instructions_review1" resname="v_follow_instructions_review1">
+        <source>In order to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;, you will have to follow the instructions given in the invitation message.</source>
+        <target>crwdns334214:0%1$scrwdne334214:0</target>
+      </trans-unit>
+      <trans-unit id="v_follow_instructions_review1_informal" resname="v_follow_instructions_review1_informal">
+        <source>In order to confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;, you will have to follow the instructions given in the invitation message.</source>
+        <target>crwdns334216:0%1$scrwdne334216:0</target>
+      </trans-unit>
+      <trans-unit id="v_follow_instructions_review2" resname="v_follow_instructions_review2">
+        <source>Please be aware that after you confirm your registration, it will need to be reviewed by the administrator before you gain access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website.</source>
+        <target>crwdns334218:0%1$scrwdne334218:0</target>
+      </trans-unit>
+      <trans-unit id="v_follow_instructions_review2_informal" resname="v_follow_instructions_review2_informal">
+        <source>Please be aware that after you confirm your registration, it will need to be reviewed by the administrator before you gain access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website.</source>
+        <target>crwdns334220:0%1$scrwdne334220:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_initiated_subject" resname="v_registration_initiated_subject">
+        <source>Please confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334222:0%1$scrwdne334222:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_initiated_subject_informal" resname="v_registration_initiated_subject_informal">
+        <source>Please confirm your registration with &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334224:0%1$scrwdne334224:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_initiated_message1" resname="v_registration_initiated_message1">
+        <source>Thank you for your application to become a member of &lt;b&gt;%1$s&lt;/b&gt;. &lt;br&gt;Everyone is welcome to browse around our website but you will need to confirm your membership to have unrestricted access to all areas.&lt;br&gt;&lt;br&gt;To confirm your membership please click on this link</source>
+        <target>crwdns334226:0%1$scrwdne334226:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_initiated_message1_informal" resname="v_registration_initiated_message1_informal">
+        <source>Thank you for your application to become a member of &lt;b&gt;%1$s&lt;/b&gt;. &lt;br&gt;Everyone is welcome to browse around our website but you will need to confirm your membership to have unrestricted access to all areas.&lt;br&gt;&lt;br&gt;To confirm your membership please click on this link</source>
+        <target>crwdns334228:0%1$scrwdne334228:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_initiated_message2" resname="v_registration_initiated_message2">
+        <source>If, for any reason, you do not wish to continue the registration process, or you have received this message in error, please click on this link</source>
+        <target>crwdns334230:0crwdne334230:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_initiated_message2_informal" resname="v_registration_initiated_message2_informal">
+        <source>If, for any reason, you do not wish to continue the registration process, or you have received this message in error, please click on this link</source>
+        <target>crwdns334232:0crwdne334232:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_initiated_message3" resname="v_registration_initiated_message3">
+        <source>Please feel free to ask us any questions, or  tell us anything about the registration process, or make any other constructive comments by sending an e-mail to</source>
+        <target>crwdns334234:0crwdne334234:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_initiated_message3_informal" resname="v_registration_initiated_message3_informal">
+        <source>Please feel free to ask us any questions, or  tell us anything about the registration process, or make any other constructive comments by sending an e-mail to</source>
+        <target>crwdns334236:0crwdne334236:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_initiated_review1" resname="v_registration_initiated_review1">
+        <source>Thank you for your application to become a member of &lt;b&gt;%1$s&lt;/b&gt;. &lt;br&gt;Everyone is welcome to browse around our website but you will need to confirm your membership to have unrestricted access to all areas.&lt;br&gt;&lt;br&gt;To confirm your membership please click on this link</source>
+        <target>crwdns334238:0%1$scrwdne334238:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_initiated_review1_informal" resname="v_registration_initiated_review1_informal">
+        <source>Thank you for your application to become a member of &lt;b&gt;%1$s&lt;/b&gt;. &lt;br&gt;Everyone is welcome to browse around our website but you will need to confirm your membership to have unrestricted access to all areas.&lt;br&gt;&lt;br&gt;To confirm your membership please click on this link</source>
+        <target>crwdns334240:0%1$scrwdne334240:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_initiated_review2" resname="v_registration_initiated_review2">
+        <source>Please be aware that after you confirm your registration, it will need to be reviewed by the administrator before you gain access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website.</source>
+        <target>crwdns334242:0%1$scrwdne334242:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_initiated_review2_informal" resname="v_registration_initiated_review2_informal">
+        <source>Please be aware that after you confirm your registration, it will need to be reviewed by the administrator before you gain access to the section &lt;b&gt;%1$s&lt;/b&gt; of our website.</source>
+        <target>crwdns334244:0%1$scrwdne334244:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_initiated" resname="v_registration_initiated">
+        <source>%3$s initiated his(her) registration in %1$s.</source>
+        <target>crwdns334246:0%3$scrwdnd334246:0%1$scrwdne334246:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_review_subject" resname="v_registration_review_subject">
+        <source>Please review the application of &lt;b&gt;%3$s&lt;/b&gt; for membership with &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334248:0%3$scrwdnd334248:0%1$scrwdne334248:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_review_subject_informal" resname="v_registration_review_subject_informal">
+        <source>Please review the application of &lt;b&gt;%3$s&lt;/b&gt; for membership with &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334250:0%3$scrwdnd334250:0%1$scrwdne334250:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_review_message1" resname="v_registration_review_message1">
+        <source>If you think that the application for membership with &lt;b&gt;%3$s&lt;/b&gt; should be accepted, please click on this link to accept</source>
+        <target>crwdns334252:0%3$scrwdne334252:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_review_message1_informal" resname="v_registration_review_message1_informal">
+        <source>If you think that the application for membership with &lt;b&gt;%3$s&lt;/b&gt; should be accepted, please click on this link to accept</source>
+        <target>crwdns334254:0%3$scrwdne334254:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_review_message2" resname="v_registration_review_message2">
+        <source>If you think that the application for membership with &lt;b&gt;%3$s&lt;/b&gt; should be refused, please click on this link to refuse</source>
+        <target>crwdns334256:0%3$scrwdne334256:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_review_message2_informal" resname="v_registration_review_message2_informal">
+        <source>If you think that the application for membership with &lt;b&gt;%3$s&lt;/b&gt; should be refused, please click on this link to refuse</source>
+        <target>crwdns334258:0%3$scrwdne334258:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_review_message3" resname="v_registration_review_message3">
+        <source>Please review the application of &lt;b&gt;%3$s&lt;/b&gt; for membership with &lt;b&gt;%1$s&lt;/b&gt;. The following data was entered on the registration form</source>
+        <target>crwdns334260:0%3$scrwdnd334260:0%1$scrwdne334260:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_invited_subject" resname="v_registration_invited_subject">
+        <source>Invitation to register with &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334262:0%1$scrwdne334262:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_invited_subject_informal" resname="v_registration_invited_subject_informal">
+        <source>Invitation to register with &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334264:0%1$scrwdne334264:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_invited_message1" resname="v_registration_invited_message1">
+        <source>We thought you might be interested in registering with &lt;b&gt;%1$s&lt;/b&gt;&lt;br&gt;&lt;br&gt;
+
+We have created an account for you with username &lt;b&gt;%2$s&lt;/b&gt; and password &lt;b&gt;%5$s&lt;/b&gt;.&lt;br&gt;&lt;br&gt;
+
+We are sending you this message so that you may confirm that you wish to register with &lt;b&gt;%1$s&lt;/b&gt;. You will be able to access the section reserved to &lt;b&gt;%1$s&lt;/b&gt; only after confirming your registration. You will also be able to change your password and account profile.&lt;br&gt;&lt;br&gt;
+
+If you wish to accept our invitation and confirm your registration in &lt;b&gt;%1$s&lt;/b&gt;, please follow this link</source>
+        <target>crwdns334266:0%1$scrwdnd334266:0%2$scrwdnd334266:0%5$scrwdnd334266:0%1$scrwdnd334266:0%1$scrwdnd334266:0%1$scrwdne334266:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_invited_message1_informal" resname="v_registration_invited_message1_informal">
+        <source>We thought you might be interested in registering with &lt;b&gt;%1$s&lt;/b&gt;&lt;br&gt;&lt;br&gt;
+
+We have created an account for you with username &lt;b&gt;%2$s&lt;/b&gt; and password &lt;b&gt;%5$s&lt;/b&gt;.&lt;br&gt;&lt;br&gt;
+
+We are sending you this message so that you may confirm that you wish to register with &lt;b&gt;%1$s&lt;/b&gt;. You will be able to access the section reserved to &lt;b&gt;%1$s&lt;/b&gt; only after confirming your registration. You will also be able to change your password and account profile.&lt;br&gt;&lt;br&gt;
+
+If you wish to accept our invitation and confirm your registration in &lt;b&gt;%1$s&lt;/b&gt;, please follow this link</source>
+        <target>crwdns334268:0%1$scrwdnd334268:0%2$scrwdnd334268:0%5$scrwdnd334268:0%1$scrwdnd334268:0%1$scrwdnd334268:0%1$scrwdne334268:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_invited_message1a" resname="v_registration_invited_message1a">
+        <source>We thought you might be interested in registering with &lt;b&gt;%1$s&lt;/b&gt;&lt;br&gt;&lt;br&gt;
+
+We have created an account for you with username &lt;b&gt;%2$s&lt;/b&gt;.&lt;br&gt;&lt;br&gt;
+
+We are sending you this message so that you may confirm that you wish to register with &lt;b&gt;%1$s&lt;/b&gt;. You will be able to access the section reserved to &lt;b&gt;%1$s&lt;/b&gt; only after confirming your registration. You will also be able to change your password and account profile.&lt;br&gt;&lt;br&gt;
+
+If you wish to accept our invitation and confirm your registration in &lt;b&gt;%1$s&lt;/b&gt;, please follow this link</source>
+        <target>crwdns334270:0%1$scrwdnd334270:0%2$scrwdnd334270:0%1$scrwdnd334270:0%1$scrwdnd334270:0%1$scrwdne334270:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_invited_message1a_informal" resname="v_registration_invited_message1a_informal">
+        <source>We thought you might be interested in registering with &lt;b&gt;%1$s&lt;/b&gt;&lt;br&gt;&lt;br&gt;
+
+We have created an account for you with username &lt;b&gt;%2$s&lt;/b&gt;.&lt;br&gt;&lt;br&gt;
+
+We are sending you this message so that you may confirm that you wish to register with &lt;b&gt;%1$s&lt;/b&gt;. You will be able to access the section reserved to &lt;b&gt;%1$s&lt;/b&gt; only after confirming your registration. You will also be able to change your password and account profile.&lt;br&gt;&lt;br&gt;
+
+If you wish to accept our invitation and confirm your registration in &lt;b&gt;%1$s&lt;/b&gt;, please follow this link</source>
+        <target>crwdns334272:0%1$scrwdnd334272:0%2$scrwdnd334272:0%1$scrwdnd334272:0%1$scrwdnd334272:0%1$scrwdne334272:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_invited_message2" resname="v_registration_invited_message2">
+        <source>You will not receive this message twice. If you wish to decline our invitation and do not wish to register in &lt;b&gt;%1$s&lt;/b&gt;, please follow this link or just ignore this message</source>
+        <target>crwdns334274:0%1$scrwdne334274:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_invited_message2_informal" resname="v_registration_invited_message2_informal">
+        <source>You will not receive this message twice. If you wish to decline our invitation and do not wish to register in &lt;b&gt;%1$s&lt;/b&gt;, please follow this link or just ignore this message</source>
+        <target>crwdns334276:0%1$scrwdne334276:0</target>
+      </trans-unit>
+      <trans-unit id="v_now_choose_password" resname="v_now_choose_password">
+        <source>Please choose a password now and enter it twice.</source>
+        <target>crwdns334278:0crwdne334278:0</target>
+      </trans-unit>
+      <trans-unit id="v_now_choose_password_informal" resname="v_now_choose_password_informal">
+        <source>Please choose a password now and enter it twice.</source>
+        <target>crwdns334280:0crwdne334280:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_invited" resname="v_registration_invited">
+        <source>An invitation to register in %1$s was sent to %3$s.</source>
+        <target>crwdns334282:0%1$scrwdnd334282:0%3$scrwdne334282:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_infomail_message1" resname="v_registration_infomail_message1">
+        <source>Your account data are username &lt;b&gt;%2$s&lt;/b&gt; and password &lt;b&gt;%5$s&lt;/b&gt;.&lt;br&gt;&lt;br&gt;</source>
+        <target>crwdns334284:0%2$scrwdnd334284:0%5$scrwdne334284:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_infomail_message1_informal" resname="v_registration_infomail_message1_informal">
+        <source>Your account data are username &lt;b&gt;%2$s&lt;/b&gt; and password &lt;b&gt;%5$s&lt;/b&gt;.&lt;br&gt;&lt;br&gt;</source>
+        <target>crwdns334286:0%2$scrwdnd334286:0%5$scrwdne334286:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_infomail_message1a" resname="v_registration_infomail_message1a">
+        <source>Your account username is &lt;b&gt;%2$s&lt;/b&gt;.&lt;br&gt;</source>
+        <target>crwdns334288:0%2$scrwdne334288:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_infomail_message1a_informal" resname="v_registration_infomail_message1a_informal">
+        <source>Your account username is &lt;b&gt;%2$s&lt;/b&gt;.&lt;br&gt;</source>
+        <target>crwdns334290:0%2$scrwdne334290:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_confirmed_subject" resname="v_registration_confirmed_subject">
+        <source>Thank you for registering with &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334292:0%1$scrwdne334292:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_confirmed_subject_informal" resname="v_registration_confirmed_subject_informal">
+        <source>Thank you for registering with &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334294:0%1$scrwdne334294:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_confirmed_message1" resname="v_registration_confirmed_message1">
+        <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</source>
+        <target>crwdns334296:0%2$scrwdne334296:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_confirmed_message1_informal" resname="v_registration_confirmed_message1_informal">
+        <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</source>
+        <target>crwdns334298:0%2$scrwdne334298:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_confirmed_message2" resname="v_registration_confirmed_message2">
+        <source>Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</source>
+        <target>crwdns334300:0%4$scrwdne334300:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_confirmed_message2_informal" resname="v_registration_confirmed_message2_informal">
+        <source>Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</source>
+        <target>crwdns334302:0%4$scrwdne334302:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_confirmed_review1" resname="v_registration_confirmed_review1">
+        <source>Your application for membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</source>
+        <target>crwdns334304:0%2$scrwdne334304:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_confirmed_review1_informal" resname="v_registration_confirmed_review1_informal">
+        <source>Your application for membership &lt;b&gt;%2$s&lt;/b&gt; has been confirmed.</source>
+        <target>crwdns334306:0%2$scrwdne334306:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_confirmed_review2" resname="v_registration_confirmed_review2">
+        <source>Your application for membership will now be reviewed by the website administrator. You will be informed by email of the administrator's decision.</source>
+        <target>crwdns334308:0crwdne334308:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_confirmed_review2_informal" resname="v_registration_confirmed_review2_informal">
+        <source>Your application for membership will now be reviewed by the website administrator. You will be informed by email of the administrator's decision.</source>
+        <target>crwdns334310:0crwdne334310:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_confirmed" resname="v_registration_confirmed">
+        <source>%3$s confirmed his(her) registration with %1$s.</source>
+        <target>crwdns334312:0%3$scrwdnd334312:0%1$scrwdne334312:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_cancelled_subject" resname="v_registration_cancelled_subject">
+        <source>Your registration has been cancelled.</source>
+        <target>crwdns334314:0crwdne334314:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_cancelled_subject_informal" resname="v_registration_cancelled_subject_informal">
+        <source>Your registration has been cancelled.</source>
+        <target>crwdns334316:0crwdne334316:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_cancelled_message1" resname="v_registration_cancelled_message1">
+        <source>As requested, we have cancelled your membership &lt;b&gt;%2$s&lt;/b&gt; and your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been deleted from our list.&lt;br&gt;</source>
+        <target>crwdns334318:0%2$scrwdnd334318:0%4$scrwdne334318:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_cancelled_message1_informal" resname="v_registration_cancelled_message1_informal">
+        <source>As requested, we have cancelled your membership &lt;b&gt;%2$s&lt;/b&gt; and your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been deleted from our list.&lt;br&gt;</source>
+        <target>crwdns334320:0%2$scrwdnd334320:0%4$scrwdne334320:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_cancelled_message2" resname="v_registration_cancelled_message2">
+        <source>You will still be able to browse the pages of &lt;b&gt;%1$s&lt;/b&gt; for which membership is not necessary, if you wish.&lt;br&gt;&lt;br&gt;If you ever change your mind, you may re-join us and we will be pleased to welcome you again.&lt;br&gt;</source>
+        <target>crwdns334322:0%1$scrwdne334322:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_cancelled_message2_informal" resname="v_registration_cancelled_message2_informal">
+        <source>You will still be able to browse the pages of &lt;b&gt;%1$s&lt;/b&gt; for which membership is not necessary, if you wish.&lt;br&gt;&lt;br&gt;If you ever change your mind, you may re-join us and we will be pleased to welcome you again.&lt;br&gt;</source>
+        <target>crwdns334324:0%1$scrwdne334324:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_cancelled" resname="v_registration_cancelled">
+        <source>%3$s cancelled his(her) registration with %1$s.</source>
+        <target>crwdns334326:0%3$scrwdnd334326:0%1$scrwdne334326:0</target>
+      </trans-unit>
+      <trans-unit id="v_deletion_cancelled_subject" resname="v_deletion_cancelled_subject">
+        <source>No deletion has been executed.</source>
+        <target>crwdns334328:0crwdne334328:0</target>
+      </trans-unit>
+      <trans-unit id="v_deletion_cancelled_message1" resname="v_deletion_cancelled_message1">
+        <source>Your account is preserved.</source>
+        <target>crwdns334330:0crwdne334330:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_accepted_subject" resname="v_registration_accepted_subject">
+        <source>The application of &lt;b&gt;%3$s&lt;/b&gt; for membership with &lt;b&gt;%1$s&lt;/b&gt; is now accepted.</source>
+        <target>crwdns334332:0%3$scrwdnd334332:0%1$scrwdne334332:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_accepted_message1" resname="v_registration_accepted_message1">
+        <source>A message is being sent to &lt;b&gt;%3$s&lt;/b&gt; to inform him(her) that his(her) membership with &lt;b&gt;%1$s&lt;/b&gt; was accepted.</source>
+        <target>crwdns334334:0%3$scrwdnd334334:0%1$scrwdne334334:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_accepted_message2" resname="v_registration_accepted_message2">
+        <source>&lt;b&gt;%3$s&lt;/b&gt; is now able to login.</source>
+        <target>crwdns334336:0%3$scrwdne334336:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_accepted_subject2" resname="v_registration_accepted_subject2">
+        <source>Your application for membership with &lt;b&gt;%1$s&lt;/b&gt; has been accepted.</source>
+        <target>crwdns334338:0%1$scrwdne334338:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_accepted_subject2_informal" resname="v_registration_accepted_subject2_informal">
+        <source>Your application for membership with &lt;b&gt;%1$s&lt;/b&gt; has been accepted.</source>
+        <target>crwdns334340:0%1$scrwdne334340:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_accepted_message3" resname="v_registration_accepted_message3">
+        <source>We are pleased to inform you that your membership &lt;b&gt;%2$s&lt;/b&gt; has been accepted and that your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</source>
+        <target>crwdns334342:0%2$scrwdnd334342:0%4$scrwdne334342:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_accepted_message3_informal" resname="v_registration_accepted_message3_informal">
+        <source>We are pleased to inform you that your membership &lt;b&gt;%2$s&lt;/b&gt; has been accepted and that your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</source>
+        <target>crwdns334344:0%2$scrwdnd334344:0%4$scrwdne334344:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_accepted_message4" resname="v_registration_accepted_message4">
+        <source>You may now login at</source>
+        <target>crwdns334346:0crwdne334346:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_accepted_message4_informal" resname="v_registration_accepted_message4_informal">
+        <source>You may now login at</source>
+        <target>crwdns334348:0crwdne334348:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_accepted" resname="v_registration_accepted">
+        <source>The application of %3$s for membership with %1$s was accepted.</source>
+        <target>crwdns334350:0%3$scrwdnd334350:0%1$scrwdne334350:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_refused_subject" resname="v_registration_refused_subject">
+        <source>The application of &lt;b&gt;%3$s&lt;/b&gt; for membership with &lt;b&gt;%1$s&lt;/b&gt; is now refused.</source>
+        <target>crwdns334352:0%3$scrwdnd334352:0%1$scrwdne334352:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_refused_message1" resname="v_registration_refused_message1">
+        <source>A message is being sent to &lt;b&gt;%3$s&lt;/b&gt; to inform him(her) that his(her) membership with &lt;b&gt;%1$s&lt;/b&gt; was refused.</source>
+        <target>crwdns334354:0%3$scrwdnd334354:0%1$scrwdne334354:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_refused_message2" resname="v_registration_refused_message2">
+        <source>The account of &lt;b&gt;%3$s&lt;/b&gt; will now be refused.</source>
+        <target>crwdns373714:0%3$scrwdne373714:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_refused" resname="v_registration_refused">
+        <source>The application of %3$s for membership with %1$s was refused.</source>
+        <target>crwdns334358:0%3$scrwdnd334358:0%1$scrwdne334358:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_refused_subject2" resname="v_registration_refused_subject2">
+        <source>Your application for membership with &lt;b&gt;%1$s&lt;/b&gt; has been refused.</source>
+        <target>crwdns334360:0%1$scrwdne334360:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_refused_subject2_informal" resname="v_registration_refused_subject2_informal">
+        <source>Your application for membership with &lt;b&gt;%1$s&lt;/b&gt; has been refused.</source>
+        <target>crwdns334362:0%1$scrwdne334362:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_refused_message3" resname="v_registration_refused_message3">
+        <source>We are sorry to inform you that your membership &lt;b&gt;%2$s&lt;/b&gt; has been refused.</source>
+        <target>crwdns334364:0%2$scrwdne334364:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_refused_message3_informal" resname="v_registration_refused_message3_informal">
+        <source>We are sorry to inform you that your membership &lt;b&gt;%2$s&lt;/b&gt; has been refused.</source>
+        <target>crwdns334366:0%2$scrwdne334366:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_refused_message4" resname="v_registration_refused_message4">
+        <source>Please feel free to ask us any questions, or  tell us anything about the registration process, or make any other comments by sending an e-mail to</source>
+        <target>crwdns334368:0crwdne334368:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_refused_message4_informal" resname="v_registration_refused_message4_informal">
+        <source>Please feel free to ask us any questions, or  tell us anything about the registration process, or make any other comments by sending an e-mail to</source>
+        <target>crwdns334370:0crwdne334370:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_entered_subject" resname="v_registration_entered_subject">
+        <source>Thank you for registering with &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334372:0%1$scrwdne334372:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_entered_subject_informal" resname="v_registration_entered_subject_informal">
+        <source>Thank you for registering with &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334374:0%1$scrwdne334374:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_entered_message1" resname="v_registration_entered_message1">
+        <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been accepted.</source>
+        <target>crwdns334376:0%2$scrwdne334376:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_entered_message1_informal" resname="v_registration_entered_message1_informal">
+        <source>Your membership &lt;b&gt;%2$s&lt;/b&gt; has been accepted.</source>
+        <target>crwdns334378:0%2$scrwdne334378:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_entered_message2" resname="v_registration_entered_message2">
+        <source>Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</source>
+        <target>crwdns334380:0%4$scrwdne334380:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_entered_message2_informal" resname="v_registration_entered_message2_informal">
+        <source>Your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been added to our list.</source>
+        <target>crwdns334382:0%4$scrwdne334382:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_entered" resname="v_registration_entered">
+        <source>%3$s accessed the login form of %1$s after acceptation of his(her) membership application.</source>
+        <target>crwdns334384:0%3$scrwdnd334384:0%1$scrwdne334384:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_deleted_subject" resname="v_registration_deleted_subject">
+        <source>Your membership with &lt;b&gt;%1$s&lt;/b&gt; has been ended.</source>
+        <target>crwdns334386:0%1$scrwdne334386:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_deleted_subject_informal" resname="v_registration_deleted_subject_informal">
+        <source>Your membership with &lt;b&gt;%1$s&lt;/b&gt; has been ended.</source>
+        <target>crwdns334388:0%1$scrwdne334388:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_deleted_message1" resname="v_registration_deleted_message1">
+        <source>As requested, we have ended your membership &lt;b&gt;%2$s&lt;/b&gt; and your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been deleted from our list.&lt;br&gt;</source>
+        <target>crwdns334390:0%2$scrwdnd334390:0%4$scrwdne334390:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_deleted_message1_informal" resname="v_registration_deleted_message1_informal">
+        <source>As requested, we have ended your membership &lt;b&gt;%2$s&lt;/b&gt; and your e-mail address &lt;b&gt;%4$s&lt;/b&gt; has been deleted from our list.&lt;br&gt;</source>
+        <target>crwdns334392:0%2$scrwdnd334392:0%4$scrwdne334392:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_deleted_message2" resname="v_registration_deleted_message2">
+        <source>You will still be able to browse the pages of &lt;b&gt;%1$s&lt;/b&gt; for which membership is not necessary, if you wish.&lt;br&gt;&lt;br&gt;If you ever change your mind, you may re-join us and we will be pleased to welcome you again.&lt;br&gt;</source>
+        <target>crwdns334394:0%1$scrwdne334394:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_deleted_message2_informal" resname="v_registration_deleted_message2_informal">
+        <source>You will still be able to browse the pages of &lt;b&gt;%1$s&lt;/b&gt; for which membership is not necessary, if you wish.&lt;br&gt;&lt;br&gt;If you ever change your mind, you may re-join us and we will be pleased to welcome you again.&lt;br&gt;</source>
+        <target>crwdns334396:0%1$scrwdne334396:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_deleted" resname="v_registration_deleted">
+        <source>%3$s deleted his(her) account from %1$s.</source>
+        <target>crwdns334398:0%3$scrwdnd334398:0%1$scrwdne334398:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_unsubscribed_subject" resname="v_registration_unsubscribed_subject">
+        <source>Your subscription to the newsletter of &lt;b&gt;%1$s&lt;/b&gt; has been ended.</source>
+        <target>crwdns334400:0%1$scrwdne334400:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_unsubscribed_subject_informal" resname="v_registration_unsubscribed_subject_informal">
+        <source>Your subscription to the newsletter of &lt;b&gt;%1$s&lt;/b&gt; has been ended.</source>
+        <target>crwdns334402:0%1$scrwdne334402:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_unsubscribed_message1" resname="v_registration_unsubscribed_message1">
+        <source>As requested, we have ended the subscription of user &lt;b&gt;%2$s&lt;/b&gt; to the newsletter of &lt;b&gt;%1$s&lt;/b&gt;.&lt;br&gt;</source>
+        <target>crwdns334404:0%2$scrwdnd334404:0%1$scrwdne334404:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_unsubscribed_message1_informal" resname="v_registration_unsubscribed_message1_informal">
+        <source>As requested, we have ended the subscription of user &lt;b&gt;%2$s&lt;/b&gt; to the newsletter of &lt;b&gt;%1$s&lt;/b&gt;.&lt;br&gt;</source>
+        <target>crwdns334406:0%2$scrwdnd334406:0%1$scrwdne334406:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_unsubscribed_message2" resname="v_registration_unsubscribed_message2">
+        <source>However, your account remains active and you may login into the site. You may also resume your subscription at your convenience.&lt;br&gt;</source>
+        <target>crwdns334408:0crwdne334408:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_unsubscribed_message2_informal" resname="v_registration_unsubscribed_message2_informal">
+        <source>However, your account remains active and you may login into the site. You may also resume your subscription at your convenience.&lt;br&gt;</source>
+        <target>crwdns334410:0crwdne334410:0</target>
+      </trans-unit>
+      <trans-unit id="v_registration_unsubscribed" resname="v_registration_unsubscribed">
+        <source>%3$s has ended his(her) subscription to the newsletter of %1$s.</source>
+        <target>crwdns334412:0%3$scrwdnd334412:0%1$scrwdne334412:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_allowed_image" resname="evalErrors_allowed_image">
+        <source>The file extension %s is not allowed.</source>
+        <target>crwdns334414:0%scrwdne334414:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_atLeast" resname="evalErrors_atLeast">
+        <source>You must enter at least %s characters!</source>
+        <target>crwdns334416:0%scrwdne334416:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_atLeast_username" resname="evalErrors_atLeast_username">
+        <source>The username must contain at least %s characters.</source>
+        <target>crwdns334418:0%scrwdne334418:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_atLeast_informal" resname="evalErrors_atLeast_informal">
+        <source>You must enter at least %s characters!</source>
+        <target>crwdns334420:0%scrwdne334420:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_atleast_characters" resname="evalErrors_atleast_characters">
+        <source>You must enter at least %s characters!</source>
+        <target>crwdns334422:0%scrwdne334422:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_atleast_characters_informal" resname="evalErrors_atleast_characters_informal">
+        <source>You must enter at least %s characters!</source>
+        <target>crwdns334424:0%scrwdne334424:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_atLeast_password" resname="evalErrors_atLeast_password">
+        <source>The password must contain at least %s characters.</source>
+        <target>crwdns334426:0%scrwdne334426:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_atLeast_password_informal" resname="evalErrors_atLeast_password_informal">
+        <source>The password must contain at least %s characters.</source>
+        <target>crwdns334428:0%scrwdne334428:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_atmost_characters" resname="evalErrors_atmost_characters">
+        <source>You must enter at most %s characters!</source>
+        <target>crwdns334430:0%scrwdne334430:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_atmost_characters_informal" resname="evalErrors_atmost_characters_informal">
+        <source>You must enter at most %s characters!</source>
+        <target>crwdns334432:0%scrwdne334432:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_atMost" resname="evalErrors_atMost">
+        <source>You must enter at most %s characters!</source>
+        <target>crwdns334434:0%scrwdne334434:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_atMost_informal" resname="evalErrors_atMost_informal">
+        <source>You must enter at most %s characters!</source>
+        <target>crwdns334436:0%scrwdne334436:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_atMost_password" resname="evalErrors_atMost_password">
+        <source>The password must contain at most %s characters.</source>
+        <target>crwdns334438:0%scrwdne334438:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_atMost_password_informal" resname="evalErrors_atMost_password_informal">
+        <source>The password must contain at most %s characters.</source>
+        <target>crwdns334440:0%scrwdne334440:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_atMost_username" resname="evalErrors_atMost_username">
+        <source>The username must contain at most %s characters.</source>
+        <target>crwdns334442:0%scrwdne334442:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_captcha" resname="evalErrors_captcha">
+        <source>Invalid!</source>
+        <target>crwdns334444:0crwdne334444:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_freecap" resname="evalErrors_freecap">
+        <source>The entered letters did not correspond to the letters in the image.</source>
+        <target>crwdns334446:0crwdne334446:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_date" resname="evalErrors_date">
+        <source>Please enter a valid date in format dd-mm-yyyy!</source>
+        <target>crwdns334448:0crwdne334448:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_date_informal" resname="evalErrors_date_informal">
+        <source>Please enter a valid date in format dd-mm-yyyy!</source>
+        <target>crwdns334450:0crwdne334450:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_email" resname="evalErrors_email">
+        <source>Please enter a valid e-mail address.</source>
+        <target>crwdns334452:0crwdne334452:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_email_informal" resname="evalErrors_email_informal">
+        <source>Please enter a valid e-mail address.</source>
+        <target>crwdns334454:0crwdne334454:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_email_email" resname="evalErrors_email_email">
+        <source>According to our verifications, the e-mail you have entered is not valid. Perhaps it was not entered correctly?</source>
+        <target>crwdns334456:0crwdne334456:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_email_email_informal" resname="evalErrors_email_email_informal">
+        <source>According to our verifications, the e-mail you entered is not valid. Perhaps you did not enter it correctly?</source>
+        <target>crwdns334458:0crwdne334458:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_existed_already" resname="evalErrors_existed_already">
+        <source>The value existed already. Enter a new value.</source>
+        <target>crwdns334460:0crwdne334460:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_existed_already_informal" resname="evalErrors_existed_already_informal">
+        <source>The value existed already. Enter a new value.</source>
+        <target>crwdns334462:0crwdne334462:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_file_extension" resname="evalErrors_file_extension">
+        <source>The file extension %s is not allowed.</source>
+        <target>crwdns334464:0%scrwdne334464:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_file_upload" resname="evalErrors_file_upload">
+        <source>Internal server error in upload of file &quot;%s&quot;.</source>
+        <target>crwdns334466:0%scrwdne334466:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_write_permission" resname="evalErrors_write_permission">
+        <source>Write permission error for file &quot;%s&quot;.</source>
+        <target>crwdns334468:0%scrwdne334468:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_max_size_image" resname="evalErrors_max_size_image">
+        <source>The file size should not exceed %s KB.</source>
+        <target>crwdns334470:0%scrwdne334470:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_preg" resname="evalErrors_preg">
+        <source>This value does not fit to the required expression!</source>
+        <target>crwdns334472:0crwdne334472:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_preg_internal" resname="evalErrors_preg_internal">
+        <source>Internal error in the regular expression &quot;%s&quot;!</source>
+        <target>crwdns334474:0%scrwdne334474:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_required" resname="evalErrors_required">
+        <source>You must enter a value!</source>
+        <target>crwdns334476:0crwdne334476:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_required_informal" resname="evalErrors_required_informal">
+        <source>You must enter a value!</source>
+        <target>crwdns334478:0crwdne334478:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_required_terms_acknowledged" resname="evalErrors_required_terms_acknowledged">
+        <source>Please acknowledge the terms!</source>
+        <target>crwdns334480:0crwdne334480:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_required_terms_acknowledged_informal" resname="evalErrors_required_terms_acknowledged_informal">
+        <source>Please acknowledge the terms!</source>
+        <target>crwdns334482:0crwdne334482:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_same_twice" resname="evalErrors_same_twice">
+        <source>You must enter the same value twice.</source>
+        <target>crwdns334484:0crwdne334484:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_same_twice_informal" resname="evalErrors_same_twice_informal">
+        <source>You must enter the same value twice.</source>
+        <target>crwdns334486:0crwdne334486:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_size_too_large" resname="evalErrors_size_too_large">
+        <source>The file is larger than %s KB.</source>
+        <target>crwdns334488:0%scrwdne334488:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_twice" resname="evalErrors_twice">
+        <source>Please enter the same value twice.</source>
+        <target>crwdns334490:0crwdne334490:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_twice_informal" resname="evalErrors_twice_informal">
+        <source>Please enter the same value twice.</source>
+        <target>crwdns334492:0crwdne334492:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_twice_password" resname="evalErrors_twice_password">
+        <source>You must enter the same password twice.</source>
+        <target>crwdns334494:0crwdne334494:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_twice_password_informal" resname="evalErrors_twice_password_informal">
+        <source>You must enter the same password twice.</source>
+        <target>crwdns334496:0crwdne334496:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_unvalid_list" resname="evalErrors_unvalid_list">
+        <source>The value was not a valid value from this list: %s</source>
+        <target>crwdns334498:0%scrwdne334498:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_unvalid_url" resname="evalErrors_unvalid_url">
+        <source>Please enter a valid Internet site address.</source>
+        <target>crwdns334500:0crwdne334500:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_unvalid_url_informal" resname="evalErrors_unvalid_url_informal">
+        <source>Please enter a valid Internet site address.</source>
+        <target>crwdns334502:0crwdne334502:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_unvalid_date" resname="evalErrors_unvalid_date">
+        <source>Please enter a valid date.</source>
+        <target>crwdns334504:0crwdne334504:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_uniqueLocal" resname="evalErrors_uniqueLocal">
+        <source>This value already exist. Please enter a new value.</source>
+        <target>crwdns334506:0crwdne334506:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_uniqueLocal_informal" resname="evalErrors_uniqueLocal_informal">
+        <source>This value already exist. Please enter a new value.</source>
+        <target>crwdns334508:0crwdne334508:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_uniqueLocal_username" resname="evalErrors_uniqueLocal_username">
+        <source>This username already exists. Please enter a different username.</source>
+        <target>crwdns334510:0crwdne334510:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_uniqueLocal_username_informal" resname="evalErrors_uniqueLocal_username_informal">
+        <source>This username already exists. Please enter a different username.</source>
+        <target>crwdns334512:0crwdne334512:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_valid_email" resname="evalErrors_valid_email">
+        <source>You must enter a valid email address.</source>
+        <target>crwdns334514:0crwdne334514:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_valid_email_informal" resname="evalErrors_valid_email_informal">
+        <source>You must enter a valid email address.</source>
+        <target>crwdns334516:0crwdne334516:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_uniqueGlobal_username" resname="evalErrors_uniqueGlobal_username">
+        <source>This username already exists. Please enter a different username.</source>
+        <target>crwdns334518:0crwdne334518:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_uniqueGlobal_username_informal" resname="evalErrors_uniqueGlobal_username_informal">
+        <source>This username already exists. Please enter a different username.</source>
+        <target>crwdns334520:0crwdne334520:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_uniqueGlobal" resname="evalErrors_uniqueGlobal">
+        <source>This value already exists. Please enter a new value.</source>
+        <target>crwdns334522:0crwdne334522:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_uniqueGlobal_informal" resname="evalErrors_uniqueGlobal_informal">
+        <source>This value already exists. Please enter a new value.</source>
+        <target>crwdns334524:0crwdne334524:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_uniqueLocal_email" resname="evalErrors_uniqueLocal_email">
+        <source>This e-mail address already exist.</source>
+        <target>crwdns334526:0crwdne334526:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_uniqueLocal_email_informal" resname="evalErrors_uniqueLocal_email_informal">
+        <source>This e-mail address already exist.</source>
+        <target>crwdns334528:0crwdne334528:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_wwwURL_www" resname="evalErrors_wwwURL_www">
+        <source>According to our verifications, the website address you entered is not valid. Perhaps it was not entered correctly?</source>
+        <target>crwdns334530:0crwdne334530:0</target>
+      </trans-unit>
+      <trans-unit id="evalErrors_wwwURL_www_informal" resname="evalErrors_wwwURL_www_informal">
+        <source>According to our verifications, the website address you entered is not valid. Perhaps it was not entered correctly?</source>
+        <target>crwdns334532:0crwdne334532:0</target>
+      </trans-unit>
+      <trans-unit id="internal_no_subtemplate" resname="internal_no_subtemplate">
+        <source>The subpart %s has not been found inside of the template file.</source>
+        <target>crwdns334534:0%scrwdne334534:0</target>
+      </trans-unit>
+      <trans-unit id="internal_edit_option" resname="internal_edit_option">
+        <source>Edit-option is not set in TypoScript.</source>
+        <target>crwdns334536:0crwdne334536:0</target>
+      </trans-unit>
+      <trans-unit id="internal_infomail_configuration" resname="internal_infomail_configuration">
+        <source>Configuration error: infomail option is not available or emailField is not set in TypoScript</source>
+        <target>crwdns334538:0crwdne334538:0</target>
+      </trans-unit>
+      <trans-unit id="internal_token_empty" resname="internal_token_empty">
+        <source>The form's token is empty!</source>
+        <target>crwdns334540:0crwdne334540:0</target>
+      </trans-unit>
+      <trans-unit id="internal_token_short" resname="internal_token_short">
+        <source>The form's token is too short!</source>
+        <target>crwdns334542:0crwdne334542:0</target>
+      </trans-unit>
+      <trans-unit id="internal_no_text_found" resname="internal_no_text_found">
+        <source>Internal error in the Agency Registration. No text replacement has been found for &lt;b&gt;%1$s&lt;/b&gt;.</source>
+        <target>crwdns334544:0%1$scrwdne334544:0</target>
+      </trans-unit>
+      <trans-unit id="internal_login_security_level" resname="internal_login_security_level">
+        <source>Front end login security level must be set to &quot;normal&quot; or to &quot;rsa&quot;</source>
+        <target>crwdns334546:0crwdne334546:0</target>
+      </trans-unit>
+      <trans-unit id="internal_rsaauth_backend_not_available" resname="internal_rsaauth_backend_not_available">
+        <source>Required RSA auth backend not available</source>
+        <target>crwdns334548:0crwdne334548:0</target>
+      </trans-unit>
+      <trans-unit id="internal_decrypt_auto_login_failed" resname="internal_decrypt_auto_login_failed">
+        <source>Failed to decrypt auto login password</source>
+        <target>crwdns334550:0crwdne334550:0</target>
+      </trans-unit>
+      <trans-unit id="internal_rsaauth_retrieve_private_key_failed" resname="internal_rsaauth_retrieve_private_key_failed">
+        <source>RSA auth service failed to retrieve private key</source>
+        <target>crwdns334552:0crwdne334552:0</target>
+      </trans-unit>
+      <trans-unit id="internal_rsaauth_process_incoming_password_failed" resname="internal_rsaauth_process_incoming_password_failed">
+        <source>RSA auth service failed to process incoming password</source>
+        <target>crwdns334554:0crwdne334554:0</target>
+      </trans-unit>
+      <trans-unit id="internal_salted_passwords_disabled" resname="internal_salted_passwords_disabled">
+        <source>Salted passwords must be enabled for the front end</source>
+        <target>crwdns334556:0crwdne334556:0</target>
+      </trans-unit>
+      <trans-unit id="internal_salted_passwords_no_instance" resname="internal_salted_passwords_no_instance">
+        <source>Could not get an instance for hashed password processing</source>
+        <target>crwdns334558:0crwdne334558:0</target>
+      </trans-unit>
+      <trans-unit id="internal_required_extension_missing" resname="internal_required_extension_missing">
+        <source>The extension &quot;%1$s&quot; is required and must be installed</source>
+        <target>crwdns334560:0%1$scrwdne334560:0</target>
+      </trans-unit>
+      <trans-unit id="internal_conflicting_extension_installed" resname="internal_conflicting_extension_installed">
+        <source>The conflicting extension &quot;%1$s&quot; must be uninstalled</source>
+        <target>crwdns334562:0%1$scrwdne334562:0</target>
+      </trans-unit>
+      <trans-unit id="internal_required_typoscript_missing" resname="internal_required_typoscript_missing">
+        <source>TypoScript is missing. The static from extensions have not been included</source>
+        <target>crwdns334564:0crwdne334564:0</target>
+      </trans-unit>
+      <trans-unit id="internal_required_authentication_service_not_available" resname="internal_required_authentication_service_not_available">
+        <source>Required authentication service not available</source>
+        <target>crwdns334566:0crwdne334566:0</target>
+      </trans-unit>
+      <trans-unit id="internal_auto_login_failed" resname="internal_auto_login_failed">
+        <source>The auto login has failed.</source>
+        <target>crwdns334568:0crwdne334568:0</target>
+      </trans-unit>
+      <trans-unit id="internal_no_enabled_user" resname="internal_no_enabled_user">
+        <source>The user &quot;%s&quot; is not existent or enabled.</source>
+        <target>crwdns334570:0%scrwdne334570:0</target>
+      </trans-unit>
+      <trans-unit id="internal_check_requirements_frontend" resname="internal_check_requirements_frontend">
+        <source>&lt;p&gt;&lt;big&gt;&lt;b&gt;Agency Registration (agency): %1$s.&lt;/b&gt;&lt;/big&gt;&lt;/p&gt;</source>
+        <target>crwdns334572:0%1$scrwdne334572:0</target>
+      </trans-unit>
+      <trans-unit id="internal_replace_deprecated_marker" resname="internal_replace_deprecated_marker">
+        <source>Deprecated marker %1$s must be replaced by marker %2$s in the HTML template file %3$s</source>
+        <target>crwdns334574:0%1$scrwdnd334574:0%2$scrwdnd334574:0%3$scrwdne334574:0</target>
+      </trans-unit>
+      <trans-unit id="internal_remove_deprecated_marker" resname="internal_remove_deprecated_marker">
+        <source>Deprecated marker %1$s must be removed from the HTML template file %2$s</source>
+        <target>crwdns334576:0%1$scrwdnd334576:0%2$scrwdne334576:0</target>
+      </trans-unit>
+      <trans-unit id="internal_label_not_localized_by_div2007" resname="internal_label_not_localized_by_div2007">
+        <source>The extenson div2007 failed to localize the label %1$s</source>
+        <target>crwdns334578:0%1$scrwdne334578:0</target>
+      </trans-unit>
+      <trans-unit id="internal_email_not_sent" resname="internal_email_not_sent">
+        <source>The email to %s could not be sent!</source>
+        <target>crwdns334580:0%scrwdne334580:0</target>
+      </trans-unit>
+      <trans-unit id="internal_invalid_token" resname="internal_invalid_token">
+        <source>Apparently this link has expired.</source>
+        <target>crwdns334582:0crwdne334582:0</target>
+      </trans-unit>
+      <trans-unit id="internal_init_language" resname="internal_init_language">
+        <source>Internal error of the language packs.</source>
+        <target>crwdns334584:0crwdne334584:0</target>
+      </trans-unit>
+      <trans-unit id="internal_no_template" resname="internal_no_template">
+        <source>The template file &quot;%s&quot; has not been found. Check your template setup about %s.</source>
+        <target>crwdns334586:0%scrwdnd334586:0%scrwdne334586:0</target>
+      </trans-unit>
+      <trans-unit id="internal_table_without_TCA" resname="internal_table_without_TCA">
+        <source>The table &quot;%s&quot; is not defined in TCA.</source>
+        <target>crwdns334588:0%scrwdne334588:0</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
