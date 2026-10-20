@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="EXT:agency/Resources/Private/Language/locallang_db.xlf" date="2018-03-07T09:00:28Z" product-name="agency" target-language="t3">
+    <header/>
+    <body>
+      <trans-unit id="tstamp" resname="tstamp">
+        <source>Time stamp</source>
+        <target>crwdns334590:0crwdne334590:0</target>
+      </trans-unit>
+      <trans-unit id="crdate" resname="crdate">
+        <source>Creation date</source>
+        <target>crwdns334592:0crwdne334592:0</target>
+      </trans-unit>
+      <trans-unit id="tt_content.list_type" resname="tt_content.list_type">
+        <source>Agency Registration</source>
+        <target>crwdns334594:0crwdne334594:0</target>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.display_mode" resname="tt_content.pi_flexform.display_mode">
+        <source>Display mode</source>
+        <target>crwdns334596:0crwdne334596:0</target>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.display_mode.1" resname="tt_content.pi_flexform.display_mode.1">
+        <source>Default</source>
+        <target>crwdns334598:0crwdne334598:0</target>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.display_mode.3" resname="tt_content.pi_flexform.display_mode.3">
+        <source>Create</source>
+        <target>crwdns334600:0crwdne334600:0</target>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.display_mode.4" resname="tt_content.pi_flexform.display_mode.4">
+        <source>Delete</source>
+        <target>crwdns334602:0crwdne334602:0</target>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.display_mode.5" resname="tt_content.pi_flexform.display_mode.5">
+        <source>Invite</source>
+        <target>crwdns334604:0crwdne334604:0</target>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.display_mode.7" resname="tt_content.pi_flexform.display_mode.7">
+        <source>Edit</source>
+        <target>crwdns334606:0crwdne334606:0</target>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.display_mode.8" resname="tt_content.pi_flexform.display_mode.8">
+        <source>Setfixed</source>
+        <target>crwdns334608:0crwdne334608:0</target>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.display_mode.9" resname="tt_content.pi_flexform.display_mode.9">
+        <source>Infomail</source>
+        <target>crwdns334610:0crwdne334610:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.cnum" resname="fe_users.cnum">
+        <source>Customer Number:</source>
+        <target>crwdns334612:0crwdne334612:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.house_no" resname="fe_users.house_no">
+        <source>House Number:</source>
+        <target>crwdns334614:0crwdne334614:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.static_info_country" resname="fe_users.static_info_country">
+        <source>Country Code:</source>
+        <target>crwdns334616:0crwdne334616:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.zone" resname="fe_users.zone">
+        <source>State/province:</source>
+        <target>crwdns334618:0crwdne334618:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.language" resname="fe_users.language">
+        <source>Language:</source>
+        <target>crwdns334620:0crwdne334620:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.first_name" resname="fe_users.first_name">
+        <source>First Name:</source>
+        <target>crwdns334622:0crwdne334622:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.last_name" resname="fe_users.last_name">
+        <source>Last Name:</source>
+        <target>crwdns334624:0crwdne334624:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.module_sys_dmail_newsletter" resname="fe_users.module_sys_dmail_newsletter">
+        <source>Activate Newsletter</source>
+        <target>crwdns334626:0crwdne334626:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.module_sys_dmail_category" resname="fe_users.module_sys_dmail_category">
+        <source>Subscribe to categories</source>
+        <target>crwdns334628:0crwdne334628:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.mail_html" resname="fe_users.mail_html">
+        <source>Receive emails in HTML format?</source>
+        <target>crwdns388448:0crwdne388448:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.module_sys_dmail_html" resname="fe_users.module_sys_dmail_html">
+        <source>Receive emails in HTML format?</source>
+        <target>crwdns334630:0crwdne334630:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.date_of_birth" resname="fe_users.date_of_birth">
+        <source>Date of birth:</source>
+        <target>crwdns334632:0crwdne334632:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.gender" resname="fe_users.gender">
+        <source>Mr/Ms:</source>
+        <target>crwdns334634:0crwdne334634:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.gender.I.0" resname="fe_users.gender.I.0">
+        <source>Mr</source>
+        <target>crwdns334636:0crwdne334636:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.gender.I.1" resname="fe_users.gender.I.1">
+        <source>Ms</source>
+        <target>crwdns334638:0crwdne334638:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.gender.I.99" resname="fe_users.gender.I.99">
+        <source>  </source>
+      </trans-unit>
+      <trans-unit id="fe_users.status" resname="fe_users.status">
+        <source>Status:</source>
+        <target>crwdns334640:0crwdne334640:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.status.I.0" resname="fe_users.status.I.0">
+        <source> </source>
+      </trans-unit>
+      <trans-unit id="fe_users.status.I.1" resname="fe_users.status.I.1">
+        <source>Student</source>
+        <target>crwdns334642:0crwdne334642:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.status.I.2" resname="fe_users.status.I.2">
+        <source>Job seeking full time</source>
+        <target>crwdns334644:0crwdne334644:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.status.I.3" resname="fe_users.status.I.3">
+        <source>Working</source>
+        <target>crwdns334646:0crwdne334646:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.status.I.4" resname="fe_users.status.I.4">
+        <source>Retired</source>
+        <target>crwdns334648:0crwdne334648:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.status.I.5" resname="fe_users.status.I.5">
+        <source>Job seeking half time</source>
+        <target>crwdns334650:0crwdne334650:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.comments" resname="fe_users.comments">
+        <source>Comments:</source>
+        <target>crwdns334652:0crwdne334652:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.by_invitation" resname="fe_users.by_invitation">
+        <source>Was invited:</source>
+        <target>crwdns334654:0crwdne334654:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.terms_acknowledged" resname="fe_users.terms_acknowledged">
+        <source>The terms have been acknowledged:</source>
+        <target>crwdns334656:0crwdne334656:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.privacy_policy_acknowledged" resname="fe_users.privacy_policy_acknowledged">
+        <source>The privacy policy has been acknowledged:</source>
+        <target>crwdns334658:0crwdne334658:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.privacy_policy_date" resname="fe_users.privacy_policy_date">
+        <source>Date of agreement to the privacy policy:</source>
+        <target>crwdns334660:0crwdne334660:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.token" resname="fe_users.token">
+        <source>Security Token</source>
+        <target>crwdns334662:0crwdne334662:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.tx_agency_password" resname="fe_users.tx_agency_password">
+        <source>Encrypted auto-login password</source>
+        <target>crwdns334664:0crwdne334664:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.lost_password" resname="fe_users.lost_password">
+        <source>Password is lost</source>
+        <target>crwdns334666:0crwdne334666:0</target>
+      </trans-unit>
+      <trans-unit id="fe_users.has_privileges" resname="fe_users.has_privileges">
+        <source>Has privileges:</source>
+        <target>crwdns334668:0crwdne334668:0</target>
+      </trans-unit>
+      <trans-unit id="fe_groups_language_overlay" resname="fe_groups_language_overlay">
+        <source>User Group Alternative Language</source>
+        <target>crwdns334670:0crwdne334670:0</target>
+      </trans-unit>
+      <trans-unit id="fe_groups_language_overlay.title" resname="fe_groups_language_overlay.title">
+        <source>Translated user group name</source>
+        <target>crwdns334672:0crwdne334672:0</target>
+      </trans-unit>
+      <trans-unit id="sys_agency_fe_users_limit_fe_groups" resname="sys_agency_fe_users_limit_fe_groups">
+        <source>Relation FE users to FE groups</source>
+        <target>crwdns334674:0crwdne334674:0</target>
+      </trans-unit>
+      <trans-unit id="sys_agency_fe_users_limit_fe_groups.codes" resname="sys_agency_fe_users_limit_fe_groups.codes">
+        <source>Codes</source>
+        <target>crwdns334676:0crwdne334676:0</target>
+      </trans-unit>
+      <trans-unit id="sys_agency_fe_users_limit_fe_groups.status" resname="sys_agency_fe_users_limit_fe_groups.status">
+        <source>Status</source>
+        <target>crwdns334678:0crwdne334678:0</target>
+      </trans-unit>
+      <trans-unit id="sys_dmail_category" resname="sys_dmail_category">
+        <source>Direct Mail Category</source>
+        <target>crwdns334680:0crwdne334680:0</target>
+      </trans-unit>
+      <trans-unit id="sys_dmail_category.category" resname="sys_dmail_category.category">
+        <source>Category:</source>
+        <target>crwdns334682:0crwdne334682:0</target>
+      </trans-unit>
+      <trans-unit id="sys_dmail_category.old_cat_number" resname="sys_dmail_category.old_cat_number">
+        <source>Old category number:</source>
+        <target>crwdns334684:0crwdne334684:0</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

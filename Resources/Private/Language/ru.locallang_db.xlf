@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="EXT:agency/Resources/Private/Language/locallang_db.xlf" date="2018-03-07T09:00:28Z" product-name="agency" target-language="ru">
+    <header/>
+    <body>
+      <trans-unit id="tstamp" resname="tstamp">
+        <source>Time stamp</source>
+        <target state="needs-translation">Time stamp</target>
+      </trans-unit>
+      <trans-unit id="crdate" resname="crdate">
+        <source>Creation date</source>
+        <target state="needs-translation">Creation date</target>
+      </trans-unit>
+      <trans-unit id="tt_content.list_type" resname="tt_content.list_type">
+        <source>Agency Registration</source>
+        <target state="translated">Регистрация пользователей на веб-сайте</target>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.display_mode" resname="tt_content.pi_flexform.display_mode">
+        <source>Display mode</source>
+        <target state="needs-translation">Display mode</target>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.display_mode.1" resname="tt_content.pi_flexform.display_mode.1">
+        <source>Default</source>
+        <target state="needs-translation">Default</target>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.display_mode.3" resname="tt_content.pi_flexform.display_mode.3">
+        <source>Create</source>
+        <target state="needs-translation">Create</target>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.display_mode.4" resname="tt_content.pi_flexform.display_mode.4">
+        <source>Delete</source>
+        <target state="needs-translation">Delete</target>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.display_mode.5" resname="tt_content.pi_flexform.display_mode.5">
+        <source>Invite</source>
+        <target state="needs-translation">Invite</target>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.display_mode.7" resname="tt_content.pi_flexform.display_mode.7">
+        <source>Edit</source>
+        <target state="needs-translation">Edit</target>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.display_mode.8" resname="tt_content.pi_flexform.display_mode.8">
+        <source>Setfixed</source>
+        <target state="needs-translation">Setfixed</target>
+      </trans-unit>
+      <trans-unit id="tt_content.pi_flexform.display_mode.9" resname="tt_content.pi_flexform.display_mode.9">
+        <source>Infomail</source>
+        <target state="needs-translation">Infomail</target>
+      </trans-unit>
+      <trans-unit id="fe_users.cnum" resname="fe_users.cnum">
+        <source>Customer Number:</source>
+        <target state="translated">Клиентский номер:</target>
+      </trans-unit>
+      <trans-unit id="fe_users.house_no" resname="fe_users.house_no">
+        <source>House Number:</source>
+        <target state="needs-translation">House Number:</target>
+      </trans-unit>
+      <trans-unit id="fe_users.static_info_country" resname="fe_users.static_info_country">
+        <source>Country Code:</source>
+        <target state="translated">Код страны:</target>
+      </trans-unit>
+      <trans-unit id="fe_users.zone" resname="fe_users.zone">
+        <source>State/province:</source>
+        <target state="translated">Район/область:</target>
+      </trans-unit>
+      <trans-unit id="fe_users.language" resname="fe_users.language">
+        <source>Language:</source>
+        <target state="translated">Язык:</target>
+      </trans-unit>
+      <trans-unit id="fe_users.first_name" resname="fe_users.first_name">
+        <source>First Name:</source>
+        <target state="translated">Имя:</target>
+      </trans-unit>
+      <trans-unit id="fe_users.last_name" resname="fe_users.last_name">
+        <source>Last Name:</source>
+        <target state="translated">Фамилия:</target>
+      </trans-unit>
+      <trans-unit id="fe_users.module_sys_dmail_newsletter" resname="fe_users.module_sys_dmail_newsletter">
+        <source>Activate Newsletter</source>
+        <target state="needs-translation">Activate Newsletter</target>
+      </trans-unit>
+      <trans-unit id="fe_users.module_sys_dmail_category" resname="fe_users.module_sys_dmail_category">
+        <source>Subscribe to categories</source>
+        <target state="needs-translation">Subscribe to categories</target>
+      </trans-unit>
+      <trans-unit id="fe_users.mail_html" resname="fe_users.mail_html">
+        <source>Receive emails in HTML format?</source>
+        <target state="needs-translation">Receive emails in HTML format?</target>
+      </trans-unit>
+      <trans-unit id="fe_users.module_sys_dmail_html" resname="fe_users.module_sys_dmail_html">
+        <source>Receive emails in HTML format?</source>
+        <target state="translated">Получать эл.почту в формате HTML?</target>
+      </trans-unit>
+      <trans-unit id="fe_users.date_of_birth" resname="fe_users.date_of_birth">
+        <source>Date of birth:</source>
+        <target state="translated">Дата рождения:</target>
+      </trans-unit>
+      <trans-unit id="fe_users.gender" resname="fe_users.gender">
+        <source>Mr/Ms:</source>
+        <target state="translated">Пол:</target>
+      </trans-unit>
+      <trans-unit id="fe_users.gender.I.0" resname="fe_users.gender.I.0">
+        <source>Mr</source>
+        <target state="translated">мужчина</target>
+      </trans-unit>
+      <trans-unit id="fe_users.gender.I.1" resname="fe_users.gender.I.1">
+        <source>Ms</source>
+        <target state="translated">женщина</target>
+      </trans-unit>
+      <trans-unit id="fe_users.gender.I.99" resname="fe_users.gender.I.99">
+        <source>  </source>
+      </trans-unit>
+      <trans-unit id="fe_users.status" resname="fe_users.status">
+        <source>Status:</source>
+        <target state="translated">Статус</target>
+      </trans-unit>
+      <trans-unit id="fe_users.status.I.0" resname="fe_users.status.I.0">
+        <source> </source>
+      </trans-unit>
+      <trans-unit id="fe_users.status.I.1" resname="fe_users.status.I.1">
+        <source>Student</source>
+        <target state="translated">Студент</target>
+      </trans-unit>
+      <trans-unit id="fe_users.status.I.2" resname="fe_users.status.I.2">
+        <source>Job seeking full time</source>
+        <target state="translated">Ищущий работу на полное время</target>
+      </trans-unit>
+      <trans-unit id="fe_users.status.I.3" resname="fe_users.status.I.3">
+        <source>Working</source>
+        <target state="translated">Работающий</target>
+      </trans-unit>
+      <trans-unit id="fe_users.status.I.4" resname="fe_users.status.I.4">
+        <source>Retired</source>
+        <target state="translated">Пенсионер</target>
+      </trans-unit>
+      <trans-unit id="fe_users.status.I.5" resname="fe_users.status.I.5">
+        <source>Job seeking half time</source>
+        <target state="translated">Ищущий подработку</target>
+      </trans-unit>
+      <trans-unit id="fe_users.comments" resname="fe_users.comments">
+        <source>Comments:</source>
+        <target state="translated">Комментарии:</target>
+      </trans-unit>
+      <trans-unit id="fe_users.by_invitation" resname="fe_users.by_invitation">
+        <source>Was invited:</source>
+        <target state="translated">Приглашен:</target>
+      </trans-unit>
+      <trans-unit id="fe_users.terms_acknowledged" resname="fe_users.terms_acknowledged">
+        <source>The terms have been acknowledged:</source>
+        <target state="needs-translation">The terms have been acknowledged:</target>
+      </trans-unit>
+      <trans-unit id="fe_users.privacy_policy_acknowledged" resname="fe_users.privacy_policy_acknowledged">
+        <source>The privacy policy has been acknowledged:</source>
+        <target state="needs-translation">The privacy policy has been acknowledged:</target>
+      </trans-unit>
+      <trans-unit id="fe_users.privacy_policy_date" resname="fe_users.privacy_policy_date">
+        <source>Date of agreement to the privacy policy:</source>
+        <target state="needs-translation">Date of agreement to the privacy policy:</target>
+      </trans-unit>
+      <trans-unit id="fe_users.token" resname="fe_users.token">
+        <source>Security Token</source>
+        <target state="needs-translation">Security Token</target>
+      </trans-unit>
+      <trans-unit id="fe_users.tx_agency_password" resname="fe_users.tx_agency_password">
+        <source>Encrypted auto-login password</source>
+        <target state="needs-translation">Encrypted auto-login password</target>
+      </trans-unit>
+      <trans-unit id="fe_users.lost_password" resname="fe_users.lost_password">
+        <source>Password is lost</source>
+        <target state="needs-translation">Password is lost</target>
+      </trans-unit>
+      <trans-unit id="fe_users.has_privileges" resname="fe_users.has_privileges">
+        <source>Has privileges:</source>
+        <target state="needs-translation">Has privileges:</target>
+      </trans-unit>
+      <trans-unit id="fe_groups_language_overlay" resname="fe_groups_language_overlay">
+        <source>User Group Alternative Language</source>
+        <target state="translated">Альтернативный язык группы пользователей</target>
+      </trans-unit>
+      <trans-unit id="fe_groups_language_overlay.title" resname="fe_groups_language_overlay.title">
+        <source>Translated user group name</source>
+        <target state="translated">Переведённое название группы</target>
+      </trans-unit>
+      <trans-unit id="sys_agency_fe_users_limit_fe_groups" resname="sys_agency_fe_users_limit_fe_groups">
+        <source>Relation FE users to FE groups</source>
+        <target state="needs-translation">Relation FE users to FE groups</target>
+      </trans-unit>
+      <trans-unit id="sys_agency_fe_users_limit_fe_groups.codes" resname="sys_agency_fe_users_limit_fe_groups.codes">
+        <source>Codes</source>
+        <target state="needs-translation">Codes</target>
+      </trans-unit>
+      <trans-unit id="sys_agency_fe_users_limit_fe_groups.status" resname="sys_agency_fe_users_limit_fe_groups.status">
+        <source>Status</source>
+        <target state="needs-translation">Status</target>
+      </trans-unit>
+      <trans-unit id="sys_dmail_category" resname="sys_dmail_category">
+        <source>Direct Mail Category</source>
+        <target state="needs-translation">Direct Mail Category</target>
+      </trans-unit>
+      <trans-unit id="sys_dmail_category.category" resname="sys_dmail_category.category">
+        <source>Category:</source>
+        <target state="needs-translation">Category:</target>
+      </trans-unit>
+      <trans-unit id="sys_dmail_category.old_cat_number" resname="sys_dmail_category.old_cat_number">
+        <source>Old category number:</source>
+        <target state="needs-translation">Old category number:</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
